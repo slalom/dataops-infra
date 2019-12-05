@@ -16,13 +16,9 @@ variable "admin_ports" {
     type    = "map"
     default = {}
 }
-variable "file_uploads" {
+variable "files" {
     default = []
-    description = "List of files to upload (encoded as base64) from local file storage (e.g. '/path/to/file' or '/path/to/file:renamed')"
-}
-variable "file_downloads" {
-    default = []
-    description = "List of files to download (curl) from remote sources"
+    description = "List of files to needed on the instance (e.g. 'http://url/to/remote/file', '/path/to/local/file', '/path/to/local/file:renamed')"
 }
 variable "app_ports" {
     type    = "map"

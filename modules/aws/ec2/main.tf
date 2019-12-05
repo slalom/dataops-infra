@@ -2,11 +2,17 @@ data "aws_availability_zones" "myAZs" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 
 locals {
-  project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  my_ip             = "${chomp(data.http.icanhazip.body)}"
-  my_ip_cidr        = "${chomp(data.http.icanhazip.body)}/32"
-  admin_cidr        = flatten([local.my_ip_cidr, var.admin_cidr])
-  default_cidr      = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
+  project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  my_ip                    = "${chomp(data.http.icanhazip.body)}"
+  my_ip_cidr               = "${chomp(data.http.icanhazip.body)}/32"
+  admin_cidr               = flatten([local.my_ip_cidr, var.admin_cidr])
+  default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
+  ssh_key_dir              = pathexpand("~/.ssh")
+  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
+  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
+  chocolatey_install_win   = <<EOF
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+EOF
 }
 
 data "aws_ami" "ec2_ami" {
@@ -42,6 +48,7 @@ resource "aws_security_group" "ec2_sg_admin_ports" {
     }
   }
 }
+
 resource "aws_security_group" "ec2_sg_app_ports" {
   name        = "${var.name_prefix}SecurityGroupForAppPorts"
   description = "allow app traffic on whitelisted ports"
@@ -72,80 +79,13 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
   }
 }
 
-locals {
-  ssh_key_dir              = pathexpand("~/.ssh")
-  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
-  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
-  chocolatey_install_win   = <<EOF
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-EOF
-  registration_install_cmd_win = (
-    substr(var.registration_file, 0, 4) == "http" ?
-    "curl \"${var.registration_file}\" > " :
-    "echo ${base64encode(file(var.registration_file))} > tmp9.b64 && certutil -decode tmp9.b64 "
-  )
-  registration_install_cmd_lin = (
-    substr(var.registration_file, 0, 4) == "http" ?
-    "curl ${var.registration_file} > " :
-    "echo ${base64encode(file(var.registration_file))} | base64 --decode > "
-  )
-}
-
-locals {
-  userdata_lin = <<EOF
-#!/bin/bash
-mkdir -p /home/ubuntu/tableau
-cd /home/ubuntu/tableau
-sudo chmod 777 /home/ubuntu/tableau
-echo "" > ___BOOSTSTRAP_STARTED_
-export PROJECT=${local.project_shortname}
-${var.use_https == false ? "" : "export HTTPS_DOMAIN=${var.https_domain}"}
-${join("\n", [for x in local.lin_files :
-  "echo ${base64encode(file("${path.module}/${x}"))} | base64 --decode > ${basename(x)}"
-])}
-${local.registration_install_cmd_lin} registration.json
-echo "" > __BOOTSTRAP_COMPLETE_
-echo "" > __USERDATA_SCRIPT_STARTED_
-sudo chmod -R 777 /home/ubuntu/tableau
-./userdata_lin.sh
-echo "" > _USERDATA_SCRIPT_COMPLETE_
-EOF
-
-userdata_win = <<EOF
-<script>
-set PROJECT=${local.project_shortname}
-${var.use_https == false ? "" : "set HTTPS_DOMAIN=${var.https_domain}"}
-${local.chocolatey_install_win}
-choco install -y curl
-mkdir C:\Users\Administrator\tableau 2> NUL
-cd C:\Users\Administrator\tableau
-echo "" > ___BOOSTSTRAP_STARTED_
-${join("\n",
-  [for x in local.file_resources :
-    substr(var.registration_file, 0, 4) == "http" 
-    ? "curl ${var.registration_file} > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
-    : "echo ${base64encode(file("${path.module}/${x}"))} > ${basename(x)}.b64 && certutil -decode ${basename(x)}.b64 ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]} & del ${basename(x)}.b64"
-  ]
-)}
-${local.registration_install_cmd_win} "C:\Users\Administrator\tableau\registration.json"
-dism.exe /online /import-defaultappassociations:defaultapps.xml
-echo "" > __BOOTSTRAP_COMPLETE_
-echo "" > __USERDATA_SCRIPT_STARTED_
-${file("${path.module}/resources/win/userdata_win.bat")}
-cd C:\Users\Administrator\tableau
-echo "" > _USERDATA_SCRIPT_COMPLETE_
-</script>
-<persist>true</persist>
-EOF
-}
-
 resource "aws_key_pair" "mykey" {
   key_name   = "${var.name_prefix}ec2-keypair"
   public_key = file(local.ssh_public_key_filepath)
 }
 
 resource "aws_instance" "ec2_instance" {
-  count                   = var.num_linux_instances
+  count                   = var.num_instances
   ami                     = data.aws_ami.ec2_ami.id
   instance_type           = var.ec2_instance_type
   key_name                = aws_key_pair.mykey.key_name
@@ -173,4 +113,58 @@ resource "aws_instance" "ec2_instance" {
     create_before_destroy = true
     ignore_changes        = [tags]
   }
+}
+
+locals {
+  userdata_lin = <<EOF
+#!/bin/bash
+export HOMEDIR=/home/ubuntu/tableau
+mkdir -p $HOMEDIR
+cd $HOMEDIR
+sudo chmod 777 $HOMEDIR
+echo "" > ___BOOSTSTRAP_STARTED_
+export PROJECT=${local.project_shortname}
+${var.use_https == false ? "" : "export HTTPS_DOMAIN=${var.https_domain}"}
+${join("\n",
+  [for x in local.file_resources :
+    substr(var.registration_file, 0, 4) == "http"
+    ? "curl ${split(x, ":")[0]} > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
+    : "echo ${base64encode(file("${path.module}/${split(x, ":")[0]}"))} | base64 --decode > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
+  ]
+)}
+echo "" > __BOOTSTRAP_COMPLETE_
+echo "" > __USERDATA_SCRIPT_STARTED_
+sudo chmod -R 777 $HOMEDIR
+./userdata_lin.sh
+echo "" > _USERDATA_SCRIPT_COMPLETE_
+EOF
+}
+
+locals {
+  userdata_win = <<EOF
+<script>
+set PROJECT=${local.project_shortname}
+${var.use_https == false ? "" : "set HTTPS_DOMAIN=${var.https_domain}"}
+${local.chocolatey_install_win}
+set HOMEDIR=C:\Users\Administrator\tableau
+choco install -y curl
+mkdir %HOMEDIR% 2> NUL
+cd %HOMEDIR%
+echo "" > ___BOOSTSTRAP_STARTED_
+${join("\n",
+  [for x in local.file_resources :
+    substr(var.registration_file, 0, 4) == "http"
+    ? "curl ${var.registration_file} > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
+    : "echo ${base64encode(file("${path.module}/${x}"))} > ${basename(x)}.b64 && certutil -decode ${basename(x)}.b64 ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]} & del ${basename(x)}.b64"
+  ]
+)}
+dism.exe /online /import-defaultappassociations:defaultapps.xml
+echo "" > __BOOTSTRAP_COMPLETE_
+echo "" > __USERDATA_SCRIPT_STARTED_
+${file("${path.module}/resources/win/userdata_win.bat")}
+cd %HOMEDIR%
+echo "" > _USERDATA_SCRIPT_COMPLETE_
+</script>
+<persist>true</persist>
+EOF
 }
