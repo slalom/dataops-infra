@@ -42,15 +42,15 @@ resource "aws_security_group" "ec2_sg_admin_ports" {
     content {
       protocol    = "tcp"
       description = ingress.key
-      from_port   = ingress.value
-      to_port     = length(split(ingress.value, ":")) > 1 ? split(ingress.value)[1] : ingress.value
+      from_port   = tonumber(split(":", ingress.value)[0])
+      to_port     = length(split(":", ingress.value)) > 1 ? tonumber(split(":", ingress.value)[1]) : tonumber(ingress.value)
       cidr_blocks = local.default_cidr
     }
   }
 }
 
 resource "aws_security_group" "ec2_sg_app_ports" {
-  name        = "${var.name_prefix}SecurityGroupForAppPorts"
+  name_prefix = "${var.name_prefix}SecurityGroupForAppPorts"
   description = "allow app traffic on whitelisted ports"
   vpc_id      = var.vpc_id
   tags        = { project = local.project_shortname }
@@ -59,15 +59,15 @@ resource "aws_security_group" "ec2_sg_app_ports" {
     content {
       protocol    = "tcp"
       description = ingress.key
-      from_port   = ingress.value
-      to_port     = length(split(ingress.value, ":")) > 1 ? split(ingress.value)[1] : ingress.value
+      from_port   = tonumber(split(":", ingress.value)[0])
+      to_port     = length(split(":", ingress.value)) > 1 ? tonumber(split(":", ingress.value)[1]) : tonumber(ingress.value)
       cidr_blocks = local.default_cidr
     }
   }
 }
 
 resource "aws_security_group" "ec2_sg_allow_outbound" {
-  name        = "${var.name_prefix}SecurityGroupForOutbound"
+  name_prefix = "${var.name_prefix}SecurityGroupForOutbound"
   description = "allow all outbound traffic"
   vpc_id      = var.vpc_id
   tags        = { project = local.project_shortname }
@@ -79,17 +79,18 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
   }
 }
 
-resource "aws_key_pair" "mykey" {
-  key_name   = "${var.name_prefix}ec2-keypair"
-  public_key = file(local.ssh_public_key_filepath)
-}
+# resource "aws_key_pair" "mykey" {
+#   key_name   = "${var.name_prefix}ec2-keypair"
+#   public_key = file(local.ssh_public_key_filepath)
+# }
 
 resource "aws_instance" "ec2_instance" {
   count                   = var.num_instances
   ami                     = data.aws_ami.ec2_ami.id
-  instance_type           = var.ec2_instance_type
-  key_name                = aws_key_pair.mykey.key_name
-  subnet_id               = var.subnet_ids[0]
+  instance_type           = var.instance_type
+  # key_name                = aws_key_pair.mykey.key_name
+  key_name                = var.ssh_key_name
+  subnet_id               = var.subnet_id
   user_data               = var.is_windows ? local.userdata_win : local.userdata_lin
   get_password_data       = var.is_windows
   ebs_optimized           = true
@@ -106,7 +107,7 @@ resource "aws_instance" "ec2_instance" {
   ]
   root_block_device {
     volume_type = "gp2"
-    volume_size = var.ec2_instance_storage_gb
+    volume_size = var.instance_storage_gb
     encrypted   = true
   }
   lifecycle {
@@ -126,10 +127,10 @@ echo "" > ___BOOSTSTRAP_STARTED_
 export PROJECT=${local.project_shortname}
 ${var.use_https == false ? "" : "export HTTPS_DOMAIN=${var.https_domain}"}
 ${join("\n",
-  [for x in local.file_resources :
-    substr(var.registration_file, 0, 4) == "http"
-    ? "curl ${split(x, ":")[0]} > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
-    : "echo ${base64encode(file("${path.module}/${split(x, ":")[0]}"))} | base64 --decode > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
+  [for x in var.file_resources :
+    substr(x, 0, 4) == "http"
+    ? "curl ${split(":", x)[0]} > ${length(split(":", x)) == 1 ? basename(x) : split(":", x)[1]}"
+    : "echo ${base64encode(file("${path.module}/${split(":", x)[0]}"))} | base64 --decode > ${length(split(":", x)) == 1 ? basename(x) : split(":", x)[1]}"
   ]
 )}
 echo "" > __BOOTSTRAP_COMPLETE_
@@ -152,16 +153,16 @@ mkdir %HOMEDIR% 2> NUL
 cd %HOMEDIR%
 echo "" > ___BOOSTSTRAP_STARTED_
 ${join("\n",
-  [for x in local.file_resources :
-    substr(var.registration_file, 0, 4) == "http"
-    ? "curl ${var.registration_file} > ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]}"
-    : "echo ${base64encode(file("${path.module}/${x}"))} > ${basename(x)}.b64 && certutil -decode ${basename(x)}.b64 ${length(split(x, ":")) == 1 ? basename(x) : split(x, ":")[1]} & del ${basename(x)}.b64"
+  [for x in var.file_resources :
+    substr(x, 0, 4) == "http"
+    ? "curl ${x} > ${length(split(":", x)) == 1 ? basename(x) : split(":", x)[1]}"
+    : "echo ${base64encode(file("${path.module}/${x}"))} > ${basename(x)}.b64 && certutil -decode ${basename(x)}.b64 ${length(split(":", x)) == 1 ? basename(x) : split(":", x)[1]} & del ${basename(x)}.b64"
   ]
 )}
 dism.exe /online /import-defaultappassociations:defaultapps.xml
 echo "" > __BOOTSTRAP_COMPLETE_
 echo "" > __USERDATA_SCRIPT_STARTED_
-${file("${path.module}/resources/win/userdata_win.bat")}
+userdata_win.bat
 cd %HOMEDIR%
 echo "" > _USERDATA_SCRIPT_COMPLETE_
 </script>

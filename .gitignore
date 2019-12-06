@@ -6,6 +6,11 @@
 !**/secrets/*sample*
 !**/secrets/*template*
 
+**/.secrets/**
+!**/.secrets/*.md
+!**/.secrets/*sample*
+!**/.secrets/*template*
+
 # .tfstate files
 *.tfstate
 *.tfstate.*

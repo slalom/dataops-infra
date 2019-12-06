@@ -1,13 +1,10 @@
 data "aws_availability_zones" "myAZs" {}
-data "http" "icanhazip" {
-  url = "http://icanhazip.com"
-}
-locals { project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1) }
-locals {
+data "http" "icanhazip" { url = "http://icanhazip.com" }
+
+locals { 
+  project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
   my_ip      = "${chomp(data.http.icanhazip.body)}"
   my_ip_cidr = "${chomp(data.http.icanhazip.body)}/32"
-}
-locals {
   admin_cidr = flatten([local.my_ip_cidr, var.admin_cidr])
 }
 resource "aws_eip" "myEIP" {
