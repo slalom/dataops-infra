@@ -51,8 +51,12 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Install Samples 01,02'
         run: |
-          cp samples/aws/01*.tf .
-          cp samples/aws/02*.tf .
+          set -v
+          pwd
+          ls -la ./samples/aws/*.tf
+          cp ./samples/aws/01*.tf .
+          cp ./samples/aws/02*.tf .
+          ls -la ./*.tf
       - name: 'Terraform Init'
         uses: hashicorp/terraform-github-actions@master
         with:
