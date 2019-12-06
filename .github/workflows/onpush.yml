@@ -14,15 +14,15 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7]
+        # python-version: [3.7]
         sample-id: ["01", "02"]
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
+      # - name: Set up Python ${{ matrix.python-version }}
+      #   uses: actions/setup-python@v1
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
       # - name: Install slalom dataops library
       #   run: |
       #     pip install tqdm
@@ -43,13 +43,6 @@ jobs:
       # - name: Terraform destroy
       #   run: |
       #     terraform destroy -auto-approve
-      # - name: 'Terraform Format'
-      #   uses: hashicorp/terraform-github-actions@master
-      #   with:
-      #     tf_actions_version: 0.12.13
-      #     tf_actions_subcommand: 'fmt'
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Install Samples (${{ matrix.sample-id }})'
         run: |
           set -v
@@ -58,6 +51,14 @@ jobs:
           cp ./samples/aws/00*.tf .
           cp ./samples/aws/${{ matrix.sample-id }}*.tf .
           ls -la ./*.tf
+      - name: 'Terraform Format (Sample #${{ matrix.sample-id }})'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Terraform Init (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
