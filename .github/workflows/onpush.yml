@@ -49,6 +49,10 @@ jobs:
       #     tf_actions_subcommand: 'fmt'
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Install Samples 01,02'
+        run: |
+          cp samples/aws/01*.tf .
+          cp samples/aws/02*.tf .
       - name: 'Terraform Init'
         uses: hashicorp/terraform-github-actions@master
         with:
