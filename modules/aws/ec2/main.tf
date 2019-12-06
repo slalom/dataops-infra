@@ -33,7 +33,7 @@ data "aws_ami" "ec2_ami" {
 }
 
 resource "aws_security_group" "ec2_sg_admin_ports" {
-  name        = "${var.name_prefix}SecurityGroupForAdminPorts"
+  name_prefix = "${var.name_prefix}SecurityGroupForAdminPorts"
   description = "allow admin traffic from whitelisted IPs"
   vpc_id      = var.vpc_id
   tags        = { project = local.project_shortname }
