@@ -10,7 +10,6 @@ output "windows_instance_password" {
     length(aws_instance.ec2_instance) == 0 ? "n/a" :
     length(aws_instance.ec2_instance[0].password_data) == 0 ? "n/a" :
     fileexists(var.ssh_private_key_filepath) == false ? "n/a" :
-    rsadecrypt(aws_instance.ec2_instance[0].password_data,
-               file(var.ssh_private_key_filepath))
+    rsadecrypt(aws_instance.ec2_instance[0].password_data, file(var.ssh_private_key_filepath))
   )
 }

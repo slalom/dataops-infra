@@ -1,4 +1,4 @@
 # This config file is created by 'aws-prerun' terraform scripts.
 # Please reference this file in future terraform deployments.
-aws_region: us-east-2
+aws_region: us-west-2
 project_shortname: MyTest2

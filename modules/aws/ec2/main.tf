@@ -88,7 +88,6 @@ resource "aws_instance" "ec2_instance" {
   count                   = var.num_instances
   ami                     = data.aws_ami.ec2_ami.id
   instance_type           = var.instance_type
-  # key_name                = aws_key_pair.mykey.key_name
   key_name                = var.ssh_key_name
   subnet_id               = var.subnet_id
   user_data               = var.is_windows ? local.userdata_win : local.userdata_lin

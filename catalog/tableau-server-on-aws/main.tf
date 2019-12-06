@@ -40,19 +40,19 @@ module "tableau_vpc" {
 }
 
 module "windows_tableau_server" {
-  source                   = "../../modules/aws/ec2"
-  name_prefix              = var.name_prefix
-  aws_region               = var.aws_region
-  num_instances            = var.num_windows_instances
-  instance_type            = var.ec2_instance_type
-  instance_storage_gb      = var.ec2_instance_storage_gb
-  ami_owner                = "amazon" # Canonical
-  ami_name_filter          = "Windows_Server-2016-English-Full-Base-*"
-  admin_ports              = merge(local.tableau_admin_ports, { "RDP" : 3389 })
-  app_ports                = local.tableau_app_ports
-  vpc_id                   = module.tableau_vpc.vpc_id
-  subnet_id                = module.tableau_vpc.private_subnet_ids[0]
-  is_windows               = true
+  source              = "../../modules/aws/ec2"
+  name_prefix         = var.name_prefix
+  aws_region          = var.aws_region
+  num_instances       = var.num_windows_instances
+  instance_type       = var.ec2_instance_type
+  instance_storage_gb = var.ec2_instance_storage_gb
+  ami_owner           = "amazon" # Canonical
+  ami_name_filter     = "Windows_Server-2016-English-Full-Base-*"
+  admin_ports         = merge(local.tableau_admin_ports, { "RDP" : 3389 })
+  app_ports           = local.tableau_app_ports
+  vpc_id              = module.tableau_vpc.vpc_id
+  subnet_id           = module.tableau_vpc.private_subnet_ids[0]
+  is_windows          = true
   # ssh_public_key_filepath  = local.ssh_public_key_filepath
   # ssh_private_key_filepath = local.ssh_private_key_filepath
   ssh_key_name             = aws_key_pair.mykey.key_name
@@ -60,18 +60,18 @@ module "windows_tableau_server" {
 }
 
 module "linux_tableau_server" {
-  source                   = "../../modules/aws/ec2"
-  name_prefix              = var.name_prefix
-  aws_region               = var.aws_region
-  num_instances            = var.num_linux_instances
-  instance_type            = var.ec2_instance_type
-  instance_storage_gb      = var.ec2_instance_storage_gb
-  ami_owner                = "099720109477" # Canonical
-  ami_name_filter          = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
-  admin_ports              = merge(local.tableau_admin_ports, { "SSH" : 22 })
-  app_ports                = local.tableau_app_ports
-  vpc_id                   = module.tableau_vpc.vpc_id
-  subnet_id                = module.tableau_vpc.private_subnet_ids[0]
+  source              = "../../modules/aws/ec2"
+  name_prefix         = var.name_prefix
+  aws_region          = var.aws_region
+  num_instances       = var.num_linux_instances
+  instance_type       = var.ec2_instance_type
+  instance_storage_gb = var.ec2_instance_storage_gb
+  ami_owner           = "099720109477" # Canonical
+  ami_name_filter     = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
+  admin_ports         = merge(local.tableau_admin_ports, { "SSH" : 22 })
+  app_ports           = local.tableau_app_ports
+  vpc_id              = module.tableau_vpc.vpc_id
+  subnet_id           = module.tableau_vpc.private_subnet_ids[0]
   # ssh_public_key_filepath  = local.ssh_public_key_filepath
   # ssh_private_key_filepath = local.ssh_private_key_filepath
   ssh_key_name             = aws_key_pair.mykey.key_name

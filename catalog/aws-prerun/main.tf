@@ -3,7 +3,7 @@ data "aws_caller_identity" "current" {}
 output "aws_account" { value = data.aws_caller_identity.current.account_id }
 output "aws_region" { value = var.aws_region }
 # output "aws_secrets_manager" { value = "arn:aws:secretsmanager:${local.aws_region}:${local.aws_account}:secret:${local.aws_secret_name_prefix}" }
-locals { 
+locals {
   name_prefix = "${var.project_shortname}-"
 }
 
@@ -34,7 +34,7 @@ resource "local_file" "ssh_installed_private_key_path" {
 
 resource "local_file" "config_yml" {
   filename = "${path.module}/../../config.yml"
-  content = <<EOF
+  content  = <<EOF
 # This config file is created by 'aws-prerun' terraform scripts.
 # Please reference this file in future terraform deployments.
 aws_region: ${var.aws_region}
