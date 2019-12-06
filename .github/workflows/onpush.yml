@@ -24,6 +24,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install slalom dataops library
         run: |
+          pip install tqdm
           pip install slalom.dataops
       - name: Install terraform
         run: |
