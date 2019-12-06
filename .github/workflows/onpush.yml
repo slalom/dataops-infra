@@ -26,26 +26,29 @@ jobs:
         run: |
           pip install tqdm
           pip install slalom.dataops
-      - name: Install terraform
-        run: |
-          python -m slalom.dataops.infra check_installs terraform --install_if_missing
-      - name: Terraform init and plan
-        run: |
-          terraform init
-          terraform plan
-      - name: Terraform apply
-        run: |
-          terraform apply -auto-approve
-      - name: Terraform destroy
-        run: |
-          terraform destroy -auto-approve
-      - name: 'Terraform Format'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Install terraform
+      #   run: |
+      #     python -m slalom.dataops.env check_installs terraform --install_if_missing
+      # - name: Test terraform
+      #   run: |
+      #     python -m slalom.dataops.infra 
+      # - name: Terraform init and plan
+      #   run: |
+      #     terraform init
+      #     terraform plan
+      # - name: Terraform apply
+      #   run: |
+      #     terraform apply -auto-approve
+      # - name: Terraform destroy
+      #   run: |
+      #     terraform destroy -auto-approve
+      # - name: 'Terraform Format'
+      #   uses: hashicorp/terraform-github-actions@master
+      #   with:
+      #     tf_actions_version: 0.12.13
+      #     tf_actions_subcommand: 'fmt'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Terraform Init'
         uses: hashicorp/terraform-github-actions@master
         with:
