@@ -7,9 +7,9 @@
 #   }
 # }
 
-variable "project_shortname" { type = "string" }
-variable "admin_email" { type = "string" }
-variable "admin_name" { type = "string" }
+variable "project_shortname" { default = "Test Project" }
+variable "admin_email" { default = "test-user@noreply.com" }
+variable "admin_name" { default = "Test User (OK to Deletes)" }
 variable "resource_tags" { default = {} }
 variable "aws_region" { default = "us-east-2" }
 
