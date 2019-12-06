@@ -15,6 +15,7 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.7]
+        sample-id: ["01", "02"]
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
@@ -49,15 +50,15 @@ jobs:
       #     tf_actions_subcommand: 'fmt'
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Install Samples 01,02'
+      - name: 'Install Samples (${{ matrix.sample-id }})'
         run: |
           set -v
           pwd
           ls -la ./samples/aws/*.tf
-          cp ./samples/aws/01*.tf .
-          cp ./samples/aws/02*.tf .
+          cp ./samples/aws/00*.tf .
+          cp ./samples/aws/${{ matrix.sample-id }}*.tf .
           ls -la ./*.tf
-      - name: 'Terraform Init'
+      - name: 'Terraform Init (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
@@ -68,7 +69,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_CLI_ARGS_backend: false
-      - name: 'Terraform Validate'
+      - name: 'Terraform Validate (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
@@ -79,7 +80,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_CLI_ARGS_backend: false
-      - name: 'Terraform Plan'
+      - name: 'Terraform Plan (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
