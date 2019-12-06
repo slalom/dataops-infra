@@ -1,5 +1,5 @@
 variable "name_prefix" {}
-variable "region" { description = "AWS region" }
+variable "aws_region" { description = "AWS region" }
 variable "aws_secrets_manager" { type = "string" }
 variable "container_name" { default = "DefaultContainer" }
 variable "container_image" {

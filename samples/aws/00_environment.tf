@@ -7,16 +7,14 @@
 #   }
 # }
 
-variable "project_shortname" { default = "Test Project" }
+variable "project_shortname" { default = "TestProject" }
 variable "admin_email" { default = "test-user@noreply.com" }
-variable "admin_name" { default = "Test User (OK to Deletes)" }
+variable "admin_name" { default = "Test User (OK to Delete)" }
 variable "resource_tags" { default = {} }
 variable "aws_region" { default = "us-east-2" }
 
 data "aws_caller_identity" "current" {}
 data "aws_availability_zones" "my_AZs" {}
-# data "local_file" "config_yml" { filename = "config.yml" }
-# locals { config = yamldecode(data.local_file.config_yml.content) }
 
 provider "aws" {
   region  = var.aws_region

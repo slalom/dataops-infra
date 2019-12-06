@@ -1,5 +1,5 @@
 variable "name_prefix" {}
-variable "region" { description = "AWS region" }
+variable "aws_region" { description = "AWS region" }
 variable "ec2_instance_type" { type = "string" }
 variable "ec2_instance_storage_gb" { default = 100 }
 variable "num_instances" { default = 1 }
