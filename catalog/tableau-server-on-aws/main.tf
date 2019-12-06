@@ -35,7 +35,7 @@ locals {
 }
 
 module "win_ec2_instances" {
-  source                   = "../../../modules/aws/ec2"
+  source                   = "../../modules/aws/ec2"
   num_instances            = var.num_windows_instances
   instance_type            = var.ec2_instance_type
   ami_owner                = "amazon" # Canonical
@@ -51,7 +51,7 @@ module "win_ec2_instances" {
 }
 
 module "lin_ec2_instances" {
-  source                   = "../../../modules/aws/ec2"
+  source                   = "../../modules/aws/ec2"
   num_instances            = var.num_linux_instances
   instance_type            = var.ec2_instance_type
   ami_owner                = "099720109477" # Canonical
