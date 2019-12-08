@@ -9,6 +9,20 @@ on:
       - "*.md"
 
 jobs:
+  terraform_linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone git repo
+        uses: actions/checkout@v1
+      - name: 'Terraform Linter Check (Formatting)'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: fmt
+          tf_actions_working_dir: ./samples/aws
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   simple_terraform_test:
     runs-on: ubuntu-latest
     strategy:
@@ -51,14 +65,6 @@ jobs:
           cp ./samples/aws/00*.tf .
           cp ./samples/aws/${{ matrix.sample-id }}*.tf .
           ls -la ./*.tf
-      - name: 'Terraform Format (Sample #${{ matrix.sample-id }})'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: fmt
-          tf_actions_working_dir: ./samples/aws
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Terraform Init (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
