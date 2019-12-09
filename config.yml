@@ -2,3 +2,6 @@
 # Please reference this file in future terraform deployments.
 aws_region: us-west-2
 project_shortname: MyTest2
+project_description: My Test Project
+project_tags:
+  admin_contact: aj.steers@slalom.com

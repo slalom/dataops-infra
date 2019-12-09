@@ -1,0 +1,3 @@
+output "summary" {
+  value = ""
+}

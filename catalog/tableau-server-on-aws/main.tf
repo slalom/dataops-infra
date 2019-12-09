@@ -39,7 +39,7 @@ module "tableau_vpc" {
   name_prefix = var.name_prefix
 }
 
-module "windows_tableau_server" {
+module "windows_tableau_servers" {
   source              = "../../modules/aws/ec2"
   name_prefix         = var.name_prefix
   aws_region          = var.aws_region
@@ -51,7 +51,7 @@ module "windows_tableau_server" {
   admin_ports         = merge(local.tableau_admin_ports, { "RDP" : 3389 })
   app_ports           = local.tableau_app_ports
   vpc_id              = module.tableau_vpc.vpc_id
-  subnet_id           = module.tableau_vpc.private_subnet_ids[0]
+  subnet_id           = coalescelist(module.tableau_vpc.private_subnet_ids, [""])[0]
   is_windows          = true
   # ssh_public_key_filepath  = local.ssh_public_key_filepath
   # ssh_private_key_filepath = local.ssh_private_key_filepath
@@ -59,7 +59,7 @@ module "windows_tableau_server" {
   ssh_private_key_filepath = local.ssh_private_key_filepath
 }
 
-module "linux_tableau_server" {
+module "linux_tableau_servers" {
   source              = "../../modules/aws/ec2"
   name_prefix         = var.name_prefix
   aws_region          = var.aws_region
@@ -71,7 +71,7 @@ module "linux_tableau_server" {
   admin_ports         = merge(local.tableau_admin_ports, { "SSH" : 22 })
   app_ports           = local.tableau_app_ports
   vpc_id              = module.tableau_vpc.vpc_id
-  subnet_id           = module.tableau_vpc.private_subnet_ids[0]
+  subnet_id           = coalescelist(module.tableau_vpc.private_subnet_ids, [""])[0]
   # ssh_public_key_filepath  = local.ssh_public_key_filepath
   # ssh_private_key_filepath = local.ssh_private_key_filepath
   ssh_key_name             = aws_key_pair.mykey.key_name

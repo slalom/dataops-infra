@@ -1,5 +1,19 @@
 data "aws_availability_zones" "myAZs" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
+# TODO: Detect EC2 Pricing
+# data "http" "ec2_base_pricing_js" { 
+#   url = "http://a0.awsstatic.com/pricing/1/ec2/linux-od.min.js"
+#   request_headers = {
+#     "Accept" = "application/javascript"
+#   }
+# }
+# resource "null_resource" "ec2_base_pricing_js" { 
+#   provisioner "local-exec" {
+#     command = "curl http://aws.amazon.com/ec2/pricing/"
+#     # curl http://aws.amazon.com/ec2/pricing/ 2>/dev/null | grep 'model:' | sed -e "s/.*'\(.*\)'.*/http:\\1/"
+#   }
+# }
+
 
 locals {
   project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
@@ -10,6 +24,16 @@ locals {
   ssh_key_dir              = pathexpand("~/.ssh")
   ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
   ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
+  pricing_regex            = chomp(
+<<EOF
+${var.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"
+EOF
+)
+  # TODO: Detect EC2 Pricing
+  # price_per_instance_hr    = (
+  #   length(regexall(local.pricing_regex, data.http.ec2_base_pricing_js)) == 0 ? "n/a" : 
+  #   regex(local.pricing_regex, data.http.ec2_base_pricing_js)[0]
+  # )
   chocolatey_install_win   = <<EOF
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 EOF
@@ -84,7 +108,7 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
 #   public_key = file(local.ssh_public_key_filepath)
 # }
 
-resource "aws_instance" "ec2_instance" {
+resource "aws_instance" "ec2_instances" {
   count                   = var.num_instances
   ami                     = data.aws_ami.ec2_ami.id
   instance_type           = var.instance_type

@@ -9,3 +9,5 @@ module "tableau_server_on_aws" {
   # default_cidr          = ["0.0.0.0/0"]
   # ec2_instance_type     = "m4.4xlarge"
 }
+
+output "summmary" { value = module.tableau_server_on_aws.summary }
