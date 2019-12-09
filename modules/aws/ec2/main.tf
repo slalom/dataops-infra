@@ -24,17 +24,17 @@ locals {
   ssh_key_dir              = pathexpand("~/.ssh")
   ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
   ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
-  pricing_regex            = chomp(
-<<EOF
+  pricing_regex = chomp(
+    <<EOF
 ${var.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"
 EOF
-)
+  )
   # TODO: Detect EC2 Pricing
   # price_per_instance_hr    = (
   #   length(regexall(local.pricing_regex, data.http.ec2_base_pricing_js)) == 0 ? "n/a" : 
   #   regex(local.pricing_regex, data.http.ec2_base_pricing_js)[0]
   # )
-  chocolatey_install_win   = <<EOF
+  chocolatey_install_win = <<EOF
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 EOF
 }
@@ -109,16 +109,17 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
 # }
 
 resource "aws_instance" "ec2_instances" {
-  count                   = var.num_instances
-  ami                     = data.aws_ami.ec2_ami.id
-  instance_type           = var.instance_type
-  key_name                = var.ssh_key_name
-  subnet_id               = var.subnet_id
-  user_data               = var.is_windows ? local.userdata_win : local.userdata_lin
-  get_password_data       = var.is_windows
-  ebs_optimized           = true
-  monitoring              = true
-  disable_api_termination = false
+  count                       = var.num_instances
+  ami                         = data.aws_ami.ec2_ami.id
+  instance_type               = var.instance_type
+  key_name                    = var.ssh_key_name
+  subnet_id                   = var.subnet_id
+  user_data                   = var.is_windows ? local.userdata_win : local.userdata_lin
+  get_password_data           = var.is_windows
+  associate_public_ip_address = true
+  ebs_optimized               = true
+  monitoring                  = true
+  disable_api_termination     = false
   tags = {
     name    = "${var.name_prefix}TableauServer-Linux"
     project = local.project_shortname
@@ -134,7 +135,8 @@ resource "aws_instance" "ec2_instances" {
     encrypted   = true
   }
   lifecycle {
-    create_before_destroy = true
+    # TODO: revert to: create_before_destroy = true (blocked by cpu limit)
+    create_before_destroy = false
     ignore_changes        = [tags]
   }
 }
