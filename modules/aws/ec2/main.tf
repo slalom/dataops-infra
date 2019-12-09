@@ -68,7 +68,7 @@ resource "aws_security_group" "ec2_sg_admin_ports" {
       description = ingress.key
       from_port   = tonumber(split(":", ingress.value)[0])
       to_port     = length(split(":", ingress.value)) > 1 ? tonumber(split(":", ingress.value)[1]) : tonumber(ingress.value)
-      cidr_blocks = local.default_cidr
+      cidr_blocks = local.admin_cidr
     }
   }
 }
