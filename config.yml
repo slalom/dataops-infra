@@ -1,7 +1,6 @@
 # This config file is created by 'aws-prerun' terraform scripts.
 # Please reference this file in future terraform deployments.
-aws_region: us-west-2
-project_shortname: MyTest2
-project_description: My Test Project
+aws_region: us-east-2
+project_shortname: MyTest
 project_tags:
-  admin_contact: aj.steers@slalom.com
+  admin_contact: admin.email@noreply.com

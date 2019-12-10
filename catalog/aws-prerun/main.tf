@@ -17,19 +17,13 @@ module "ssh_key_pair" {
   namespace             = "${var.project_shortname}"
   stage                 = "prod"
   name                  = "ec2_keypair"
-  ssh_public_key_path   = "../../.secrets"
+  ssh_public_key_path   = abspath("../../.secrets")
   private_key_extension = ".pem"
   public_key_extension  = ".pub"
   generate_ssh_key      = true
   chmod_command = ( # chmod only on linux (ignore on windows)
     substr(pathexpand("~"), 1, 1) == "/" ? "chmod 600 %v" : ""
   )
-}
-
-resource "local_file" "ssh_installed_private_key_path" {
-  filename   = "${pathexpand("~/.ssh")}/${basename(module.ssh_key_pair.private_key_filename)}"
-  content    = fileexists(module.ssh_key_pair.private_key_filename) ? file(module.ssh_key_pair.private_key_filename) : "n/a"
-  depends_on = [module.ssh_key_pair]
 }
 
 resource "local_file" "config_yml" {
@@ -39,12 +33,20 @@ resource "local_file" "config_yml" {
 # Please reference this file in future terraform deployments.
 aws_region: ${var.aws_region}
 project_shortname: ${var.project_shortname}
+project_tags:
+  admin_contact: admin.email@noreply.com
 EOF
+}
+
+resource "local_file" "ssh_installed_private_key_path" {
+  filename   = "${pathexpand("~/.ssh")}/${basename(module.ssh_key_pair.private_key_filename)}"
+  content    = length(module.ssh_key_pair.public_key) >= 0 ? file(module.ssh_key_pair.private_key_filename) : file(module.ssh_key_pair.private_key_filename)
+  depends_on = [module.ssh_key_pair]
 }
 
 resource "local_file" "ssh_installed_public_key_path" {
   filename   = "${pathexpand("~/.ssh")}/${basename(module.ssh_key_pair.public_key_filename)}"
-  content    = fileexists(module.ssh_key_pair.public_key_filename) ? file(module.ssh_key_pair.public_key_filename) : "n/a"
+  content    = module.ssh_key_pair.public_key
   depends_on = [module.ssh_key_pair]
 }
 
@@ -83,7 +85,7 @@ resource "random_id" "suffix" {
 }
 
 resource "aws_s3_bucket" "s3_metadata_bucket" {
-  bucket = "${lower(var.project_shortname)}-project-metadata-${random_id.suffix.hex}"
+  bucket = "${lower(var.project_shortname)}-project-data-${random_id.suffix.hex}"
   acl    = "private"
   tags   = { project = var.project_shortname }
   server_side_encryption_configuration {
