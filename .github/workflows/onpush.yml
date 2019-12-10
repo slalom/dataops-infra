@@ -33,30 +33,10 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      # - name: Set up Python ${{ matrix.python-version }}
-      #   uses: actions/setup-python@v1
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-      # - name: Install slalom dataops library
-      #   run: |
-      #     pip install tqdm
-      #     pip install slalom.dataops
-      # - name: Install terraform
-      #   run: |
-      #     python -m slalom.dataops.env check_installs terraform --install_if_missing
-      # - name: Test terraform
-      #   run: |
-      #     python -m slalom.dataops.infra 
-      # - name: Terraform init and plan
-      #   run: |
-      #     terraform init
-      #     terraform plan
-      # - name: Terraform apply
-      #   run: |
-      #     terraform apply -auto-approve
-      # - name: Terraform destroy
-      #   run: |
-      #     terraform destroy -auto-approve
+      - name: Setup Terraform
+        uses: actions/setup-terraform
+        with:
+          terraform-version: 0.12.13
       - name: 'Terraform Init (Prerun)'
         uses: hashicorp/terraform-github-actions@master
         with:
