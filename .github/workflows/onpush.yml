@@ -33,26 +33,26 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      - name: Setup Terraform
-        env:
-          tfVersion: 0.12.13
-        run: |
-          url="https://releases.hashicorp.com/terraform/${tfVersion}/terraform_${tfVersion}_linux_amd64.zip"
-          sudo apt-get install unzip
-          echo "Downloading Terraform v${tfVersion}"
-          curl -s -S -L -o /tmp/terraform_${tfVersion} ${url}
-          if [ "${?}" -ne 0 ]; then
-            echo "Failed to download Terraform v${tfVersion}"
-            exit 1
-          fi
-          echo "Successfully downloaded Terraform v${tfVersion}"
-          echo "Unzipping Terraform v${tfVersion}"
-          unzip -d /usr/local/bin /tmp/terraform_${tfVersion}
-          if [ "${?}" -ne 0 ]; then
-            echo "Failed to unzip Terraform v${tfVersion}"
-            exit 1
-          fi
-          echo "Successfully unzipped Terraform v${tfVersion}"
+      # - name: Setup Terraform
+      #   env:
+      #     tfVersion: 0.12.13
+      #   run: |
+      #     url="https://releases.hashicorp.com/terraform/${tfVersion}/terraform_${tfVersion}_linux_amd64.zip"
+      #     sudo apt-get install unzip
+      #     echo "Downloading Terraform v${tfVersion}"
+      #     curl -s -S -L -o /tmp/terraform_${tfVersion} ${url}
+      #     if [ "${?}" -ne 0 ]; then
+      #       echo "Failed to download Terraform v${tfVersion}"
+      #       exit 1
+      #     fi
+      #     echo "Successfully downloaded Terraform v${tfVersion}"
+      #     echo "Unzipping Terraform v${tfVersion}"
+      #     unzip -d /usr/local/bin /tmp/terraform_${tfVersion}
+      #     if [ "${?}" -ne 0 ]; then
+      #       echo "Failed to unzip Terraform v${tfVersion}"
+      #       exit 1
+      #     fi
+      #     echo "Successfully unzipped Terraform v${tfVersion}"
       - name: 'Terraform Init (Prerun)'
         uses: hashicorp/terraform-github-actions@master
         with:
