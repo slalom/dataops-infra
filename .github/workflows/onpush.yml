@@ -114,7 +114,7 @@ jobs:
           TF_CLI_ARGS_backend: false
       - name: 'Terraform Destroy (Prerun)'
         if: always()
-        run:
+        run: |
           cd ./catalog/aws-prerun
           terraform destroy
         #   uses: docker://hashicorp/terraform:0.12.11
