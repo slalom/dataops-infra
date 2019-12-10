@@ -7,12 +7,14 @@ locals {
   my_ip_cidr        = "${chomp(data.http.icanhazip.body)}/32"
   admin_cidr        = flatten([local.my_ip_cidr, var.admin_cidr])
 }
+
 resource "aws_eip" "myEIP" {
   tags = {
     Name    = "${var.name_prefix}EIP"
     project = local.project_shortname
   }
 }
+
 resource "aws_vpc" "myVPC" {
   cidr_block = "10.0.0.0/16"
   tags = {
@@ -21,7 +23,7 @@ resource "aws_vpc" "myVPC" {
   }
 }
 
-resource "aws_subnet" "myPublicSubnets" {
+resource "aws_subnet" "public_subnets" {
   count = 2
 
   availability_zone       = "${data.aws_availability_zones.myAZs.names[count.index]}"
@@ -34,7 +36,7 @@ resource "aws_subnet" "myPublicSubnets" {
   }
 }
 
-resource "aws_subnet" "myPrivateSubnets" {
+resource "aws_subnet" "private_subnets" {
   count = 2
 
   availability_zone = "${data.aws_availability_zones.myAZs.names[count.index]}"
@@ -56,7 +58,7 @@ resource "aws_internet_gateway" "myIGW" {
 
 resource "aws_nat_gateway" "myNATGateway" {
   allocation_id = "${aws_eip.myEIP.id}"
-  subnet_id     = "${aws_subnet.myPublicSubnets.0.id}"
+  subnet_id     = "${aws_subnet.public_subnets.0.id}"
   tags = {
     Name    = "${var.name_prefix}NAT"
     project = local.project_shortname
@@ -74,7 +76,7 @@ resource "aws_route_table" "myPublicRT" {
 resource "aws_route_table_association" "myPublicRTAssoc" {
   count          = 2
   route_table_id = "${aws_route_table.myPublicRT.id}"
-  subnet_id      = "${aws_subnet.myPublicSubnets.*.id[count.index]}"
+  subnet_id      = "${aws_subnet.public_subnets.*.id[count.index]}"
 }
 
 resource "aws_route" "myIGWRoute" {
@@ -83,18 +85,18 @@ resource "aws_route" "myIGWRoute" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
+resource "aws_route_table_association" "myPrivateRTAssoc" {
+  count          = 2
+  route_table_id = "${aws_route_table.myPrivateRT.id}"
+  subnet_id      = "${aws_subnet.private_subnets.*.id[count.index]}"
+}
+
 resource "aws_route_table" "myPrivateRT" {
   vpc_id = "${aws_vpc.myVPC.id}"
   tags = {
     Name    = "${var.name_prefix}PrivateRT"
     project = local.project_shortname
   }
-}
-
-resource "aws_route_table_association" "myPrivateRTAssoc" {
-  count          = 2
-  route_table_id = "${aws_route_table.myPrivateRT.id}"
-  subnet_id      = "${aws_subnet.myPrivateSubnets.*.id[count.index]}"
 }
 
 resource "aws_route" "myNATRoute" {
