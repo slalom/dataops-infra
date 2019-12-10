@@ -52,8 +52,6 @@ jobs:
             exit 1
           fi
           echo "Successfully unzipped Terraform v${tfVersion}"
-        with:
-          terraform-version: 0.12.13
       - name: 'Terraform Init (Prerun)'
         uses: hashicorp/terraform-github-actions@master
         with:
