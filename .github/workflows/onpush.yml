@@ -69,7 +69,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_CLI_ARGS_backend: false
           TF_VAR_aws_region: us-east-2
-          TF_VAR_project_shortname: CI-Test-1234
+          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
       - name: 'Terraform Apply (Prerun)'
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -82,7 +82,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_CLI_ARGS_backend: false
           TF_VAR_aws_region: us-east-2
-          TF_VAR_project_shortname: CI-Test-1234
+          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
       - name: 'Terraform Init (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
