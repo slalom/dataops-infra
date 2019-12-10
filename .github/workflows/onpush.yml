@@ -34,7 +34,24 @@ jobs:
       - name: Clone git repo
         uses: actions/checkout@v1
       - name: Setup Terraform
-        uses: actions/setup-terraform@v1
+        env:
+          tfVersion: 0.12.13
+        run: |
+          url="https://releases.hashicorp.com/terraform/${tfVersion}/terraform_${tfVersion}_linux_amd64.zip"
+          echo "Downloading Terraform v${tfVersion}"
+          curl -s -S -L -o /tmp/terraform_${tfVersion} ${url}
+          if [ "${?}" -ne 0 ]; then
+            echo "Failed to download Terraform v${tfVersion}"
+            exit 1
+          fi
+          echo "Successfully downloaded Terraform v${tfVersion}"
+          echo "Unzipping Terraform v${tfVersion}"
+          unzip -d /usr/local/bin /tmp/terraform_${tfVersion} &> /dev/null
+          if [ "${?}" -ne 0 ]; then
+            echo "Failed to unzip Terraform v${tfVersion}"
+            exit 1
+          fi
+          echo "Successfully unzipped Terraform v${tfVersion}"
         with:
           terraform-version: 0.12.13
       - name: 'Terraform Init (Prerun)'
@@ -97,15 +114,21 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_CLI_ARGS_backend: false
       - name: 'Terraform Destroy (Prerun)'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: destroy
-          tf_actions_working_dir: ./catalog/aws-prerun
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_WARN_OUTPUT_ERRORS: 1
-          TF_CLI_ARGS_backend: false
         if: always()
+        run:
+          cd ./catalog/aws-prerun
+          terraform destroy
+        #   uses: docker://hashicorp/terraform:0.12.11
+        # with:
+        #   entrypoint: terraform
+        #   args: destroy -auto-approve
+        # with:
+        #   tf_actions_version: 0.12.13
+        #   tf_actions_subcommand: destroy
+        #   tf_actions_working_dir: ./catalog/aws-prerun
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        #   TF_WARN_OUTPUT_ERRORS: 1
+        #   TF_CLI_ARGS_backend: false
