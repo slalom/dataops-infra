@@ -121,8 +121,7 @@ jobs:
           TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
         run: |
           cd ./catalog/aws-prerun
-          sudo -E echo $TF_VAR_aws_region
-          sudo -E terraform destroy
+          sudo -E terraform destroy -auto-approve
         #   uses: docker://hashicorp/terraform:0.12.11
         # with:
         #   entrypoint: terraform
