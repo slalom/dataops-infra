@@ -50,6 +50,15 @@ resource "local_file" "ssh_installed_public_key_path" {
   depends_on = [module.ssh_key_pair]
 }
 
+resource "local_file" "aws_credentials_file" {
+  filename   = "${abspath("../../.secrets")}/credentials"
+  depends_on = [aws_iam_user.automation_user]
+  content    = <<EOF
+aws_access_key_id=${aws_iam_access_key.automation_user_key.id}
+aws_secret_access_key=${aws_iam_access_key.automation_user_key.secret}
+EOF
+}
+
 resource "aws_iam_user" "automation_user" {
   name = "${var.project_shortname}-automation-user"
   tags = {
