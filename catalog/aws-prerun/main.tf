@@ -76,12 +76,12 @@ resource "aws_iam_user" "automation_user" {
 }
 
 resource "aws_iam_access_key" "automation_user_key" {
-  user = "${aws_iam_user.automation_user.name}"
+  user = aws_iam_user.automation_user.name
 }
 
 resource "aws_iam_user_policy" "automation_user_permissions" {
   name   = "${var.project_shortname}-automation-user-access"
-  user   = "${aws_iam_user.automation_user.name}"
+  user   = aws_iam_user.automation_user.name
   policy = <<EOF
 {
   "Version": "2012-10-17",
