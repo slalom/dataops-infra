@@ -12,6 +12,10 @@ provider "aws" {
   version = "~> 2.10"
 }
 
+resource "random_id" "suffix" {
+  byte_length = 2
+}
+
 module "ssh_key_pair" {
   source                = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
   namespace             = "${var.project_shortname}"
@@ -54,6 +58,11 @@ resource "local_file" "aws_credentials_file" {
   filename   = "${abspath("../../.secrets")}/credentials"
   depends_on = [aws_iam_user.automation_user]
   content    = <<EOF
+[default]
+aws_access_key_id=${aws_iam_access_key.automation_user_key.id}
+aws_secret_access_key=${aws_iam_access_key.automation_user_key.secret}
+
+[${aws_iam_access_key.automation_user_key.user}]
 aws_access_key_id=${aws_iam_access_key.automation_user_key.id}
 aws_secret_access_key=${aws_iam_access_key.automation_user_key.secret}
 EOF
@@ -87,10 +96,6 @@ resource "aws_iam_user_policy" "automation_user_permissions" {
   ]
 }
 EOF
-}
-
-resource "random_id" "suffix" {
-  byte_length = 2
 }
 
 resource "aws_s3_bucket" "s3_metadata_bucket" {
