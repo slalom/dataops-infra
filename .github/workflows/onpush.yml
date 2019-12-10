@@ -114,6 +114,9 @@ jobs:
           TF_CLI_ARGS_backend: false
       - name: 'Terraform Destroy (Prerun)'
         if: always()
+        env:
+          TF_VAR_aws_region: us-east-2
+          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
         run: |
           cd ./catalog/aws-prerun
           sudo terraform destroy
