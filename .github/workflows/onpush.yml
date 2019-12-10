@@ -34,7 +34,7 @@ jobs:
       - name: Clone git repo
         uses: actions/checkout@v1
       - name: Setup Terraform
-        uses: actions/setup-terraform
+        uses: actions/setup-terraform@v1
         with:
           terraform-version: 0.12.13
       - name: 'Terraform Init (Prerun)'
