@@ -38,7 +38,7 @@ jobs:
           tfVersion: 0.12.13
         run: |
           url="https://releases.hashicorp.com/terraform/${tfVersion}/terraform_${tfVersion}_linux_amd64.zip"
-          apt-get install unzip
+          sudo apt-get install unzip
           echo "Downloading Terraform v${tfVersion}"
           curl -s -S -L -o /tmp/terraform_${tfVersion} ${url}
           if [ "${?}" -ne 0 ]; then
