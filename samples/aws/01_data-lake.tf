@@ -1,5 +1,19 @@
 module "data_late_on_aws" {
   source      = "../../catalog/data-lake-on-aws"
-  name_prefix = "${local.project_shortname}-Tableau-"
-  aws_region  = local.aws_region
+  name_prefix           = local.name_prefix
+  aws_region            = local.aws_region
+
+  # CONFIGURE HERE:
+
+  num_linux_instances   = 1
+  num_windows_instances = 0
+
+  /*
+  # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
+
+  ec2_instance_type     = "p3.8xlarge"
+  ec2_instance_type     = "m4.4xlarge"
+  admin_cidr            = []
+  default_cidr          = ["0.0.0.0/0"]
+  */
 }
