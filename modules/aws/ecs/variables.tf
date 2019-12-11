@@ -31,7 +31,7 @@ variable "min_ec2_instances" { default = 0 }
 variable "max_ec2_instances" { default = 3 }
 variable "ec2_container_ram_gb" { default = "8" }
 variable "ec2_container_num_cores" { default = "4" }
-variable "ec2_instance_type" {}
+variable "ec2_instance_type" { default = "m4.xlarge" }
 variable "ecs_environment_secrets" {
   type        = "map"
   default     = {}
