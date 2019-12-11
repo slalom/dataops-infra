@@ -1,15 +1,15 @@
-variable "name_prefix" {}
-variable "region" { description = "AWS region" }
-variable "ec2_instance_type" { type = "string" }
+variable "name_prefix" { type = "string" }
+variable "aws_region" { description = "AWS region" }
+variable "ec2_instance_type" { default = "m4.4xlarge" }
 variable "ec2_instance_storage_gb" { default = 100 }
 variable "num_linux_instances" { default = 1 }
 variable "num_windows_instances" { default = 0 }
-variable "registration_file" { default = "secrets/registration.json" }
-variable "vpc_id" { type = "string" }
-variable "subnet_ids" { type = "list" }
+variable "registration_file" { default = "../../.secrets/registration.json" }
 variable "admin_cidr" { default = [] }
 variable "default_cidr" { default = ["0.0.0.0/0"] }
 variable "linux_use_https" { default = false }
 variable "linux_https_domain" { default = "" }
 variable "windows_use_https" { default = false }
 variable "windows_https_domain" { default = "" }
+# variable "vpc_id" { type = "string" }
+# variable "subnet_ids" { type = "list" }

@@ -1,10 +1,12 @@
 variable "name_prefix" {}
-variable "region" { description = "AWS region" }
-variable "ec2_instance_type" { type = "string" }
-variable "ec2_instance_storage_gb" { default = 100 }
+variable "aws_region" { description = "AWS region" }
+variable "ssh_key_name" { type = "string" }
+variable "ssh_private_key_filepath" { type = "string" }
+variable "instance_type" { type = "string" }
+variable "instance_storage_gb" { default = 100 }
 variable "num_instances" { default = 1 }
 variable "vpc_id" { type = "string" }
-variable "subnet_ids" { type = "list" }
+variable "subnet_id" { type = "string" }
 variable "default_cidr" { default = ["0.0.0.0/0"] }
 variable "admin_cidr" { default = [] }
 variable "use_https" { default = false }
@@ -13,15 +15,15 @@ variable "ami_owner" { default = "amazon" }
 variable "ami_name_filter" { type = "string" }
 variable "is_windows" { default = false }
 variable "admin_ports" {
-    type    = "map"
-    default = {}
+  type    = "map"
+  default = {}
 }
-variable "files" {
-    default = []
-    description = "List of files to needed on the instance (e.g. 'http://url/to/remote/file', '/path/to/local/file', '/path/to/local/file:renamed')"
+variable "file_resources" {
+  default     = []
+  description = "List of files to needed on the instance (e.g. 'http://url/to/remote/file', '/path/to/local/file', '/path/to/local/file:renamed')"
 }
 variable "app_ports" {
-    type    = "map"
-    description = "map of port descriptions to port numbers (e.g. 22) or ranges (e.g. '0:65535')"
-    default = {"SSH": "22"}
+  type        = "map"
+  description = "map of port descriptions to port numbers (e.g. 22) or ranges (e.g. '0:65535')"
+  default     = { "SSH" : "22" }
 }

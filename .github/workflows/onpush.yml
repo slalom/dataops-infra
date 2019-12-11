@@ -9,61 +9,130 @@ on:
       - "*.md"
 
 jobs:
+  terraform_linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone git repo
+        uses: actions/checkout@v1
+      - name: 'Terraform Linter Check (Formatting)'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: fmt
+          tf_actions_working_dir: ./samples/aws
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   simple_terraform_test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7]
+        # python-version: [3.7]
+        sample-id: ["01", "02"]
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install slalom dataops library
-        run: |
-          pip install tqdm
-          pip install slalom.dataops
-      - name: Install terraform
-        run: |
-          python -m slalom.dataops.infra check_installs terraform --install_if_missing
-      - name: Terraform init and plan
-        run: |
-          terraform init
-          terraform plan
-      - name: Terraform apply
-        run: |
-          terraform apply -auto-approve
-      - name: Terraform destroy
-        run: |
-          terraform destroy -auto-approve
-      - name: 'Terraform Format'
+      # - name: Setup Terraform
+      #   env:
+      #     tfVersion: 0.12.13
+      #   run: |
+      #     url="https://releases.hashicorp.com/terraform/${tfVersion}/terraform_${tfVersion}_linux_amd64.zip"
+      #     sudo apt-get install unzip
+      #     echo "Downloading Terraform v${tfVersion}"
+      #     curl -s -S -L -o /tmp/terraform_${tfVersion} ${url}
+      #     if [ "${?}" -ne 0 ]; then
+      #       echo "Failed to download Terraform v${tfVersion}"
+      #       exit 1
+      #     fi
+      #     echo "Successfully downloaded Terraform v${tfVersion}"
+      #     echo "Unzipping Terraform v${tfVersion}"
+      #     unzip -d /usr/local/bin /tmp/terraform_${tfVersion}
+      #     if [ "${?}" -ne 0 ]; then
+      #       echo "Failed to unzip Terraform v${tfVersion}"
+      #       exit 1
+      #     fi
+      #     echo "Successfully unzipped Terraform v${tfVersion}"
+      - name: 'Terraform Init (Prerun)'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
+          tf_actions_subcommand: init
+          tf_actions_working_dir: ./catalog/aws-prerun
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Terraform Init'
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_CLI_ARGS_backend: false
+          TF_VAR_aws_region: us-east-2
+          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
+      - name: 'Terraform Apply (Prerun)'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'init'
+          tf_actions_subcommand: apply
+          tf_actions_working_dir: ./catalog/aws-prerun
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Terraform Validate'
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_CLI_ARGS_backend: false
+          TF_VAR_aws_region: us-east-2
+          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
+      - name: 'Terraform Init (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'validate'
+          tf_actions_subcommand: init
+          tf_actions_working_dir: ./samples/aws
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Terraform Plan'
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_CLI_ARGS_backend: false
+      - name: 'Terraform Validate (Sample #${{ matrix.sample-id }})'
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'plan'
+          tf_actions_subcommand: validate
+          tf_actions_working_dir: ./samples/aws
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_CLI_ARGS_backend: false
+      - name: 'Terraform Plan (Sample #${{ matrix.sample-id }})'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: plan
+          tf_actions_working_dir: ./samples/aws
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_CLI_ARGS_backend: false
+      - name: 'Terraform Destroy (Prerun)'
+        if: always()
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_aws_region: us-east-2
+          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
+        run: |
+          cd ./catalog/aws-prerun
+          sudo -E terraform destroy -auto-approve
+        #   uses: docker://hashicorp/terraform:0.12.11
+        # with:
+        #   entrypoint: terraform
+        #   args: destroy -auto-approve
+        # with:
+        #   tf_actions_version: 0.12.13
+        #   tf_actions_subcommand: destroy
+        #   tf_actions_working_dir: ./catalog/aws-prerun
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        #   TF_WARN_OUTPUT_ERRORS: 1
+        #   TF_CLI_ARGS_backend: false
