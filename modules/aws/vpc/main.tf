@@ -1,4 +1,4 @@
-data "aws_availability_zones" "myAZs" {}
+data "aws_availability_zones" "az_list" {}
 data "http" "icanhazip" { url = "http://icanhazip.com" }
 
 locals {
@@ -26,7 +26,7 @@ resource "aws_vpc" "myVPC" {
 resource "aws_subnet" "public_subnets" {
   count = 2
 
-  availability_zone       = "${data.aws_availability_zones.myAZs.names[count.index]}"
+  availability_zone       = "${data.aws_availability_zones.az_list.names[count.index]}"
   cidr_block              = "10.0.${count.index + 2}.0/24"
   vpc_id                  = "${aws_vpc.myVPC.id}"
   map_public_ip_on_launch = true
@@ -39,7 +39,7 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_subnet" "private_subnets" {
   count = 2
 
-  availability_zone = "${data.aws_availability_zones.myAZs.names[count.index]}"
+  availability_zone = "${data.aws_availability_zones.az_list.names[count.index]}"
   cidr_block        = "10.0.${count.index}.0/24"
   vpc_id            = "${aws_vpc.myVPC.id}"
   tags = {

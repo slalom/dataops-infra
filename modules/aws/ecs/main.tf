@@ -1,4 +1,4 @@
-data "aws_availability_zones" "myAZs" {}
+data "aws_availability_zones" "az_list" {}
 
 locals {
   project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
@@ -8,7 +8,7 @@ locals {
   ])
 }
 
-resource "aws_cloudwatch_log_group" "myCWLogGroup" {
+resource "aws_cloudwatch_log_group" "cw_log_group" {
   name = "${var.name_prefix}AWSLogs"
   tags = { project = local.project_shortname }
   # lifecycle { prevent_destroy = true }
@@ -44,7 +44,7 @@ data "aws_ami" "ecs_linux_ami" {
   # }
 }
 
-resource "aws_ecs_cluster" "myECSCluster" {
+resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.name_prefix}ECSCluster"
   tags = { project = local.project_shortname }
 }
@@ -53,7 +53,7 @@ resource "aws_iam_instance_profile" "ecs_iam_instance_profile" {
   role = module.aws_iam.ecs_instance_role
 }
 
-resource "aws_launch_configuration" "myEcsInstanceLaunchConfig" {
+resource "aws_launch_configuration" "ecs_instance_launch_config" {
   name_prefix                 = "${var.name_prefix}ECSStandardLaunchConfig"
   associate_public_ip_address = true
   ebs_optimized               = true
@@ -64,7 +64,7 @@ resource "aws_launch_configuration" "myEcsInstanceLaunchConfig" {
 
   user_data = <<USER_DATA
 #!/usr/bin/env bash
-echo ECS_CLUSTER=${aws_ecs_cluster.myECSCluster.name} >> /etc/ecs/ecs.config
+echo ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config
 USER_DATA
 }
 
@@ -88,47 +88,39 @@ resource "aws_security_group" "ecs_tasks_sg" {
   }
 }
 
-resource "aws_autoscaling_group" "myEcsAsg" {
+resource "aws_autoscaling_group" "ecs_asg" {
   name                 = "${var.name_prefix}ECSASG"
-  availability_zones   = slice(data.aws_availability_zones.myAZs.names, 0, 2)
+  availability_zones   = slice(data.aws_availability_zones.az_list.names, 0, 2)
   desired_capacity     = var.min_ec2_instances
   min_size             = var.min_ec2_instances
   max_size             = var.max_ec2_instances
-  launch_configuration = aws_launch_configuration.myEcsInstanceLaunchConfig.id
+  launch_configuration = aws_launch_configuration.ecs_instance_launch_config.id
 }
 
-resource "aws_ecs_service" "myFargateECSService" {
+resource "aws_ecs_service" "fargate_ecs_service" {
   for_each = var.tag_aliases
 
   name            = "${var.name_prefix}ECSServiceOnFargate-${each.key}"
   desired_count   = 0
-  cluster         = aws_ecs_cluster.myECSCluster.id
-  task_definition = aws_ecs_task_definition.myFargateTask[each.key].arn
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.fargate_tasks[each.key].arn
   launch_type     = "FARGATE"
 
   network_configuration {
     subnets         = "${var.subnet_ids}"
     security_groups = ["${var.ecs_security_group}"]
   }
-  # load_balancer {
-  #   target_group_arn = "${aws_alb_target_group.app.id}"
-  #   container_name   = "app"
-  #   container_port   = "${var.app_port}"
-  # }
-  # depends_on = [
-  #   "aws_alb_listener.front_end",
-  # ]
 }
 
-resource "aws_ecs_service" "myStandardECSService" {
+resource "aws_ecs_service" "standard_ecs_service" {
   name            = "${var.name_prefix}ECSServiceOnEC2"
   desired_count   = 0
-  cluster         = aws_ecs_cluster.myECSCluster.id
-  task_definition = aws_ecs_task_definition.myECSStandardTask.arn
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.standard_tasks.arn
   launch_type     = "EC2"
 }
 
-resource "aws_ecs_task_definition" "myFargateTask" {
+resource "aws_ecs_task_definition" "fargate_tasks" {
   for_each = var.tag_aliases
 
   family                   = "${var.name_prefix}ECSFargateTask-${each.key}"
@@ -151,7 +143,7 @@ resource "aws_ecs_task_definition" "myFargateTask" {
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group":          "${aws_cloudwatch_log_group.myCWLogGroup.name}",
+        "awslogs-group":          "${aws_cloudwatch_log_group.cw_log_group.name}",
         "awslogs-region":         "${var.region}",
         "awslogs-stream-prefix":  "container-log"
       }
@@ -178,7 +170,7 @@ resource "aws_ecs_task_definition" "myFargateTask" {
 DEFINITION
 }
 
-resource "aws_ecs_task_definition" "myECSStandardTask" {
+resource "aws_ecs_task_definition" "standard_tasks" {
   family                   = "${var.name_prefix}ECSStandardTask"
   network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
@@ -198,7 +190,7 @@ resource "aws_ecs_task_definition" "myECSStandardTask" {
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group":         "${aws_cloudwatch_log_group.myCWLogGroup.name}",
+        "awslogs-group":         "${aws_cloudwatch_log_group.cw_log_group.name}",
         "awslogs-region":        "${var.region}",
         "awslogs-stream-prefix": "container-log"
       }

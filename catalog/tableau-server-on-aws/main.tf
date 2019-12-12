@@ -1,4 +1,4 @@
-data "aws_availability_zones" "myAZs" {}
+data "aws_availability_zones" "az_list" {}
 
 resource "aws_key_pair" "mykey" {
   key_name   = "${var.name_prefix}ec2-keypair"

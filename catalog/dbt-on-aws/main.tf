@@ -1,4 +1,4 @@
-data "aws_availability_zones" "myAZs" {}
+data "aws_availability_zones" "az_list" {}
 
 locals {
   project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
@@ -29,7 +29,33 @@ module "ecs_cluster" {
   subnet_ids                  = module.vpc.private_subnet_ids
   ecs_environment_secrets     = {}
   ecs_security_group          = ""
-  container_image             = ""
-  container_entrypoint        = ""
-  container_run_command       = ""
+  container_image             = "${var.docker_image}:${var.docker_tag}"
+  container_command_overrides = {
+    "run"     = "run"
+    "compile" = "compile"
+    "seed"    = "seed"
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
+  name                = "dtb-daily-run-schedule"
+  description         = "Daily Execution"
+  schedule_expression = "cron(0 20 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "daily_run_task" {
+  rule       = aws_cloudwatch_event_rule.daily_run_schedule.name
+  arn        = module.ecs_cluster.cluster_arn
+  role_arn   = module.ecs_cluster.ecs_task_role_arn
+  ecs_target {
+    task_definition_arn = var.event_target_ecs_target_task_definition_arn
+    task_count          = 1
+    launch_type         = "FARGATE"
+    group               = "DBT-ECSTaskGroup-Daily"
+    network_configuration {
+      subnets          = var.subnet_ids
+      security_groups  = [var.ecs_security_group]
+      assign_public_ip = false
+    }
+  }
 }

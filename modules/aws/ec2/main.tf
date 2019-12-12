@@ -1,4 +1,4 @@
-data "aws_availability_zones" "myAZs" {}
+data "aws_availability_zones" "az_list" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 # TODO: Detect EC2 Pricing
 # data "http" "ec2_base_pricing_js" { 
