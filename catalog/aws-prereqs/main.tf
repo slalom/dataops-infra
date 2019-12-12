@@ -33,7 +33,7 @@ module "ssh_key_pair" {
 resource "local_file" "config_yml" {
   filename = "${path.module}/../../config.yml"
   content  = <<EOF
-# This config file is created by 'aws-prerun' terraform scripts.
+# This config file is created by 'aws-prereqs' terraform scripts.
 # Please reference this file in future terraform deployments.
 aws_region: ${var.aws_region}
 project_shortname: ${var.project_shortname}
