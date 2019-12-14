@@ -1,15 +1,25 @@
-data "aws_caller_identity" "current" {}
+# data "aws_caller_identity" "current" {}
 
-output "aws_account" { value = data.aws_caller_identity.current.account_id }
-output "aws_region" { value = var.aws_region }
-# output "aws_secrets_manager" { value = "arn:aws:secretsmanager:${local.aws_region}:${local.aws_account}:secret:${local.aws_secret_name_prefix}" }
 locals {
-  name_prefix = "${var.project_shortname}-"
+  name_prefix    = "${var.project_shortname}-"
+  # creds_filepath = "${abspath("../../.secrets")}/credentials"
+  creds_filepath = "${pathexpand("~/.aws")}/credentials"
+  creds_text     = <<EOF
+
+[terraform]
+aws_access_key_id=${var.terraform_basic_account_access_key}
+aws_secret_access_key=${var.terraform_basic_account_secret_key}
+EOF
 }
+# WAS:
+# aws_access_key_id=${aws_iam_access_key.automation_user_key.id}
+# aws_secret_access_key=${aws_iam_access_key.automation_user_key.secret}
 
 provider "aws" {
-  region  = var.aws_region
-  version = "~> 2.10"
+  region     = var.aws_region
+  version    = "~> 2.10"
+  access_key = var.terraform_basic_account_access_key
+  secret_key = var.terraform_basic_account_secret_key
 }
 
 resource "random_id" "suffix" {
@@ -55,64 +65,62 @@ resource "local_file" "ssh_installed_public_key_path" {
 }
 
 resource "local_file" "aws_credentials_file" {
-  filename   = "${abspath("../../.secrets")}/credentials"
-  depends_on = [aws_iam_user.automation_user]
-  content    = <<EOF
-[default]
-aws_access_key_id=${aws_iam_access_key.automation_user_key.id}
-aws_secret_access_key=${aws_iam_access_key.automation_user_key.secret}
-
-[${aws_iam_access_key.automation_user_key.user}]
-aws_access_key_id=${aws_iam_access_key.automation_user_key.id}
-aws_secret_access_key=${aws_iam_access_key.automation_user_key.secret}
-EOF
+  filename = local.creds_filepath
+  # depends_on = [aws_iam_user.automation_user]
+  content = (
+    ! fileexists(local.creds_filepath) ?
+    local.creds_text :
+    replace(file(local.creds_filepath), "terraform", "") != file(local.creds_filepath) ?
+    file(local.creds_filepath) :
+    format("%s\n\n%s", file(local.creds_filepath), local.creds_text)
+  )
 }
 
-resource "aws_iam_user" "automation_user" {
-  name = "${var.project_shortname}-automation-user"
-  tags = {
-    project = var.project_shortname
-  }
-}
+# resource "aws_iam_user" "automation_user" {
+#   name = "${var.project_shortname}-automation-user"
+#   tags = {
+#     project = var.project_shortname
+#   }
+# }
 
-resource "aws_iam_access_key" "automation_user_key" {
-  user = aws_iam_user.automation_user.name
-}
+# resource "aws_iam_access_key" "automation_user_key" {
+#   user = aws_iam_user.automation_user.name
+# }
 
-resource "aws_iam_user_policy" "automation_user_permissions" {
-  name   = "${var.project_shortname}-automation-user-access"
-  user   = aws_iam_user.automation_user.name
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ec2:Describe*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
+# resource "aws_iam_user_policy" "automation_user_permissions" {
+#   name   = "${var.project_shortname}-automation-user-access"
+#   user   = aws_iam_user.automation_user.name
+#   policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": [
+#         "ec2:Describe*"
+#       ],
+#       "Effect": "Allow",
+#       "Resource": "*"
+#     }
+#   ]
+# }
+# EOF
+# }
 
-resource "aws_s3_bucket" "s3_metadata_bucket" {
-  bucket = "${lower(var.project_shortname)}-project-data-${random_id.suffix.hex}"
-  acl    = "private"
-  tags   = { project = var.project_shortname }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-}
+# resource "aws_s3_bucket" "s3_metadata_bucket" {
+#   bucket = "${lower(var.project_shortname)}-project-data-${random_id.suffix.hex}"
+#   acl    = "private"
+#   tags   = { project = var.project_shortname }
+#   server_side_encryption_configuration {
+#     rule {
+#       apply_server_side_encryption_by_default {
+#         sse_algorithm = "AES256"
+#       }
+#     }
+#   }
+# }
 
-resource "aws_s3_bucket_public_access_block" "s3_metadata_bucket_block" {
-  bucket              = aws_s3_bucket.s3_metadata_bucket.id
-  block_public_acls   = true
-  block_public_policy = true
-}
+# resource "aws_s3_bucket_public_access_block" "s3_metadata_bucket_block" {
+#   bucket              = aws_s3_bucket.s3_metadata_bucket.id
+#   block_public_acls   = true
+#   block_public_policy = true
+# }
