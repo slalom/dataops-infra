@@ -17,11 +17,6 @@ locals {
     fileset(path.module, "resources/*"),
     ["${var.registration_file}:registration.json"]
   ])
-  lin_files = flatten([
-    fileset(path.module, "resources/lin/*"),
-    fileset(path.module, "resources/*"),
-    ["${var.registration_file}:registration.json"]
-  ])
   tableau_app_ports = {
     "HTTP/HTTPS" = "80"
     "SSL"        = "443"
@@ -50,24 +45,6 @@ module "windows_tableau_servers" {
   ami_owner                = "amazon" # Canonical
   ami_name_filter          = "Windows_Server-2016-English-Full-Base-*"
   admin_ports              = merge(local.tableau_admin_ports, { "RDP" : 3389 })
-  app_ports                = local.tableau_app_ports
-  ssh_key_name             = aws_key_pair.mykey.key_name
-  ssh_private_key_filepath = local.ssh_private_key_filepath
-  vpc_id                   = module.tableau_vpc.vpc_id
-  subnet_id                = coalescelist(module.tableau_vpc.public_subnet_ids, [""])[0]
-  # subnet_id              = coalescelist(module.tableau_vpc.private_subnet_ids, [""])[0]
-}
-
-module "linux_tableau_servers" {
-  source                   = "../../modules/aws/ec2"
-  name_prefix              = var.name_prefix
-  aws_region               = var.aws_region
-  num_instances            = var.num_linux_instances
-  instance_type            = var.ec2_instance_type
-  instance_storage_gb      = var.ec2_instance_storage_gb
-  ami_owner                = "099720109477" # Canonical
-  ami_name_filter          = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
-  admin_ports              = merge(local.tableau_admin_ports, { "SSH" : 22 })
   app_ports                = local.tableau_app_ports
   ssh_key_name             = aws_key_pair.mykey.key_name
   ssh_private_key_filepath = local.ssh_private_key_filepath
