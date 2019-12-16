@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DefaultAssociations>
+    <Association Identifier=".website" ProgId="Applications\chrome.exe" ApplicationName="Google Chrome" />
+    <Association Identifier="http" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+    <Association Identifier="https" ProgId="ChromeHTML" ApplicationName="Google Chrome" />
+</DefaultAssociations>
