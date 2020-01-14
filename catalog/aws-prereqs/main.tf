@@ -69,7 +69,7 @@ resource "local_file" "aws_credentials_file" {
   content = (
     ! fileexists(local.creds_filepath) ?
     local.creds_text :
-    replace(file(local.creds_filepath), "terraform", "") != file(local.creds_filepath) ?
+    replace(file(local.creds_filepath), "${var.project_shortname}-terraform", "") != file(local.creds_filepath) ?
     file(local.creds_filepath) :
     format("%s\n\n%s", file(local.creds_filepath), local.creds_text)
   )
