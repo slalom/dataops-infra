@@ -22,5 +22,5 @@ locals {
 provider "aws" {
   region  = local.aws_region
   version = "~> 2.10"
-  profile = "f{local.project_shortname}-terraform"
+  profile = "${local.project_shortname}-terraform"
 }
