@@ -9,7 +9,7 @@
 3. Initialize your SSH key and local settings file.
 
     ```bash
-    cd catalog/aws-prerun
+    cd catalog/aws-prereqs
     terraform init
     terraform apply -auto-approve
     ```

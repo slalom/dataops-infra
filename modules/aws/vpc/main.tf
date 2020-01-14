@@ -3,7 +3,7 @@ data "http" "icanhazip" { url = "http://icanhazip.com" }
 
 locals {
   project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  my_ip             = "${chomp(data.http.icanhazip.body)}"
+  my_ip             = chomp(data.http.icanhazip.body)
   my_ip_cidr        = "${chomp(data.http.icanhazip.body)}/32"
   admin_cidr        = flatten([local.my_ip_cidr, var.admin_cidr])
 }
@@ -26,9 +26,9 @@ resource "aws_vpc" "myVPC" {
 resource "aws_subnet" "public_subnets" {
   count = 2
 
-  availability_zone       = "${data.aws_availability_zones.myAZs.names[count.index]}"
+  availability_zone       = data.aws_availability_zones.myAZs.names[count.index]
   cidr_block              = "10.0.${count.index + 2}.0/24"
-  vpc_id                  = "${aws_vpc.myVPC.id}"
+  vpc_id                  = aws_vpc.myVPC.id
   map_public_ip_on_launch = true
   tags = {
     Name    = "${var.name_prefix}PublicSubnet-${count.index}"
@@ -39,9 +39,9 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_subnet" "private_subnets" {
   count = 2
 
-  availability_zone = "${data.aws_availability_zones.myAZs.names[count.index]}"
+  availability_zone = data.aws_availability_zones.myAZs.names[count.index]
   cidr_block        = "10.0.${count.index}.0/24"
-  vpc_id            = "${aws_vpc.myVPC.id}"
+  vpc_id            = aws_vpc.myVPC.id
   tags = {
     Name    = "${var.name_prefix}PrivateSubnet-${count.index}"
     project = local.project_shortname
