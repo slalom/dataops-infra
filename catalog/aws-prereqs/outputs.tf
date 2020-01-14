@@ -2,7 +2,6 @@
 output "aws_region" { value = var.aws_region }
 # output "aws_secrets_manager" { value = "arn:aws:secretsmanager:${local.aws_region}:${local.aws_account}:secret:${local.aws_secret_name_prefix}" }
 output "aws_creds_filepath" { value = local_file.aws_credentials_file.filename }
-output "aws_default_region" { value = var.aws_region }
 output "aws_user_access_key_masked" {
   value = "****************${substr(var.terraform_basic_account_access_key, 15, 4)}"
 }
