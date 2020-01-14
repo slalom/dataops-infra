@@ -6,7 +6,7 @@ locals {
   creds_filepath = "${pathexpand("~/.aws")}/credentials"
   creds_text     = <<EOF
 
-[terraform]
+[${local.project_shortname}-terraform]
 aws_access_key_id=${var.terraform_basic_account_access_key}
 aws_secret_access_key=${var.terraform_basic_account_secret_key}
 EOF
