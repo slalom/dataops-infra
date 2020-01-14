@@ -1,4 +1,4 @@
-variable "name_prefix" { type = "string" }
+variable "name_prefix" { type = string }
 variable "aws_region" { description = "AWS region" }
 variable "ec2_instance_type" { default = "m4.4xlarge" }
 variable "ec2_instance_storage_gb" { default = 100 }
@@ -11,5 +11,5 @@ variable "linux_use_https" { default = false }
 variable "linux_https_domain" { default = "" }
 variable "windows_use_https" { default = false }
 variable "windows_https_domain" { default = "" }
-# variable "vpc_id" { type = "string" }
-# variable "subnet_ids" { type = "list" }
+# variable "vpc_id" { type = string }
+# variable "subnet_ids" { type = list }

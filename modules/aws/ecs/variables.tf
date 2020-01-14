@@ -1,6 +1,6 @@
 variable "name_prefix" {}
 variable "aws_region" { description = "AWS region" }
-variable "aws_secrets_manager" { type = "string" }
+variable "aws_secrets_manager" { type = string }
 variable "container_name" { default = "DefaultContainer" }
 variable "container_image" {
   description = "e.g. [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
@@ -8,9 +8,9 @@ variable "container_image" {
 variable "container_entrypoint" { default = "python" }
 variable "container_run_command" { default = "bin/run.py" }
 variable "app_port" { default = "8080" }
-variable "vpc_id" { type = "string" }
-variable "subnet_ids" { type = "list" }
-variable "ecs_security_group" { type = "string" }
+variable "vpc_id" { type = string }
+variable "subnet_ids" { type = list }
+variable "ecs_security_group" { type = string }
 variable "tag_aliases" {
   default = {
     "latest"    = "prod"
@@ -33,7 +33,7 @@ variable "ec2_container_ram_gb" { default = "8" }
 variable "ec2_container_num_cores" { default = "4" }
 variable "ec2_instance_type" {}
 variable "ecs_environment_secrets" {
-  type        = "map"
+  type        = map
   default     = {}
   description = <<EOF
 Mapping of environment variable names to secret manager ARNs.
