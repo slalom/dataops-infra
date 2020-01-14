@@ -66,7 +66,6 @@ resource "local_file" "ssh_installed_public_key_path" {
 
 resource "local_file" "aws_credentials_file" {
   filename = local.creds_filepath
-  # depends_on = [aws_iam_user.automation_user]
   content = (
     ! fileexists(local.creds_filepath) ?
     local.creds_text :
