@@ -1,4 +1,4 @@
-# TODO: Automate grants for policy 'AmazonRedshiftFullAccess'
+# NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
 resource "random_id" "random_pass" {
   byte_length = 8
