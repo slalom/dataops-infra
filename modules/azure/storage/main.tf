@@ -17,8 +17,4 @@ resource "azurerm_storage_account" "project_storage_account" {
 resource "azurerm_storage_data_lake_gen2_filesystem" "project_fs" {
   name               = "${var.project_shortname}-storage-fs"
   storage_account_id = azurerm_storage_account.project_storage_account.id
-
-  properties = {
-    hello = "aGVsbG8="
-  }
 }
