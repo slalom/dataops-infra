@@ -11,8 +11,8 @@ module "redshift_dw" {
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  node_type         = "dc2.large"  # https://aws.amazon.com/redshift/pricing/
-  num_nodes         = 2
+  node_type         = "dc2.large"  #  "dc2.large" is smallest, costs ~$200/mo: https://aws.amazon.com/redshift/pricing/
+  num_nodes         = 1
 
   admin_password    = "asdfAS12"
   aws_region        = local.aws_region

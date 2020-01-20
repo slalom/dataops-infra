@@ -5,7 +5,7 @@ module "tableau_server_on_aws" {
 
   # CONFIGURE HERE:
 
-  num_linux_instances   = 1
+  num_linux_instances   = 0
   num_windows_instances = 0
 
   /*
