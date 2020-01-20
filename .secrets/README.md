@@ -1,6 +1,6 @@
 # Secret folder (ignored by git)
 
-After running `terraform apply` from the `prerun` directory, this folder should contain the following files:
+After running `terraform apply` from the `prereqs` directory, this folder should contain the following files:
 
 - `dataops-prod-ec2keypair.pub`
 - `dataops-prod-ec2keypair.pem`

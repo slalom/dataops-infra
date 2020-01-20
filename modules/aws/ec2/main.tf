@@ -135,8 +135,7 @@ resource "aws_instance" "ec2_instances" {
     encrypted   = true
   }
   lifecycle {
-    # TODO: revert to: create_before_destroy = true (blocked by cpu limit)
-    create_before_destroy = false
+    create_before_destroy = true
     ignore_changes        = [tags]
   }
 }

@@ -17,14 +17,14 @@ pip install slalom.dataops
 Run interactively:
 
 ```bash
-python -m slalom.dataops.infra --init my-project --interactive
+s-infra --init my-project --interactive
 cd my-project
 ```
 
 Or run non-interactive:
 
 ```bash
-python -m slalom.dataops.infra --config my-project --config=/path/to/config.yml
+s-infra --config my-project --config=/path/to/config.yml
 cd my-project
 ```
 
