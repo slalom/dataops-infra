@@ -1,6 +1,7 @@
 # This config file is created by 'aws-prereqs' terraform scripts.
 # Please reference this file in future terraform deployments.
+# NOTE: Changing the project shortname also requires updating the credentials file: ~/.aws/credentials
 aws_region: us-east-2
-project_shortname: RedshiftTest01
+project_shortname: AJTest007  
 project_tags:
   admin_contact: admin.email@noreply.com

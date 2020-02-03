@@ -1,7 +1,7 @@
 # data "aws_caller_identity" "current" {}
 
 locals {
-  name_prefix    = "${var.project_shortname}-"
+  name_prefix = "${var.project_shortname}-"
   # creds_filepath = "${abspath("../../.secrets")}/credentials"
   creds_filepath = "${pathexpand("~/.aws")}/credentials"
   creds_text     = <<EOF

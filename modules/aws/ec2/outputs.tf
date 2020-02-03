@@ -20,21 +20,21 @@ output "private_ips" {
   }
 }
 output "instance_state" { value = length(aws_instance.ec2_instances) == 0 ? "n/a" : aws_instance.ec2_instances[0].instance_state }
-output "instance_states" { 
+output "instance_states" {
   value = {
     for s in aws_instance.ec2_instances :
     s.id => s.instance_state
   }
 }
 locals {
-  windows_instance_passwords =  (
+  windows_instance_passwords = (
     # returns a map of instance IDs to windows passwords
     # returns null if is_windows == false
     # returns null also if no private ssh key is available
     var.is_windows == false ? null :
-    var.num_instances == 0 ? {}: 
+    var.num_instances == 0 ? {} :
     {
-      for s in aws_instance.ec2_instances:
+      for s in aws_instance.ec2_instances :
       s.id => (
         length(s.password_data) == 0 ? "n/a" :
         fileexists(var.ssh_private_key_filepath) == false ? "n/a" :
@@ -44,9 +44,9 @@ locals {
   )
   remote_admin_commands = (
     # returns a map of instance IDs to remote connect commands (ssh for linux, rdp for windows)
-    var.num_instances == 0 ? {}:
+    var.num_instances == 0 ? {} :
     tomap({
-      for s in aws_instance.ec2_instances:
+      for s in aws_instance.ec2_instances :
       s.id => (
         var.is_windows == true ?
         "cmdkey /generic:TERMSRV/${s.public_ip} /user:Administrator /pass:\"${local.windows_instance_passwords[s.id]}\" && mstsc /v:${s.public_ip} /w:1100 /h:900" :

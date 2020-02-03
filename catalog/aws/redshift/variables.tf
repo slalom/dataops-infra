@@ -1,3 +1,9 @@
+variable "name_prefix" { type = string }
+variable "aws_region" { default = null }
+variable "resource_tags" {
+  type    = map
+  default = {}
+}
 variable "admin_password" {
   description = "Must be 8 characters long."
   type        = string
@@ -21,7 +27,6 @@ variable "kms_key_id" {
   type    = string
   default = null
 }
-variable "project_shortname" { type = string }
 variable "s3_logging_bucket" {
   type    = string
   default = null

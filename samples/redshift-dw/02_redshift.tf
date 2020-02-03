@@ -1,9 +1,9 @@
 # NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
 module "redshift_dw" {
-  # source          = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/redshift-on-aws?ref=master"
-  source            = "../../catalog/redshift-on-aws"
-  project_shortname = local.project_shortname
+  # source            = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/redshift?ref=master"
+  source      = "../../catalog/aws/redshift"
+  name_prefix = "${local.project_shortname}-"
 
   # CONFIGURE HERE:
 
