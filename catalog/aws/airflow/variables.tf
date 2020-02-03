@@ -13,7 +13,13 @@ variable "container_image" {
   type = string
   default = "airflow"
 }
-variable "environment_vars" { type = map(string) }
-variable "environment_secrets" { type = map(string) }
+variable "environment_vars" {
+  type    = map(string)
+  default = {}
+}
+variable "environment_secrets" {
+  type    = map(string)
+  default = {}
+}
 variable "container_num_cores" { default = 2 }
 variable "container_ram_gb" { default = 4 }
