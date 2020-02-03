@@ -55,7 +55,7 @@ resource "aws_iam_role_policy_attachment" "ecs_role_policy-secrets" {
   policy_arn = data.aws_iam_policy.SecretsManagerReadWrite.arn
 }
 resource "aws_iam_policy" "ecs_policy_handoff" {
-  policy     = <<EOF
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [

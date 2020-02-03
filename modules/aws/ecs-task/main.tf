@@ -3,7 +3,7 @@ data "aws_ecs_cluster" "ecs_cluster" { cluster_name = var.ecs_cluster_name }
 
 locals {
   aws_region = var.aws_region != null ? var.aws_region : data.aws_region.current.name
-  env_vars = merge({ "AWS_DEFAULT_REGION": local.aws_region }, var.environment_vars)
+  env_vars   = merge({ "AWS_DEFAULT_REGION" : local.aws_region }, var.environment_vars)
   container_secrets_str = join(",\n", [
     for k, v in var.environment_secrets :
     "{\"name\": \"${k}\", \"valueFrom\": \"${v}\"}"
@@ -13,9 +13,9 @@ locals {
     "{\"name\": \"${k}\", \"value\": \"${v}\"}"
   ])
   entrypoint_str = var.container_entrypoint == null ? "" : "\"entryPoint\": [\"${var.container_entrypoint}\"],"
-  command_str = var.container_command == null ? "" : "\"command\": [\"${var.container_command}\"],"
-  network_mode = var.use_fargate ? "awsvpc" : "bridge"
-  launch_type  = var.use_fargate ? "FARGATE" : "EC2"
+  command_str    = var.container_command == null ? "" : "\"command\": [\"${var.container_command}\"],"
+  network_mode   = var.use_fargate ? "awsvpc" : "bridge"
+  launch_type    = var.use_fargate ? "FARGATE" : "EC2"
 }
 
 resource "aws_cloudwatch_log_group" "cw_log_group" {
@@ -110,11 +110,11 @@ resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
 }
 
 resource "aws_cloudwatch_event_target" "daily_run_task" {
-  for_each   = var.schedules
+  for_each = var.schedules
   # for_each   = aws_cloudwatch_event_rule.daily_run_schedule
-  rule       = aws_cloudwatch_event_rule.daily_run_schedule[each.value].name
-  arn        = data.aws_ecs_cluster.ecs_cluster.arn
-  role_arn   = aws_iam_role.ecs_task_execution_role.arn
+  rule     = aws_cloudwatch_event_rule.daily_run_schedule[each.value].name
+  arn      = data.aws_ecs_cluster.ecs_cluster.arn
+  role_arn = aws_iam_role.ecs_task_execution_role.arn
   ecs_target {
     task_definition_arn = aws_ecs_task_definition.ecs_task.arn
     task_count          = 1
