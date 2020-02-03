@@ -1,3 +1,7 @@
+variable "resource_tags" {
+  type    = map
+  default = {}
+}
 variable "name" { type = "string" }
 variable "secret_text" {
   default = null

@@ -1,4 +1,5 @@
 data "aws_availability_zones" "az_list" {}
+data "aws_region" "current" {}
 
 resource "aws_key_pair" "mykey" {
   key_name   = "${var.name_prefix}ec2-keypair"
@@ -7,6 +8,7 @@ resource "aws_key_pair" "mykey" {
 
 locals {
   project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  aws_region               = var.aws_region != null ? var.aws_region : data.aws_region.current.name
   admin_cidr               = var.admin_cidr
   default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
@@ -35,15 +37,17 @@ locals {
 }
 
 module "tableau_vpc" {
-  source      = "../../modules/aws/vpc"
+  source      = "../../../modules/aws/vpc"
   name_prefix = var.name_prefix
+  resource_tags            = var.resource_tags
 }
 
 module "windows_tableau_servers" {
-  source                   = "../../modules/aws/ec2"
+  source                   = "../../../modules/aws/ec2"
   is_windows               = true
   name_prefix              = var.name_prefix
-  aws_region               = var.aws_region
+  aws_region               = local.aws_region
+  resource_tags            = var.resource_tags
   num_instances            = var.num_windows_instances
   instance_type            = var.ec2_instance_type
   instance_storage_gb      = var.ec2_instance_storage_gb
@@ -59,9 +63,10 @@ module "windows_tableau_servers" {
 }
 
 module "linux_tableau_servers" {
-  source                   = "../../modules/aws/ec2"
+  source                   = "../../../modules/aws/ec2"
   name_prefix              = var.name_prefix
-  aws_region               = var.aws_region
+  aws_region               = local.aws_region
+  resource_tags            = var.resource_tags
   num_instances            = var.num_linux_instances
   instance_type            = var.ec2_instance_type
   instance_storage_gb      = var.ec2_instance_storage_gb

@@ -1,5 +1,10 @@
 variable "name_prefix" {}
-variable "aws_region" { description = "AWS region" }
+variable "aws_region" { default = null }
+variable "resource_tags" {
+  type    = map
+  default = {}
+}
+
 variable "ssh_key_name" { type = string }
 variable "ssh_private_key_filepath" { type = string }
 variable "instance_type" { type = string }
