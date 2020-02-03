@@ -9,13 +9,14 @@ module "dbt_on_aws" {
   # ADD OR MODIFY CONFIGURATION HERE:
 
   container_image            = "slalomggp/dataops:test-project-latest-dev"
-  dbt_run_command            = "./gradlew dbtHelp"
+  dbt_run_command            = "./gradlew dbtSeed dbtCompile dbtRun"
   scheduled_timezone         = "PST"
-  scheduled_refresh_interval = "2 minutes"
+  scheduled_refresh_interval = "4 hours"
   environment_vars = {
+    "DETECT_HOSTNAME" = "true"
     "PROJECT_NAME" = "MY-TEST"
     "WITH_SPARK" = "true"
-    "DETECT_HOSTNAME" = "true"
+    "PROJECT_GIT_URL" = "git+https://github.com/slalom-ggp/dataops-infra.git"
   }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
