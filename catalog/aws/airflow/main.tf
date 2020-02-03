@@ -24,7 +24,7 @@ module "airflow_ecs_task" {
   container_num_cores      = var.container_num_cores
   container_ram_gb         = var.container_ram_gb
   admin_ports              = { "WebPortal" : 8080 }
-  app_ports                = {}
+  # app_ports                = { "WebPortal" : 8080 }
   vpc_id                   = module.airflow_vpc.vpc_id
   subnets                  = module.airflow_vpc.public_subnet_ids
   # subnet_id              = coalescelist(module.airflow_vpc.private_subnet_ids, [""])[0]
