@@ -7,6 +7,7 @@ module "redshift_dw" {
 
   # CONFIGURE HERE:
 
+  skip_final_snapshot = true
 
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
