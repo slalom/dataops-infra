@@ -1,5 +1,5 @@
 module "airflow" {
-  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/airflow-on-aws?ref=master"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/airflow?ref=master"
   source        = "../../catalog/aws/airflow"
   name_prefix   = local.name_prefix
   resource_tags = local.project_tags

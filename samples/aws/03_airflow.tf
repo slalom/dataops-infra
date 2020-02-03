@@ -1,6 +1,6 @@
 module "airflow" {
   # source          = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/airflow-on-aws?ref=master"
-  source            = "../../catalog/airflow-on-aws"
+  source            = "../../catalog/aws/airflow"
   project_shortname = local.project_shortname
 
   # CONFIGURE HERE:
