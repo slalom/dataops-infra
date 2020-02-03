@@ -20,7 +20,7 @@ module "airflow_ecs_task" {
   aws_region               = local.aws_region
   use_fargate              = true
   ecs_cluster_name         = module.airflow_ecs_cluster.ecs_cluster_name
-  container_image          = "${var.name_prefix}-Airflow"
+  container_image          = var.container_image
   container_num_cores      = var.container_num_cores
   container_ram_gb         = var.container_ram_gb
   admin_ports              = { "WebPortal" : 8080 }
