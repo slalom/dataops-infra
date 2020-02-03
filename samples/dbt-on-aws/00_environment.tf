@@ -1,15 +1,9 @@
-# Uncomment this to use an S3 backend in place of local state files:
-# terraform {
-#   backend "s3" {
-#     bucket = "my-bucket-name"
-#     key    = "infra/dataops-pkg-state"
-#     region = "us-east-2"
-#   }
-# }
+# STANDARD TERRAFORM ENVIRONMENT DEFINITION
+# NO NEED TO MODIFY THIS FILE
 
 data "local_file" "config_yml" { filename = "${path.module}/../config.yml" }
 data "aws_caller_identity" "current" {}
-data "aws_availability_zones" "my_AZs" {}
+data "aws_availability_zones" "az_list" {}
 
 locals {
   config            = yamldecode(data.local_file.config_yml.content)

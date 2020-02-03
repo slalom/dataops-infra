@@ -1,5 +1,6 @@
 module "tableau_server_on_aws" {
-  source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/tableau-server-on-aws?ref=master"
+  # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=master"
+  source      = "../../catalog/aws/tableau-server"
   name_prefix = local.name_prefix
   aws_region  = local.aws_region
 
@@ -11,7 +12,6 @@ module "tableau_server_on_aws" {
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  ec2_instance_type     = "m4.xlarge"
   ec2_instance_type     = "p3.8xlarge"
   ec2_instance_type     = "m4.4xlarge"
   admin_cidr            = []
