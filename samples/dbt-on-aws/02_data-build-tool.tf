@@ -14,8 +14,8 @@ module "dbt_on_aws" {
   scheduled_refresh_interval = "4 hours"
   environment_vars = {
     "DETECT_HOSTNAME" = "true"
-    "PROJECT_NAME" = "MY-TEST"
-    "WITH_SPARK" = "true"
+    "PROJECT_NAME"    = "MY-TEST"
+    "WITH_SPARK"      = "true"
     "PROJECT_GIT_URL" = "git+https://github.com/slalom-ggp/dataops-infra.git"
   }
 
