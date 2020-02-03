@@ -9,6 +9,9 @@ variable "github_repo_ref" {
   default = null
 }
 variable "resource_tags" { type = map(string) }
+variable "container_command" {
+  type = string
+}
 variable "container_image" {
   type = string
   default = "airflow"

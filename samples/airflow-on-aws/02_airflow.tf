@@ -6,8 +6,10 @@ module "airflow" {
 
   # CONFIGURE HERE:
 
-  container_image = "slalomggp/dataops:test-project-latest-dev"
-  environment_vars = {
+  # container_image = "slalomggp/dataops:test-project-latest-dev"
+  container_image   = "puckel/docker-airflow"
+  container_command = "webserver"
+  environment_vars  = {
     "DETECT_HOSTNAME" = "true"
     "PROJECT_GIT_URL" = "git+https://github.com/slalom-ggp/dataops-infra.git"
   }
