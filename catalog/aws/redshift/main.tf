@@ -7,9 +7,9 @@ locals {
 }
 
 module "vpc" {
-  source            = "../../../modules/aws/vpc"
-  name_prefix       = var.name_prefix
-  aws_region        = local.aws_region
+  source      = "../../../modules/aws/vpc"
+  name_prefix = var.name_prefix
+  aws_region  = local.aws_region
 }
 
 module "redshift" {

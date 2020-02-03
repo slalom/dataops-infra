@@ -37,9 +37,9 @@ locals {
 }
 
 module "tableau_vpc" {
-  source      = "../../../modules/aws/vpc"
-  name_prefix = var.name_prefix
-  resource_tags            = var.resource_tags
+  source        = "../../../modules/aws/vpc"
+  name_prefix   = var.name_prefix
+  resource_tags = var.resource_tags
 }
 
 module "windows_tableau_servers" {
