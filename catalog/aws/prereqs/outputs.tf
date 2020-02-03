@@ -5,7 +5,7 @@ output "aws_creds_filepath" { value = local_file.aws_credentials_file.filename }
 output "aws_user_access_key_masked" {
   value = "****************${substr(var.terraform_basic_account_access_key, 15, 4)}"
 }
-  # value = "****************${substr(aws_iam_access_key.automation_user_key.id, 15, 4)}"
+# value = "****************${substr(aws_iam_access_key.automation_user_key.id, 15, 4)}"
 # output "aws_user_name" { value = aws_iam_access_key.automation_user_key.user }
 # output "s3_bucket_name" { value = aws_s3_bucket.s3_metadata_bucket.bucket }
 output "ssh_private_key_filenames" {
