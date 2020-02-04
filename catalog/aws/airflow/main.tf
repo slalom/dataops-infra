@@ -27,5 +27,6 @@ module "airflow_ecs_task" {
   # app_ports                = { "WebPortal" : 8080 }
   vpc_id                   = module.airflow_vpc.vpc_id
   subnets                  = module.airflow_vpc.public_subnet_ids
-  # subnet_id              = coalescelist(module.airflow_vpc.private_subnet_ids, [""])[0]
+  always_on                = true
+  use_load_balancer        = true
 }

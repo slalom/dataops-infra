@@ -6,5 +6,6 @@ output "summary" {
 Airflow Summary:
   Launch command: ${module.airflow_ecs_task.ecs_runtask_cli}
   Logging URL:    ${module.airflow_ecs_task.ecs_logging_url}
+  Airflow URL:    http://${module.airflow_ecs_task.load_balancer_dns}:8080
 EOF
 }

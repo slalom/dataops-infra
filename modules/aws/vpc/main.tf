@@ -13,16 +13,8 @@ provider "aws" {
   alias  = "regional"
   region = local.aws_region
 }
-
 data "aws_availability_zones" "az_list" {
   provider = aws.regional
-}
-
-resource "aws_eip" "eip" {
-  tags = {
-    Name    = "${var.name_prefix}EIP"
-    project = local.project_shortname
-  }
 }
 
 resource "aws_vpc" "my_vpc" {
@@ -34,8 +26,7 @@ resource "aws_vpc" "my_vpc" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  count = 2
-
+  count                   = 2
   availability_zone       = data.aws_availability_zones.az_list.names[count.index]
   cidr_block              = "10.0.${count.index + 2}.0/24"
   vpc_id                  = aws_vpc.my_vpc.id
@@ -47,11 +38,11 @@ resource "aws_subnet" "public_subnets" {
 }
 
 resource "aws_subnet" "private_subnets" {
-  count = 2
-
-  availability_zone = data.aws_availability_zones.az_list.names[count.index]
-  cidr_block        = "10.0.${count.index}.0/24"
-  vpc_id            = aws_vpc.my_vpc.id
+  count                   = 2
+  availability_zone       = data.aws_availability_zones.az_list.names[count.index]
+  cidr_block              = "10.0.${count.index}.0/24"
+  vpc_id                  = aws_vpc.my_vpc.id
+  map_public_ip_on_launch = false
   tags = {
     Name    = "${var.name_prefix}PrivateSubnet-${count.index}"
     project = local.project_shortname
@@ -66,9 +57,16 @@ resource "aws_internet_gateway" "my_igw" {
   }
 }
 
+resource "aws_eip" "nat_eip" {
+  tags = {
+    Name    = "${var.name_prefix}EIP"
+    project = local.project_shortname
+  }
+}
+
 resource "aws_nat_gateway" "nat_gateway" {
-  allocation_id = aws_eip.eip.id
-  subnet_id     = aws_subnet.public_subnets.0.id
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnets[0].id
   tags = {
     Name    = "${var.name_prefix}NAT"
     project = local.project_shortname
@@ -86,7 +84,7 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route_table_association" "public_rt_assoc" {
   count          = 2
   route_table_id = aws_route_table.public_rt.id
-  subnet_id      = aws_subnet.public_subnets.*.id[count.index]
+  subnet_id      = aws_subnet.public_subnets[count.index].id
 }
 
 resource "aws_route" "igw_route" {
@@ -98,7 +96,7 @@ resource "aws_route" "igw_route" {
 resource "aws_route_table_association" "private_rt_assoc" {
   count          = 2
   route_table_id = aws_route_table.private_rt.id
-  subnet_id      = aws_subnet.private_subnets.*.id[count.index]
+  subnet_id      = aws_subnet.private_subnets[count.index].id
 }
 
 resource "aws_route_table" "private_rt" {
