@@ -1,23 +1,17 @@
 variable "aws_region" { default = null }
+variable "name_prefix" { type = string }
 variable "resource_tags" {
   type    = map
   default = {}
 }
-variable "admin_cidr" {
-  type    = list
-  default = []
-}
 variable "container_image" { default = "slalomggp/dataops" }
 variable "container_entrypoint" { default = null }
-variable "container_num_cores" { default = 4 }
-variable "container_ram_gb" { default = 30 }
-variable "dbt_project_git_repo" {
+variable "conatiner_command" { default = null }
+variable "container_num_cores" { default = 2 }
+variable "container_ram_gb" { default = 2 }
+variable "project_git_repo" {
   type    = string
   default = "git+https://github.com/slalom-ggp/dataops-project-template.git"
-}
-variable "dbt_run_command" {
-  type    = string
-  default = null
 }
 variable "environment_secrets" {
   type        = map(string)
@@ -32,7 +26,6 @@ variable "environment_vars" {
   default     = {}
   description = "Mapping of environment variable names to their values."
 }
-variable "name_prefix" { type = string }
 variable "scheduled_refresh_interval" {
   type        = string
   description = "A rate string, e.g. '5 minutes'. This is in addition to any other scheduled executions."

@@ -3,7 +3,13 @@ data "aws_ecs_cluster" "ecs_cluster" { cluster_name = var.ecs_cluster_name }
 
 locals {
   aws_region = var.aws_region != null ? var.aws_region : data.aws_region.current.name
-  env_vars   = merge({ "AWS_DEFAULT_REGION" : local.aws_region }, var.environment_vars)
+  env_vars   = merge(
+    {
+      "AWS_DEFAULT_REGION" : local.aws_region,
+      "DETECT_HOSTNAME": 'true'
+    },
+    var.environment_vars
+  )
   container_secrets_str = join(",\n", [
     for k, v in var.environment_secrets :
     "{\"name\": \"${k}\", \"valueFrom\": \"${v}\"}"

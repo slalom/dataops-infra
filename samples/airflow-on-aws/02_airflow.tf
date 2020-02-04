@@ -10,7 +10,6 @@ module "airflow" {
   container_image   = "puckel/docker-airflow"
   container_command = "webserver"
   environment_vars = {
-    "DETECT_HOSTNAME" = "true"
     "PROJECT_GIT_URL" = "git+https://github.com/slalom-ggp/dataops-infra.git"
   }
   environment_secrets = {
