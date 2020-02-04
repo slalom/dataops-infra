@@ -22,12 +22,13 @@ resource "aws_redshift_cluster" "redshift" {
     : var.admin_password
   )
 
-  node_type       = var.node_type
-  number_of_nodes = var.num_nodes
-  cluster_type    = var.num_nodes > 1 ? "multi-node" : "single-node"
-  kms_key_id      = var.kms_key_id
-  elastic_ip      = var.elastic_ip
-  port            = var.jdbc_port
+  node_type           = var.node_type
+  number_of_nodes     = var.num_nodes
+  cluster_type        = var.num_nodes > 1 ? "multi-node" : "single-node"
+  kms_key_id          = var.kms_key_id
+  elastic_ip          = var.elastic_ip
+  port                = var.jdbc_port
+  skip_final_snapshot = var.skip_final_snapshot
 
   logging {
     enable        = var.s3_logging_bucket == null ? false : true

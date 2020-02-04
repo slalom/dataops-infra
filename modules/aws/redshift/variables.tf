@@ -5,6 +5,7 @@ variable "resource_tags" {
   type    = map
   default = {}
 }
+variable "skip_final_snapshot" { default = false }
 variable "admin_password" {
   description = "Must be 8 characters long."
   type        = string

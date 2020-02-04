@@ -1,5 +1,6 @@
 variable "name_prefix" { type = string }
 variable "aws_region" { default = null }
+variable "skip_final_snapshot" { default = false }
 variable "resource_tags" {
   type    = map
   default = {}

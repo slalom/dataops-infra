@@ -49,3 +49,15 @@ variable "environment_vars" {
   default     = {}
   description = "Mapping of environment variable names to their values."
 }
+variable "load_balancer_arn" {
+  type    = string
+  default = null
+}
+variable "always_on" {
+  type    = bool
+  default = false
+}
+variable "use_load_balancer" {
+  type    = bool
+  default = false
+}

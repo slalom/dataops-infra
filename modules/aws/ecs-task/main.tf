@@ -68,9 +68,13 @@ resource "aws_ecs_task_definition" "ecs_task" {
 DEFINITION
 }
 
+data "aws_vpc" "lookup" {
+  id = var.vpc_id
+}
+
 resource "aws_security_group" "ecs_tasks_sg" {
   name        = "${var.name_prefix}ECSSecurityGroup"
-  description = "allow inbound access on specific ports"
+  description = "allow inbound access on specific ports, outbound on all ports"
   vpc_id      = var.vpc_id
   tags        = var.resource_tags
   dynamic "ingress" {
@@ -82,23 +86,50 @@ resource "aws_security_group" "ecs_tasks_sg" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
+  dynamic "ingress" {
+    for_each = var.admin_ports
+    content {
+      protocol    = "tcp"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
   egress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
+resource "aws_security_group_rule" "ingress_docker_ports" {
+  type              = "ingress"
+  from_port         = 32768
+  to_port           = 61000
+  protocol          = "-1"
+  cidr_blocks       = ["${data.aws_vpc.lookup.cidr_block}"]
+  security_group_id = aws_security_group.ecs_tasks_sg.id
+}
+
 resource "aws_ecs_service" "ecs_service" {
   name            = "${var.name_prefix}ECSService"
-  desired_count   = 0
+  desired_count   = var.always_on ? 1 : 0
   cluster         = data.aws_ecs_cluster.ecs_cluster.arn
   task_definition = aws_ecs_task_definition.ecs_task.arn
   launch_type     = local.launch_type
+  # iam_role        = aws_iam_role.ecs_task_execution_role.name
   network_configuration {
-    subnets         = var.subnets
-    security_groups = [aws_security_group.ecs_tasks_sg.id]
+    subnets          = var.subnets
+    security_groups  = [
+      aws_security_group.ecs_tasks_sg.id
+    ]
+    assign_public_ip = true
+  }
+  load_balancer {
+    target_group_arn = var.use_load_balancer ? aws_lb_target_group.alb_target_group[0].arn : null
+    container_name = var.use_load_balancer ? var.container_name : null
+    container_port = var.use_load_balancer ? var.admin_ports["WebPortal"] : null
   }
 }
 

@@ -1,3 +1,7 @@
+############################
+### IAM Global Constants ###
+############################
+
 data "aws_iam_policy" "AmazonS3FullAccess" {
   arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
@@ -10,6 +14,10 @@ data "aws_iam_policy" "CloudWatchLogsFullAccess" {
 data "aws_iam_policy" "SecretsManagerReadWrite" {
   arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
 }
+
+##############################
+### ECS Task Excution Role ###
+##############################
 
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "${var.name_prefix}ECSWorkerRole"
@@ -38,6 +46,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   }
 EOF
 }
+
 resource "aws_iam_role_policy_attachment" "ecs_role_policy-S3" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = data.aws_iam_policy.AmazonS3FullAccess.arn
