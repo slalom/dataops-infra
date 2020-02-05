@@ -4,7 +4,7 @@ resource "aws_lb" "alb" {
   name               = "${lower(var.name_prefix)}lb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = var.subnets
+  subnets            = var.public_subnets
   tags               = var.resource_tags
   security_groups    = [aws_security_group.ecs_tasks_sg.id]
 
@@ -12,9 +12,9 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb_target_group" {
-  count       = var.use_load_balancer ? 1 : 0
-  name        = "${var.name_prefix}LB-TargetGroup"
-  port        = 8080
+  for_each    = var.use_load_balancer ? toset(var.app_ports) : []
+  name        = "${var.name_prefix}LB-TargetGroup-${each.value}"
+  port        = each.value
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = var.vpc_id

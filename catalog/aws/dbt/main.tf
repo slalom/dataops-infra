@@ -3,7 +3,7 @@ data "aws_region" "current" {}
 
 locals {
   project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  aws_region        = var.aws_region != null ? var.aws_region : data.aws_region.current.name
+  aws_region        = coalesce(var.aws_region, data.aws_region.current.name)
   admin_cidr        = var.admin_cidr
   admin_ports = {
     "DBT Docs"      = "8080"
@@ -12,11 +12,17 @@ locals {
   tz_hour_offset = (
     contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
   )
+  vpc_id = coalesce(var.vpc_id, module.vpc.vpc_id)
+  public_subnets = coalesce(var.public_subnets, module.vpc.public_subnets)
+  private_subnets = coalesce(var.private_subnets, module.vpc.private_subnets)
 }
 
 module "vpc" {
-  source      = "../../../modules/aws/vpc"
-  name_prefix = var.name_prefix
+  source        = "../../../modules/aws/vpc"
+  disabled      = var.create_vpc ? false : true
+  name_prefix   = var.name_prefix
+  aws_region    = local.aws_region
+  resource_tags = var.resource_tags
 }
 
 module "ecs_cluster" {
@@ -32,8 +38,9 @@ module "ecs_task" {
   aws_region          = local.aws_region
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
-  vpc_id              = module.vpc.vpc_id
-  subnets             = module.vpc.private_subnet_ids
+  vpc_id              = local.vpc_id
+  public_subnets      = local.public_subnets
+  private_subnets     = local.private_subnets
   container_image     = var.container_image
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores

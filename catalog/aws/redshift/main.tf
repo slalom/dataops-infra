@@ -3,19 +3,23 @@
 data "aws_region" "current" {}
 
 locals {
-  aws_region = var.aws_region != null ? var.aws_region : data.aws_region.current.name
+  aws_region = coalesce(coalesce(var.aws_region, data.aws_region.current.name)
+  vpc_id = coalesce(var.vpc_id, module.vpc.vpc_id)
+  subnets = coalesce(var.subnets, module.vpc.public_subnets)
 }
 
 module "vpc" {
-  source      = "../../../modules/aws/vpc"
-  name_prefix = var.name_prefix
-  aws_region  = local.aws_region
+  source        = "../../../modules/aws/vpc"
+  disabled      = var.create_vpc ? false : true
+  name_prefix   = var.name_prefix
+  aws_region    = local.aws_region
+  resource_tags = var.resource_tags
 }
 
 module "redshift" {
   source              = "../../../modules/aws/redshift"
   name_prefix         = var.name_prefix
-  subnets             = module.vpc.public_subnet_ids
+  subnets             = local.subnets
   resource_tags       = var.resource_tags
   skip_final_snapshot = var.skip_final_snapshot
   admin_password      = var.admin_password

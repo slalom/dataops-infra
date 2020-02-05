@@ -18,3 +18,10 @@ provider "aws" {
   version = "~> 2.10"
   profile = "${local.project_shortname}-terraform"
 }
+
+module "vpc" {
+  source        = "../../modules/aws/vpc"
+  name_prefix   = local.name_prefix
+  aws_region    = local.aws_region
+  resource_tags = local.config["project_tags"]
+}

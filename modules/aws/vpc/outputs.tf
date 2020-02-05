@@ -1,3 +1,3 @@
-output "vpc_id" { value = aws_vpc.my_vpc.id }
-output "private_subnet_ids" { value = aws_subnet.private_subnets.*.id }
-output "public_subnet_ids" { value = aws_subnet.public_subnets.*.id }
+output "vpc_id" { value = var.disabled ? null : aws_vpc.my_vpc[0].id }
+output "private_subnets" { value = var.disabled ? null : aws_subnet.private_subnets[0].*.id }
+output "public_subnets" { value = var.disabled ? null : aws_subnet.public_subnets[0].*.id }

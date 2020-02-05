@@ -25,7 +25,8 @@ variable "ecs_launch_type" {
   default     = "FARGATE"
 }
 variable "vpc_id" { type = string }
-variable "subnets" { type = list(string) }
+variable "public_subnets" { type = list(string) }
+variable "private_subnets" { type = list(string) }
 variable "app_ports" { default = ["8080"] }
 variable "admin_ports" { default = ["8080"] }
 variable "container_name" { default = "DefaultContainer" }

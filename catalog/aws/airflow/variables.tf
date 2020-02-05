@@ -1,14 +1,13 @@
 variable "name_prefix" { type = string }
-variable "aws_region" {
-  type    = string
-  default = null
-}
+variable "aws_region" { default = null }
+variable "vpc_id" { default = null }
+variable "create_vpc" { default = false }
+variable "resource_tags" { type = map(string) }
 variable "github_repo_ref" {
   type = string
   description = "The git repo reference to clone onto the airflow server"
   default = null
 }
-variable "resource_tags" { type = map(string) }
 variable "container_command" {
   type = string
 }

@@ -1,9 +1,10 @@
 variable "name_prefix" {}
 variable "aws_region" { default = null }
-variable "app_ports" { default = ["8080"] }
-variable "admin_cidr" { default = [] }
-variable "default_cidr" { default = ["0.0.0.0/0"] }
 variable "resource_tags" {
   type    = map
   default = {}
+}
+variable "disabled" {
+  description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
+  default     = false
 }

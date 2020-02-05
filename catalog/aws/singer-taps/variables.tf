@@ -1,5 +1,11 @@
 variable "aws_region" { default = null }
 variable "name_prefix" { type = string }
+variable "vpc_id" { default = null }
+variable "create_vpc" { default = false }
+variable "subnets" {
+  type    = list(string)
+  default = null
+}
 variable "resource_tags" {
   type    = map
   default = {}
@@ -26,16 +32,22 @@ variable "environment_vars" {
   default     = {}
   description = "Mapping of environment variable names to their values."
 }
-variable "scheduled_refresh_interval" {
+variable "scheduled_sync_interval" {
   type        = string
   description = "A rate string, e.g. '5 minutes'. This is in addition to any other scheduled executions."
   default     = null
 }
-variable "scheduled_refresh_times" {
+variable "scheduled_sync_times" {
   type        = list(string)
   description = "A list of schedule strings in 6-part cron notation. For help creating cron schedule codes: https://crontab.guru"
   default     = []
 }
 variable "scheduled_timezone" {
   default = "PT"
+}
+variable "tap_plan_command" {
+  default = "./data/taps/plan.sh"
+}
+variable "tap_sync_command" {
+  default = "./data/taps/sync.sh"
 }

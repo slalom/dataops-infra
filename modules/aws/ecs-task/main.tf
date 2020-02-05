@@ -2,11 +2,11 @@ data "aws_region" "current" {}
 data "aws_ecs_cluster" "ecs_cluster" { cluster_name = var.ecs_cluster_name }
 
 locals {
-  aws_region = var.aws_region != null ? var.aws_region : data.aws_region.current.name
+  aws_region = coalesce(var.aws_region, data.aws_region.current.name)
   env_vars   = merge(
     {
       "AWS_DEFAULT_REGION" : local.aws_region,
-      "DETECT_HOSTNAME": 'true'
+      "DETECT_HOSTNAME": "true"
     },
     var.environment_vars
   )
@@ -126,16 +126,21 @@ resource "aws_ecs_service" "ecs_service" {
   launch_type     = local.launch_type
   # iam_role        = aws_iam_role.ecs_task_execution_role.name
   network_configuration {
-    subnets          = var.subnets
+    subnets          = var.public_subnets
     security_groups  = [
       aws_security_group.ecs_tasks_sg.id
     ]
     assign_public_ip = true
   }
-  load_balancer {
-    target_group_arn = var.use_load_balancer ? aws_lb_target_group.alb_target_group[0].arn : null
-    container_name = var.use_load_balancer ? var.container_name : null
-    container_port = var.use_load_balancer ? var.admin_ports["WebPortal"] : null
+  dynamic "load_balancer" {
+    for_each = var.use_load_balancer ? toset(var.app_ports) : []
+    content {
+      target_group_arn = var.use_load_balancer ? aws_lb_target_group.alb_target_group[each.value].arn : null
+      container_name = var.container_name
+      container_port = each.value
+      # container_name = var.use_load_balancer ? var.container_name : null
+      # container_port = var.use_load_balancer ? var.admin_ports["WebPortal"] : null
+    }
   }
 }
 
@@ -158,7 +163,7 @@ resource "aws_cloudwatch_event_target" "daily_run_task" {
     launch_type         = var.ecs_launch_type
     group               = "${var.name_prefix}ScheduledTasks"
     network_configuration {
-      subnets          = var.subnets
+      subnets          = var.public_subnets
       security_groups  = [aws_security_group.ecs_tasks_sg.id]
       assign_public_ip = false
     }

@@ -1,10 +1,12 @@
 variable "name_prefix" { type = string }
 variable "aws_region" { default = null }
-variable "skip_final_snapshot" { default = false }
+variable "vpc_id" { default = null }
+variable "create_vpc" { default = false }
 variable "resource_tags" {
   type    = map
   default = {}
 }
+variable "skip_final_snapshot" { default = false }
 variable "admin_password" {
   description = "Must be 8 characters long."
   type        = string

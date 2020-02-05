@@ -5,12 +5,15 @@ module "singer_taps_on_aws" {
   source        = "../../catalog/aws/singer-taps"
   name_prefix   = local.name_prefix
   resource_tags = local.project_tags
+  vpc_id        = module.vpc.vpc_id
+  subnets       = module.vpc.private_subnets
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
   container_image            = "slalomggp/dataops:test-project-latest-dev"
-  sync_command               = "./gradlew tapSyncSalesforce"
-  scheduled_refresh_interval = "4 hours"
+  tap_plan_command           = "./data/taps/plan.sh"
+  tap_sync_command           = "./data/taps/sync.sh"
+  scheduled_sync_interval = "4 hours"
   environment_vars           = {}
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
@@ -18,9 +21,9 @@ module "singer_taps_on_aws" {
   docker_registry_url        = ""
   docker_user                = ""
   docker_password            = ""
-  scheduled_refresh_interval = "1 minute"
+  scheduled_sync_interval = "1 minute"
   scheduled_timezone         = "PST"
-  scheduled_refresh_times    = ["0300", "1200", "1800"]
+  scheduled_sync_times    = ["0300", "1200", "1800"]
 
   */
 }

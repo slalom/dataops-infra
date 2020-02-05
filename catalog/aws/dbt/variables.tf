@@ -1,4 +1,8 @@
 variable "aws_region" { default = null }
+variable "vpc_id" { default = null }
+variable "create_vpc" { default = false }
+variable "public_subnets" { default = null }
+variable "private_subnets" { default = null }
 variable "resource_tags" {
   type    = map
   default = {}
