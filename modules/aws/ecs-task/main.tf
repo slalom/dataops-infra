@@ -109,15 +109,6 @@ resource "aws_security_group" "ecs_tasks_sg" {
   }
 }
 
-resource "aws_security_group_rule" "ingress_docker_ports" {
-  type              = "ingress"
-  from_port         = 32768
-  to_port           = 61000
-  protocol          = "-1"
-  cidr_blocks       = ["${data.aws_vpc.lookup.cidr_block}"]
-  security_group_id = aws_security_group.ecs_tasks_sg.id
-}
-
 resource "aws_ecs_service" "ecs_service" {
   name            = "${var.name_prefix}ECSService"
   desired_count   = var.always_on ? 1 : 0
