@@ -137,7 +137,7 @@ resource "aws_ecs_service" "ecs_service" {
 
 resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
   for_each            = var.schedules
-  name_prefix         = "${var.name_prefix}ecs-task-schedule-run-"
+  name_prefix         = "${var.name_prefix}sched-"
   description         = "Daily Execution 'run' @ ${each.value}"
   schedule_expression = each.value
 }

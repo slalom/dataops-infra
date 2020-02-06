@@ -1,19 +1,14 @@
 data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 
-resource "aws_key_pair" "mykey" {
-  key_name   = "${var.name_prefix}ec2-keypair"
-  public_key = file(local.ssh_public_key_filepath)
-}
-
 locals {
-  project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  name_prefix              = "${var.name_prefix}Tableau-"
   aws_region               = coalesce(var.aws_region, data.aws_region.current.name)
   admin_cidr               = var.admin_cidr
   default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
-  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
-  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
+  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pub"
+  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pem"
   win_files = flatten([
     fileset(path.module, "resources/win/*"),
     fileset(path.module, "resources/*"),
@@ -39,10 +34,15 @@ locals {
   private_subnets = coalece(var.private_subnets, module.vpc.private_subnets)
 }
 
+resource "aws_key_pair" "mykey" {
+  key_name   = "${local.name_prefix}ec2-keypair"
+  public_key = file(local.ssh_public_key_filepath)
+}
+
 module "vpc" {
   source        = "../../../modules/aws/vpc"
   disabled      = var.create_vpc ? false : true
-  name_prefix   = var.name_prefix
+  name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
 }
@@ -50,7 +50,7 @@ module "vpc" {
 module "windows_tableau_servers" {
   source                   = "../../../modules/aws/ec2"
   is_windows               = true
-  name_prefix              = var.name_prefix
+  name_prefix              = "${local.name_prefix}win-"
   aws_region               = local.aws_region
   resource_tags            = var.resource_tags
   num_instances            = var.num_windows_instances
@@ -68,7 +68,7 @@ module "windows_tableau_servers" {
 
 module "linux_tableau_servers" {
   source                   = "../../../modules/aws/ec2"
-  name_prefix              = var.name_prefix
+  name_prefix              = "${local.name_prefix}lin-"
   aws_region               = local.aws_region
   resource_tags            = var.resource_tags
   num_instances            = var.num_linux_instances

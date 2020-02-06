@@ -2,7 +2,7 @@ data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 
 locals {
-  project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  name_prefix       = "${var.name_prefix}DBT-"
   aws_region        = coalesce(var.aws_region, data.aws_region.current.name)
   admin_cidr        = var.admin_cidr
   admin_ports = {
@@ -20,21 +20,21 @@ locals {
 module "vpc" {
   source        = "../../../modules/aws/vpc"
   disabled      = var.create_vpc ? false : true
-  name_prefix   = var.name_prefix
+  name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
 }
 
 module "ecs_cluster" {
   source        = "../../../modules/aws/ecs-cluster"
-  name_prefix   = var.name_prefix
+  name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
 }
 
 module "ecs_task" {
   source              = "../../../modules/aws/ecs-task"
-  name_prefix         = "${var.name_prefix}run-"
+  name_prefix         = "${local.name_prefix}run-"
   aws_region          = local.aws_region
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name

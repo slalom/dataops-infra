@@ -14,7 +14,7 @@ variable "admin_cidr" {
 variable "container_image" { default = "slalomggp/dataops" }
 variable "container_entrypoint" { default = null }
 variable "container_num_cores" { default = 4 }
-variable "container_ram_gb" { default = 30 }
+variable "container_ram_gb" { default = 16 }
 variable "dbt_project_git_repo" {
   type    = string
   default = "git+https://github.com/slalom-ggp/dataops-project-template.git"

@@ -8,26 +8,27 @@ locals {
   vpc_id     = coalesce(var.vpc_id, module.vpc.vpc_id)
   subnets    = coalesce(var.subnets, module.vpc.public_subnets)
   aws_region = coalesce(var.aws_region, data.aws_region.current.name)
+  name_prefix = "${var.name_prefix}Tap-"
 }
 
 module "vpc" {
   source        = "../../../modules/aws/vpc"
   disabled      = var.create_vpc ? false : true
-  name_prefix   = var.name_prefix
+  name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
 }
 
 module "ecs_cluster" {
   source        = "../../../modules/aws/ecs-cluster"
-  name_prefix   = var.name_prefix
+  name_prefix   = local.name_prefix
   aws_region    = var.aws_region
   resource_tags = var.resource_tags
 }
 
 module "ecs_tap_sync_task" {
   source              = "../../../modules/aws/ecs-task"
-  name_prefix         = "${var.name_prefix}sync-"
+  name_prefix         = "${local.name_prefix}sync-"
   aws_region          = var.aws_region
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name

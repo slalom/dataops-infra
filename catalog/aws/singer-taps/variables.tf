@@ -14,7 +14,7 @@ variable "container_image" { default = "slalomggp/dataops" }
 variable "container_entrypoint" { default = null }
 variable "conatiner_command" { default = null }
 variable "container_num_cores" { default = 2 }
-variable "container_ram_gb" { default = 2 }
+variable "container_ram_gb" { default = 4 }
 variable "project_git_repo" {
   type    = string
   default = "git+https://github.com/slalom-ggp/dataops-project-template.git"

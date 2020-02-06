@@ -19,10 +19,10 @@ data "aws_availability_zones" "az_list" {
 resource "aws_vpc" "my_vpc" {
   count      = var.disabled ? 0 : 1
   cidr_block = "10.0.0.0/16"
-  tags = {
-    Name    = "${var.name_prefix}VPC"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags,
+    { Name = "${var.name_prefix}VPC" }
+  )
 }
 
 resource "aws_subnet" "public_subnets" {
@@ -31,10 +31,10 @@ resource "aws_subnet" "public_subnets" {
   cidr_block              = "10.0.${count.index + 2}.0/24"
   vpc_id                  = aws_vpc.my_vpc[0].id
   map_public_ip_on_launch = true
-  tags = {
-    Name    = "${var.name_prefix}PublicSubnet-${count.index}"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags,
+    { Name = "${var.name_prefix}PublicSubnet${count.index}" }
+  )
 }
 
 resource "aws_subnet" "private_subnets" {
@@ -43,46 +43,46 @@ resource "aws_subnet" "private_subnets" {
   cidr_block              = "10.0.${count.index}.0/24"
   vpc_id                  = aws_vpc.my_vpc[0].id
   map_public_ip_on_launch = false
-  tags = {
-    Name    = "${var.name_prefix}PrivateSubnet-${count.index}"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags,
+    { Name = "${var.name_prefix}PrivateSubnet${count.index}" }
+  )
 }
 
 resource "aws_internet_gateway" "my_igw" {
   count  = var.disabled ? 0 : 1
   vpc_id = aws_vpc.my_vpc[0].id
-  tags = {
-    Name    = "${var.name_prefix}IGW"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags, 
+    { Name = "${var.name_prefix}IGW" }
+  )
 }
 
 resource "aws_eip" "nat_eip" {
   count  = var.disabled ? 0 : 1
-  tags = {
-    Name    = "${var.name_prefix}EIP"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags, 
+    { Name = "${var.name_prefix}EIP" }
+  )
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
   count         = var.disabled ? 0 : 1
   allocation_id = aws_eip.nat_eip[0].id
   subnet_id     = aws_subnet.public_subnets[0].id
-  tags = {
-    Name    = "${var.name_prefix}NAT"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags, 
+    { Name = "${var.name_prefix}NAT" }
+  )
 }
 
 resource "aws_route_table" "public_rt" {
   count  = var.disabled ? 0 : 1
   vpc_id = aws_vpc.my_vpc[0].id
-  tags = {
-    Name    = "${var.name_prefix}PublicRT"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags, 
+    { Name = "${var.name_prefix}PublicRT" }
+  )
 }
 
 resource "aws_route_table_association" "public_rt_assoc" {
@@ -107,10 +107,10 @@ resource "aws_route_table_association" "private_rt_assoc" {
 resource "aws_route_table" "private_rt" {
   count  = var.disabled ? 0 : 1
   vpc_id = aws_vpc.my_vpc[0].id
-  tags = {
-    Name    = "${var.name_prefix}PrivateRT"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags, 
+    { Name = "${var.name_prefix}PrivateRT" }
+  )
 }
 
 resource "aws_route" "nat_route" {

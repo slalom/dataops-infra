@@ -3,6 +3,7 @@ output "logging_url" { value = module.airflow_ecs_task.ecs_logging_url }
 output "server_launch_cli" { value = module.airflow_ecs_task.ecs_runtask_cli }
 output "summary" {
   value = <<EOF
+
 Airflow Summary:
   Launch command: ${module.airflow_ecs_task.ecs_runtask_cli}
   Logging URL:    ${module.airflow_ecs_task.ecs_logging_url}
