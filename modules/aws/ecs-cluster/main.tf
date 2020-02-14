@@ -5,7 +5,8 @@ locals {
 }
 
 resource "aws_launch_configuration" "ecs_instance_launch_config" {
-  name_prefix                 = "${var.name_prefix}ECSStandardLaunchConfig"
+  count                       = var.ec2_instance_count == 0 ? 0 : 1
+  name_prefix                 = "${var.name_prefix}launch-"
   associate_public_ip_address = true
   ebs_optimized               = true
   enable_monitoring           = true
@@ -20,12 +21,13 @@ USER_DATA
 }
 
 resource "aws_autoscaling_group" "ecs_asg" {
+  count                = var.ec2_instance_count == 0 ? 0 : 1
   name                 = "${var.name_prefix}ECSASG"
   availability_zones   = slice(data.aws_availability_zones.az_list.names, 0, 2)
-  desired_capacity     = var.min_ec2_instances
-  min_size             = var.min_ec2_instances
-  max_size             = var.max_ec2_instances
-  launch_configuration = aws_launch_configuration.ecs_instance_launch_config.id
+  desired_capacity     = var.ec2_instance_count
+  min_size             = var.ec2_instance_count
+  max_size             = var.ec2_instance_count
+  launch_configuration = aws_launch_configuration.ecs_instance_launch_config[0].id
 }
 
 data "aws_ami" "ecs_linux_ami" {

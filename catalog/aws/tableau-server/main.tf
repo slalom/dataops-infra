@@ -1,19 +1,14 @@
 data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 
-resource "aws_key_pair" "mykey" {
-  key_name   = "${var.name_prefix}ec2-keypair"
-  public_key = file(local.ssh_public_key_filepath)
-}
-
 locals {
-  project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  aws_region               = var.aws_region != null ? var.aws_region : data.aws_region.current.name
+  name_prefix              = "${var.name_prefix}Tableau-"
+  aws_region               = coalesce(var.aws_region, data.aws_region.current.name)
   admin_cidr               = var.admin_cidr
   default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
-  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
-  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
+  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pub"
+  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pem"
   win_files = flatten([
     fileset(path.module, "resources/win/*"),
     fileset(path.module, "resources/*"),
@@ -34,18 +29,27 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
+  vpc_id          = coalecse(var.vpc_id, module.vpc.vpc_id)
+  public_subnets  = coalece(var.public_subnets, module.vpc.public_subnets)
+  private_subnets = coalece(var.private_subnets, module.vpc.private_subnets)
 }
 
-module "tableau_vpc" {
+resource "aws_key_pair" "mykey" {
+  key_name   = "${local.name_prefix}ec2-keypair"
+  public_key = file(local.ssh_public_key_filepath)
+}
+
+module "vpc" {
   source        = "../../../modules/aws/vpc"
-  name_prefix   = var.name_prefix
+  name_prefix   = local.name_prefix
+  aws_region    = local.aws_region
   resource_tags = var.resource_tags
 }
 
 module "windows_tableau_servers" {
   source                   = "../../../modules/aws/ec2"
   is_windows               = true
-  name_prefix              = var.name_prefix
+  name_prefix              = "${local.name_prefix}win-"
   aws_region               = local.aws_region
   resource_tags            = var.resource_tags
   num_instances            = var.num_windows_instances
@@ -57,14 +61,13 @@ module "windows_tableau_servers" {
   app_ports                = local.tableau_app_ports
   ssh_key_name             = aws_key_pair.mykey.key_name
   ssh_private_key_filepath = local.ssh_private_key_filepath
-  vpc_id                   = module.tableau_vpc.vpc_id
-  subnet_id                = coalescelist(module.tableau_vpc.public_subnet_ids, [""])[0]
-  # subnet_id              = coalescelist(module.tableau_vpc.private_subnet_ids, [""])[0]
+  vpc_id                   = local.vpc_id
+  subnet_id                = coalescelist(local.public_subnets, [""])[0]
 }
 
 module "linux_tableau_servers" {
   source                   = "../../../modules/aws/ec2"
-  name_prefix              = var.name_prefix
+  name_prefix              = "${local.name_prefix}lin-"
   aws_region               = local.aws_region
   resource_tags            = var.resource_tags
   num_instances            = var.num_linux_instances
@@ -76,7 +79,6 @@ module "linux_tableau_servers" {
   app_ports                = local.tableau_app_ports
   ssh_key_name             = aws_key_pair.mykey.key_name
   ssh_private_key_filepath = local.ssh_private_key_filepath
-  vpc_id                   = module.tableau_vpc.vpc_id
-  subnet_id                = coalescelist(module.tableau_vpc.public_subnet_ids, [""])[0]
-  # subnet_id              = coalescelist(module.tableau_vpc.private_subnet_ids, [""])[0]
+  vpc_id                   = local.vpc_id
+  subnet_id                = coalescelist(local.public_subnets, [""])[0]
 }

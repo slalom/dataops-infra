@@ -2,20 +2,13 @@ data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 
 locals {
-  name_prefix = "${var.name_prefix}DBT-"
-  aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
-  admin_cidr  = var.admin_cidr
-  admin_ports = {
-    "DBT Docs"      = "8080"
-    "Thrift (JDBC)" = "10000"
-  }
   tz_hour_offset = (
     contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
   )
-  vpc_id          = coalesce(var.vpc_id, module.vpc.vpc_id)
-  public_subnets  = coalesce(var.public_subnets, module.vpc.public_subnets)
-  private_subnets = coalesce(var.private_subnets, module.vpc.private_subnets)
-  create_vpc      = var.vpc_id == null && var.private_subnets == null && var.public_subnets == null
+  vpc_id      = coalesce(var.vpc_id, module.vpc.vpc_id)
+  subnets     = coalesce(var.subnets, module.vpc.public_subnets)
+  aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
+  name_prefix = "${var.name_prefix}Tap-"
 }
 
 module "vpc" {
@@ -29,32 +22,31 @@ module "vpc" {
 module "ecs_cluster" {
   source        = "../../../modules/aws/ecs-cluster"
   name_prefix   = local.name_prefix
-  aws_region    = local.aws_region
+  aws_region    = var.aws_region
   resource_tags = var.resource_tags
 }
 
-module "ecs_task" {
+module "ecs_tap_sync_task" {
   source              = "../../../modules/aws/ecs-task"
-  name_prefix         = "${local.name_prefix}run-"
-  aws_region          = local.aws_region
+  name_prefix         = "${local.name_prefix}sync-"
+  aws_region          = var.aws_region
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
   vpc_id              = local.vpc_id
-  public_subnets      = local.public_subnets
-  private_subnets     = local.private_subnets
+  public_subnets      = local.subnets
+  private_subnets     = local.subnets
   container_image     = var.container_image
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores
-  container_command   = var.dbt_run_command
+  container_command   = var.tap_sync_command
   use_fargate         = true
-  admin_ports         = local.admin_ports
   environment_vars    = var.environment_vars
   environment_secrets = var.environment_secrets
   schedules = flatten([
-    var.scheduled_refresh_interval == null ? [] : ["rate(${var.scheduled_refresh_interval})"],
+    var.scheduled_sync_interval == null ? [] : ["rate(${var.scheduled_sync_interval})"],
     [
       # Convert 4-digit time of day into cron. Cron tester: https://crontab.guru/
-      for cron_expr in var.scheduled_refresh_times :
+      for cron_expr in var.scheduled_sync_times :
       "cron(${
         tonumber(substr(cron_expr, 2, 2))
         } ${

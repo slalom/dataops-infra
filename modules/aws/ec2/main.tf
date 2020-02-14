@@ -60,7 +60,7 @@ resource "aws_security_group" "ec2_sg_admin_ports" {
   name_prefix = "${var.name_prefix}SecurityGroupForAdminPorts"
   description = "allow admin traffic from whitelisted IPs"
   vpc_id      = var.vpc_id
-  tags        = { project = local.project_shortname }
+  tags        = var.resource_tags
   dynamic "ingress" {
     for_each = var.admin_ports
     content {
@@ -77,7 +77,7 @@ resource "aws_security_group" "ec2_sg_app_ports" {
   name_prefix = "${var.name_prefix}SecurityGroupForAppPorts"
   description = "allow app traffic on whitelisted ports"
   vpc_id      = var.vpc_id
-  tags        = { project = local.project_shortname }
+  tags        = var.resource_tags
   dynamic "ingress" {
     for_each = var.app_ports
     content {
@@ -94,7 +94,7 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
   name_prefix = "${var.name_prefix}SecurityGroupForOutbound"
   description = "allow all outbound traffic"
   vpc_id      = var.vpc_id
-  tags        = { project = local.project_shortname }
+  tags        = var.resource_tags
   egress {
     protocol    = "tcp"
     from_port   = "0"
@@ -120,10 +120,10 @@ resource "aws_instance" "ec2_instances" {
   ebs_optimized               = true
   monitoring                  = true
   disable_api_termination     = false
-  tags = {
-    name    = "${var.name_prefix}TableauServer-Linux"
-    project = local.project_shortname
-  }
+  tags = merge(
+    var.resource_tags,
+    { name = "${var.name_prefix}EC2${count.index}" }
+  )
   vpc_security_group_ids = [
     aws_security_group.ec2_sg_admin_ports.id,
     aws_security_group.ec2_sg_allow_outbound.id,

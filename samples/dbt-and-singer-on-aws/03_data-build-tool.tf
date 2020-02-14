@@ -2,9 +2,13 @@ module "dbt_on_aws" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
 
-  source        = "../../catalog/aws/dbt"
-  name_prefix   = local.name_prefix
-  resource_tags = local.project_tags
+  # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/dbt?ref=master"
+  source          = "../../catalog/aws/dbt"
+  name_prefix     = local.name_prefix
+  resource_tags   = local.project_tags
+  vpc_id          = module.vpc.vpc_id
+  public_subnets  = module.vpc.public_subnets
+  private_subnets = module.vpc.private_subnets
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
@@ -13,10 +17,8 @@ module "dbt_on_aws" {
   scheduled_timezone         = "PST"
   scheduled_refresh_interval = "4 hours"
   environment_vars = {
-    "DETECT_HOSTNAME" = "true"
-    "PROJECT_NAME"    = "MY-TEST"
-    "WITH_SPARK"      = "true"
     "PROJECT_GIT_URL" = "git+https://github.com/slalom-ggp/dataops-infra.git"
+    "WITH_SPARK"      = "true"
   }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
@@ -31,4 +33,4 @@ module "dbt_on_aws" {
 }
 
 # BOILERPLATE OUTPUT (NO NEED TO CHANGE):
-output "summary" { value = module.dbt_on_aws.summary }
+output "dbt_summary" { value = module.dbt_on_aws.summary }

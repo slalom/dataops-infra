@@ -1,10 +1,9 @@
-
 resource "aws_lb" "alb" {
   count              = var.use_load_balancer ? 1 : 0
   name               = "${lower(var.name_prefix)}lb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = var.subnets
+  subnets            = coalesce(var.public_subnets, var.private_subnets)
   tags               = var.resource_tags
   security_groups    = [aws_security_group.ecs_tasks_sg.id]
 
@@ -12,9 +11,9 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb_target_group" {
-  count       = var.use_load_balancer ? 1 : 0
-  name        = "${var.name_prefix}LB-TargetGroup"
-  port        = 8080
+  for_each    = var.use_load_balancer ? toset(var.app_ports) : []
+  name        = "${var.name_prefix}LBTargets-${each.value}"
+  port        = each.value
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = var.vpc_id
@@ -29,14 +28,14 @@ resource "aws_lb_target_group" "alb_target_group" {
 }
 
 resource "aws_lb_listener" "listener" {
-  count             = var.use_load_balancer ? 1 : 0
+  for_each          = var.use_load_balancer ? toset(var.app_ports) : []
   load_balancer_arn = aws_lb.alb[0].arn
-  port              = "8080"
+  port              = each.value
   protocol          = "HTTP"
   # ssl_policy        = "ELBSecurityPolicy-2016-08"
   # certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.alb_target_group[0].arn
+    target_group_arn = aws_lb_target_group.alb_target_group[each.value].arn
   }
 }
