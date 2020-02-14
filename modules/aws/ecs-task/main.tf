@@ -3,10 +3,10 @@ data "aws_ecs_cluster" "ecs_cluster" { cluster_name = var.ecs_cluster_name }
 
 locals {
   aws_region = coalesce(var.aws_region, data.aws_region.current.name)
-  env_vars   = merge(
+  env_vars = merge(
     {
       "AWS_DEFAULT_REGION" : local.aws_region,
-      "DETECT_HOSTNAME": "true"
+      "DETECT_HOSTNAME" : "true"
     },
     var.environment_vars
   )
@@ -116,10 +116,10 @@ resource "aws_ecs_service" "ecs_service" {
   task_definition = aws_ecs_task_definition.ecs_task.arn
   launch_type     = local.launch_type
   # iam_role        = aws_iam_role.ecs_task_execution_role.name
-  depends_on      = [aws_lb.alb]
+  depends_on = [aws_lb.alb]
   network_configuration {
-    subnets          = var.public_subnets
-    security_groups  = [
+    subnets = var.public_subnets
+    security_groups = [
       aws_security_group.ecs_tasks_sg.id
     ]
     assign_public_ip = true
@@ -128,8 +128,8 @@ resource "aws_ecs_service" "ecs_service" {
     for_each = var.use_load_balancer ? toset(var.app_ports) : []
     content {
       target_group_arn = var.use_load_balancer ? aws_lb_target_group.alb_target_group[load_balancer.value].arn : null
-      container_name = var.container_name
-      container_port = load_balancer.value
+      container_name   = var.container_name
+      container_port   = load_balancer.value
       # container_name = var.use_load_balancer ? var.container_name : null
       # container_port = var.use_load_balancer ? var.admin_ports["WebPortal"] : null
     }

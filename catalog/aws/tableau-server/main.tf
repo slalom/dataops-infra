@@ -29,8 +29,8 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
-  vpc_id = coalecse(var.vpc_id, module.vpc.vpc_id)
-  public_subnets = coalece(var.public_subnets, module.vpc.public_subnets)
+  vpc_id          = coalecse(var.vpc_id, module.vpc.vpc_id)
+  public_subnets  = coalece(var.public_subnets, module.vpc.public_subnets)
   private_subnets = coalece(var.private_subnets, module.vpc.private_subnets)
 }
 

@@ -2,9 +2,9 @@ data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 
 locals {
-  name_prefix       = "${var.name_prefix}DBT-"
-  aws_region        = coalesce(var.aws_region, data.aws_region.current.name)
-  admin_cidr        = var.admin_cidr
+  name_prefix = "${var.name_prefix}DBT-"
+  aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
+  admin_cidr  = var.admin_cidr
   admin_ports = {
     "DBT Docs"      = "8080"
     "Thrift (JDBC)" = "10000"

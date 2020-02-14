@@ -53,15 +53,15 @@ resource "aws_internet_gateway" "my_igw" {
   count  = var.disabled ? 0 : 1
   vpc_id = aws_vpc.my_vpc[0].id
   tags = merge(
-    var.resource_tags, 
+    var.resource_tags,
     { Name = "${var.name_prefix}IGW" }
   )
 }
 
 resource "aws_eip" "nat_eip" {
-  count  = var.disabled ? 0 : 1
+  count = var.disabled ? 0 : 1
   tags = merge(
-    var.resource_tags, 
+    var.resource_tags,
     { Name = "${var.name_prefix}EIP" }
   )
 }
@@ -71,7 +71,7 @@ resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.nat_eip[0].id
   subnet_id     = aws_subnet.public_subnets[0].id
   tags = merge(
-    var.resource_tags, 
+    var.resource_tags,
     { Name = "${var.name_prefix}NAT" }
   )
 }
@@ -80,7 +80,7 @@ resource "aws_route_table" "public_rt" {
   count  = var.disabled ? 0 : 1
   vpc_id = aws_vpc.my_vpc[0].id
   tags = merge(
-    var.resource_tags, 
+    var.resource_tags,
     { Name = "${var.name_prefix}PublicRT" }
   )
 }
@@ -108,7 +108,7 @@ resource "aws_route_table" "private_rt" {
   count  = var.disabled ? 0 : 1
   vpc_id = aws_vpc.my_vpc[0].id
   tags = merge(
-    var.resource_tags, 
+    var.resource_tags,
     { Name = "${var.name_prefix}PrivateRT" }
   )
 }
