@@ -5,7 +5,7 @@ output "ecs_logging_url" {
 output "ecs_container_name" { value = "${var.container_name}" }
 output "ecs_task_name" { value = "${aws_ecs_task_definition.ecs_task.family}" }
 output "ecs_runtask_cli" {
-  value = "aws ecs run-task --task-definition ${aws_ecs_task_definition.ecs_task.family} --cluster ${var.ecs_cluster_name} --launch-type ${local.launch_type} --region ${local.aws_region} ${var.use_fargate ? "--network-configuration awsvpcConfiguration={subnets=[${element(var.public_subnets, 0)}],securityGroups=[${aws_security_group.ecs_tasks_sg.id}],assignPublicIp=ENABLED}" : ""}"
+  value = "aws ecs run-task --task-definition ${aws_ecs_task_definition.ecs_task.family} --cluster ${var.ecs_cluster_name} --launch-type ${local.launch_type} --region ${local.aws_region} ${var.use_fargate ? "--network-configuration awsvpcConfiguration={subnets=[${element(local.public_subnets, 0)}],securityGroups=[${aws_security_group.ecs_tasks_sg.id}],assignPublicIp=ENABLED}" : ""}"
 }
 output "load_balancer_arn" { value = var.use_load_balancer ? aws_lb.alb[0].arn : null }
 output "load_balancer_dns" { value = var.use_load_balancer ? aws_lb.alb[0].dns_name : null }

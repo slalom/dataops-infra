@@ -25,10 +25,16 @@ variable "ecs_launch_type" {
   default     = "FARGATE"
 }
 variable "vpc_id" { type = string }
-variable "public_subnets" { type = list(string) }
-variable "private_subnets" { type = list(string) }
-variable "app_ports" { default = ["8080"] }
-variable "admin_ports" { default = ["8080"] }
+variable "public_subnets" { type = set(string) }
+variable "private_subnets" { type = set(string) }
+variable "app_ports" {
+  type    = list(string)
+  default = ["8080"]
+}
+variable "admin_ports" {
+  type    = list(string)
+  default = ["8080"]
+}
 variable "container_name" { default = "DefaultContainer" }
 variable "container_image" {
   description = "e.g. [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"

@@ -13,7 +13,7 @@ locals {
 
 module "vpc" {
   source        = "../../../modules/aws/vpc"
-  disabled      = var.create_vpc ? false : true
+  disabled      = local.create_vpc ? false : true
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags

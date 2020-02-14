@@ -23,4 +23,5 @@ module "airflow" {
   */
 }
 
-output "summary" { value = module.airflow.summary }
+output "airflow_summary" { value = module.airflow.summary }
+# output "airflow_summary" { value = "module.airflow.summary" }

@@ -41,7 +41,7 @@ module "ssh_key_pair" {
 }
 
 resource "local_file" "config_yml" {
-  filename = "${path.module}/../../config.yml"
+  filename = "${path.module}/../../infra-config.yml"
   content  = <<EOF
 # This config file is created by 'aws-prereqs' terraform scripts.
 # Please reference this file in future terraform deployments.

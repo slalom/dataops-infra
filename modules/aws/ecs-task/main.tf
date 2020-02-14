@@ -116,6 +116,7 @@ resource "aws_ecs_service" "ecs_service" {
   task_definition = aws_ecs_task_definition.ecs_task.arn
   launch_type     = local.launch_type
   # iam_role        = aws_iam_role.ecs_task_execution_role.name
+  depends_on      = [aws_lb.alb]
   network_configuration {
     subnets          = var.public_subnets
     security_groups  = [
@@ -126,9 +127,9 @@ resource "aws_ecs_service" "ecs_service" {
   dynamic "load_balancer" {
     for_each = var.use_load_balancer ? toset(var.app_ports) : []
     content {
-      target_group_arn = var.use_load_balancer ? aws_lb_target_group.alb_target_group[each.value].arn : null
+      target_group_arn = var.use_load_balancer ? aws_lb_target_group.alb_target_group[load_balancer.value].arn : null
       container_name = var.container_name
-      container_port = each.value
+      container_port = load_balancer.value
       # container_name = var.use_load_balancer ? var.container_name : null
       # container_port = var.use_load_balancer ? var.admin_ports["WebPortal"] : null
     }

@@ -1,7 +1,6 @@
 variable "name_prefix" { type = string }
 variable "aws_region" { default = null }
 variable "vpc_id" { default = null }
-variable "create_vpc" { default = false }
 variable "resource_tags" {
   type    = map
   default = {}

@@ -1,7 +1,6 @@
 variable "aws_region" { default = null }
 variable "name_prefix" { type = string }
 variable "vpc_id" { default = null }
-variable "create_vpc" { default = false }
 variable "subnets" {
   type    = list(string)
   default = null

@@ -15,3 +15,5 @@ module "data_lake_on_aws" {
   default_cidr          = ["0.0.0.0/0"]
   */
 }
+
+output "data_lake_summary" { value = module.data_lake_on_aws.summary }

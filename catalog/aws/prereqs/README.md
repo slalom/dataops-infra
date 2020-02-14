@@ -24,7 +24,7 @@ cd my-project
 Or run non-interactive:
 
 ```bash
-s-infra --config my-project --config=/path/to/config.yml
+s-infra --config my-project --config=/path/to/infra-config.yml
 cd my-project
 ```
 
@@ -33,7 +33,7 @@ cd my-project
 To configure, simply edit the generated yaml file, uncommenting desired features or settings and entering desired values as described in the file's code comments.
 
 ```bash
-code my-project/config.yml
+code my-project/infra-config.yml
 ```
 
 ### 5. Initialize Terraform

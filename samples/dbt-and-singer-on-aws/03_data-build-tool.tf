@@ -2,6 +2,7 @@ module "dbt_on_aws" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
 
+  # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/dbt?ref=master"
   source          = "../../catalog/aws/dbt"
   name_prefix     = local.name_prefix
   resource_tags   = local.project_tags
