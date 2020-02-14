@@ -1,5 +1,5 @@
 # Config file (comment this line to modify the template):
-samples/infra-config.yml
+# samples/infra-config.yml
 
 #  Local .terraform directories
 .terraform

@@ -1,0 +1,8 @@
+# This config file is created by 'aws-prereqs' terraform scripts.
+# Please reference this file in future terraform deployments.
+# NOTE: 1. Changing the project shortname also requires updating the credentials file: ~/.aws/credentials
+#       2. Before changing access keys to a new account, remember to run `terraform destroy`
+aws_region: us-east-1
+project_shortname: AJTest010
+project_tags:
+  admin_contact: aj.steers-at-slalom.com

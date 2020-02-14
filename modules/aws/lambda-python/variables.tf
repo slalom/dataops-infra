@@ -8,6 +8,7 @@ variable "runtime" { default = "python3.7" }
 variable "additional_tool_urls" {
   description = "A map of destination paths to source URLs."
   type        = map(string)
+  default     = {}
 }
 variable "source_root" { type = string }
 variable "build_root" { type = string }

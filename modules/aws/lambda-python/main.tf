@@ -12,7 +12,7 @@ resource "aws_lambda_function" "python_lambda" {
   environment {
     variables = var.environment_vars
   }
-  depends_on    = ["aws_iam_role_policy_attachment.lambda_logs", "aws_cloudwatch_log_group.example"]
+  depends_on = [aws_iam_role_policy_attachment.lambda_logs, aws_cloudwatch_log_group.example]
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
