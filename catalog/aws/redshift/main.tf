@@ -7,6 +7,7 @@ locals {
   aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
   vpc_id      = coalesce(var.vpc_id, module.vpc.vpc_id)
   subnets     = coalesce(var.subnets, module.vpc.public_subnets)
+  create_vpc  = var.vpc_id == null && var.private_subnets == null && var.public_subnets == null
 }
 
 module "vpc" {

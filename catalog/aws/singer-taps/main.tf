@@ -9,11 +9,12 @@ locals {
   subnets     = coalesce(var.subnets, module.vpc.public_subnets)
   aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
   name_prefix = "${var.name_prefix}Tap-"
+  create_vpc  = var.vpc_id == null && var.private_subnets == null && var.public_subnets == null
 }
 
 module "vpc" {
   source        = "../../../modules/aws/vpc"
-  disabled      = local.create_vpc ? false : true
+  disabled      = ! local.create_vpc
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
