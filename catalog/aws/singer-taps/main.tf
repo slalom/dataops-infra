@@ -5,9 +5,9 @@ locals {
   tz_hour_offset = (
     contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
   )
-  vpc_id     = coalesce(var.vpc_id, module.vpc.vpc_id)
-  subnets    = coalesce(var.subnets, module.vpc.public_subnets)
-  aws_region = coalesce(var.aws_region, data.aws_region.current.name)
+  vpc_id      = coalesce(var.vpc_id, module.vpc.vpc_id)
+  subnets     = coalesce(var.subnets, module.vpc.public_subnets)
+  aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
   name_prefix = "${var.name_prefix}Tap-"
 }
 

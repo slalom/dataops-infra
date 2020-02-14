@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 
 locals {
   name_prefix = "${var.name_prefix}-RS"
-  aws_region  = coalesce(coalesce(var.aws_region, data.aws_region.current.name)
+  aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
   vpc_id      = coalesce(var.vpc_id, module.vpc.vpc_id)
   subnets     = coalesce(var.subnets, module.vpc.public_subnets)
 }

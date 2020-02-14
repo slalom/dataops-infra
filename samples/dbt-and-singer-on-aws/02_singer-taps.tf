@@ -11,11 +11,11 @@ module "singer_taps_on_aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  container_image            = "slalomggp/dataops:test-project-latest-dev"
-  tap_plan_command           = "./data/taps/plan.sh"
-  tap_sync_command           = "./data/taps/sync.sh"
-  scheduled_sync_interval    = "4 hours"
-  environment_vars           = {}
+  container_image         = "slalomggp/dataops:test-project-latest-dev"
+  tap_plan_command        = "./data/taps/plan.sh"
+  tap_sync_command        = "./data/taps/sync.sh"
+  scheduled_sync_interval = "4 hours"
+  environment_vars        = {}
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 

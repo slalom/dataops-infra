@@ -6,10 +6,10 @@ locals {
   create_vpc      = var.vpc_id == null && var.private_subnets == null && var.public_subnets == null
 }
 data "aws_subnet" "public_subnet_lookup" {
-    id = (var.public_subnets != null ? var.public_subnets : module.vpc.public_subnets)[0]
+  id = (var.public_subnets != null ? var.public_subnets : module.vpc.public_subnets)[0]
 }
 data "aws_subnet" "private_subnet_lookup" {
-    id = (var.private_subnets != null ? var.private_subnets : module.vpc.private_subnets)[0]
+  id = (var.private_subnets != null ? var.private_subnets : module.vpc.private_subnets)[0]
 }
 locals {
   vpc_id = coalesce(
