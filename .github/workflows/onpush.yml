@@ -23,13 +23,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  simple_terraform_test:
+  validate_terraform_samples:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         # python-version: [3.7]
-        sample-id: ["01", "02"]
+        sample-id:
+          - airflow-on-aws
+          - azure
+          - dbt-and-singer-on-aws
+          - redshift-dw
+          - tableau-on-aws
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
@@ -84,7 +89,7 @@ jobs:
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: init
-          tf_actions_working_dir: ./samples/airflow-on-aws
+          tf_actions_working_dir: ./samples/${{ matrix.sample-id }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -95,7 +100,7 @@ jobs:
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: validate
-          tf_actions_working_dir: ./samples/airflow-on-aws
+          tf_actions_working_dir: ./samples/${{ matrix.sample-id }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
