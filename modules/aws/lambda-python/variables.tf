@@ -1,4 +1,5 @@
 variable "name_prefix" { type = string }
+variable "resource_tags" { type = map(string) }
 variable "triggering_s3_paths" {
   description = "A list of strings representing which S3 paths should be listened to."
   type        = list(string)
