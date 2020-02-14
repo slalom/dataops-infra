@@ -1,3 +1,4 @@
+variable "name_prefix" { type = string }
 variable "triggering_s3_paths" {
   description = "A list of strings representing which S3 paths should be listened to."
   type        = list(string)
