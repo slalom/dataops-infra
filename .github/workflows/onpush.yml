@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      - name: 'Terraform Linter Check (Formatting)'
+      - name: "Terraform Linter Check (Formatting)"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
@@ -27,7 +27,7 @@ jobs:
   validate_terraform_samples:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 8
       matrix:
         # python-version: [3.7]
         sample-id:
@@ -36,6 +36,7 @@ jobs:
           - dbt-and-singer-on-aws
           - redshift-dw
           - tableau-on-aws
+          - s3-lambda-trigger
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
@@ -59,7 +60,7 @@ jobs:
       #       exit 1
       #     fi
       #     echo "Successfully unzipped Terraform v${tfVersion}"
-      - name: 'Terraform Init (Prerun)'
+      - name: "Terraform Init (Prerun)"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
@@ -85,7 +86,7 @@ jobs:
       #     TF_CLI_ARGS_backend: false
       #     TF_VAR_aws_region: us-east-2
       #     TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
-      - name: 'Terraform Init (Sample #${{ matrix.sample-id }})'
+      - name: "Terraform Init (Sample #${{ matrix.sample-id }})"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
@@ -96,7 +97,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_CLI_ARGS_backend: false
-      - name: 'Terraform Validate (Sample #${{ matrix.sample-id }})'
+      - name: "Terraform Validate (Sample #${{ matrix.sample-id }})"
         uses: hashicorp/terraform-github-actions@master
         with:
           tf_actions_version: 0.12.13
@@ -128,17 +129,17 @@ jobs:
       #   run: |
       #     cd ./catalog/aws/prereqs
       #     sudo -E terraform destroy -auto-approve
-        #   uses: docker://hashicorp/terraform:0.12.11
-        # with:
-        #   entrypoint: terraform
-        #   args: destroy -auto-approve
-        # with:
-        #   tf_actions_version: 0.12.13
-        #   tf_actions_subcommand: destroy
-        #   tf_actions_working_dir: ./catalog/aws/prereqs
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #   TF_WARN_OUTPUT_ERRORS: 1
-        #   TF_CLI_ARGS_backend: false
+      #   uses: docker://hashicorp/terraform:0.12.11
+      # with:
+      #   entrypoint: terraform
+      #   args: destroy -auto-approve
+      # with:
+      #   tf_actions_version: 0.12.13
+      #   tf_actions_subcommand: destroy
+      #   tf_actions_working_dir: ./catalog/aws/prereqs
+      # env:
+      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   TF_WARN_OUTPUT_ERRORS: 1
+      #   TF_CLI_ARGS_backend: false

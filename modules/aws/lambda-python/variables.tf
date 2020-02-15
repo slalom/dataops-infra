@@ -18,3 +18,5 @@ variable "handler" {
   type    = string
   default = "main.main"
 }
+variable "function_name" { type = string }
+variable "pip_path" { default = "pip3" }

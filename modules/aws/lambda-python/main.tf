@@ -3,16 +3,16 @@ locals {
 }
 
 resource "aws_lambda_function" "python_lambda" {
-  filename         = var.lambda_fn_zip
+  filename         = data.archive_file.lambda_zip.output_path
   function_name    = local.function_name
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "exports.test"
   runtime          = var.runtime
-  source_code_hash = filebase64sha256(var.lambda_fn_zip)
+  source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
   environment {
     variables = var.environment_vars
   }
-  depends_on = [aws_iam_role_policy_attachment.lambda_logs, aws_cloudwatch_log_group.example]
+  depends_on = [aws_iam_role_policy_attachment.lambda_logs, aws_cloudwatch_log_group.lambda_log_group]
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
