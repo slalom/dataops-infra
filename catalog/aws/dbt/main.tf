@@ -5,10 +5,7 @@ locals {
   name_prefix = "${var.name_prefix}DBT-"
   aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
   admin_cidr  = var.admin_cidr
-  admin_ports = {
-    "DBT Docs"      = "8080"
-    "Thrift (JDBC)" = "10000"
-  }
+  admin_ports = ["8080", "10000"]
   tz_hour_offset = (
     contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
   )
