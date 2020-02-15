@@ -14,9 +14,10 @@ locals {
 }
 
 provider "aws" {
-  region  = local.aws_region
-  version = "~> 2.10"
-  profile = "${local.project_shortname}-terraform"
+  version                 = "~> 2.10"
+  region                  = local.aws_region
+  shared_credentials_file = "../../.secrets/credentials"
+  profile                 = "${local.project_shortname}-terraform"
 }
 
 module "vpc" {
