@@ -4,6 +4,9 @@ data "aws_region" "current" {}
 locals {
   name_prefix              = "${var.name_prefix}Tableau-"
   aws_region               = coalesce(var.aws_region, data.aws_region.current.name)
+  vpc_id                   = coalesce(var.vpc_id, module.vpc.vpc_id)
+  public_subnets           = coalesce(var.public_subnets, module.vpc.public_subnets)
+  private_subnets          = coalesce(var.private_subnets, module.vpc.private_subnets)
   admin_cidr               = var.admin_cidr
   default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
@@ -29,9 +32,6 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
-  vpc_id          = coalecse(var.vpc_id, module.vpc.vpc_id)
-  public_subnets  = coalece(var.public_subnets, module.vpc.public_subnets)
-  private_subnets = coalece(var.private_subnets, module.vpc.private_subnets)
 }
 
 resource "aws_key_pair" "mykey" {

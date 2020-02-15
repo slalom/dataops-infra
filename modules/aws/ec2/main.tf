@@ -1,4 +1,5 @@
 data "aws_availability_zones" "az_list" {}
+data "aws_region" "current" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 # TODO: Detect EC2 Pricing
 # data "http" "ec2_base_pricing_js" { 
@@ -17,6 +18,7 @@ data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 
 locals {
   project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  aws_region               = coalesce(var.aws_region, data.aws_region.current.name)
   my_ip                    = "${chomp(data.http.icanhazip.body)}"
   my_ip_cidr               = "${chomp(data.http.icanhazip.body)}/32"
   admin_cidr               = flatten([local.my_ip_cidr, var.admin_cidr])
