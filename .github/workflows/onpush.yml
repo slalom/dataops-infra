@@ -19,9 +19,10 @@ jobs:
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: fmt
-          tf_actions_working_dir: ./samples/airflow-on-aws
+          tf_actions_working_dir: .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TF_CLI_ARGS: -recursive
 
   validate_terraform_samples:
     runs-on: ubuntu-latest
