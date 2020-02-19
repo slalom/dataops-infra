@@ -14,7 +14,7 @@ locals {
 }
 
 module "vpc" {
-  source        = "../../../modules/aws/vpc"
+  source        = "../../../components/aws/vpc"
   disabled      = ! local.create_vpc
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
@@ -22,14 +22,14 @@ module "vpc" {
 }
 
 module "ecs_cluster" {
-  source        = "../../../modules/aws/ecs-cluster"
+  source        = "../../../components/aws/ecs-cluster"
   name_prefix   = local.name_prefix
   aws_region    = var.aws_recomponents/
   resource_tags = var.resource_tags
 }
 
 module "ecs_tap_sync_task" {
-  source              = "../../../modules/aws/ecs-task"
+  source              = "../../../components/aws/ecs-task"
   name_prefix         = "${local.name_prefix}sync-"
   aws_region          = var.aws_recomponents/
   resource_tags       = var.resource_tags

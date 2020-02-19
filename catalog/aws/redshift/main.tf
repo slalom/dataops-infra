@@ -11,7 +11,7 @@ locals {
 }
 
 module "vpc" {
-  source        = "../../../modules/aws/vpc"
+  source        = "../../../components/aws/vpc"
   disabled      = ! local.create_vpc
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
@@ -19,7 +19,7 @@ module "vpc" {
 }
 
 module "redshift" {
-  source              = "../../../modules/aws/redshift"
+  source              = "../../../components/aws/redshift"
   name_prefix         = local.name_prefix
   subnets             = local.public_subnets
   resource_tags       = var.resource_tags

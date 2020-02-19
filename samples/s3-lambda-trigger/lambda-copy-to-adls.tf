@@ -3,7 +3,7 @@ module "lambda_copy_to_adls" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
 
   # TODO: Revert to master branch after feature merge:
-  source = "../../modules/aws/lambda-python"
+  source = "../../components/aws/lambda-python"
 
   # TODO: Uncomment when added to module:
   name_prefix   = local.name_prefix
