@@ -40,14 +40,14 @@ resource "aws_key_pair" "mykey" {
 }
 
 module "vpc" {
-  source        = "../../../modules/aws/vpc"
+  source        = "../../../components/aws/vpc"
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
 }
 
 module "windows_tableau_servers" {
-  source                   = "../../../modules/aws/ec2"
+  source                   = "../../../components/aws/ec2"
   is_windows               = true
   name_prefix              = "${local.name_prefix}win-"
   aws_region               = local.aws_region
@@ -66,7 +66,7 @@ module "windows_tableau_servers" {
 }
 
 module "linux_tableau_servers" {
-  source                   = "../../../modules/aws/ec2"
+  source                   = "../../../components/aws/ec2"
   name_prefix              = "${local.name_prefix}lin-"
   aws_region               = local.aws_region
   resource_tags            = var.resource_tags

@@ -21,7 +21,7 @@ locals {
 }
 
 module "vpc" {
-  source        = "../../../modules/aws/vpc"
+  source        = "../../../components/aws/vpc"
   disabled      = ! local.create_vpc
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
