@@ -21,7 +21,8 @@ provider "aws" {
 }
 
 module "vpc" {
-  source        = "git::https://github.com/slalom-ggp/dataops-infra.git//modules/aws/vpc?ref=master"
+  # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//components/aws/vpc?ref=master"
+  source        = "../../components/aws/vpc"
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = local.config["project_tags"]
