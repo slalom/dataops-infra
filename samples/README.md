@@ -6,12 +6,12 @@ Sample modules are essentially just solution modules which test a certain combin
 
 To export a sample solution to an external project, follow these steps:
 
-1. Create a folder called `infra` in the root the directory of your project, and then paste the desired sample into that new folder.
+1. Create a folder called `infra` in the root the directory of your project, and then paste the desired sample as a subfolder within the `infra` directory.
 2. Create a new file in the parent folder called `infra-config.yml` following the example [here](infra-config.yml).
 3. Create a folder called `.secrets` at the root of your project.
     * **IMPORTANT:** Make sure you add .secrets to the top of your `.gitignore` fire.
 4. For AWS projects, create a file in `.secrets` called `credentials` and then paste in your AWS credentials following the guidelines [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
-5. Within each .tf files you copy into your project, replace `source = "../../catalog/{...}"` at the top of the file with `source = "git::https://github.com/slalom-ggp/dataops-infra.git///catalog/{...}?ref=master"`. This changes the source from a local module reference to a remote git reference.
+5. Within each of the `.tf` files copy into your project, replace `source = "../../catalog/{...}"` at the top of the file with `source = "git::https://github.com/slalom-ggp/dataops-infra.git///catalog/{...}?ref=master"`. (This changes the source from a local module reference to a remote git reference.)
 
 ## Testing Sample Modules
 
