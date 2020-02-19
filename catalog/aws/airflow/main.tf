@@ -1,11 +1,11 @@
 module "airflow_ecs_cluster" {
-  source      = "../../../modules/aws/ecs-cluster"
+  source      = "../../../components/aws/ecs-cluster"
   name_prefix = local.name_prefix
   aws_region  = var.aws_region
 }
 
 module "airflow_ecs_task" {
-  source              = "../../../modules/aws/ecs-task"
+  source              = "../../../components/aws/ecs-task"
   name_prefix         = local.name_prefix
   aws_region          = var.aws_region
   use_fargate         = true
