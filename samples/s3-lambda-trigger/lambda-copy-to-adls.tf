@@ -37,4 +37,4 @@ module "lambda_copy_to_adls" {
 }
 
 # BOILERPLATE OUTPUT (NO NEED TO CHANGE):
-output "lambda_copy_to_adls_summary" { value = module.lambda_copy_to_adls_summary.summary }
+output "lambda_copy_to_adls_summary" { value = module.lambda_copy_to_adls.summary }
