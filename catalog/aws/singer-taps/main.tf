@@ -24,14 +24,14 @@ module "vpc" {
 module "ecs_cluster" {
   source        = "../../../components/aws/ecs-cluster"
   name_prefix   = local.name_prefix
-  aws_region    = var.aws_recomponents/
+  aws_region    = var.aws_region
   resource_tags = var.resource_tags
 }
 
 module "ecs_tap_sync_task" {
   source              = "../../../components/aws/ecs-task"
   name_prefix         = "${local.name_prefix}sync-"
-  aws_region          = var.aws_recomponents/
+  aws_region          = var.aws_region
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
   vpc_id              = local.vpc_id
