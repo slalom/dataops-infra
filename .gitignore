@@ -1,5 +1,7 @@
 # Config file (comment this line to modify the template):
 samples/infra-config.yml
+build
+!build/README.md
 
 #  Local .terraform directories
 .terraform
