@@ -24,7 +24,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: -recursive
 
-  validate_terraform_samples:
+  tf_sample_tests:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 8
