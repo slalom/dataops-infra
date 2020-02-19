@@ -22,7 +22,7 @@ provider "aws" {
 
 module "vpc" {
   source        = "../../components/aws/vpc"
-  name_prefix   = local.ncomponents / ix
+  name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = local.config["project_tags"]
 }
