@@ -24,7 +24,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: -recursive
 
-  tf_sample_tests:
+  tf_test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 8
