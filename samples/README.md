@@ -15,4 +15,4 @@ To export a sample solution to an external project, follow these steps:
 
 ## Testing Sample Modules
 
-In order to receive automated testing, each sample folder needs to registered in the file [.github/workflows/onpush.yml](.github/../../.github/workflows/onpush.yml). To do this, simply open the `onpush.yml` file, search for the text `sample-id:` and add the name of the sample folder to the list.
+In order to receive automated testing, each sample folder needs to registered in the file [.github/workflows/onpush.yml](.github/../../.github/workflows/terraform-ci-cd.yml). To do this, simply open the `onpush.yml` file, search for the text `sample-id:` and add the name of the sample folder to the list.
