@@ -14,17 +14,17 @@ module "data_lake_with_lambda_trigger" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  lambda_python_source          = "${path.module}/python/fn_lambda_logger"
-  s3_triggers = [{
-    # triggering_path  = "data/published/people-data/*"
-    triggering_path  = "uploads/*"
-    function_name    = "fn_lambda_logger2"
-    function_handler = "main.lambda_handler"
-    environment_vars = {}
-    environment_secrets = {
-      "PGP_PRIVATE_KEY" = "aws:secretmanager/myaccount/mysecret"
+  lambda_python_source = "${path.module}/python/fn_lambda_logger"
+  s3_triggers = {
+    "fn_lambda_logger2" = {
+      triggering_path     = "uploads/*"
+      function_handler    = "main.lambda_handler"
+      environment_vars    = {}
+      environment_secrets = {
+        "PGP_PRIVATE_KEY" = "aws:secretmanager/myaccount/mysecret"
+      }
     }
-  }]
+  }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 

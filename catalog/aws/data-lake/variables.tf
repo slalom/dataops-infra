@@ -14,20 +14,20 @@ variable "lambda_python_source" {
 #   default = {}
 # }
 variable "s3_triggers" {
-  type = list(object({
+  type = map(object({
+    # function_name       = string
     triggering_path     = string
-    function_name       = string
     function_handler    = string
     environment_vars    = map(string)
     environment_secrets = map(string)
   }))
-  default = [
-    {
+  default = {
+    "fn_log" = {
+      # function_name       = "fn_log"
       triggering_path     = "*"
-      function_name       = "fn_log"
       function_handler    = "main.lambda_handler"
       environment_vars    = {}
       environment_secrets = {}
     }
-  ]
+  }
 }

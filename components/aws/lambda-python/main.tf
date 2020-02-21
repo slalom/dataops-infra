@@ -1,9 +1,5 @@
 locals {
-  function_names = toset([
-    for trigger in var.s3_triggers :
-    trigger.function_name
-  ])
-  s3_triggers       = zipmap(local.function_names, var.s3_triggers)
+  function_names    = toset(keys(var.s3_triggers))
   is_windows        = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   source_files_hash = join(",", [
     for filepath in fileset(var.lambda_source_folder, "*") :
@@ -21,13 +17,13 @@ resource "aws_lambda_function" "python_lambda" {
   source_code_hash  = data.archive_file.lambda_zip.output_base64sha256
   function_name     = each.value
   role              = aws_iam_role.iam_for_lambda.arn
-  handler           = local.s3_triggers[each.value].function_handler
+  handler           = var.s3_triggers[each.value].function_handler
   runtime           = var.runtime
   timeout           = var.timeout_seconds
   environment {
     variables = merge(
       coalesce(
-        local.s3_triggers[each.value].environment_vars,
+        var.s3_triggers[each.value].environment_vars,
         {}
       ),
       var.resource_tags
@@ -35,7 +31,7 @@ resource "aws_lambda_function" "python_lambda" {
   }
   # source_code_hash  = data.archive_file.lambda_zip.output_base64sha256  # triggers redundant updates if supplied
   # dynamic "environment" {
-  #   for_each = local.s3_triggers[each.value].environment_vars
+  #   for_each = var.s3_triggers[each.value].environment_vars
   #   content {
   #     variables = environment.value
   #   }
@@ -66,8 +62,8 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     content {
       lambda_function_arn = aws_lambda_function.python_lambda[lambda_function.value].arn
       events              = ["s3:ObjectCreated:*"]
-      filter_prefix       = split("*", local.s3_triggers[lambda_function.value].triggering_path)[0]
-      filter_suffix       = split("*", local.s3_triggers[lambda_function.value].triggering_path)[1]
+      filter_prefix       = split("*", var.s3_triggers[lambda_function.value].triggering_path)[0]
+      filter_suffix       = split("*", var.s3_triggers[lambda_function.value].triggering_path)[1]
     }
   }
 }
