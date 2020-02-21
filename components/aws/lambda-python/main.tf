@@ -21,7 +21,13 @@ resource "aws_lambda_function" "python_lambda" {
   runtime           = var.runtime
   timeout           = var.timeout_seconds
   environment {
-    variables = coalesce(local.s3_triggers[each.value].environment_vars, {})
+    variables = merge(
+      coalesce(
+        local.s3_triggers[each.value].environment_vars,
+        {}
+      ),
+      var.resource_tags
+    )
   }
   # source_code_hash  = data.archive_file.lambda_zip.output_base64sha256  # triggers redundant updates if supplied
   # dynamic "environment" {
