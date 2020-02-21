@@ -16,4 +16,4 @@ jobs:
       - name: Install link validator
         run: sudo -H -E npm install --global remark-cli remark-validate-links
       - name: Check for broken links (404 errors)
-        run: remark -u validate-links .
+        run: remark --frail -u validate-links .
