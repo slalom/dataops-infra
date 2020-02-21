@@ -1,34 +1,27 @@
 module "data_lake_with_lambda_trigger" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-
-  # TODO: Revert to master branch after feature merge:
   source = "../../catalog/aws/data-lake"
-
-  # TODO: Uncomment when added to module:
   name_prefix   = local.name_prefix
   resource_tags = local.project_tags
-  # vpc_id          = module.vpc.vpc_id
-  # public_subnets  = module.vpc.public_subnets
-  # private_subnets = module.vpc.private_subnets
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
   lambda_python_source = "${path.module}/python/fn_lambda_logger"
   s3_triggers = {
-    "fn_lambda_logger2" = {
+    "fn_lambda_logger" = {
       triggering_path  = "uploads/*"
       function_handler = "main.lambda_handler"
       environment_vars = {}
-      environment_secrets = {
-        "PGP_PRIVATE_KEY" = "aws:secretmanager/myaccount/mysecret"
-      }
+      environment_secrets = {}
     }
   }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-
+  # vpc_id          = module.vpc.vpc_id
+  # public_subnets  = module.vpc.public_subnets
+  # private_subnets = module.vpc.private_subnets
 
   */
 
