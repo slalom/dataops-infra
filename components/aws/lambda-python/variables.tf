@@ -12,11 +12,11 @@ variable "s3_path_to_lambda_zip" {
   description = "S3 Path to where the source code zip should be uploaded."
   type        = string
 }
-variable "dependency_urls" {
-  description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs."
-  type        = map(string)
-  default     = {}
-}
+# variable "dependency_urls" {
+#   description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs."
+#   type        = map(string)
+#   default     = {}
+# }
 variable "s3_trigger_bucket" {
   type    = string
   default = null

@@ -15,7 +15,6 @@ module "data_lake_with_lambda_trigger" {
   # ADD OR MODIFY CONFIGURATION HERE:
 
   lambda_python_source          = "${path.module}/python/fn_lambda_logger"
-  lambda_python_dependency_urls = {}
   s3_triggers = [{
     # triggering_path  = "data/published/people-data/*"
     triggering_path  = "uploads/*"

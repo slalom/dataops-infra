@@ -1,13 +1,13 @@
-data "http" "additional_reqs" {
-  for_each = var.dependency_urls
-  url      = each.value
-}
+# data "http" "additional_reqs" {
+#   for_each = var.dependency_urls
+#   url      = each.value
+# }
 
-resource "local_file" "additional_reqs_local" {
-  for_each = var.dependency_urls
-  filename = "${path.module}/../../${each.key}"
-  content  = data.http.additional_reqs[each.value].content
-}
+# resource "local_file" "additional_reqs_local" {
+#   for_each = var.dependency_urls
+#   filename = "${local.temp_build_folder}/${each.key}"
+#   content  = data.http.additional_reqs[each.value].content
+# }
 
 resource "null_resource" "pip" {
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)

@@ -9,10 +9,10 @@ variable "lambda_python_source" {
   type        = string
   default     = "resources/fn_log"
 }
-variable "lambda_python_dependency_urls" {
-  type    = map(string)
-  default = {}
-}
+# variable "lambda_python_dependency_urls" {
+#   type    = map(string)
+#   default = {}
+# }
 variable "s3_triggers" {
   type = list(object({
     triggering_path     = string

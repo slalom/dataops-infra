@@ -57,7 +57,7 @@ module "triggered_lambda" {
   lambda_source_folder  = var.lambda_python_source
   s3_path_to_lambda_zip = local.s3_path_to_lambda_zip
   resource_tags         = var.resource_tags
-  dependency_urls       = {}
+
   # depends_on = [
   #   aws_s3_bucket.s3_data_bucket,
   #   aws_s3_bucket.s3_logging_bucket,
