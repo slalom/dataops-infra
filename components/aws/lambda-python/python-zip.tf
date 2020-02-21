@@ -26,9 +26,9 @@ resource "null_resource" "copy_files" {
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
     version_increment = 1.3
-    source_file_list = join(",", fileset(var.lambda_source_folder, "*"))
+    source_file_list  = join(",", fileset(var.lambda_source_folder, "*"))
     source_files_hash = local.source_files_hash
-    output_path = local.temp_build_folder
+    output_path       = local.temp_build_folder
     temp_build_folder = local.temp_build_folder
   }
   provisioner "local-exec" {
@@ -58,7 +58,7 @@ data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = data.null_data_source.wait_for_lambda_exporter.outputs["source_dir"]
   output_path = local.zip_local_path
-  depends_on = [null_resource.pip, null_resource.copy_files]
+  depends_on  = [null_resource.pip, null_resource.copy_files]
 }
 
 resource "aws_s3_bucket_object" "s3_lambda_zip" {

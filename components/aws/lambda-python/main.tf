@@ -1,6 +1,6 @@
 locals {
-  function_names    = toset(keys(var.s3_triggers))
-  is_windows        = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+  function_names = toset(keys(var.s3_triggers))
+  is_windows     = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   source_files_hash = join(",", [
     for filepath in fileset(var.lambda_source_folder, "*") :
     filebase64sha256("${var.lambda_source_folder}/${filepath}")
@@ -10,16 +10,16 @@ locals {
 }
 
 resource "aws_lambda_function" "python_lambda" {
-  for_each          = local.function_names
-  s3_bucket         = aws_s3_bucket_object.s3_lambda_zip.bucket
-  s3_key            = aws_s3_bucket_object.s3_lambda_zip.id
+  for_each  = local.function_names
+  s3_bucket = aws_s3_bucket_object.s3_lambda_zip.bucket
+  s3_key    = aws_s3_bucket_object.s3_lambda_zip.id
   # s3_object_version = aws_s3_bucket_object.s3_lambda_zip.version_id  # requires bucket versioning enabled
-  source_code_hash  = data.archive_file.lambda_zip.output_base64sha256
-  function_name     = each.value
-  role              = aws_iam_role.iam_for_lambda.arn
-  handler           = var.s3_triggers[each.value].function_handler
-  runtime           = var.runtime
-  timeout           = var.timeout_seconds
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  function_name    = each.value
+  role             = aws_iam_role.iam_for_lambda.arn
+  handler          = var.s3_triggers[each.value].function_handler
+  runtime          = var.runtime
+  timeout          = var.timeout_seconds
   environment {
     variables = merge(
       coalesce(
