@@ -67,4 +67,4 @@ When making changes to the terraform modules, please observe the following desig
 
 #### Input and Output Variables for Azure Components
 
-* Azure Component modules should match the required input and output parameters specified here: [components/azure/README.md](../components/azure/README.md).
+* Azure Component modules should match the required input and output parameters specified here: [components/azure/README.md](/components/azure/README.md).
