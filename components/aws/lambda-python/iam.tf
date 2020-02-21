@@ -1,5 +1,5 @@
 resource "aws_iam_role" "iam_for_lambda" {
-  name               = "iam_for_lambda"
+  name               = "${var.name_prefix}lambda_iam_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -32,7 +32,7 @@ resource "aws_lambda_permission" "allow_bucket" {
 
 # See also the following AWS managed policy: AWSLambdaBasicExecutionRole
 resource "aws_iam_policy" "lambda_logging" {
-  name        = "lambda_logging"
+  name        = "${var.name_prefix}lambda_logging_policy"
   path        = "/"
   description = "IAM policy for logging from a lambda"
   policy      = <<EOF
