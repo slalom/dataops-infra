@@ -32,7 +32,7 @@ terraform apply
 
 ## Contributions Guide
 
-For information on how to contribute in the form of PRs or Issues, please see [CONTRIBUTING.md](docs/CONTRIBUTING.md.test).
+For information on how to contribute in the form of PRs or Issues, please see [CONTRIBUTING.md](docs/CONTRIBUTING.md).
 
 ## Related Code Repos
 
