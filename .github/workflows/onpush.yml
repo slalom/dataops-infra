@@ -24,6 +24,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: -recursive
 
+  markdown_checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone git repo
+        uses: actions/checkout@v1
+      - name: Install npm
+        run: sudo apt-get install npm
+      - name: Install link validator
+        run: sudo -H -E npm install --global remark-cli remark-validate-links
+      - name: Check for broken links (404 errors)
+        run: remark -u validate-links .
+
   tf_test:
     runs-on: ubuntu-latest
     strategy:
