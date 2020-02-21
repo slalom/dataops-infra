@@ -1,4 +1,4 @@
-name: Automated Build and Test
+name: Markdown CI/CD
 
 on:
   push:
