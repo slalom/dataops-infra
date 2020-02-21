@@ -106,7 +106,7 @@ resource "local_file" "aws_credentials_file" {
 # }
 
 # resource "aws_s3_bucket" "s3_metadata_bucket" {
-#   bucket = "${lower(var.project_shortname)}-project-data-${random_id.suffix.hex}"
+#   bucket = "${lower(var.project_shortname)}-project-data-${local.random_bucket_suffix}"
 #   acl    = "private"
 #   tags   = { project = var.project_shortname }
 #   server_side_encryption_configuration {

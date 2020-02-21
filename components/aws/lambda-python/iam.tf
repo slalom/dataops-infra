@@ -17,6 +17,19 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
+data "aws_s3_bucket" "bucket_lookup" {
+  bucket = var.s3_trigger_bucket
+}
+
+resource "aws_lambda_permission" "allow_bucket" {
+  for_each      = aws_lambda_function.python_lambda
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = each.value.arn
+  principal     = "s3.amazonaws.com"
+  source_arn    = data.aws_s3_bucket.bucket_lookup.arn
+}
+
 # See also the following AWS managed policy: AWSLambdaBasicExecutionRole
 resource "aws_iam_policy" "lambda_logging" {
   name        = "lambda_logging"

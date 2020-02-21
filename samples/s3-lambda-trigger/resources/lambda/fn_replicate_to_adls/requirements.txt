@@ -1,3 +1,0 @@
-slalom.dataops
-boto3
-gnupg
