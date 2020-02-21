@@ -4,9 +4,13 @@ locals {
     trigger.function_name
   ])
   s3_triggers       = zipmap(local.function_names, var.s3_triggers)
-  temp_build_folder = "${path.root}/.terraform/tmp/${var.name_prefix}lambda-zip"
-  zip_local_path    = "${local.temp_build_folder}/../${var.name_prefix}lambda.zip"
   is_windows        = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+  source_files_hash = join(",", [
+    for filepath in fileset(var.lambda_source_folder, "*") :
+    filebase64sha256("${var.lambda_source_folder}/${filepath}")
+  ])
+  temp_build_folder = "${path.root}/.terraform/tmp/${var.name_prefix}lambda-zip-${md5(local.source_files_hash)}"
+  zip_local_path    = "${local.temp_build_folder}/../${var.name_prefix}lambda-${md5(local.source_files_hash)}.zip"
 }
 
 resource "aws_lambda_function" "python_lambda" {

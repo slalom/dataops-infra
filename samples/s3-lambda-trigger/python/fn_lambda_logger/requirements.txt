@@ -1,2 +1,3 @@
+# These will be install to the zip file
 boto3
 aws-lambda-logging
