@@ -51,11 +51,11 @@ When making changes to the terraform modules, please observe the following desig
 
 #### Input and Output Variables for AWS Catalog Modules
 
-* AWS Component modules should match the required input/output parameters specified at [catalog/aws/README.md](../catalog/aws/README.md).
+* AWS Component modules should match the required input/output parameters specified at [catalog/aws/README.md](/catalog/aws/README.md).
 
 #### Input and Output Variables for Azure Catalog Modules
 
-* Azure Component modules should match the required input/output parameters specified at [catalog/azure/README.md](../catalog/azure/README.md).
+* Azure Component modules should match the required input/output parameters specified at [catalog/azure/README.md](/catalog/azure/README.md).
 
 ### Component Modules (Layer 3)
 
@@ -63,7 +63,7 @@ When making changes to the terraform modules, please observe the following desig
 
 #### Input and Output Variables for AWS Components
 
-* AWS Component modules should match the required input and output parameters specified here: [components/aws/README.md](../components/aws/README.md).
+* AWS Component modules should match the required input and output parameters specified here: [components/aws/README.md](/components/aws/README.md).
 
 #### Input and Output Variables for Azure Components
 
