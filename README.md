@@ -26,6 +26,10 @@ terraform init
 terraform apply
 ```
 
+## Debug Info
+
+* **Note:** It is possible for environments to become stuck due to failures in printing output variables, for instance if SSH keys are accidentally deleted or rotated incorrectly. To ignore errors from outputs which cannot be parsed, first set the environment variable: `TF_WARN_OUTPUT_ERRORS=1` and then re-run `terraform apply` or `terrafom destroy`. This will warn on output errors instead of failing the process.
+
 ## Related Code Repos
 
 * [dataops-docs](https://github.com/slalom-ggp/dataops-docs): Documentation Resources

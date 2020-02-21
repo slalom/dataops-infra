@@ -1,7 +1,11 @@
 variable "aws_region" { default = null }
 variable "name_prefix" { type = string }
 variable "vpc_id" { default = null }
-variable "subnets" {
+variable "private_subnets" {
+  type    = list(string)
+  default = null
+}
+variable "public_subnets" {
   type    = list(string)
   default = null
 }

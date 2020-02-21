@@ -5,10 +5,7 @@ locals {
   name_prefix = "${var.name_prefix}DBT-"
   aws_region  = coalesce(var.aws_region, data.aws_region.current.name)
   admin_cidr  = var.admin_cidr
-  admin_ports = {
-    "DBT Docs"      = "8080"
-    "Thrift (JDBC)" = "10000"
-  }
+  admin_ports = ["8080", "10000"]
   tz_hour_offset = (
     contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
   )
@@ -16,25 +13,25 @@ locals {
   public_subnets  = coalesce(var.public_subnets, module.vpc.public_subnets)
   private_subnets = coalesce(var.private_subnets, module.vpc.private_subnets)
   create_vpc      = var.vpc_id == null && var.private_subnets == null && var.public_subnets == null
-}components/
+}
 
 module "vpc" {
-  source        = "../../../modules/aws/vpc"
+  source        = "../../../components/aws/vpc"
   disabled      = local.create_vpc ? false : true
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
-}components/
+}
 
 module "ecs_cluster" {
-  source        = "../../../modules/aws/ecs-cluster"
+  source        = "../../../components/aws/ecs-cluster"
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = var.resource_tags
-}components/
+}
 
 module "ecs_task" {
-  source              = "../../../modules/aws/ecs-task"
+  source              = "../../../components/aws/ecs-task"
   name_prefix         = "${local.name_prefix}run-"
   aws_region          = local.aws_region
   resource_tags       = var.resource_tags
