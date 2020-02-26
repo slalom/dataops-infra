@@ -14,7 +14,7 @@ output "environment" {
   # })
   value = {
     vpc_id          = module.vpc.vpc_id
-    aws_region      = module.vpc.aws_region
+    aws_region      = var.aws_region
     private_subnets = module.vpc.private_subnets
     public_subnets  = module.vpc.public_subnets
   }
