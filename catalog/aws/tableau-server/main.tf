@@ -50,7 +50,6 @@ module "windows_tableau_servers" {
   app_ports                = local.tableau_app_ports
   ssh_key_name             = aws_key_pair.mykey.key_name
   ssh_private_key_filepath = local.ssh_private_key_filepath
-  vpc_id                   = local.vpc_id
 }
 
 module "linux_tableau_servers" {
