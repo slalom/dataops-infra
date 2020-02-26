@@ -1,3 +1,17 @@
+# TODO:  BUGFIX:'summary' and 'arn_list' appear to be returning null
 output "summary" {
-  value = aws_secretsmanager_secret.secret_mgr_store.arn
+  value = <<EOF
+
+Secrets Summary:
+ - Secret ARNs: ${coalesce(join(", ", aws_secretsmanager_secret.secrets.*.arn), "(empty)")}
+EOF
+}
+output "arn_list" {
+  value = aws_secretsmanager_secret.secrets.*.arn
+}
+output "secret_ids" {
+  value = {
+    for secret_id in var.secrets_names :
+    secret_id => aws_secretsmanager_secret.secrets[secret_id].arn
+  }
 }
