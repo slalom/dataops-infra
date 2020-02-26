@@ -1,12 +1,6 @@
 variable "name_prefix" { type = string }
-variable "environment" {
-  type = object({
-    vpc_id          = string
-    aws_region      = string
-    public_subnets  = list(string)
-    private_subnets = list(string)
-  })
-}
+variable "subnets" { type = list(string) }
+variable "database_name" { default = "rds_db" }
 variable "resource_tags" {
   type    = map
   default = {}
@@ -24,13 +18,13 @@ variable "elastic_ip" {
 variable "node_type" {
   description = "Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr  (https://aws.amazon.com/redshift/pricing/)"
   type        = string
-  default     = "dc2.large" /* check the right terminology for mysql rds*/
+  default     = "dc2.large"
 }
 variable "num_nodes" {
   type    = number
   default = 1
 }
-variable "jdbc_port" { default = 5439 }
+variable "jdbc_port" { default = 3306 }
 variable "kms_key_id" {
   type    = string
   default = null
