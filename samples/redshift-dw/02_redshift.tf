@@ -4,6 +4,7 @@ module "redshift_dw" {
   # source            = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/redshift?ref=master"
   source      = "../../catalog/aws/redshift"
   name_prefix = "${local.project_shortname}-"
+  environment = module.env.environment
 
   # CONFIGURE HERE:
 

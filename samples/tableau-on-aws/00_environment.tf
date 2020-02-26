@@ -19,3 +19,11 @@ provider "aws" {
   shared_credentials_file = "../../.secrets/credentials"
   profile                 = "${local.project_shortname}-terraform"
 }
+
+module "env" {
+  # TODO: Revert to stable source
+  source        = "../../catalog/aws/environment"
+  name_prefix   = local.name_prefix
+  aws_region    = local.aws_region
+  resource_tags = local.config["project_tags"]
+}

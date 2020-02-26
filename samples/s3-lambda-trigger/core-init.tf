@@ -20,9 +20,9 @@ provider "aws" {
   profile                 = "${local.project_shortname}-terraform"
 }
 
-module "vpc" {
-  # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//components/aws/vpc?ref=master"
-  source        = "../../components/aws/vpc"
+module "env" {
+  # TODO: Revert to stable source
+  source        = "../../catalog/aws/environment"
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
   resource_tags = local.config["project_tags"]
