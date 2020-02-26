@@ -2,7 +2,7 @@ variable "name_prefix" {}
 variable "environment" {
   type = object({
     vpc_id          = string
-    aws_region      = list(string)
+    aws_region      = string
     public_subnets  = list(string)
     private_subnets = list(string)
   })
