@@ -114,7 +114,7 @@ resource "aws_instance" "ec2_instances" {
   ami                         = data.aws_ami.ec2_ami.id
   instance_type               = var.instance_type
   key_name                    = var.ssh_key_name
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.environment.public_subnet_ids[0]
   user_data                   = var.is_windows ? local.userdata_win : local.userdata_lin
   get_password_data           = var.is_windows
   associate_public_ip_address = true
