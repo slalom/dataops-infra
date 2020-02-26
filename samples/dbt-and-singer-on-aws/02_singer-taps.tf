@@ -3,7 +3,7 @@ module "singer_taps_on_aws" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
 
   # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/singer-taps?ref=master"
-  source          = "../../catalog/aws/singer-taps"
+  source          = "../../../dataops-infra/catalog/aws/singer-taps"
   name_prefix     = local.name_prefix
   resource_tags   = local.project_tags
   vpc_id          = module.vpc.vpc_id

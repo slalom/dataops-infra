@@ -2,13 +2,13 @@ data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 # TODO: Detect EC2 Pricing
-# data "http" "ec2_base_pricing_js" { 
+# data "http" "ec2_base_pricing_js" {
 #   url = "http://a0.awsstatic.com/pricing/1/ec2/linux-od.min.js"
 #   request_headers = {
 #     "Accept" = "application/javascript"
 #   }
 # }
-# resource "null_resource" "ec2_base_pricing_js" { 
+# resource "null_resource" "ec2_base_pricing_js" {
 #   provisioner "local-exec" {
 #     command = "curl http://aws.amazon.com/ec2/pricing/"
 #     # curl http://aws.amazon.com/ec2/pricing/ 2>/dev/null | grep 'model:' | sed -e "s/.*'\(.*\)'.*/http:\\1/"
@@ -18,7 +18,6 @@ data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 
 locals {
   project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  aws_region               = coalesce(var.aws_region, data.aws_region.current.name)
   my_ip                    = "${chomp(data.http.icanhazip.body)}"
   my_ip_cidr               = "${chomp(data.http.icanhazip.body)}/32"
   admin_cidr               = flatten([local.my_ip_cidr, var.admin_cidr])
@@ -28,16 +27,16 @@ locals {
   ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
   pricing_regex = chomp(
     <<EOF
-${local.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"
+${var.environment.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"
 EOF
   )
   # TODO: Detect EC2 Pricing
   # price_per_instance_hr    = (
-  #   length(regexall(local.pricing_regex, data.http.ec2_base_pricing_js)) == 0 ? "n/a" : 
+  #   length(regexall(local.pricing_regex, data.http.ec2_base_pricing_js)) == 0 ? "n/a" :
   #   regex(local.pricing_regex, data.http.ec2_base_pricing_js)[0]
   # )
   chocolatey_install_win = <<EOF
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 EOF
 }
 
@@ -61,7 +60,7 @@ data "aws_ami" "ec2_ami" {
 resource "aws_security_group" "ec2_sg_admin_ports" {
   name_prefix = "${var.name_prefix}SecurityGroupForAdminPorts"
   description = "allow admin traffic from whitelisted IPs"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.environment.vpc_id
   tags        = var.resource_tags
   dynamic "ingress" {
     for_each = var.admin_ports
@@ -78,7 +77,7 @@ resource "aws_security_group" "ec2_sg_admin_ports" {
 resource "aws_security_group" "ec2_sg_app_ports" {
   name_prefix = "${var.name_prefix}SecurityGroupForAppPorts"
   description = "allow app traffic on whitelisted ports"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.environment.vpc_id
   tags        = var.resource_tags
   dynamic "ingress" {
     for_each = var.app_ports
@@ -95,7 +94,7 @@ resource "aws_security_group" "ec2_sg_app_ports" {
 resource "aws_security_group" "ec2_sg_allow_outbound" {
   name_prefix = "${var.name_prefix}SecurityGroupForOutbound"
   description = "allow all outbound traffic"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.environment.vpc_id
   tags        = var.resource_tags
   egress {
     protocol    = "tcp"

@@ -3,10 +3,6 @@ data "aws_region" "current" {}
 
 locals {
   name_prefix              = "${var.name_prefix}Tableau-"
-  aws_region               = coalesce(var.aws_region, data.aws_region.current.name)
-  vpc_id                   = coalesce(var.vpc_id, module.vpc.vpc_id)
-  public_subnets           = coalesce(var.public_subnets, module.vpc.public_subnets)
-  private_subnets          = coalesce(var.private_subnets, module.vpc.private_subnets)
   admin_cidr               = var.admin_cidr
   default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
@@ -39,18 +35,11 @@ resource "aws_key_pair" "mykey" {
   public_key = file(local.ssh_public_key_filepath)
 }
 
-module "vpc" {
-  source        = "../../../components/aws/vpc"
-  name_prefix   = local.name_prefix
-  aws_region    = local.aws_region
-  resource_tags = var.resource_tags
-}
-
 module "windows_tableau_servers" {
   source                   = "../../../components/aws/ec2"
   is_windows               = true
   name_prefix              = "${local.name_prefix}win-"
-  aws_region               = local.aws_region
+  environment              = var.environment
   resource_tags            = var.resource_tags
   num_instances            = var.num_windows_instances
   instance_type            = var.ec2_instance_type
@@ -62,13 +51,12 @@ module "windows_tableau_servers" {
   ssh_key_name             = aws_key_pair.mykey.key_name
   ssh_private_key_filepath = local.ssh_private_key_filepath
   vpc_id                   = local.vpc_id
-  subnet_id                = coalescelist(local.public_subnets, [""])[0]
 }
 
 module "linux_tableau_servers" {
   source                   = "../../../components/aws/ec2"
   name_prefix              = "${local.name_prefix}lin-"
-  aws_region               = local.aws_region
+  environment              = var.environment
   resource_tags            = var.resource_tags
   num_instances            = var.num_linux_instances
   instance_type            = var.ec2_instance_type
@@ -79,6 +67,4 @@ module "linux_tableau_servers" {
   app_ports                = local.tableau_app_ports
   ssh_key_name             = aws_key_pair.mykey.key_name
   ssh_private_key_filepath = local.ssh_private_key_filepath
-  vpc_id                   = local.vpc_id
-  subnet_id                = coalescelist(local.public_subnets, [""])[0]
 }

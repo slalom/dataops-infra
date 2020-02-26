@@ -1,11 +1,11 @@
-data "aws_region" "current" {}
-data "aws_ecs_cluster" "ecs_cluster" { cluster_name = var.ecs_cluster_name }
+data "aws_ecs_cluster" "ecs_cluster" {
+  cluster_name = var.ecs_cluster_name
+}
 
 locals {
-  aws_region = coalesce(var.aws_region, data.aws_region.current.name)
   env_vars = merge(
     {
-      "AWS_DEFAULT_REGION" : local.aws_region,
+      "AWS_DEFAULT_REGION" : var.environment.aws_region,
       "DETECT_HOSTNAME" : "true"
     },
     var.environment_vars
@@ -51,7 +51,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
       "logDriver": "awslogs",
       "options": {
         "awslogs-group":          "${aws_cloudwatch_log_group.cw_log_group.name}",
-        "awslogs-region":         "${local.aws_region}",
+        "awslogs-region":         "${var.environment.aws_region}",
         "awslogs-stream-prefix":  "container-log"
       }
     },
@@ -74,14 +74,10 @@ resource "aws_ecs_task_definition" "ecs_task" {
 DEFINITION
 }
 
-data "aws_vpc" "lookup" {
-  id = var.vpc_id
-}
-
 resource "aws_security_group" "ecs_tasks_sg" {
   name        = "${var.name_prefix}ECSSecurityGroup"
   description = "allow inbound access on specific ports, outbound on all ports"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.environment.vpc_id
   tags        = var.resource_tags
   dynamic "ingress" {
     for_each = var.app_ports
@@ -118,7 +114,7 @@ resource "aws_ecs_service" "ecs_service" {
   # iam_role        = aws_iam_role.ecs_task_execution_role.name
   depends_on = [aws_lb.alb]
   network_configuration {
-    subnets = var.public_subnets
+    subnets = var.environment.public_subnets
     security_groups = [
       aws_security_group.ecs_tasks_sg.id
     ]
@@ -155,7 +151,7 @@ resource "aws_cloudwatch_event_target" "daily_run_task" {
     launch_type         = var.ecs_launch_type
     group               = "${var.name_prefix}ScheduledTasks"
     network_configuration {
-      subnets          = var.public_subnets
+      subnets          = var.environment.public_subnets
       security_groups  = [aws_security_group.ecs_tasks_sg.id]
       assign_public_ip = false
     }

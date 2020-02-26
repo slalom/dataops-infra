@@ -1,17 +1,21 @@
 variable "name_prefix" {}
-variable "aws_region" { default = null }
+variable "environment" {
+  type = object({
+    vpc_id          = string
+    aws_region      = list(string)
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+}
 variable "resource_tags" {
   type    = map
   default = {}
 }
-
 variable "ssh_key_name" { type = string }
 variable "ssh_private_key_filepath" { type = string }
 variable "instance_type" { type = string }
 variable "instance_storage_gb" { default = 100 }
 variable "num_instances" { default = 1 }
-variable "vpc_id" { type = string }
-variable "subnet_id" { type = string }
 variable "default_cidr" { default = ["0.0.0.0/0"] }
 variable "admin_cidr" { default = [] }
 variable "use_https" { default = false }

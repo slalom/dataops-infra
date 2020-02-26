@@ -1,16 +1,10 @@
 # Common Variables:
 variable "aws_region" { default = null }
 variable "name_prefix" { type = string }
-variable "private_subnets" {
-  type    = list(string)
-  default = null
-}
-variable "public_subnets" {
-  type    = list(string)
-  default = null
+variable "environment" {
+  type =
 }
 variable "resource_tags" { type = map(string) }
-variable "vpc_id" { default = null }
 
 # Catalog Variables
 variable "container_command" { type = string }

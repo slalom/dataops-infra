@@ -1,4 +1,12 @@
 variable "name_prefix" { type = string }
+variable "environment" {
+  type = object({
+    vpc_id          = string
+    aws_region      = list(string)
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+}
 variable "resource_tags" { type = map(string) }
 variable "runtime" { default = "python3.8" }
 variable "pip_path" { default = "pip3" }
