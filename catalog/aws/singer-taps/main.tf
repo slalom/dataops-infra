@@ -5,13 +5,13 @@ locals {
   tz_hour_offset = (
     contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
   )
-  name_prefix     = "${var.name_prefix}Tap-"
+  name_prefix = "${var.name_prefix}Tap-"
 }
 
 module "ecs_cluster" {
   source        = "../../../components/aws/ecs-cluster"
   name_prefix   = local.name_prefix
-  environment         = var.environment
+  environment   = var.environment
   resource_tags = var.resource_tags
 }
 

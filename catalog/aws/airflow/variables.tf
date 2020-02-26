@@ -2,7 +2,12 @@
 variable "aws_region" { default = null }
 variable "name_prefix" { type = string }
 variable "environment" {
-  type =
+  type = object({
+    vpc_id          = string
+    aws_region      = list(string)
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
 }
 variable "resource_tags" { type = map(string) }
 
