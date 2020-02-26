@@ -3,7 +3,7 @@ resource "aws_lb" "alb" {
   name               = "${lower(var.name_prefix)}lb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = coalesce(var.public_subnets, var.private_subnets)
+  subnets            = coalesce(var.environment.public_subnets, var.environment.private_subnets)
   tags               = var.resource_tags
   security_groups    = [aws_security_group.ecs_tasks_sg.id]
 
@@ -16,7 +16,7 @@ resource "aws_lb_target_group" "alb_target_group" {
   port        = each.value
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.environment.vpc_id
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 10

@@ -3,7 +3,14 @@
 ##############################################
 
 variable "name_prefix" { type = string }
-variable "aws_region" { default = null }
+variable "environment" {
+  type = object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+}
 variable "resource_tags" {
   type    = map(string)
   default = {}
@@ -24,9 +31,6 @@ variable "ecs_launch_type" {
   description = "'FARGATE' or 'Standard'"
   default     = "FARGATE"
 }
-variable "vpc_id" { type = string }
-variable "public_subnets" { type = set(string) }
-variable "private_subnets" { type = set(string) }
 variable "app_ports" {
   type    = list(string)
   default = ["8080"]

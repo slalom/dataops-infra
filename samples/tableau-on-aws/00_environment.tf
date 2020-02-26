@@ -10,7 +10,7 @@ locals {
   project_shortname = local.config["project_shortname"]
   name_prefix       = "${local.project_shortname}-"
   aws_region        = local.config["aws_region"]
-  project_tags      = local.config["project_tags"]
+  resource_tags     = local.config["project_tags"]
 }
 
 provider "aws" {
@@ -18,4 +18,12 @@ provider "aws" {
   region                  = local.aws_region
   shared_credentials_file = "../../.secrets/credentials"
   profile                 = "${local.project_shortname}-terraform"
+}
+
+module "env" {
+  # TODO: Revert to stable source
+  source        = "../../catalog/aws/environment"
+  name_prefix   = local.name_prefix
+  aws_region    = local.aws_region
+  resource_tags = local.config["project_tags"]
 }

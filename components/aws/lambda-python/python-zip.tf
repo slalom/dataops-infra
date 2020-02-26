@@ -10,6 +10,8 @@
 # }
 
 resource "null_resource" "pip" {
+  count = local.is_disabled ? 0 : 1
+
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
     version_increment = 1.2
@@ -23,6 +25,8 @@ resource "null_resource" "pip" {
 }
 
 resource "null_resource" "copy_files" {
+  count = local.is_disabled ? 0 : 1
+
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
     version_increment = 1.3
@@ -41,12 +45,14 @@ resource "null_resource" "copy_files" {
 }
 
 data "null_data_source" "wait_for_lambda_exporter" {
+  count = local.is_disabled ? 0 : 1
+
   # Workaround for explicit 'depends' issue within archive_file provider: https://github.com/terraform-providers/terraform-provider-archive/issues/11
   inputs = {
     # This ensures that this data resource will not be evaluated until
     # after the null_resource has been created.
-    lambda_exporter_id = "${null_resource.pip.id}"
-    copy_files_id      = "${null_resource.copy_files.id}"
+    lambda_exporter_id = "${null_resource.pip[0].id}"
+    copy_files_id      = "${null_resource.copy_files[0].id}"
 
     # This value gives us something to implicitly depend on
     # in the archive_file below.
@@ -55,19 +61,21 @@ data "null_data_source" "wait_for_lambda_exporter" {
 }
 
 data "archive_file" "lambda_zip" {
+  count       = local.is_disabled ? 0 : 1
   type        = "zip"
-  source_dir  = data.null_data_source.wait_for_lambda_exporter.outputs["source_dir"]
+  source_dir  = data.null_data_source.wait_for_lambda_exporter[0].outputs["source_dir"]
   output_path = local.zip_local_path
   depends_on  = [null_resource.pip, null_resource.copy_files]
 }
 
 resource "aws_s3_bucket_object" "s3_lambda_zip" {
+  count  = local.is_disabled ? 0 : 1
   bucket = split("/", split("//", var.s3_path_to_lambda_zip)[1])[0]
   key = join("/", slice(
     split("/", split("//", var.s3_path_to_lambda_zip)[1]),
     1,
     length(split("/", split("//", var.s3_path_to_lambda_zip)[1]))
   ))
-  source = data.archive_file.lambda_zip.output_path
-  etag   = data.archive_file.lambda_zip.output_md5
+  source = data.archive_file.lambda_zip[0].output_path
+  etag   = data.archive_file.lambda_zip[0].output_md5
 }

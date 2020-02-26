@@ -3,7 +3,8 @@ module "data_lake_with_lambda_trigger" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source        = "../../catalog/aws/data-lake"
   name_prefix   = local.name_prefix
-  resource_tags = local.project_tags
+  resource_tags = local.resource_tags
+  environment   = module.env.environment
 
   # ADD OR MODIFY CONFIGURATION HERE:
 

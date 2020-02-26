@@ -3,7 +3,7 @@ echo on
 REM Logs at: C:\ProgramData\Amazon\EC2-Windows\Launch\Log\UserdataExecution.log
 
 REM Intalling chocolatey...
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 REM Installing curl...
 choco install -y --no-progress curl
 
@@ -59,7 +59,7 @@ choco install -y --no-progress ^
     vscode
 
 REM log verbose
-echo on 
+echo on
 
 echo ------------
 echo Setting AWS path to avoid restart

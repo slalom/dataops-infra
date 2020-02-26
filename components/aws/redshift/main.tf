@@ -6,7 +6,7 @@ resource "random_id" "random_pass" {
 
 resource "aws_redshift_subnet_group" "subnet_group" {
   name       = "${lower(var.name_prefix)}redshift-subnet-group"
-  subnet_ids = var.subnets
+  subnet_ids = var.environment.public_subnets
   tags       = var.resource_tags
 }
 

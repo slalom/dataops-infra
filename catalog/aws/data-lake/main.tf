@@ -52,6 +52,7 @@ resource "aws_s3_bucket" "s3_logging_bucket" {
 module "triggered_lambda" {
   source                = "../../../components/aws/lambda-python"
   name_prefix           = var.name_prefix
+  environment           = var.environment
   s3_trigger_bucket     = aws_s3_bucket.s3_data_bucket.bucket
   s3_triggers           = var.s3_triggers
   lambda_source_folder  = var.lambda_python_source

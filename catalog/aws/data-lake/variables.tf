@@ -1,19 +1,36 @@
 variable "name_prefix" { type = string }
-variable "aws_region" { default = null }
+variable "environment" {
+  type = object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+}
 variable "resource_tags" {
   type    = map
   default = {}
 }
 variable "lambda_python_source" {
-  description = "Local path to a folder containing the lambda source code"
+  description = "Local path to a folder containing the lambda source code (e.g. 'resources/fn_log')"
   type        = string
-  default     = "resources/fn_log"
+  default     = null
 }
 # variable "lambda_python_dependency_urls" {
 #   type    = map(string)
 #   default = {}
 # }
 variable "s3_triggers" {
+  description = <<EOF
+List of S3 triggers objects, for example:
+[{
+  function_name       = "fn_log"
+  triggering_path     = "*"
+  function_handler    = "main.lambda_handler"
+  environment_vars    = {}
+  environment_secrets = {}
+}]
+EOF
   type = map(object({
     # function_name       = string
     triggering_path     = string
@@ -21,13 +38,5 @@ variable "s3_triggers" {
     environment_vars    = map(string)
     environment_secrets = map(string)
   }))
-  default = {
-    "fn_log" = {
-      # function_name       = "fn_log"
-      triggering_path     = "*"
-      function_handler    = "main.lambda_handler"
-      environment_vars    = {}
-      environment_secrets = {}
-    }
-  }
+  default = {}
 }
