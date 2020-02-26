@@ -1,13 +1,15 @@
 module "airflow_ecs_cluster" {
-  source      = "../../../components/aws/ecs-cluster"
-  name_prefix = local.name_prefix
-  environment = var.environment
+  source        = "../../../components/aws/ecs-cluster"
+  name_prefix   = var.name_prefix
+  environment   = var.environment
+  resource_tags = var.resource_tags
 }
 
 module "airflow_ecs_task" {
   source              = "../../../components/aws/ecs-task"
-  name_prefix         = local.name_prefix
+  name_prefix         = var.name_prefix
   environment         = var.environment
+  resource_tags       = var.resource_tags
   use_fargate         = true
   ecs_cluster_name    = module.airflow_ecs_cluster.ecs_cluster_name
   container_image     = var.container_image

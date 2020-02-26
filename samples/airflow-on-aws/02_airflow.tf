@@ -2,6 +2,7 @@ module "airflow" {
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/airflow?ref=master"
   source        = "../../catalog/aws/airflow"
   name_prefix   = local.name_prefix
+  environment   = var.environment
   resource_tags = local.project_tags
 
   # CONFIGURE HERE:

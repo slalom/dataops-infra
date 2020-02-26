@@ -1,5 +1,4 @@
 # Common Variables:
-variable "aws_region" { default = null }
 variable "name_prefix" { type = string }
 variable "environment" {
   type = object({
