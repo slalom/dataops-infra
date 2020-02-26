@@ -5,7 +5,7 @@ module "dbt_on_aws" {
   # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/dbt?ref=master"
   source          = "../../catalog/aws/dbt"
   name_prefix     = local.name_prefix
-  resource_tags   = local.project_tags
+  resource_tags   = local.resource_tags
   vpc_id          = module.vpc.vpc_id
   public_subnets  = module.vpc.public_subnets
   private_subnets = module.vpc.private_subnets

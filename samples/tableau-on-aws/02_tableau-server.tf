@@ -1,8 +1,9 @@
 module "tableau_server_on_aws" {
   # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=master"
-  source      = "../../catalog/aws/tableau-server"
-  name_prefix = local.name_prefix
-  aws_region  = local.aws_region
+  source        = "../../catalog/aws/tableau-server"
+  name_prefix   = local.name_prefix
+  resource_tags = local.resource_tags
+  environment   = var.environment
 
   # CONFIGURE HERE:
 

@@ -12,7 +12,7 @@ locals {
   project_shortname = local.config["project_shortname"]
   name_prefix       = "${local.project_shortname}-"
   aws_region        = local.config["aws_region"]
-  project_tags      = local.config["project_tags"]
+  resource_tags     = local.config["project_tags"]
 }
 
 provider "aws" {
