@@ -8,7 +8,7 @@ data "aws_availability_zones" "az_list" {}
 locals {
   config            = yamldecode(data.local_file.config_yml.content)
   secrets_file_path = "${path.module}/../.secrets/aws-secrets-manager-secrets.yml"
-  secrets_file      = fileexists(local.secrets_file_path) ? local.secrets_file : null
+  secrets_file      = fileexists(local.secrets_file_path) ? local.secrets_file_path : null
   project_shortname = local.config["project_shortname"]
   name_prefix       = "${local.project_shortname}-"
   aws_region        = local.config["aws_region"]

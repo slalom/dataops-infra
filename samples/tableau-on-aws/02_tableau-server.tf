@@ -3,7 +3,7 @@ module "tableau_server_on_aws" {
   source        = "../../catalog/aws/tableau-server"
   name_prefix   = local.name_prefix
   resource_tags = local.resource_tags
-  environment   = var.environment
+  environment   = module.env.environment
 
   # CONFIGURE HERE:
 
