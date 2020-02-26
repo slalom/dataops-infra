@@ -6,9 +6,7 @@ module "dbt_on_aws" {
   source          = "../../catalog/aws/dbt"
   name_prefix     = local.name_prefix
   resource_tags   = local.resource_tags
-  vpc_id          = module.vpc.vpc_id
-  public_subnets  = module.vpc.public_subnets
-  private_subnets = module.vpc.private_subnets
+  environment     = module.env.environment
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
