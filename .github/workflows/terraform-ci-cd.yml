@@ -34,6 +34,7 @@ jobs:
           - airflow-on-aws
           - azure
           - dbt-and-singer-on-aws
+          - rds-on-aws
           - redshift-dw
           - tableau-on-aws
           - s3-lambda-trigger
