@@ -6,3 +6,5 @@ aws_region: us-east-1
 project_shortname: TestProject
 project_tags:
   admin_contact: aj.steers-at-slalom.com
+resource_tags:
+  admin_contact: aj.steers-at-slalom.com

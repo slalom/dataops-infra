@@ -1,9 +1,9 @@
-output "endpoint" { value = aws_mysql_db.mysql.endpoint }
+output "endpoint" { value = aws_db_instance.mysql.endpoint }
 output "summary" {
   value = <<EOF
 
-MySQL ID:         ${aws_mysql_db.mysql.id}
-MySQL ARN:        ${aws_mysql_db.mysql.arn}
-MySQL Endpoint:   ${aws_mysql_db.mysql.endpoint}
+MySQL ID:         ${aws_db_instance.mysql.id}
+MySQL ARN:        ${aws_db_instance.mysql.arn}
+MySQL Endpoint:   ${aws_db_instance.mysql.endpoint}
 EOF
 }

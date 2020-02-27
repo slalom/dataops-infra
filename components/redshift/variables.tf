@@ -1,10 +1,6 @@
 variable "name_prefix" { type = string }
-variable "environment" {
-
-}
-variable "identifier" { default = "rds_db" }
-variable "engine" { default = "mysql" }
-variable "engine_version" { default = "5.7.26" }
+variable "subnets" { type = list(string) }
+variable "database_name" { default = "redshift_db" }
 variable "resource_tags" {
   type    = map
   default = {}
@@ -19,16 +15,16 @@ variable "elastic_ip" {
   type    = string
   default = null
 }
-variable "instance_class" {
-  description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr  (https://aws.amazon.com/rds/mysql/pricing/ )"
+variable "node_type" {
+  description = "Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr  (https://aws.amazon.com/redshift/pricing/)"
   type        = string
-  default     = "db.t2.micro"
+  default     = "dc2.large"
 }
 variable "num_nodes" {
   type    = number
   default = 1
 }
-variable "jdbc_port" { default = 3306 }
+variable "jdbc_port" { default = 5439 }
 variable "kms_key_id" {
   type    = string
   default = null
