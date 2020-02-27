@@ -4,6 +4,9 @@
 
 ### Workstation Setup
 
+
+blah
+
 1. Follow the steps in [Windows Development Quickstart](https://docs.dataops.tk/docs/windows_development.html), which will automatically install all of the following required tools: Terraform, Docker, VS Code, Python 3, and Git.
 2. Clone this repo to your local machine.
 3. Initialize your SSH key and local settings file.
