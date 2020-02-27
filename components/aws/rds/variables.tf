@@ -1,6 +1,8 @@
 variable "name_prefix" { type = string }
 variable "subnets" { type = list(string) }
-variable "database_name" { default = "rds_db" }
+variable "identifier" { default = "rds_db" }
+variable "engine" { default = "mysql" }
+variable "engine_version" { default = "5.7.26" }
 variable "resource_tags" {
   type    = map
   default = {}
@@ -15,10 +17,10 @@ variable "elastic_ip" {
   type    = string
   default = null
 }
-variable "node_type" {
-  description = "Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr  (https://aws.amazon.com/redshift/pricing/)"
+variable "instance_class" {
+  description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr  (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
-  default     = "dc2.large"
+  default     = "db.t2.micro"
 }
 variable "num_nodes" {
   type    = number

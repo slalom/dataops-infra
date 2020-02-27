@@ -1,9 +1,9 @@
-output "endpoint" { value = aws_redshift_cluster.redshift.endpoint }
+output "endpoint" { value = aws_mysql_db.mysql.endpoint }
 output "summary" {
   value = <<EOF
 
-Redshift Cluster ID: ${aws_redshift_cluster.redshift.id}
-Redshift ARN:        ${aws_redshift_cluster.redshift.arn}
-Redshift endpoint:   ${aws_redshift_cluster.redshift.endpoint}
+MySQL ID:         ${aws_mysql_db.mysql.id}
+MySQL ARN:        ${aws_mysql_db.mysql.arn}
+MySQL Endpoint:   ${aws_mysql_db.mysql.endpoint}
 EOF
 }

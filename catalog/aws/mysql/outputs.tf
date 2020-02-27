@@ -1,2 +1,2 @@
-output "endpoint" { value = module.redshift.endpoint }
-output "summary" { value = module.redshift.summary }
+output "endpoint" { value = module.mysql.endpoint }
+output "summary" { value = module.mysql.summary }

@@ -1,4 +1,4 @@
-# NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
+# NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
 data "aws_region" "current" {}
 
@@ -25,7 +25,9 @@ module "rds" {
   resource_tags       = var.resource_tags
   skip_final_snapshot = var.skip_final_snapshot
   admin_password      = var.admin_password
-  node_type           = var.node_type
+  instance_class      = var.instance_class
+  engine              = var.engine
+  engine_version      = var.engine_version
   num_nodes           = var.num_nodes
   kms_key_id          = var.kms_key_id
   elastic_ip          = var.elastic_ip

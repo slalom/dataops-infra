@@ -24,7 +24,7 @@ variable "elastic_ip" {
 variable "node_type" {
   description = "Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr  (https://aws.amazon.com/redshift/pricing/)"
   type        = string
-  default     = "dc2.large" /* check the right terminology for mysql rds*/
+  default     = "dc2.large"
 }
 variable "num_nodes" {
   type    = number
