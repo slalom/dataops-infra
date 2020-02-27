@@ -18,8 +18,8 @@ module "vpc" {
   resource_tags = var.resource_tags
 }
 
-module "rds" {
-  source              = "../../../components/aws/rds"
+module "mysql" {
+  source              = "../../../components/aws/mysql"
   name_prefix         = local.name_prefix
   subnets             = local.public_subnets
   resource_tags       = var.resource_tags
