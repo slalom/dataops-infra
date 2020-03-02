@@ -1,3 +1,7 @@
+locals {
+  airflow_url = "http://${module.airflow_ecs_task.load_balancer_dns}:8080"
+}
+
 module "airflow_ecs_cluster" {
   source        = "../../../components/aws/ecs-cluster"
   name_prefix   = var.name_prefix
