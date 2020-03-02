@@ -58,6 +58,10 @@ data "aws_ami" "ecs_linux_ami" {
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.name_prefix}ECSCluster"
   tags = var.resource_tags
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_iam_instance_profile" "ecs_iam_instance_profile" {

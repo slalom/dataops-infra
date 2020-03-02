@@ -19,7 +19,7 @@ locals {
     "{\"name\": \"${k}\", \"value\": \"${v}\"}"
   ])
   entrypoint_str = var.container_entrypoint == null ? "" : "\"entryPoint\": [\"${var.container_entrypoint}\"],"
-  command_str    = var.container_command == null ? "" : "\"command\": [\"${var.container_command}\"],"
+  command_str    = var.container_command == null ? "" : "\"command\": [\"${replace(replace(var.container_command, "\"", "\\\""), " ", "\", \"")}\"],"
   network_mode   = var.use_fargate ? "awsvpc" : "bridge"
   launch_type    = var.use_fargate ? "FARGATE" : "EC2"
 }

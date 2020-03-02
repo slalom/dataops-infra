@@ -31,5 +31,5 @@ module "env" {
   source        = "../../catalog/aws/environment"
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
-  resource_tags = local.config["project_tags"]
+  resource_tags = local.config["resource_tags"]
 }

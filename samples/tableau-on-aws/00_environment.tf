@@ -10,7 +10,7 @@ locals {
   project_shortname = local.config["project_shortname"]
   name_prefix       = "${local.project_shortname}-"
   aws_region        = local.config["aws_region"]
-  resource_tags     = local.config["project_tags"]
+  resource_tags     = local.config["resource_tags"]
 }
 
 provider "aws" {
@@ -25,5 +25,5 @@ module "env" {
   source        = "../../catalog/aws/environment"
   name_prefix   = local.name_prefix
   aws_region    = local.aws_region
-  resource_tags = local.config["project_tags"]
+  resource_tags = local.config["resource_tags"]
 }
