@@ -43,9 +43,9 @@ module "ecs_tap_sync_task" {
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores
   use_fargate         = true
-  environment_vars    = merge(
+  environment_vars = merge(
     {
-      "TAP_CONFIG_DIR": "s3://${var.source_code_s3_bucket}/${var.source_code_s3_path}/tap-snapshot-${local.unique_hash}"
+      "TAP_CONFIG_DIR" : "s3://${var.source_code_s3_bucket}/${var.source_code_s3_path}/tap-snapshot-${local.unique_hash}"
     },
     {
       for k, v in var.taps[0].settings :
