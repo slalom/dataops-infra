@@ -36,7 +36,8 @@ resource "aws_ecs_task_definition" "ecs_task" {
   requires_compatibilities = [local.launch_type]
   cpu                      = var.container_num_cores * 1024
   memory                   = var.container_ram_gb * 1024
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
   tags                     = var.resource_tags
   container_definitions    = <<DEFINITION
 [
@@ -111,7 +112,7 @@ resource "aws_ecs_service" "ecs_service" {
   cluster         = data.aws_ecs_cluster.ecs_cluster.arn
   task_definition = aws_ecs_task_definition.ecs_task.arn
   launch_type     = local.launch_type
-  # iam_role        = aws_iam_role.ecs_task_execution_role.name
+  # iam_role        = aws_iam_role.ecs_execution_role.name
   depends_on = [aws_lb.alb]
   network_configuration {
     subnets = var.environment.public_subnets
@@ -144,7 +145,7 @@ resource "aws_cloudwatch_event_target" "daily_run_task" {
   # for_each   = aws_cloudwatch_event_rule.daily_run_schedule
   rule     = aws_cloudwatch_event_rule.daily_run_schedule[each.value].name
   arn      = data.aws_ecs_cluster.ecs_cluster.arn
-  role_arn = aws_iam_role.ecs_task_execution_role.arn
+  role_arn = aws_iam_role.ecs_execution_role.arn
   ecs_target {
     task_definition_arn = aws_ecs_task_definition.ecs_task.arn
     task_count          = 1

@@ -1,7 +1,8 @@
 locals {
   is_windows_host = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   user_home       = pathexpand("~")
-  aws_creds_file  = "${var.secrets_folder}/credentials"
+  secrets_folder  = abspath(var.secrets_folder)
+  aws_creds_file  = "${local.secrets_folder}/credentials"
   aws_user_switch_cmd = (
     local.is_windows_host ?
     "SET AWS_SHARED_CREDENTIALS_FILE=${local.aws_creds_file}" :
@@ -21,7 +22,7 @@ module "ssh_key_pair" {
   namespace             = "${var.name_prefix}ssh"
   stage                 = "prod"
   name                  = "keypair"
-  ssh_public_key_path   = abspath(var.secrets_folder)
+  ssh_public_key_path   = local.secrets_folder
   private_key_extension = ".pem"
   public_key_extension  = ".pub"
   generate_ssh_key      = true

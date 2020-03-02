@@ -43,8 +43,29 @@ module "ecs_tap_sync_task" {
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores
   use_fargate         = true
-  environment_vars    = var.taps[0].settings
-  environment_secrets = var.taps[0].secrets
+  environment_vars    = merge(
+    {
+      "TAP_CONFIG_DIR": "s3://${var.source_code_s3_bucket}/${var.source_code_s3_path}/tap-snapshot-${local.unique_hash}"
+    },
+    {
+      for k, v in var.taps[0].settings :
+      "TAP_${upper(replace(var.taps[0].id, "-", "_"))}_${k}" => v
+    },
+    {
+      for k, v in var.target.settings :
+      "TARGET_${upper(replace(var.target.id, "-", "_"))}_${k}" => v
+    }
+  )
+  environment_secrets = merge(
+    {
+      for k, v in var.taps[0].secrets :
+      "TAP_${upper(var.taps[0].id)}_${k}" => v
+    },
+    {
+      for k, v in var.target.secrets :
+      "TAP_${upper(var.target.id)}_${k}" => v
+    }
+  )
   schedules = [
     # Convert 4-digit time of day into cron. Cron tester: https://crontab.guru/
     for cron_expr in var.scheduled_sync_times :
