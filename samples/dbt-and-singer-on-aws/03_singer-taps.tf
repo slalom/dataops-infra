@@ -15,15 +15,15 @@ module "singer_taps_on_aws" {
   taps = [
     {
       # Update with correct source information
-      id = "postgres"
+      id = "sample"
       settings = {
         # Update with any extract settings
         start_date = "2020-02-28T00:00:00Z"
       }
       secrets = {
         # Update with names of secrets keys
-        email    = module.secrets.secrets_ids["POSTGRES_username"]
-        password = module.secrets.secrets_ids["POSTGRES_password"]
+        email    = module.secrets.secrets_ids["SAMPLE_username"]
+        password = module.secrets.secrets_ids["SAMPLE_password"]
       }
     }
   ]

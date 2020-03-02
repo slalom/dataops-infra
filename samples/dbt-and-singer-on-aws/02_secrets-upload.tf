@@ -4,14 +4,14 @@ module "secrets" {
   source        = "../../components/aws/secrets-manager"
   name_prefix   = "${local.name_prefix}pardot-"
   resource_tags = local.resource_tags
-  secrets_file  = "../data/taps/.secrets/tap-pardot-config.json"
+  secrets_file  = "./sample-taps/sample-creds-config.json"
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
   secrets_file_map = {
-    PARDOT_email    = "email",
-    PARDOT_password = "password",
-    PARDOT_user_key = "user_key",
+    SAMPLE_username = "username",
+    SAMPLE_password = "password",
+    SAMPLE_user_key = "user_key",
   }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
