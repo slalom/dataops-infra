@@ -1,0 +1,194 @@
+selected_tables:
+  campaigns:
+    selected_columns:
+    - id
+    - name
+    - cost
+  email_clicks:
+    selected_columns:
+    - id
+    - prospect_id
+    - url
+    - list_email_id
+    - drip_program_action_id
+    - email_template_id
+    - tracker_redirect_id
+    - created_at
+  list_memberships:
+    selected_columns:
+    - id
+    - list_id
+    - prospect_id
+    - opted_out
+    - created_at
+    - updated_at
+  lists:
+    selected_columns:
+    - id
+    - name
+    - is_public
+    - is_dynamic
+    - title
+    - description
+    - is_crm_visible
+    - created_at
+    - updated_at
+  opportunities:
+    selected_columns:
+    - id
+    - campaign_id
+    - name
+    - value
+    - probability
+    - type
+    - stage
+    - status
+    - closed_at
+    - created_at
+    - updated_at
+  prospect_accounts:
+    selected_columns:
+    - id
+    - name
+    - updated_at
+    - created_at
+    - assigned_to
+    - Account_Status
+    - Alliance_Partner
+    - annual_revenue
+    - billing_address_one
+    - billing_address_two
+    - billing_city
+    - billing_country
+    - billing_state
+    - billing_zip
+    - description
+    - employees
+    - fax
+    - industry
+    - Market_Focus
+    - number
+    - ownership
+    - phone
+    - rating
+    - shipping_address_one
+    - shipping_address_two
+    - shipping_city
+    - shipping_country
+    - shipping_state
+    - shipping_zip
+    - sic
+    - site
+    - ticker_symbol
+    - type
+    - website
+  prospects:
+    selected_columns:
+    - id
+    - campaign_id
+    - salutation
+    - email
+    - password
+    - company
+    - prospect_account_id
+    - website
+    - job_title
+    - department
+    - country
+    - address_one
+    - address_two
+    - city
+    - state
+    - territory
+    - zip
+    - phone
+    - fax
+    - source
+    - annual_revenue
+    - employees
+    - industry
+    - years_in_business
+    - comments
+    - notes
+    - score
+    - grade
+    - last_activity_at
+    - recent_interaction
+    - crm_lead_fid
+    - crm_contact_fid
+    - crm_owner_fid
+    - crm_account_fid
+    - crm_last_sync
+    - crm_url
+    - is_do_not_email
+    - is_do_not_call
+    - opted_out
+    - is_reviewed
+    - is_starred
+    - created_at
+    - updated_at
+    ignored_columns:
+    - first_name
+    - last_name
+  users:
+    selected_columns:
+    - id
+    - email
+    - job_title
+    - role
+    - created_at
+    - updated_at
+    ignored_columns:
+    - first_name
+    - last_name
+  visitor_activities:
+    selected_columns:
+    - id
+    - prospect_id
+    - visitor_id
+    - type
+    - type_name
+    - details
+    - email_id
+    - email_template_id
+    - list_email_id
+    - form_id
+    - form_handler_id
+    - site_search_query_id
+    - landing_page_id
+    - paid_search_id_id
+    - multivariate_test_variation_id
+    - visitor_page_view_id
+    - file_id
+    - campaign
+    - created_at
+  visitors:
+    selected_columns:
+    - id
+    - page_view_count
+    - ip_address
+    - hostname
+    - campaign_parameter
+    - medium_parameter
+    - source_parameter
+    - content_parameter
+    - term_parameter
+    - created_at
+    - updated_at
+  visits:
+    selected_columns:
+    - id
+    - visitor_id
+    - prospect_id
+    - visitor_page_view_count
+    - visitor_page_views
+    - first_visitor_page_view_at
+    - last_visitor_page_view_at
+    - duration_in_seconds
+    - campaign_parameter
+    - medium_parameter
+    - source_parameter
+    - content_parameter
+    - term_parameter
+    - created_at
+    - updated_at
