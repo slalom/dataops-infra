@@ -34,7 +34,6 @@ variable "target" {
   default = {
     id = "s3-csv"
     settings = {
-      s3_bucket     = module.data_lake_on_aws.s3_data_bucket
       s3_key_prefix = "data/raw/{tap}/{table}/{version}/"
     }
     secrets = {}
