@@ -15,7 +15,7 @@ variable "resource_tags" {
 variable "source_code_folder" { type = string }
 variable "source_code_s3_bucket" { type = string }
 variable "source_code_s3_path" {
-  type = string
+  type    = string
   default = "code/taps"
 }
 variable "taps" {

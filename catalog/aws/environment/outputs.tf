@@ -23,7 +23,7 @@ output "environment" {
 }
 
 output "aws_creds_file" { value = var.aws_creds_file }
-output "is_windows_host" { value = local.is_windows_host}
+output "is_windows_host" { value = local.is_windows_host }
 output "user_home" { value = local.user_home }
 output "ssh_private_key_filename" { value = module.ssh_key_pair.private_key_filename }
 output "ssh_public_key_filename" { value = module.ssh_key_pair.public_key_filename }
