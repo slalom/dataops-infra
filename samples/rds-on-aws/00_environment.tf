@@ -19,13 +19,11 @@ provider "aws" {
   profile                 = "default"
 }
 
-
+output "env_summary" { value = module.env.summary }
 module "env" {
-  source        = "../../catalog/aws/environment"
-  name_prefix   = local.name_prefix
-  aws_region    = local.aws_region
-  resource_tags = local.resource_tags
-  # secrets_folder = local.secrets_folder
+  source         = "../../catalog/aws/environment"
+  name_prefix    = local.name_prefix
+  aws_region     = local.aws_region
+  resource_tags  = local.resource_tags
+  secrets_folder = local.secrets_folder
 }
-
-#output "env_summary" { value = module.env.summary }
