@@ -4,7 +4,7 @@
 data "local_file" "config_yml" { filename = "${path.module}/../infra-config.yml" }
 locals {
   config            = yamldecode(data.local_file.config_yml.content)
-  secrets_folder    = "${path.module}/../.secrets"
+  secrets_folder    = "${path.module}/../../.secrets"
   secrets_file_path = "${local.secrets_folder}/aws-secrets-manager-secrets.yml"
   project_shortname = local.config["project_shortname"]
   name_prefix       = "${local.project_shortname}-"
@@ -19,8 +19,9 @@ provider "aws" {
   profile                 = "default"
 }
 
+output "env_summary" { value = module.env.summary }
 module "env" {
-  source         = "../../dataops-infra/catalog/aws/environment"
+  source         = "../../catalog/aws/environment"
   name_prefix    = local.name_prefix
   aws_region     = local.aws_region
   resource_tags  = local.resource_tags

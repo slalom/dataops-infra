@@ -5,6 +5,8 @@ module "secrets" {
   name_prefix   = "${local.name_prefix}pardot-"
   resource_tags = local.resource_tags
   secrets_file  = "./sample-taps/sample-creds-config.json"
+  # secrets_file  = "../.secrets/aws-secrets-manager-secrets.yml"
+  # secrets_file  = "../data/taps/.secrets/tap-pardot-config.json"
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
