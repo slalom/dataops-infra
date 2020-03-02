@@ -4,12 +4,17 @@ output "summary" {
 
 
 Secrets Summary:
- - Secret ARNs: ${coalesce(join(", ", aws_secretsmanager_secret.secrets.*.arn), "(empty)")}
+ - Secret ARNs: \n\t${coalesce(join("\n\t",
+  [
+    for secret_name in local.secrets_names :
+    "${secret_name} => ${aws_secretsmanager_secret.secrets[secret_name].id}"
+  ]
+ ), "(empty)")}
 EOF
 }
 output "secrets_ids" {
   value = {
     for secret_name in local.secrets_names :
-    secret_name => aws_secretsmanager_secret.secrets[secret_name].arn
+    secret_name => aws_secretsmanager_secret.secrets[secret_name].id
   }
 }
