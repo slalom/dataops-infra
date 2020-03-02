@@ -4,7 +4,7 @@ output "summary" {
 
 
 Secrets Summary:
- - Secret ARNs: \n\t${coalesce(join("\n\t",
+ - Secret ARNs: ${"\n\t"}${coalesce(join("\n\t",
   [
     for secret_name in local.secrets_names :
     "${secret_name} => ${aws_secretsmanager_secret.secrets[secret_name].id}"
