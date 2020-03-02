@@ -59,11 +59,11 @@ module "ecs_tap_sync_task" {
   environment_secrets = merge(
     {
       for k, v in var.taps[0].secrets :
-      "TAP_${upper(var.taps[0].id)}_${k}" => v
+      "TAP_${upper(replace(var.taps[0].id, "-", "_"))}_${k}" => v
     },
     {
       for k, v in var.target.secrets :
-      "TARGET_${upper(var.target.id)}_${k}" => v
+      "TARGET_${upper(replace(var.target.id, "-", "_"))}_${k}" => v
     }
   )
   schedules = [
