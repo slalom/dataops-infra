@@ -63,7 +63,7 @@ module "ecs_tap_sync_task" {
     },
     {
       for k, v in var.target.secrets :
-      "TAP_${upper(var.target.id)}_${k}" => v
+      "TARGET_${upper(var.target.id)}_${k}" => v
     }
   )
   schedules = [
