@@ -1,17 +1,19 @@
-output "vpc_id" { value = var.disabled ? null : module.vpc.vpc_id }
-output "private_subnets" {
-  value = var.disabled || length(module.vpc.private_subnets) == 0 ? null : toset(module.vpc.private_subnets.*.id)
+output "summary" {
+  value = <<EOF
+
+
+Environment summary:
+
+  VPC ID:          ${module.vpc.vpc_id}
+  AWS Region:      ${var.aws_region}
+  Private Subnets: ${join(",", module.vpc.private_subnets)}
+  Public Subnets:  ${join(",", module.vpc.public_subnets)}
+  User Switch Cmd: ${coalesce(try(local.aws_user_switch_cmd, "n/a (error)"), "n/a")}
+
+EOF
 }
-output "public_subnets" {
-  value = var.disabled || length(module.vpc.public_subnets) == 0 ? null : toset(module.vpc.public_subnets.*.id)
-}
+
 output "environment" {
-  # type = object({
-  #   vpc_id          = string
-  #   aws_region      = string
-  #   public_subnets  = list(string)
-  #   private_subnets = list(string)
-  # })
   value = {
     vpc_id          = module.vpc.vpc_id
     aws_region      = var.aws_region
@@ -19,3 +21,9 @@ output "environment" {
     public_subnets  = module.vpc.public_subnets
   }
 }
+
+output "aws_creds_file" { value = local.aws_creds_file }
+output "is_windows_host" { value = local.is_windows_host }
+output "user_home" { value = local.user_home }
+output "ssh_private_key_filename" { value = module.ssh_key_pair.private_key_filename }
+output "ssh_public_key_filename" { value = module.ssh_key_pair.public_key_filename }

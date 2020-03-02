@@ -4,5 +4,5 @@
 #       2. Before changing access keys to a new account, remember to run `terraform destroy`
 aws_region: us-east-1
 project_shortname: AJTest010
-project_tags:
+resource_tags:
   admin_contact: aj.steers-at-slalom.com

@@ -35,9 +35,6 @@ module "ssh_key_pair" {
   private_key_extension = ".pem"
   public_key_extension  = ".pub"
   generate_ssh_key      = true
-  chmod_command = ( # chmod only on linux (ignore on windows)
-    substr(pathexpand("~"), 1, 1) == "/" ? "chmod 600 %v" : ""
-  )
 }
 
 resource "local_file" "config_yml" {
