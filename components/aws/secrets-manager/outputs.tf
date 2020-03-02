@@ -9,7 +9,7 @@ Secrets Summary:
     for secret_name in local.secrets_names :
     "${secret_name} => ${aws_secretsmanager_secret.secrets[secret_name].id}"
   ]
- ), "(empty)")}
+), "(empty)")}
 EOF
 }
 output "secrets_ids" {
