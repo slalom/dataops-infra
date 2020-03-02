@@ -47,7 +47,7 @@ resource "local_file" "config_yml" {
 # Please reference this file in future terraform deployments.
 aws_region: ${var.aws_region}
 project_shortname: ${var.project_shortname}
-project_tags:
+resource_tags:
   admin_contact: admin.email@noreply.com
 EOF
 }

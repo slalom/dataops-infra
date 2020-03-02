@@ -13,7 +13,7 @@ resource "aws_db_subnet_group" "subnet_group" {
 resource "aws_db_instance" "mysql" {
   /*cluster_identifier        = "${lower(var.name_prefix)}redshift" */ /* MR - is this required for RDS ? */
   db_subnet_group_name = aws_db_subnet_group.subnet_group.name
-  identifier           = var.identifier
+  identifier           = lower(var.identifier)
   engine               = var.engine
   engine_version       = var.engine_version
   # master_username      = "mysqladmin"
