@@ -17,11 +17,11 @@ locals {
     if replace(secret_name, ":secretsmanager:", "") == secret_name
   }
   merged_secrets_map = merge(
-      local.existing_secrets_ids_map, {
-        for created_name in keys(local.new_secrets_map):
-          created_name => aws_secretsmanager_secret.secrets[created_name].id
-      }
-    )
+    local.existing_secrets_ids_map, {
+      for created_name in keys(local.new_secrets_map) :
+      created_name => aws_secretsmanager_secret.secrets[created_name].id
+    }
+  )
 }
 
 resource "aws_secretsmanager_secret" "secrets" {

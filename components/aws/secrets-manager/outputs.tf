@@ -5,11 +5,11 @@ output "summary" {
 Secrets Summary:
  - Secret ARNs:
  ${"\t"}${
-   coalesce(join("\n\t",
-  [
-    for name, id in local.merged_secrets_map :
+  coalesce(join("\n\t",
+    [
+      for name, id in local.merged_secrets_map :
       "${name} => ${id}"
-  ]
+    ]
   ), "(none)")
 }
 EOF
