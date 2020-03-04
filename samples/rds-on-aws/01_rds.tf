@@ -8,7 +8,7 @@ module "rds_mysql" {
 
   # CONFIGURE HERE:
 
-  skip_final_snapshot = true
+  #skip_final_snapshot = true
 
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:

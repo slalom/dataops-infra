@@ -5,6 +5,7 @@ variable "environment" {
 variable "identifier" { default = "rds-db" }
 variable "engine" { default = "mysql" }
 variable "engine_version" { default = "5.7.26" }
+variable "allocated_storage" { default = "20" }
 variable "resource_tags" {
   type    = map
   default = {}

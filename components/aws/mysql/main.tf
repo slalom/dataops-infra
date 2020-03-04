@@ -11,7 +11,7 @@ resource "aws_db_subnet_group" "subnet_group" {
 }
 
 resource "aws_db_instance" "mysql" {
-  /*cluster_identifier        = "${lower(var.name_prefix)}redshift" */ /* MR - is this required for RDS ? */
+
   db_subnet_group_name = aws_db_subnet_group.subnet_group.name
   identifier           = lower(var.identifier)
   engine               = var.engine
@@ -25,11 +25,11 @@ resource "aws_db_instance" "mysql" {
 
   instance_class = var.instance_class
   # number_of_nodes = var.num_nodes
-  # cluster_type    = var.num_nodes > 1 ? "multi-node" : "single-node"
   kms_key_id = var.kms_key_id
   # elastic_ip          = var.elastic_ip
   port                = var.jdbc_port
   skip_final_snapshot = var.skip_final_snapshot
+  allocated_storage   = var.allocated_storage
 
   # logging {
   #   enable        = var.s3_logging_bucket == null ? false : true

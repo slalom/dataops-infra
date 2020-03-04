@@ -10,16 +10,12 @@ variable "environment" {
 variable "identifier" { default = "rds_db" }
 variable "engine" { default = "mysql" }
 variable "engine_version" { default = "5.7.26" }
+variable "allocated_storage" { default = "20" }
 variable "resource_tags" {
   type    = map
   default = {}
 }
 variable "skip_final_snapshot" { default = false }
-variable "admin_password" {
-  description = "Must be 8 characters long."
-  type        = string
-  default     = null
-}
 variable "elastic_ip" {
   type    = string
   default = null
