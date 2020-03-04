@@ -1,7 +1,7 @@
 locals {
-  is_windows_host      = substr(pathexpand("~"), 0, 1) == "/" ? false : true
-  user_home            = pathexpand("~")
-  secrets_folder       = abspath(var.secrets_folder)
+  is_windows_host = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+  user_home       = pathexpand("~")
+  secrets_folder  = abspath(var.secrets_folder)
   aws_credentials_file = (
     fileexists("${local.secrets_folder}/aws-credentials") ?
     "${local.secrets_folder}/aws-credentials" : (
