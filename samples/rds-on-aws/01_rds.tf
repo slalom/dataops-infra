@@ -8,7 +8,16 @@ module "rds_mysql" {
 
   # CONFIGURE HERE:
 
-  #skip_final_snapshot = true
+
+  identifier          = "rds-db"
+  instance_class      = "db.t2.micro"
+  engine              = "mysql"
+  engine_version      = "5.7.26"
+  username            = "mysqladmin"
+  password            = "asdfASDF12"
+  jdbc_port           = 3306
+  allocated_storage   = 20
+  skip_final_snapshot = true
 
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:

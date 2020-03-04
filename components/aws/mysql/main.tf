@@ -30,6 +30,8 @@ resource "aws_db_instance" "mysql" {
   port                = var.jdbc_port
   skip_final_snapshot = var.skip_final_snapshot
   allocated_storage   = var.allocated_storage
+  admin_username      = var.admin_username
+  admin_password      = var.admin_password
 
   # logging {
   #   enable        = var.s3_logging_bucket == null ? false : true

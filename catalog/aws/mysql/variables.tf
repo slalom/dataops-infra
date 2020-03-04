@@ -7,10 +7,14 @@ variable "environment" {
     private_subnets = list(string)
   })
 }
-variable "identifier" { default = "rds_db" }
+variable "identifier" { default = "rds-db" }
 variable "engine" { default = "mysql" }
 variable "engine_version" { default = "5.7.26" }
-variable "allocated_storage" { default = "20" }
+variable "allocated_storage" {
+  description = "The allocated storage value is denoted in GB"
+  type        = string
+  default     = "20"
+}
 variable "resource_tags" {
   type    = map
   default = {}
@@ -24,6 +28,13 @@ variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr  (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t2.micro"
+}
+
+variable "admin_username" { type = string }
+variable "admin_password" {
+  description = "Must be 8 characters long."
+  type        = string
+  default     = null
 }
 variable "num_nodes" {
   type    = number
