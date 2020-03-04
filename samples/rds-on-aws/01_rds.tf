@@ -13,8 +13,8 @@ module "rds_mysql" {
   instance_class      = "db.t2.micro"
   engine              = "mysql"
   engine_version      = "5.7.26"
-  username            = "mysqladmin"
-  password            = "asdfASDF12"
+  admin_username      = "mysqladmin"
+  admin_password      = "asdfASDF12"
   jdbc_port           = 3306
   allocated_storage   = 20
   skip_final_snapshot = true
