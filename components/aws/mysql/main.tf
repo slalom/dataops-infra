@@ -39,3 +39,5 @@ resource "aws_db_instance" "mysql" {
   #   s3_key_prefix = var.s3_logging_path
   # }
 }
+
+
