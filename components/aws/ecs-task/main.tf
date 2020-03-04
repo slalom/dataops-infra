@@ -26,7 +26,7 @@ locals {
 
 module "secrets" {
   source        = "../secrets-manager"
-  name_prefix   = "${var.name_prefix}"
+  name_prefix   = var.name_prefix
   resource_tags = var.resource_tags
   secrets_map   = var.environment_secrets
   kms_key_id    = var.secrets_manager_kms_key_id
