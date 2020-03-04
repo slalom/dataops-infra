@@ -11,7 +11,7 @@ locals {
     var.environment_vars
   )
   container_secrets_str = join(",\n", [
-    for k, v in var.environment_secrets :
+    for k, v in module.secrets.secrets_ids :
     "{\"name\": \"${k}\", \"valueFrom\": \"${v}\"}"
   ])
   container_env_vars_str = join(",\n", [
@@ -22,6 +22,14 @@ locals {
   command_str    = var.container_command == null ? "" : "\"command\": [\"${replace(replace(var.container_command, "\"", "\\\""), " ", "\", \"")}\"],"
   network_mode   = var.use_fargate ? "awsvpc" : "bridge"
   launch_type    = var.use_fargate ? "FARGATE" : "EC2"
+}
+
+module "secrets" {
+  source        = "../secrets-manager"
+  name_prefix   = var.name_prefix
+  resource_tags = var.resource_tags
+  secrets_map   = var.environment_secrets
+  kms_key_id    = var.secrets_manager_kms_key_id
 }
 
 resource "aws_cloudwatch_log_group" "cw_log_group" {
