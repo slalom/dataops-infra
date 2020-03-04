@@ -25,7 +25,7 @@ locals {
 }
 
 resource "aws_secretsmanager_secret" "secrets" {
-  for_each   = keys(local.new_secrets_map)
+  for_each   = toset(keys(local.new_secrets_map))
   name       = "${var.name_prefix}${each.key}"
   kms_key_id = var.kms_key_id
 }
