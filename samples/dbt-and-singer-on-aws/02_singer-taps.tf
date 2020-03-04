@@ -22,8 +22,8 @@ module "singer_taps_on_aws" {
       }
       secrets = {
         # Update with names of secrets keys
-        email    = module.secrets.secrets_ids["SAMPLE_username"]
-        password = module.secrets.secrets_ids["SAMPLE_password"]
+        SAMPLE_username = "./sample-taps/sample-creds-config.json:username",
+        SAMPLE_password = "./sample-taps/sample-creds-config.json:password",
       }
     }
   ]
@@ -37,7 +37,10 @@ module "singer_taps_on_aws" {
       s3_bucket     = module.data_lake_on_aws.s3_data_bucket
       s3_key_prefix = "data/raw/{tap}/{table}/{version}/"
     }
-    secrets = {}
+    secrets = {
+      aws_access_key_id     = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_access_key_id"
+      aws_secret_access_key = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_secret_access_key"
+    }
   }
 
   s3_data_bucket = module.data_lake_on_aws.s3_data_bucket
