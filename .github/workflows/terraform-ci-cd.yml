@@ -33,12 +33,12 @@ jobs:
         # python-version: [3.7]
         sample-id:
           - airflow-on-aws
-          - azure
           - dbt-and-singer-on-aws
           - rds-on-aws
           - redshift-dw
-          - tableau-on-aws
           - s3-lambda-trigger
+          - secrets-manager-on-aws
+          - tableau-on-aws
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1

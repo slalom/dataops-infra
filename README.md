@@ -9,14 +9,14 @@
 3. Initialize your SSH key and local settings file.
 
     ```bash
-    cd catalog/aws-prereqs
+    cd samples/s3-lambda-trigger
     terraform init
     terraform apply -auto-approve
     ```
 
    * _**Note:** If you receive an error that "Provider produced inconsistent final plan", please rerun the final `terraform apply` step with the same provided input values. This is a known issue and will be resolved in a future update._
 
-### Install Infrastructure from the Infrasturcture Catalog
+### Install Infrastructure from the Infrastructure Catalog
 
 The below instructions will use 'tableau-server-on-aws' as the example. The same steps can be repeated for any Infrastructure Catalog items within 'catalog' folder.
 

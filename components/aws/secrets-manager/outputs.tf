@@ -1,20 +1,19 @@
-# TODO:  BUGFIX:'summary' and 'arn_list' appear to be returning null
 output "summary" {
   value = <<EOF
 
 
 Secrets Summary:
- - Secret ARNs: ${"\n\t"}${coalesce(join("\n\t",
-  [
-    for secret_name in local.secrets_names :
-    "${secret_name} => ${aws_secretsmanager_secret.secrets[secret_name].id}"
-  ]
-), "(empty)")}
+ - Secret ARNs:
+ ${"\t"}${
+  coalesce(join("\n\t",
+    [
+      for name, id in local.merged_secrets_map :
+      "${name} => ${id}"
+    ]
+  ), "(none)")
+}
 EOF
 }
 output "secrets_ids" {
-  value = {
-    for secret_name in local.secrets_names :
-    secret_name => aws_secretsmanager_secret.secrets[secret_name].id
-  }
+  value = local.merged_secrets_map
 }
