@@ -10,7 +10,7 @@ module "step-functions" {
  "StartAt": "Generate Unique Job Name",
   "States": {
     "Generate Unique Job Name": {
-      "Resource": "arn:aws:lambda:us-east-1:954496255132:function:UniqueJobName",
+      "Resource": "arn:aws:lambda:us-east-1::function:UniqueJobName",
       "Parameters": {
         "JobName": "customerchurn"
       },
@@ -84,7 +84,7 @@ module "step-functions" {
             "InstanceType": "ml.m5.xlarge",
             "VolumeSizeInGB": 30
           },
-          "RoleArn": "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole",
+          "RoleArn": "arn:aws:iam:::role/StepFunctionsMLOpsRole",
           "InputDataConfig": [
             {
               "DataSource": {
@@ -119,7 +119,7 @@ module "step-functions" {
       "Next": "Extract Best Model Path"
     },
     "Extract Best Model Path": {
-      "Resource": "arn:aws:lambda:us-east-1:954496255132:function:ExtractModelPath",
+      "Resource": "arn:aws:lambda:us-east-1::function:ExtractModelPath",
       "Type": "Task",
       "Next": "Save Best Model"
     },
@@ -130,7 +130,7 @@ module "step-functions" {
           "Environment": {},
           "ModelDataUrl.$": "$.modelDataUrl"
         },
-        "ExecutionRoleArn": "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole",
+        "ExecutionRoleArn": "arn:aws:iam:::role/StepFunctionsMLOpsRole",
         "ModelName.$": "$.bestTrainingJobName"
       },
       "Resource": "arn:aws:states:::sagemaker:createModel",
@@ -138,12 +138,12 @@ module "step-functions" {
       "Next": "Extract Model Name"
     },
     "Extract Model Name": {
-      "Resource": "arn:aws:lambda:us-east-1:954496255132:function:ExtractModelName",
+      "Resource": "arn:aws:lambda:us-east-1::function:ExtractModelName",
       "Type": "Task",
       "Next": "Query Training Results"
     },
     "Query Training Results": {
-      "Resource": "arn:aws:lambda:us-east-1:954496255132:function:QueryTrainingStatus",
+      "Resource": "arn:aws:lambda:us-east-1::function:QueryTrainingStatus",
       "Type": "Task",
       "Next": "Endpoint Rule"
     },
@@ -179,12 +179,12 @@ module "step-functions" {
       "Next": "Extract Endpoint Config Name"
     },
     "Extract Endpoint Config Name": {
-      "Resource": "arn:aws:lambda:us-east-1:954496255132:function:ExtractModelName",
+      "Resource": "arn:aws:lambda:us-east-1::function:ExtractModelName",
       "Type": "Task",
       "Next": "Check Endpoint Exists"
     },
     "Check Endpoint Exists": {
-      "Resource": "arn:aws:lambda:us-east-1:954496255132:function:CheckEndpointExists",
+      "Resource": "arn:aws:lambda:us-east-1::function:CheckEndpointExists",
       "Parameters": {
         "EndpointConfig.$": "$.modelName",
         "EndpointName": "customerchurn-089-001-bf391ccb"
