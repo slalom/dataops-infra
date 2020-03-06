@@ -4,9 +4,9 @@ resource "aws_lambda_function" "QueryTrainingStatus" {
   role          = "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole"
   handler       = "query_training_status.lambda_handler"
   filename      = "${path.module}/source/code/query_training_status.zip"
-  runtime = "python3.8"
+  runtime       = "python3.8"
 
-  tags   = local.resource_tags
+  tags = local.resource_tags
 }
 
 resource "aws_lambda_function" "ExtractModelPath" {
@@ -15,9 +15,9 @@ resource "aws_lambda_function" "ExtractModelPath" {
   role          = "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole"
   handler       = "extract_model_path.lambda_handler"
   filename      = "${path.module}/source/code/extract_model_path.zip"
-  runtime = "python3.8"
+  runtime       = "python3.8"
 
-  tags   = local.resource_tags
+  tags = local.resource_tags
 }
 
 resource "aws_lambda_function" "ExtractModelName" {
@@ -26,9 +26,9 @@ resource "aws_lambda_function" "ExtractModelName" {
   role          = "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole"
   handler       = "extract_model_name.lambda_handler"
   filename      = "${path.module}/source/code/extract_model_name.zip"
-  runtime = "python3.8"
+  runtime       = "python3.8"
 
-  tags   = local.resource_tags
+  tags = local.resource_tags
 }
 
 resource "aws_lambda_function" "CheckEndpointExists" {
@@ -37,9 +37,9 @@ resource "aws_lambda_function" "CheckEndpointExists" {
   role          = "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole"
   handler       = "check_endpoint_exists.lambda_handler"
   filename      = "${path.module}/source/code/check_endpoint_exists.zip"
-  runtime = "python3.8"
+  runtime       = "python3.8"
 
-  tags   = local.resource_tags
+  tags = local.resource_tags
 }
 
 resource "aws_lambda_function" "UniqueJobName" {
@@ -48,7 +48,7 @@ resource "aws_lambda_function" "UniqueJobName" {
   role          = "arn:aws:iam::954496255132:role/StepFunctionsMLOpsRole"
   handler       = "unique_job_name.lambda_handler"
   filename      = "${path.module}/source/code/unique_job_name.zip"
-  runtime = "python3.8"
+  runtime       = "python3.8"
 
-  tags   = local.resource_tags
+  tags = local.resource_tags
 }

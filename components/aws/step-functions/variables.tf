@@ -1,5 +1,5 @@
-variable "name_prefix" { 
-  type = string 
+variable "name_prefix" {
+  type = string
 }
 
 variable "environment" {
@@ -15,8 +15,8 @@ variable "state_machine_definition" {
   type = string
 }
 
-variable "s3_bucket_name" { 
-  type = string 
+variable "s3_bucket_name" {
+  type = string
 }
 
 variable "resource_tags" {

@@ -1,14 +1,14 @@
-variable "name_prefix" { 
-  type = string 
+variable "name_prefix" {
+  type = string
 }
 
-variable "s3_bucket_name" { 
-  type = string 
+variable "s3_bucket_name" {
+  type = string
 }
 
-variable "data_folder" { 
-  type = string 
-  default = "source/data" 
+variable "data_folder" {
+  type    = string
+  default = "source/data"
 }
 
 variable "data_s3_path" {

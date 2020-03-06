@@ -6,13 +6,13 @@ module "s3_store_and_lambdas" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-//  lambda_python_source = "${path.module}/python/fn_lambda_logger"
-//  s3_triggers = {
-//    "fn_lambda_logger" = {
-//      triggering_path     = "uploads/*"
-//      function_handler    = "main.lambda_handler"
-//      environment_vars    = {}
-//      environment_secrets = {}
-//    }
-//  }
+  //  lambda_python_source = "${path.module}/python/fn_lambda_logger"
+  //  s3_triggers = {
+  //    "fn_lambda_logger" = {
+  //      triggering_path     = "uploads/*"
+  //      function_handler    = "main.lambda_handler"
+  //      environment_vars    = {}
+  //      environment_secrets = {}
+  //    }
+  //  }
 }

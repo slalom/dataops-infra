@@ -1,3 +1,3 @@
-output "summary" { 
-    value = module.step-functions.summary 
+output "summary" {
+  value = module.step-functions.summary
 }

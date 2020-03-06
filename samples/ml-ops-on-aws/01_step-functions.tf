@@ -1,9 +1,9 @@
 module "ml-ops-on-aws" {
   #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  source         = "../../catalog/aws/ml-ops-on-aws"
-  name_prefix    = local.name_prefix
-  environment    = module.env.environment
-  resource_tags  = local.resource_tags
+  source        = "../../catalog/aws/ml-ops-on-aws"
+  name_prefix   = local.name_prefix
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
 
   # Training data source and upload
   s3_bucket_name = module.s3_store_and_lambdas.s3_data_bucket
