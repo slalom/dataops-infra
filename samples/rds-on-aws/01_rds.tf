@@ -19,6 +19,6 @@ module "rds_mysql" {
   allocated_storage   = 20
   skip_final_snapshot = true
 
-
+}
 output "summary" { value = module.rds_mysql.summary }
 
