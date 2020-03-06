@@ -30,10 +30,7 @@ variable "instance_class" {
   type        = string
   default     = "db.t2.micro"
 }
-variable "num_nodes" {
-  type    = number
-  default = 1
-}
+
 variable "jdbc_port" { default = 3306 }
 variable "kms_key_id" {
   type    = string

@@ -16,7 +16,6 @@ module "mysql" {
   allocated_storage   = var.allocated_storage
   engine              = var.engine
   engine_version      = var.engine_version
-  num_nodes           = var.num_nodes
   kms_key_id          = var.kms_key_id
   elastic_ip          = var.elastic_ip
   jdbc_port           = var.jdbc_port

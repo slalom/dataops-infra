@@ -16,22 +16,14 @@ resource "aws_db_instance" "mysql" {
   identifier           = lower(var.identifier)
   engine               = var.engine
   engine_version       = var.engine_version
-  # master_username      = "mysqladmin"
-  # master_password = (
-  #   var.admin_password == null
-  #   ? "${lower(substr(random_id.random_pass.hex, 0, 4))}${upper(substr(random_id.random_pass.hex, 4, 4))}"
-  #   : var.admin_password
-  # )
-
-  instance_class = var.instance_class
-  # number_of_nodes = var.num_nodes
-  kms_key_id = var.kms_key_id
+  instance_class       = var.instance_class
+  kms_key_id           = var.kms_key_id
   # elastic_ip          = var.elastic_ip
   port                = var.jdbc_port
   skip_final_snapshot = var.skip_final_snapshot
   allocated_storage   = var.allocated_storage
-  # admin_username      = var.admin_username
-  # admin_password      = var.admin_password
+  username            = var.admin_username
+  password            = var.admin_password
 
   # logging {
   #   enable        = var.s3_logging_bucket == null ? false : true

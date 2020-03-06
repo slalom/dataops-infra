@@ -36,10 +36,7 @@ variable "admin_password" {
   type        = string
   default     = null
 }
-variable "num_nodes" {
-  type    = number
-  default = 1
-}
+
 variable "jdbc_port" { default = 3306 }
 variable "kms_key_id" {
   type    = string
