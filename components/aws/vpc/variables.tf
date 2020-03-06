@@ -8,3 +8,13 @@ variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
   default     = false
 }
+variable "aws_credentials_file" {
+  description = "Optional, unless set at the main AWS provider level in which case it is required."
+  type        = string
+  default     = null
+}
+variable "aws_profile" {
+  description = "Optional, unless set at the main AWS provider level in which case it is required."
+  type        = string
+  default     = null
+}
