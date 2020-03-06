@@ -5,13 +5,13 @@ resource "null_resource" "delay" {
     interpreter = ["PowerShell", "-Command"]
   }
   triggers = {
-    "states_exec_role" = "arn:aws:iam:::role/StepFunctionsWorkflowExecutionRole"
+    "states_exec_role" = aws_iam_role.step_functions_ml_ops_role.arn
   }
 }
 
 resource "aws_sfn_state_machine" "state_machine" {
-  name     = var.state_machine_name
-  role_arn = "arn:aws:iam:::role/StepFunctionsWorkflowExecutionRole"
+  name     = "${lower(var.name_prefix)}state-machine"
+  role_arn = aws_iam_role.step_functions_ml_ops_role.arn
 
   definition = var.state_machine_definition
 
