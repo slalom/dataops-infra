@@ -1,7 +1,7 @@
 # NOTE: IAM role includes actions for SageMaker and Lambda for ML Ops use-case
 
 resource "aws_iam_role" "step_functions_ml_ops_role" {
-  name = "StepFunctionsMLOpsRole"
+  name = "${var.name_prefix}StepFunctionsRole"
 
   tags = var.resource_tags
 
@@ -27,7 +27,7 @@ EOF
 }
 
 resource "aws_iam_policy" "step_functions_ml_ops_policy" {
-  name        = "StepFunctionsMLOpsPolicy"
+  name        = "${var.name_prefix}StepFunctionsPolicy"
   description = "Policy for Step Function MLOps Workflow"
   path        = "/"
 

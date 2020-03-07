@@ -84,7 +84,7 @@ module "step-functions" {
             "InstanceType": "ml.m5.xlarge",
             "VolumeSizeInGB": 30
           },
-          "RoleArn": "arn:aws:iam:::role/StepFunctionsMLOpsRole",
+          "RoleArn": "${module.step-functions.iam_role_arn}",
           "InputDataConfig": [
             {
               "DataSource": {
@@ -130,7 +130,7 @@ module "step-functions" {
           "Environment": {},
           "ModelDataUrl.$": "$.modelDataUrl"
         },
-        "ExecutionRoleArn": "arn:aws:iam:::role/StepFunctionsMLOpsRole",
+        "ExecutionRoleArn": "${module.step-functions.iam_role_arn}",
         "ModelName.$": "$.bestTrainingJobName"
       },
       "Resource": "arn:aws:states:::sagemaker:createModel",
