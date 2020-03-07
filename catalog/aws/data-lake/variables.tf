@@ -7,6 +7,11 @@ variable "environment" {
     private_subnets = list(string)
   })
 }
+variable "data_bucket_override" {
+  description = "Optionally, you can override the default data bucket with a bucket that already exists."
+  type        = string
+  default     = null
+}
 variable "resource_tags" {
   type    = map
   default = {}
