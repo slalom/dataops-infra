@@ -9,7 +9,7 @@ locals {
 }
 
 provider "aws" {
-  alias                   = "region_lookup"
+  alias                   = "regional"  # used for region-specific AZ lookup
   version                 = "~> 2.10"
   region                  = local.aws_region
   shared_credentials_file = var.aws_credentials_file
@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 data "aws_availability_zones" "az_list" {
-  provider = aws.region_lookup
+  provider = aws.regional
 }
 
 resource "aws_vpc" "my_vpc" {
