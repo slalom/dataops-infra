@@ -11,3 +11,8 @@ variable "disabled" {
 variable "secrets_folder" {
   type = string
 }
+variable "aws_profile" {
+  description = "Optional, unless set at the main AWS provider level in which case it is required."
+  type        = string
+  default     = null
+}

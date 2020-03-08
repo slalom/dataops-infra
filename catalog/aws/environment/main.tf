@@ -2,19 +2,29 @@ locals {
   is_windows_host = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   user_home       = pathexpand("~")
   secrets_folder  = abspath(var.secrets_folder)
-  aws_creds_file  = "${local.secrets_folder}/credentials"
+  aws_credentials_file = (
+    fileexists("${local.secrets_folder}/aws-credentials") ?
+    "${local.secrets_folder}/aws-credentials" : (
+      fileexists("${local.secrets_folder}/credentials") ?
+      "${local.secrets_folder}/credentials" : null
+    )
+  )
   aws_user_switch_cmd = (
-    local.is_windows_host ?
-    "SET AWS_SHARED_CREDENTIALS_FILE=${local.aws_creds_file}" :
-    "EXPORT AWS_SHARED_CREDENTIALS_FILE=${local.aws_creds_file}"
+    local.aws_credentials_file == null ? "n/a" : (
+      local.is_windows_host ?
+      "SET AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}" :
+      "export AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}"
+    )
   )
 }
 
 module "vpc" {
-  source        = "../../../components/aws/vpc"
-  name_prefix   = var.name_prefix
-  aws_region    = var.aws_region
-  resource_tags = var.resource_tags
+  source               = "../../../components/aws/vpc"
+  name_prefix          = var.name_prefix
+  aws_region           = var.aws_region
+  resource_tags        = var.resource_tags
+  aws_credentials_file = local.aws_credentials_file
+  aws_profile          = var.aws_profile
 }
 
 module "ssh_key_pair" {

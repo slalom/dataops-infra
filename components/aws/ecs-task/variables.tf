@@ -61,9 +61,15 @@ variable "environment_secrets" {
   type        = map(string)
   default     = {}
   description = <<EOF
-Mapping of environment variable names to secret manager ARNs.
-e.g. arn:aws:secretsmanager:[aws_region]:[aws_account]:secret:prod/ECSRunner/AWS_SECRET_ACCESS_KEY
+Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:
+ - arn:aws:secretsmanager:[aws_region]:[aws_account]:secret:prod/ECSRunner/AWS_SECRET_ACCESS_KEY
+ - path/to/file.json:MY_KEY_NAME_1
+ - path/to/file.yml:MY_KEY_NAME_2
 EOF
+}
+variable "secrets_manager_kms_key_id" {
+  type    = string
+  default = null
 }
 variable "environment_vars" {
   type        = map(string)
