@@ -11,8 +11,7 @@ module "rds_postgres" {
 
   identifier          = "rds-postgres-db"
   instance_class      = "db.t2.micro"
-  engine              = "postgres"
-  engine_version      = "11.5"
+  postgres_version    = "11.5"
   admin_username      = "postgresadmin"
   admin_password      = "asdfASDF12"
   jdbc_port           = 5432
@@ -20,5 +19,8 @@ module "rds_postgres" {
   skip_final_snapshot = true
 
 }
+
+#OPTIONAL CONFIGURATION HERE
+
 output "summary" { value = module.rds_postgres.summary }
 

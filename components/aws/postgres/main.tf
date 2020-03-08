@@ -18,18 +18,13 @@ resource "aws_db_instance" "postgres" {
   engine_version       = var.engine_version
   instance_class       = var.instance_class
   kms_key_id           = var.kms_key_id
-  # elastic_ip          = var.elastic_ip
-  port                = var.jdbc_port
-  skip_final_snapshot = var.skip_final_snapshot
-  allocated_storage   = var.allocated_storage
-  username            = var.admin_username
-  password            = var.admin_password
+  port                 = var.jdbc_port
+  skip_final_snapshot  = var.skip_final_snapshot
+  allocated_storage    = var.storage_size_gb
+  username             = var.admin_username
+  password             = var.admin_password
 
-  # logging {
-  #   enable        = var.s3_logging_bucket == null ? false : true
-  #   bucket_name   = var.s3_logging_bucket
-  #   s3_key_prefix = var.s3_logging_path
-  # }
+
 }
 
 

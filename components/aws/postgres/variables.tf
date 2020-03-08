@@ -5,7 +5,7 @@ variable "environment" {
 variable "identifier" { default = "rds-postgres-db" }
 variable "engine" { default = "postgres" }
 variable "engine_version" { default = "11.5" }
-variable "allocated_storage" {
+variable "storage_size_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "10"
@@ -21,10 +21,7 @@ variable "admin_password" {
   type        = string
   default     = null
 }
-variable "elastic_ip" {
-  type    = string
-  default = null
-}
+
 variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr  (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
@@ -36,11 +33,4 @@ variable "kms_key_id" {
   type    = string
   default = null
 }
-variable "s3_logging_bucket" {
-  type    = string
-  default = null
-}
-variable "s3_logging_path" {
-  type    = string
-  default = null
-}
+

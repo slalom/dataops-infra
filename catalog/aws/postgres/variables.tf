@@ -8,8 +8,7 @@ variable "environment" {
   })
 }
 variable "identifier" { default = "rds-postgres-db" }
-variable "engine" { default = "postgres" }
-variable "engine_version" { default = "11.5" }
+variable "postgres_version" { default = "11.5" }
 variable "allocated_storage" {
   description = "The allocated storage value is denoted in GB"
   type        = string
