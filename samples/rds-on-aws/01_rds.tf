@@ -11,8 +11,7 @@ module "rds_mysql" {
 
   identifier          = "rds-db"
   instance_class      = "db.t2.micro"
-  engine              = "mysql"
-  engine_version      = "5.7.26"
+  mysql_version       = "5.7.26"
   admin_username      = "mysqladmin"
   admin_password      = "asdfASDF12"
   jdbc_port           = 3306
@@ -20,5 +19,8 @@ module "rds_mysql" {
   skip_final_snapshot = true
 
 }
+
+#OPTIONAL CONFIGURATION HERE 
+
 output "summary" { value = module.rds_mysql.summary }
 

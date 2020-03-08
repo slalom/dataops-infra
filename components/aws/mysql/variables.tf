@@ -5,7 +5,7 @@ variable "environment" {
 variable "identifier" { default = "rds-db" }
 variable "engine" { default = "mysql" }
 variable "engine_version" { default = "5.7.26" }
-variable "allocated_storage" {
+variable "storage_size_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "20"

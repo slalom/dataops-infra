@@ -13,12 +13,9 @@ module "mysql" {
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   instance_class      = var.instance_class
-  allocated_storage   = var.allocated_storage
-  engine              = var.engine
-  engine_version      = var.engine_version
+  engine              = "mysql"
+  engine_version      = var.mysql_version
   kms_key_id          = var.kms_key_id
-  elastic_ip          = var.elastic_ip
   jdbc_port           = var.jdbc_port
-  s3_logging_bucket   = var.s3_logging_bucket
-  s3_logging_path     = var.s3_logging_path
+
 }
