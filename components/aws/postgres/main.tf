@@ -5,12 +5,12 @@ resource "random_id" "random_pass" {
 }
 
 resource "aws_db_subnet_group" "subnet_group" {
-  name       = "${lower(var.name_prefix)}mysql-subnet-group"
+  name       = "${lower(var.name_prefix)}postgres-subnet-group"
   subnet_ids = var.environment.public_subnets
   tags       = var.resource_tags
 }
 
-resource "aws_db_instance" "mysql" {
+resource "aws_db_instance" "postgres" {
 
   db_subnet_group_name = aws_db_subnet_group.subnet_group.name
   identifier           = lower(var.identifier)
@@ -18,13 +18,18 @@ resource "aws_db_instance" "mysql" {
   engine_version       = var.engine_version
   instance_class       = var.instance_class
   kms_key_id           = var.kms_key_id
-  port                 = var.jdbc_port
-  skip_final_snapshot  = var.skip_final_snapshot
-  allocated_storage    = var.storage_size_in_gb
-  username             = var.admin_username
-  password             = var.admin_password
+  # elastic_ip          = var.elastic_ip
+  port                = var.jdbc_port
+  skip_final_snapshot = var.skip_final_snapshot
+  allocated_storage   = var.allocated_storage
+  username            = var.admin_username
+  password            = var.admin_password
 
-
+  # logging {
+  #   enable        = var.s3_logging_bucket == null ? false : true
+  #   bucket_name   = var.s3_logging_bucket
+  #   s3_key_prefix = var.s3_logging_path
+  # }
 }
 
 

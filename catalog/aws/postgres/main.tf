@@ -1,11 +1,11 @@
 # NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
 locals {
-  name_prefix = "${var.name_prefix}MySQL-"
+  name_prefix = "${var.name_prefix}PostgreSQL-"
 }
 
-module "mysql" {
-  source              = "../../../components/aws/mysql"
+module "postgres" {
+  source              = "../../../components/aws/postgres"
   name_prefix         = local.name_prefix
   environment         = var.environment
   resource_tags       = var.resource_tags
@@ -13,9 +13,12 @@ module "mysql" {
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   instance_class      = var.instance_class
-  engine              = "mysql"
-  engine_version      = var.mysql_version
+  allocated_storage   = var.allocated_storage
+  engine              = var.engine
+  engine_version      = var.engine_version
   kms_key_id          = var.kms_key_id
+  elastic_ip          = var.elastic_ip
   jdbc_port           = var.jdbc_port
-
+  s3_logging_bucket   = var.s3_logging_bucket
+  s3_logging_path     = var.s3_logging_path
 }
