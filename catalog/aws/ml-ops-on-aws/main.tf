@@ -12,7 +12,7 @@ module "step-functions" {
     "Generate Unique Job Name": {
       "Resource": "arn:aws:lambda:us-east-1::function:UniqueJobName",
       "Parameters": {
-        "JobName": "customerchurn"
+        "JobName": "${var.job_name}"
       },
       "Type": "Task",
       "Next": "Hyperparameter Tuning"
@@ -24,53 +24,18 @@ module "step-functions" {
         "HyperParameterTuningJobConfig": {
           "Strategy": "Bayesian",
           "HyperParameterTuningJobObjective": {
-            "Type": "Minimize",
-            "MetricName": "validation:error"
+            "Type": "${var.tuning_objective}",
+            "MetricName": "${var.tuning_metric}"
           },
           "ResourceLimits": {
-            "MaxNumberOfTrainingJobs": 2,
-            "MaxParallelTrainingJobs": 2
+            "MaxNumberOfTrainingJobs": ${tostring(var.max_number_training_jobs)},
+            "MaxParallelTrainingJobs": ${tostring(var.max_parallel_training_jobs)}
           },
-          "ParameterRanges": {
-            "ContinuousParameterRanges": [
-              {
-                "Name": "eta",
-                "MinValue": "0.1",
-                "MaxValue": "0.5",
-                "ScalingType": "Auto"
-              },
-              {
-                "Name": "min_child_weight",
-                "MinValue": "5",
-                "MaxValue": "100",
-                "ScalingType": "Auto"
-              },
-              {
-                "Name": "subsample",
-                "MinValue": "0.1",
-                "MaxValue": "0.5",
-                "ScalingType": "Auto"
-              },
-              {
-                "Name": "gamma",
-                "MinValue": "0",
-                "MaxValue": "5",
-                "ScalingType": "Auto"
-              }
-            ],
-            "IntegerParameterRanges": [
-              {
-                "Name": "max_depth",
-                "MinValue": "0",
-                "MaxValue": "10",
-                "ScalingType": "Auto"
-              }
-            ]
-          }
+          "ParameterRanges": ${var.parameter_ranges}
         },
         "TrainingJobDefinition": {
           "AlgorithmSpecification": {
-            "TrainingImage": "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1",
+            "TrainingImage": "${var.training_image}",
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
@@ -91,7 +56,7 @@ module "step-functions" {
                 "S3DataSource": {
                   "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${var.s3_bucket_name}/data/train/train.csv"
+                  "S3Uri": "s3://${var.s3_bucket_name}/${var.data_s3_path}/train/train.csv"
                 }
               },
               "ChannelName": "train",
@@ -102,7 +67,7 @@ module "step-functions" {
                 "S3DataSource": {
                   "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${var.s3_bucket_name}/data/validation/validation.csv"
+                  "S3Uri": "s3://${var.s3_bucket_name}/${var.data_s3_path}/validation/validation.csv"
                 }
               },
               "ChannelName": "validation",
@@ -126,7 +91,7 @@ module "step-functions" {
     "Save Best Model": {
       "Parameters": {
         "PrimaryContainer": {
-          "Image": "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1",
+          "Image": "${var.training_image}",
           "Environment": {},
           "ModelDataUrl.$": "$.modelDataUrl"
         },
@@ -152,7 +117,7 @@ module "step-functions" {
       "Choices": [
         {
           "Variable": "$['trainingMetrics'][0]['Value']",
-          "NumericLessThan": 0.2,
+          "NumericLessThan": ${var.create_endpoint_error_threshold},
           "Next": "Create Model Endpoint Config"
         }
       ],
@@ -187,7 +152,7 @@ module "step-functions" {
       "Resource": "arn:aws:lambda:us-east-1::function:CheckEndpointExists",
       "Parameters": {
         "EndpointConfig.$": "$.modelName",
-        "EndpointName": "customerchurn-089-001-bf391ccb"
+        "EndpointName": "${var.endpoint_name}"
       },
       "Type": "Task",
       "Next": "Create or Update Endpoint"
