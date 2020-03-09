@@ -39,7 +39,7 @@ module "ecs_task" {
       "cron(${
         tonumber(substr(cron_expr, 2, 2))
         } ${
-        (tonumber(substr(cron_expr, 0, 2)) + local.tz_hour_offset + 24) % 24
+        (24 + tonumber(substr(cron_expr, 0, 2)) - local.tz_hour_offset) % 24
       } * * ? *)"
     ]
   ])
