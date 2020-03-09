@@ -72,19 +72,6 @@ variable "max_parallel_training_jobs" {
   default = 2
 }
 
-//variable "resource_limits" {
-//  type = object({
-//    MaxNumberOfTrainingJobs = number
-//    MaxParallelTrainingJobs = number
-//  })
-//  default = <<EOF
-//   {
-//            "MaxNumberOfTrainingJobs": 2,
-//            "MaxParallelTrainingJobs": 2
-//          }
-//EOF
-//}
-
 variable "parameter_ranges" {
   type    = string
   default = <<EOF
