@@ -31,7 +31,7 @@ module "step-functions" {
             "MaxNumberOfTrainingJobs": ${tostring(var.max_number_training_jobs)},
             "MaxParallelTrainingJobs": ${tostring(var.max_parallel_training_jobs)}
           },
-          "ParameterRanges": ${var.parameter_ranges}
+          "ParameterRanges": ${jsonencode(var.parameter_ranges)}
         },
         "TrainingJobDefinition": {
           "AlgorithmSpecification": {

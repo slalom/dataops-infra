@@ -73,43 +73,42 @@ variable "max_parallel_training_jobs" {
 }
 
 variable "parameter_ranges" {
-  type    = string
-  default = <<EOF
-   {
-      "ContinuousParameterRanges": [
-        {
-          "Name": "eta",
-          "MinValue": "0.1",
-          "MaxValue": "0.5",
-          "ScalingType": "Auto"
-        },
-        {
-          "Name": "min_child_weight",
-          "MinValue": "5",
-          "MaxValue": "100",
-          "ScalingType": "Auto"
-        },
-        {
-          "Name": "subsample",
-          "MinValue": "0.1",
-          "MaxValue": "0.5",
-          "ScalingType": "Auto"
-        },
-        {
-          "Name": "gamma",
-          "MinValue": "0",
-          "MaxValue": "5",
-          "ScalingType": "Auto"
-        }
-      ],
-      "IntegerParameterRanges": [
-        {
-          "Name": "max_depth",
-          "MinValue": "0",
-          "MaxValue": "10",
-          "ScalingType": "Auto"
-        }
-      ]
-    }
-EOF
+  type = map
+
+  default = {
+    "ContinuousParameterRanges" = [
+      {
+        "Name"        = "eta",
+        "MinValue"    = "0.1",
+        "MaxValue"    = "0.5",
+        "ScalingType" = "Auto"
+      },
+      {
+        "Name"        = "min_child_weight",
+        "MinValue"    = "5",
+        "MaxValue"    = "100",
+        "ScalingType" = "Auto"
+      },
+      {
+        "Name"        = "subsample",
+        "MinValue"    = "0.1",
+        "MaxValue"    = "0.5",
+        "ScalingType" = "Auto"
+      },
+      {
+        "Name"        = "gamma",
+        "MinValue"    = "0",
+        "MaxValue"    = "5",
+        "ScalingType" = "Auto"
+      }
+    ],
+    "IntegerParameterRanges" = [
+      {
+        "Name"        = "max_depth",
+        "MinValue"    = "0",
+        "MaxValue"    = "10",
+        "ScalingType" = "Auto"
+      }
+    ]
+  }
 }
