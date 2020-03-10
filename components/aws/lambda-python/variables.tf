@@ -17,33 +17,59 @@ variable "lambda_source_folder" {
   default     = "resources/fn_log"
 }
 variable "s3_path_to_lambda_zip" {
-  description = "S3 Path to where the source code zip should be uploaded."
+  description = <<EOF
+S3 Path to where the source code zip should be uploaded.
+If omitted, zip file will be attached to the function directly.
+EOF
   type        = string
+  default     = null
 }
-# variable "dependency_urls" {
-#   description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs."
-#   type        = map(string)
-#   default     = {}
-# }
-variable "s3_trigger_bucket" {
-  type    = string
-  default = null
-}
-variable "s3_triggers" {
+variable "functions" {
+  description = <<EOF
+A map of function names to create and an object with properties describing the function.
+
+Example:
+  python_functions = [
+    "fn_log" = {
+      description = "Add an entry to the log whenever a file is created."
+      handler     = "main.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+  ]
+EOF
   type = map(object({
-    # function_name       = string
-    triggering_path     = string
-    function_handler    = string
-    environment_vars    = map(string)
-    environment_secrets = map(string)
+    description = string
+    handler     = string
+    environment = map(string)
+    secrets     = map(string)
   }))
   default = {
     "fn_log" = {
-      # function_name       = "fn_log"
-      triggering_path     = "*"
-      function_handler    = "main.lambda_handler"
-      environment_vars    = {}
-      environment_secrets = {}
+      description = "Add an entry to the log whenever a file is created."
+      handler     = "main.lambda_handler"
+      environment = {}
+      secrets     = {}
     }
   }
+}
+variable "s3_triggers" {
+  description = <<EOF
+A list of objects describing the S3 trigger action.
+
+Example:
+  s3_triggers = [
+    {
+      function_name = "fn_log"
+      s3_bucket     = "*"
+      s3_path       = "*"
+    }
+  ]
+EOF
+  type = map(object({
+    function_name = string
+    s3_bucket     = string
+    s3_path       = string
+  }))
+  default = {}
 }
