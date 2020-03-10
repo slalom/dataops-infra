@@ -1,5 +1,5 @@
 module "lambda_functions" {
-  source        = "../../components/aws/lambda-python"
+  source        = "../lambda-python"
   name_prefix   = var.name_prefix
   resource_tags = var.resource_tags
   environment   = var.environment
