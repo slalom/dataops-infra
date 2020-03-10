@@ -1,54 +1,42 @@
-resource "aws_lambda_function" "QueryTrainingStatus" {
-  function_name = "QueryTrainingStatus"
-  description   = "Queries the SageMaker training job and return the results."
-  role          = module.ml-ops-on-aws.iam_role_arn
-  handler       = "query_training_status.lambda_handler"
-  filename      = "${path.module}/source/code/query_training_status.zip"
-  runtime       = "python3.8"
+module "lambda_functions" {
+  source        = "../../components/aws/lambda-python"
+  name_prefix   = var.name_prefix
+  resource_tags = var.resource_tags
+  environment   = var.environment
 
-  tags = local.resource_tags
-}
+  lambda_source_folder = "${path.module}/lambda-python"
+  runtime              = "python3.8"
 
-resource "aws_lambda_function" "ExtractModelPath" {
-  function_name = "ExtractModelPath"
-  description   = "Queries the SageMaker model to return the model path."
-  role          = module.ml-ops-on-aws.iam_role_arn
-  handler       = "extract_model_path.lambda_handler"
-  filename      = "${path.module}/source/code/extract_model_path.zip"
-  runtime       = "python3.8"
-
-  tags = local.resource_tags
-}
-
-resource "aws_lambda_function" "ExtractModelName" {
-  function_name = "ExtractModelName"
-  description   = "Queries the SageMaker model to return the model name."
-  role          = module.ml-ops-on-aws.iam_role_arn
-  handler       = "extract_model_name.lambda_handler"
-  filename      = "${path.module}/source/code/extract_model_name.zip"
-  runtime       = "python3.8"
-
-  tags = local.resource_tags
-}
-
-resource "aws_lambda_function" "CheckEndpointExists" {
-  function_name = "CheckEndpointExists"
-  description   = "Queries if endpoint exists to determine create or update job."
-  role          = module.ml-ops-on-aws.iam_role_arn
-  handler       = "check_endpoint_exists.lambda_handler"
-  filename      = "${path.module}/source/code/check_endpoint_exists.zip"
-  runtime       = "python3.8"
-
-  tags = local.resource_tags
-}
-
-resource "aws_lambda_function" "UniqueJobName" {
-  function_name = "UniqueJobName"
-  description   = "Creates a unique identifier for the hyperparameter tuning job."
-  role          = module.ml-ops-on-aws.iam_role_arn
-  handler       = "unique_job_name.lambda_handler"
-  filename      = "${path.module}/source/code/unique_job_name.zip"
-  runtime       = "python3.8"
-
-  tags = local.resource_tags
+  functions = {
+    QueryTrainingStatus = {
+      description = "Queries the SageMaker training job and return the results."
+      handler     = "query_training_status.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ExtractModelPath = {
+      description = "Queries the SageMaker model to return the model path."
+      handler     = "extract_model_path.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ExtractModelName = {
+      description = "Queries the SageMaker model to return the model name."
+      handler     = "extract_model_name.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    CheckEndpointExists = {
+      description = "Queries if endpoint exists to determine create or update job."
+      handler     = "check_endpoint_exists.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    UniqueJobName = {
+      description = "Creates a unique identifier for the hyperparameter tuning job."
+      handler     = "unique_job_name.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+  }
 }
