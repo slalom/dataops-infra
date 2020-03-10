@@ -40,12 +40,6 @@ resource "aws_lambda_function" "python_lambda" {
     )
   }
   # source_code_hash  = data.archive_file.lambda_zip[0].output_base64sha256  # triggers redundant updates if supplied
-  # dynamic "environment" {
-  #   for_each = var.s3_triggers[each.value].environment_vars
-  #   content {
-  #     variables = environment.value
-  #   }
-  # }
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
     aws_cloudwatch_log_group.lambda_log_group,
@@ -58,12 +52,6 @@ resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name  = "/aws/lambda/${var.name_prefix}lambda-${local.random_suffix}"
   # retention_in_days = 14
 }
-
-# resource "aws_lambda_layer_version" "python_requirements_layer" {
-#   filename            = "${var.name_prefix}requirements.zip"
-#   layer_name          = "${var.name_prefix}requirements"
-#   compatible_runtimes = [var.runtime]
-# }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
   count  = local.is_disabled ? 0 : 1
