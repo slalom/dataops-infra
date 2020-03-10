@@ -86,7 +86,7 @@ resource "aws_iam_policy" "step_functions_ml_ops_policy" {
                 "${
   join(
     "\",\n                \"",
-    values(module.lambda_functions.function_ids)
+    values(var.lambda_functions)
   )
 }"
             ]

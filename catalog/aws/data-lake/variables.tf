@@ -36,12 +36,14 @@ List of S3 triggers objects, for example:
   environment_secrets = {}
 }]
 EOF
-  type = map(object({
-    # function_name       = string
-    triggering_path     = string
-    function_handler    = string
-    environment_vars    = map(string)
-    environment_secrets = map(string)
-  }))
+  type = map(
+    # function_name as map key
+    object({
+      triggering_path     = string
+      function_handler    = string
+      environment_vars    = map(string)
+      environment_secrets = map(string)
+    })
+  )
   default = {}
 }

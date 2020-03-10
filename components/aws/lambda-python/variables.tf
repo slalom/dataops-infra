@@ -16,10 +16,11 @@ variable "lambda_source_folder" {
   type        = string
   default     = "resources/fn_log"
 }
-variable "s3_path_to_lambda_zip" {
+variable "upload_to_s3" { type = bool }
+variable "upload_to_s3_path" {
   description = <<EOF
 S3 Path to where the source code zip should be uploaded.
-If omitted, zip file will be attached to the function directly.
+Use in combination with: `upload_to_s3 = true`
 EOF
   type        = string
   default     = null
@@ -29,7 +30,7 @@ variable "functions" {
 A map of function names to create and an object with properties describing the function.
 
 Example:
-  python_functions = [
+  functions = [
     "fn_log" = {
       description = "Add an entry to the log whenever a file is created."
       handler     = "main.lambda_handler"
@@ -44,14 +45,6 @@ EOF
     environment = map(string)
     secrets     = map(string)
   }))
-  default = {
-    "fn_log" = {
-      description = "Add an entry to the log whenever a file is created."
-      handler     = "main.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
-  }
 }
 variable "s3_triggers" {
   description = <<EOF
@@ -66,10 +59,10 @@ Example:
     }
   ]
 EOF
-  type = map(object({
+  type = list(object({
     function_name = string
     s3_bucket     = string
     s3_path       = string
   }))
-  default = {}
+  default = []
 }

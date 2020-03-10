@@ -1,11 +1,13 @@
 module "lambda_functions" {
-  source        = "../lambda-python"
+  source        = "../../../components/aws/lambda-python"
   name_prefix   = var.name_prefix
   resource_tags = var.resource_tags
   environment   = var.environment
 
-  lambda_source_folder = "${path.module}/lambda-python"
   runtime              = "python3.8"
+  lambda_source_folder = "${path.module}/lambda-python"
+  upload_to_s3         = false
+  upload_to_s3_path    = null
 
   functions = {
     QueryTrainingStatus = {

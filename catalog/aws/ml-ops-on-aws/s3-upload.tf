@@ -8,7 +8,6 @@ resource "aws_s3_bucket_object" "train_data" {
   )
 }
 
-
 resource "aws_s3_bucket_object" "validation_data" {
   bucket = var.s3_bucket_name
   key    = "${var.data_s3_path}/validation/validation.csv"

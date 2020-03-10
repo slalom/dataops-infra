@@ -5,6 +5,7 @@ module "step-functions" {
   s3_bucket_name           = var.s3_bucket_name
   environment              = var.environment
   resource_tags            = var.resource_tags
+  lambda_functions         = module.lambda_functions.function_ids
   state_machine_definition = <<EOF
 {
  "StartAt": "Generate Unique Job Name",
