@@ -10,7 +10,7 @@
 # }
 
 resource "null_resource" "pip" {
-  count = local.is_disabled ? 0 : 1
+  count = local.is_disabled ? 0 : (fileexists("${var.lambda_source_folder}/requirements.txt") ? 1 : 0)
 
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
