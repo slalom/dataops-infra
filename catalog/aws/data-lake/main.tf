@@ -70,16 +70,16 @@ module "triggered_lambda" {
   functions = {
     for name, def in var.s3_triggers :
     name => {
-      description = "'${def.name}' trigger for data lake events"
-      handler     = def.handler
-      environment = def.environment
-      secrets     = def.secrets
+      description = "'${name}' trigger for data lake events"
+      handler     = def.lambda_handler
+      environment = def.environment_vars
+      secrets     = def.environment_secrets
     }
   }
   s3_triggers = [
     for name, trigger in var.s3_triggers :
     {
-      function_name = trigger.function_name
+      function_name = name
       s3_bucket     = local.data_bucket_name
       s3_path       = trigger.triggering_path
     }
