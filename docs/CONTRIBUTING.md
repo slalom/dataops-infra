@@ -75,6 +75,11 @@ Submitted PRs should meet the following code standards before being merged into 
    * If you use VS Code, the defaults specified in `settings.json` should automatically apply formatting on each file save.
    * Formatting is checked automatically after each commit by the CI/CD pipeline.
    * If you receive failures related to Terraform formatting, simply run `terraform fmt -recursive` from the root of the repo. This command will auto format the entire repo and then you can simply commit the resulting changes.
+3. **Modules should be self-documenting** - In order for components to be effectively used by a broad audience, each module must be self-documenting and should be included in the Catalog auto-document tool.
+   * Make sure each input and output variable has it's `description` field set.
+   * Make sure each module has a `main.tf` file and that the file contains a header comment with a paragraph description of the basic module functions. See [components/aws/secrets-manager/main.tf](../components/aws/secrets-manager/main.tf) for a sample.
+   * All input variables should be stored in `variables.tf` and all output variables should be stored in `outputs.tf`.
+   * After the above are met, update the project docs by navigating to the `docs` directory and running `build.py`. This command will update all module README files as well as [catalog_index.md](catalog_index.md) and [components_index.md](components_index.md).
 
 ### General Design Principles
 

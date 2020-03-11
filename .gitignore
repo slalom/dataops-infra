@@ -22,3 +22,6 @@ build
 
 # .tfvars files
 *.tfvars
+
+# Other (Python)
+.mypy_cache
