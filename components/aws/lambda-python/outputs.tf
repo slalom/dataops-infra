@@ -4,6 +4,6 @@ output "build_temp_dir" {
 output "function_ids" {
   value = {
     for name in local.function_names :
-    name => aws_lambda_function.python_lambda[name].id
+    name => aws_lambda_function.python_lambda[name].arn
   }
 }
