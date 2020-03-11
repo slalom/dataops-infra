@@ -1,24 +1,24 @@
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
-| aws  | n/a     |
+|------|---------|
+| aws | n/a |
 
 ## Inputs
 
-| Name             | Description | Type  | Default | Required |
-| ---------------- | ----------- | ----- | ------- | :------: |
-| image\_name      | n/a         | `any` | n/a     |   yes    |
-| repository\_name | n/a         | `any` | n/a     |   yes    |
-| resource\_tags   | n/a         | `map` | `{}`    |    no    |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:-----:|
+| image\_name | n/a | `any` | n/a | yes |
+| repository\_name | n/a | `any` | n/a | yes |
+| resource\_tags | n/a | `map` | `{}` | no |
 
 ## Outputs
 
-| Name            | Description |
-| --------------- | ----------- |
-| ecr\_image\_url | n/a         |
-| ecr\_repo\_arn  | n/a         |
-| ecr\_repo\_root | n/a         |
+| Name | Description |
+|------|-------------|
+| ecr\_image\_url | n/a |
+| ecr\_repo\_arn | n/a |
+| ecr\_repo\_root | n/a |
 
 ---------------------
 
