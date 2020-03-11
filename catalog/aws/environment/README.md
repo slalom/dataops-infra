@@ -1,19 +1,15 @@
 ## Providers
 
-| Name | Version |
-|------|---------|
-| aws | ~> 2.10 ~> 2.10 |
-| aws.region\_lookup | ~> 2.10 ~> 2.10 |
-| http | n/a |
+No provider.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| aws\_credentials\_file | Optional, unless set at the main AWS provider level in which case it is required. | `string` | n/a | yes |
 | aws\_profile | Optional, unless set at the main AWS provider level in which case it is required. | `string` | n/a | yes |
 | aws\_region | n/a | `any` | n/a | yes |
 | name\_prefix | n/a | `string` | n/a | yes |
+| secrets\_folder | n/a | `string` | n/a | yes |
 | disabled | As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely. | `bool` | `false` | no |
 | resource\_tags | n/a | `map` | `{}` | no |
 
@@ -21,9 +17,13 @@
 
 | Name | Description |
 |------|-------------|
-| private\_subnets | n/a |
-| public\_subnets | n/a |
-| vpc\_id | n/a |
+| aws\_credentials\_file | n/a |
+| environment | n/a |
+| is\_windows\_host | n/a |
+| ssh\_private\_key\_filename | n/a |
+| ssh\_public\_key\_filename | n/a |
+| summary | n/a |
+| user\_home | n/a |
 
 ---------------------
 

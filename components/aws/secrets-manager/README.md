@@ -1,6 +1,10 @@
-# `aws/secrets-manager` Component Module
+# AWS Secrets Manager
 
-This components module takes as input a set of maps from variable names to secrets locations (in YAML or JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing to the IDs of new AWS Secrets manager locations. Those IDs (aka ARNs) can then safely be handed on to other resources which required access to those secrets.
+`components/aws/secrets-manager`
+
+## Overview
+
+This module takes as input a set of maps from variable names to secrets locations (in YAML or JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing to the IDs of new AWS Secrets manager locations. Those IDs (aka ARNs) can then safely be handed on to other resources which required access to those secrets.
 
 **Usage Notes:**
 
@@ -42,3 +46,31 @@ This components module takes as input a set of maps from variable names to secre
     SAMPLE_aws_secret_access_key = "arn:aws:secretsmanager:us-east-1::secret:aws_secret_access_key-adf13"
 }
 ```
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:-----:|
+| kms\_key\_id | Optional. A valid KMS key ID to use for encrypting the secret values. If omitted, the default KMS key will be applied. | `any` | n/a | yes |
+| name\_prefix | Common variable: the name prefix to use in all created resources. | `string` | n/a | yes |
+| resource\_tags | Common variable: the resource tags to use in all created resources. | `map` | n/a | yes |
+| secrets\_map | A map between secret names and their locations.<br><br>The location can be:<br><br>  - ID of an existing Secrets Manager secret (`arn:aws:secretsmanager:...`)<br>   - String with the local secrets file name and property names separated by `:` (`path/to/file.yml:my_key_name`)." | `map(string)` | `{}` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| secrets\_ids | n/a |
+| summary | n/a |
+
+---------------------
+
+_**NOTE:** This documentation was auto-generated using
+`terraform-docs` and `s-infra` from `slalom.dataops`.
+Please do not attempt to manually update this file._
