@@ -1,3 +1,9 @@
+/*
+* This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
+* trigger automatically when new content is added.
+*
+*/
+
 resource "random_id" "suffix" { byte_length = 2 }
 
 data aws_s3_bucket "data_bucket_override" {

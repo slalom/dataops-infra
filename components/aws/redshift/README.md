@@ -1,9 +1,14 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| aws | n/a |
-| random | n/a |
+# AWS Redshift
+
+`/components/aws/redshift`
+
+## Overview
+
+
+This is the underlying technical component which supports the Redshift catalog module.
+
+NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
 ## Inputs
 

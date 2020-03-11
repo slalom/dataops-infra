@@ -1,9 +1,13 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| aws | n/a |
-| random | n/a |
+# AWS Data-Lake
+
+`/catalog/aws/data-lake`
+
+## Overview
+
+
+This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
+trigger automatically when new content is added.
 
 ## Inputs
 

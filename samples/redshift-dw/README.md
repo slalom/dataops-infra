@@ -1,8 +1,10 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| local | n/a |
+# Samples Redshift-Dw
+
+`/samples/redshift-dw`
+
+## Overview
+
 
 ## Inputs
 

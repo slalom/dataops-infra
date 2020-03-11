@@ -1,10 +1,20 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| aws | ~> 2.10 ~> 2.10 |
-| aws.region\_lookup | ~> 2.10 ~> 2.10 |
-| http | n/a |
+# AWS VPC
+
+`/components/aws/vpc`
+
+## Overview
+
+
+The VPC module creates a number of network services which support other key AWS functions.
+
+Included automatically when creating this module:
+* 1 VPC which contains the following:
+    * 2 private subnets (for resources which **do not** need a public IP address)
+    * 2 public subnets (for resources which do need a public IP address)
+    * 1 NAT gateway (allows private sugnet resources to reach the outside world)
+    * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
+    * route tables and routes to connect all of the above
 
 ## Inputs
 

@@ -1,8 +1,12 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| aws | n/a |
+# AWS Redshift
+
+`/catalog/aws/redshift`
+
+## Overview
+
+
+Redshift is an AWS database platform which applies MPP (Massively-Parallel-Processing) principles to big data workloads in the cloud.
 
 ## Inputs
 

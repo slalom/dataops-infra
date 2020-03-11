@@ -1,8 +1,10 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| local | n/a |
+# Samples DBT-And-Singer-On-AWS
+
+`/samples/dbt-and-singer-on-aws`
+
+## Overview
+
 
 ## Inputs
 

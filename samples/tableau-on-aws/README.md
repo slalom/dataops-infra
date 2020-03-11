@@ -1,8 +1,10 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| local | n/a |
+# Samples Tableau-On-AWS
+
+`/samples/tableau-on-aws`
+
+## Overview
+
 
 ## Inputs
 

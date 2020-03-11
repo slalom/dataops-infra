@@ -1,8 +1,10 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| local | n/a |
+# Samples Secrets-Manager-On-AWS
+
+`/samples/secrets-manager-on-aws`
+
+## Overview
+
 
 ## Inputs
 

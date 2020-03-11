@@ -147,6 +147,14 @@ resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
   description         = "Daily Execution 'run' @ ${each.value}"
   schedule_expression = each.value
 }
+/*
+* ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
+* features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
+* to manage or pay for when tasks are not running.
+*
+* Use in combination with the `ECS-Cluster` component.
+*
+*/
 
 resource "aws_cloudwatch_event_target" "daily_run_task" {
   for_each = var.schedules

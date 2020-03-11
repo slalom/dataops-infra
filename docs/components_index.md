@@ -10,7 +10,6 @@ These components define the technical building blocks which enable advanced, rea
     - [AWS ECR](#AWS-ECR)
     - [AWS ECS-Cluster](#AWS-ECS-Cluster)
     - [AWS ECS-Task](#AWS-ECS-Task)
-    - [AWS IAM](#AWS-IAM)
     - [AWS Lambda-Python](#AWS-Lambda-Python)
     - [AWS Redshift](#AWS-Redshift)
     - [AWS Secrets-Manager](#AWS-Secrets-Manager)
@@ -26,160 +25,118 @@ These components define the technical building blocks which enable advanced, rea
 
 ### [AWS EC2](../components/aws/ec2/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/ec2?ref=master
-```
+EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
+credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
 
 
-* See the [AWS EC2 Readme](../components/aws/ec2/README.md) for additional info
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ec2?ref=master`
+* See the [AWS EC2 Readme](../components/aws/ec2/README.md) for input/output specs and additional info.
+
 -------------------
 
 ### [AWS ECR](../components/aws/ecr/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecr?ref=master
-```
+ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. ECR allows you to securely publish docker images which
+should not be accessible to external users.
 
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecr?ref=master`
+* See the [AWS ECR Readme](../components/aws/ecr/README.md) for input/output specs and additional info.
 
-* See the [AWS ECR Readme](../components/aws/ecr/README.md) for additional info
 -------------------
 
 ### [AWS ECS-Cluster](../components/aws/ecs-cluster/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-cluster?ref=master
-```
+ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
+features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
+to manage or pay for when tasks are not running.
 
+Use in combination with the `ECS-Task` component.
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-cluster?ref=master`
+* See the [AWS ECS-Cluster Readme](../components/aws/ecs-cluster/README.md) for input/output specs and additional info.
 
-* See the [AWS ECS-Cluster Readme](../components/aws/ecs-cluster/README.md) for additional info
 -------------------
 
 ### [AWS ECS-Task](../components/aws/ecs-task/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-task?ref=master
-```
 
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-task?ref=master`
+* See the [AWS ECS-Task Readme](../components/aws/ecs-task/README.md) for input/output specs and additional info.
 
-* See the [AWS ECS-Task Readme](../components/aws/ecs-task/README.md) for additional info
--------------------
-
-### [AWS IAM](../components/aws/iam/README.md)
-
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/iam?ref=master
-```
-
-
-
-* See the [AWS IAM Readme](../components/aws/iam/README.md) for additional info
 -------------------
 
 ### [AWS Lambda-Python](../components/aws/lambda-python/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/lambda-python?ref=master
-```
+AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
+Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
+packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
+S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
 
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/lambda-python?ref=master`
+* See the [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md) for input/output specs and additional info.
 
-* See the [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md) for additional info
 -------------------
 
 ### [AWS Redshift](../components/aws/redshift/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/redshift?ref=master
-```
+This is the underlying technical component which supports the Redshift catalog module.
 
+NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/redshift?ref=master`
+* See the [AWS Redshift Readme](../components/aws/redshift/README.md) for input/output specs and additional info.
 
-* See the [AWS Redshift Readme](../components/aws/redshift/README.md) for additional info
 -------------------
 
 ### [AWS Secrets-Manager](../components/aws/secrets-manager/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/secrets-manager?ref=master
-```
-
-# AWS Secrets Manager
-
-`components/aws/secrets-manager`
-
-## Overview
-
-This module takes as input a set of maps from variable names to secrets locations (in YAML or JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing to the IDs of new AWS Secrets manager locations. Those IDs (aka ARNs) can then safely be handed on to other resources which required access to those secrets.
+This module takes as input a set of maps from variable names to secrets locations (in YAML or
+JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing
+to the IDs of new AWS Secrets manager locations. Those IDs (aka ARNs) can then safely be handed
+on to other resources which required access to those secrets.
 
 **Usage Notes:**
 
 * Any secrets locations which are already pointing to AWS secrets will simply be passed back through to the output with no changes.
 * For security reasons, this module does not accept inputs for secrets using the clear text of the secrets themselves. To properly use this module, first save the secrets to a YAML or JSON file which is excluded from source control.
 
-## Usage Example
 
-**Sample inputs:**
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/secrets-manager?ref=master`
+* See the [AWS Secrets-Manager Readme](../components/aws/secrets-manager/README.md) for input/output specs and additional info.
 
-```hcl
-  secrets_file_map = {
-    # These secret will be retrieved from the respective files and uploaded
-    # to AWS Secrets Manager:
-    MY_SAMPLE_1_username = "./.secrets/mysample1-creds.yml:username
-    MY_SAMPLE_1_password = "./.secrets/mysample1-creds.yml:password
-    MY_SAMPLE_2_username = "./.secrets/mysample2-creds.json:username
-    MY_SAMPLE_2_password = "./.secrets/mysample2-creds.json:password
-
-    # Because the paths starts with `arn://`, these secret are assumed to be
-    # already in AWS Secrets Manager and will not be uploaded:
-    SAMPLE_aws_access_key_id     = "arn:aws:secretsmanager:us-east-1::secret:aws_access_key_id-sqQDPG"
-    SAMPLE_aws_secret_access_key = "arn:aws:secretsmanager:us-east-1::secret:aws_secret_access_key-adf13"
-  }
-```
-
-**Outputs from sample:**
-
-```hcl
-{
-    # Newly created AWS Secrets Manager secrets:
-    MY_SAMPLE_1_username = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_1_username-adf13"
-    MY_SAMPLE_1_password = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_1_password-adf13"
-    MY_SAMPLE_2_username = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_2_username-adf13"
-    MY_SAMPLE_2_password = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_2_password-adf13"
-
-    # Secrets IDs passed through with no change:
-    SAMPLE_aws_access_key_id     = "arn:aws:secretsmanager:us-east-1::secret:aws_access_key_id-adf13"
-    SAMPLE_aws_secret_access_key = "arn:aws:secretsmanager:us-east-1::secret:aws_secret_access_key-adf13"
-}
-```
-
-
-* See the [AWS Secrets-Manager Readme](../components/aws/secrets-manager/README.md) for additional info
 -------------------
 
 ### [AWS Step-Functions](../components/aws/step-functions/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/step-functions?ref=master
-```
+AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
+to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
+for another step.
 
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/step-functions?ref=master`
+* See the [AWS Step-Functions Readme](../components/aws/step-functions/README.md) for input/output specs and additional info.
 
-* See the [AWS Step-Functions Readme](../components/aws/step-functions/README.md) for additional info
 -------------------
 
 ### [AWS VPC](../components/aws/vpc/README.md)
 
-```
-source = git::https://github.com/slalom-ggp/dataops-infra//components/aws/vpc?ref=master
-```
+The VPC module creates a number of network services which support other key AWS functions.
 
+Included automatically when creating this module:
+* 1 VPC which contains the following:
+    * 2 private subnets (for resources which **do not** need a public IP address)
+    * 2 public subnets (for resources which do need a public IP address)
+    * 1 NAT gateway (allows private sugnet resources to reach the outside world)
+    * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
+    * route tables and routes to connect all of the above
 
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/vpc?ref=master`
+* See the [AWS VPC Readme](../components/aws/vpc/README.md) for input/output specs and additional info.
 
-* See the [AWS VPC Readme](../components/aws/vpc/README.md) for additional info
 -------------------
 
 

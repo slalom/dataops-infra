@@ -1,8 +1,10 @@
-## Providers
 
-| Name | Version |
-|------|---------|
-| local | n/a |
+# Samples Airflow-On-AWS
+
+`/samples/airflow-on-aws`
+
+## Overview
+
 
 ## Inputs
 

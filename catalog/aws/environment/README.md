@@ -1,6 +1,13 @@
-## Providers
 
-No provider.
+# AWS Environment
+
+`/catalog/aws/environment`
+
+## Overview
+
+
+The environment module sets up common infrastrcuture like VPCs and network subnets. The `envrionment` output
+from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
 
 ## Inputs
 
