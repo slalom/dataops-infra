@@ -7,3 +7,4 @@ output "function_ids" {
     name => aws_lambda_function.python_lambda[name].arn
   }
 }
+output "lambda_iam_role" { value = aws_iam_role.iam_for_lambda.name }
