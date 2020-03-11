@@ -9,13 +9,6 @@
 EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
 credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | n/a |
-| http | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

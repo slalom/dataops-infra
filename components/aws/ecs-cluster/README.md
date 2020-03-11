@@ -12,12 +12,6 @@ to manage or pay for when tasks are not running.
 
 Use in combination with the `ECS-Task` component.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

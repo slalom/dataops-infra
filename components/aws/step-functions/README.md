@@ -10,13 +10,6 @@ AWS Step Functions is a service provided by Amazon Web Services that makes it ea
 to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
 for another step.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | n/a |
-| null | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

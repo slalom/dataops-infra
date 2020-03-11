@@ -16,12 +16,6 @@ on to other resources which required access to those secrets.
 * Any secrets locations which are already pointing to AWS secrets will simply be passed back through to the output with no changes.
 * For security reasons, this module does not accept inputs for secrets using the clear text of the secrets themselves. To properly use this module, first save the secrets to a YAML or JSON file which is excluded from source control.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

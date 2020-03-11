@@ -16,14 +16,6 @@ Included automatically when creating this module:
     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
     * route tables and routes to connect all of the above
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | ~> 2.10 ~> 2.10 |
-| aws.region\_lookup | ~> 2.10 ~> 2.10 |
-| http | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

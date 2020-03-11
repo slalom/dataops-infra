@@ -9,10 +9,6 @@
 The environment module sets up common infrastrcuture like VPCs and network subnets. The `envrionment` output
 from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
 
-## Providers
-
-No provider.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

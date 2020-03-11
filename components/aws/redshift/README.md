@@ -10,13 +10,6 @@ This is the underlying technical component which supports the Redshift catalog m
 
 NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| aws | n/a |
-| random | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

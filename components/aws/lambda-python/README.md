@@ -11,15 +11,6 @@ Python implementatin of Lambda functions. Given a path to a folder of one or mor
 packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
 S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| archive | n/a |
-| aws | n/a |
-| null | n/a |
-| random | n/a |
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |

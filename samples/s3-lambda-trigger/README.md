@@ -6,12 +6,6 @@
 ## Overview
 
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| local | n/a |
-
 ## Inputs
 
 No input.
