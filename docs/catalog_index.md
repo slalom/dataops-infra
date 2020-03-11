@@ -44,7 +44,7 @@ trigger automatically when new content is added.
 
 ### [AWS DBT](../catalog/aws/dbt/README.md)
 
-DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating data transformations. More info at [www.getdbt.com](www.getdbt.com).
+DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating data transformations. More info at [www.getdbt.com](https://www.getdbt.com).
 
 
 
@@ -77,7 +77,7 @@ Redshift is an AWS database platform which applies MPP (Massively-Parallel-Proce
 
 ### [AWS Singer-Taps](../catalog/aws/singer-taps/README.md)
 
-The Singer Taps platform is the open source stack which powers the [Stitcher](www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
 
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/singer-taps?ref=master`
