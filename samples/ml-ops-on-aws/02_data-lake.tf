@@ -10,7 +10,7 @@ module "s3_store_and_lambdas" {
   //  s3_triggers = {
   //    "fn_lambda_logger" = {
   //      triggering_path     = "uploads/*"
-  //      function_handler    = "main.lambda_handler"
+  //      lambda_handler      = "main.lambda_handler"
   //      environment_vars    = {}
   //      environment_secrets = {}
   //    }

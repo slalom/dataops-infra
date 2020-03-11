@@ -28,13 +28,15 @@ variable "lambda_python_source" {
 variable "s3_triggers" {
   description = <<EOF
 List of S3 triggers objects, for example:
+```
 [{
   function_name       = "fn_log"
   triggering_path     = "*"
-  lambda_handler    = "main.lambda_handler"
+  lambda_handler      = "main.lambda_handler"
   environment_vars    = {}
   environment_secrets = {}
 }]
+```
 EOF
   type = map(
     # function_name as map key
