@@ -1,3 +1,10 @@
+/*
+* This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
+* The module supports both Linux and Windows versions of the Tableau Server Software.
+*
+*/
+
+
 data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 

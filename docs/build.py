@@ -126,9 +126,9 @@ def build_index(type: str, tf_dir: str, output_file: str, overview_desc: str):
             readme_path = f"{module}/README.md"
             content_metadata[platform] += (
                 f"### [{module_title}]({readme_path})\n\n"
-                f"```\nsource = {source}\n```\n\n"
                 f"{metadata['header']}\n\n"
-                f"* See the [{module_title} Readme]({readme_path}) for additional info\n"
+                f"* Source: `{source}`\n"
+                f"* See the [{module_title} Readme]({readme_path}) for input/output specs and additional info.\n\n"
                 f"-------------------\n\n"
             )
 

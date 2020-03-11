@@ -1,3 +1,14 @@
+
+# AWS ECR
+
+`/components/aws/ecr`
+
+## Overview
+
+
+ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. ECR allows you to securely publish docker images which
+should not be accessible to external users.
+
 ## Providers
 
 | Name | Version |
