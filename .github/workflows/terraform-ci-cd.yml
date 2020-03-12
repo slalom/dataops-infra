@@ -29,7 +29,7 @@ jobs:
           python-version: 3.7
       - name: "Terraform Code Standards Check"
         run: |
-          pip3 install slalom.dataops
+          pip3 install --pre slalom.dataops
           s-infra check_tf_metadata ./catalog \
               --check_module_headers \
               --required_input_vars=name_prefix,resource_tags,environment \
