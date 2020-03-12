@@ -18,23 +18,24 @@ EOF
 }
 
 data "aws_s3_bucket" "bucket_lookup" {
-  bucket = var.s3_trigger_bucket
+  for_each = toset(keys(local.bucket_triggers))
+  bucket   = each.value
 }
 
 resource "aws_lambda_permission" "allow_bucket" {
-  for_each      = aws_lambda_function.python_lambda
+  for_each = {
+    for trigger in var.s3_triggers :
+    trigger.function_name => trigger.s3_bucket
+  }
   statement_id  = "AllowExecutionFromS3Bucket"
   action        = "lambda:InvokeFunction"
-  function_name = each.value.arn
   principal     = "s3.amazonaws.com"
-  source_arn    = data.aws_s3_bucket.bucket_lookup.arn
+  function_name = aws_lambda_function.python_lambda[each.key].arn
+  source_arn    = data.aws_s3_bucket.bucket_lookup[each.value].arn
 }
 
 resource "aws_iam_policy" "lambda_s3_access" {
-  count = length(compact([
-    for x in var.s3_triggers :
-    x.triggering_path == null ? 0 : 1
-  ])) > 0 ? 1 : 0
+  for_each    = toset(keys(local.bucket_triggers))
   name        = "${var.name_prefix}lambda_s3_access-${local.random_suffix}"
   path        = "/"
   description = "IAM policy for accessing S3 from a lambda"
@@ -45,7 +46,7 @@ resource "aws_iam_policy" "lambda_s3_access" {
     {
       "Effect": "Allow",
       "Action": ["s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::${var.s3_trigger_bucket}"]
+      "Resource": ["${data.aws_s3_bucket.bucket_lookup[each.value].arn}"]
     },
     {
       "Effect": "Allow",
@@ -54,24 +55,21 @@ resource "aws_iam_policy" "lambda_s3_access" {
         "s3:GetObject",
         "s3:DeleteObject"
       ],
-      "Resource": ["arn:aws:s3:::${var.s3_trigger_bucket}/*"]
+      "Resource": ["${data.aws_s3_bucket.bucket_lookup[each.value].arn}/*"]
     }
   ]
 }
 EOF
 }
 resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
-  count = length(compact([
-    for x in var.s3_triggers :
-    x.triggering_path == null ? 0 : 1
-  ])) > 0 ? 1 : 0
+  for_each   = toset(keys(local.bucket_triggers))
   role       = aws_iam_role.iam_for_lambda.name
-  policy_arn = aws_iam_policy.lambda_s3_access[0].arn
+  policy_arn = aws_iam_policy.lambda_s3_access[each.value].arn
 }
 
 resource "aws_iam_policy" "lambda_secrets_access" {
-  for_each    = local.functions_with_secrets
-  name        = "${var.name_prefix}lambda_secrets_access-${each.value}"
+  for_each    = local.function_secrets
+  name        = "${var.name_prefix}lambda_secrets_access-${each.key}"
   path        = "/"
   description = "IAM policy for accessing secrets from a lambda"
   policy      = <<EOF
@@ -82,17 +80,18 @@ resource "aws_iam_policy" "lambda_secrets_access" {
       "Effect": "Allow",
       "Action": "secretsmanager:GetSecretValue",
       "Resource": [
-        "${join("\", \"", values(var.s3_triggers[each.value].environment_secrets))}"
+        "${join("\", \"", values(each.value))}"
       ]
     }
   ]
 }
 EOF
 }
+
 resource "aws_iam_role_policy_attachment" "lambda_secrets_rules" {
-  for_each   = local.functions_with_secrets
+  for_each   = local.function_secrets
   role       = aws_iam_role.iam_for_lambda.name
-  policy_arn = aws_iam_policy.lambda_secrets_access[each.value].arn
+  policy_arn = aws_iam_policy.lambda_secrets_access[each.key].arn
 }
 
 resource "aws_iam_policy" "lambda_logging" {

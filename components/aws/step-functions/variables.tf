@@ -23,3 +23,8 @@ variable "resource_tags" {
   type    = map
   default = {}
 }
+
+variable "lambda_functions" {
+  description = "Map of function names to ARNs"
+  type        = map(string)
+}

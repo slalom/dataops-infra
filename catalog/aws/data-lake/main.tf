@@ -57,18 +57,31 @@ resource "aws_s3_bucket" "s3_logging_bucket" {
 }
 
 module "triggered_lambda" {
-  source                = "../../../components/aws/lambda-python"
-  name_prefix           = var.name_prefix
-  environment           = var.environment
-  s3_trigger_bucket     = local.data_bucket_name
-  s3_triggers           = var.s3_triggers
-  lambda_source_folder  = var.lambda_python_source
-  s3_path_to_lambda_zip = local.s3_path_to_lambda_zip
-  resource_tags         = var.resource_tags
+  source        = "../../../components/aws/lambda-python"
+  name_prefix   = var.name_prefix
+  resource_tags = var.resource_tags
+  environment   = var.environment
 
-  # depends_on = [
-  #   aws_s3_bucket.s3_data_bucket,
-  #   aws_s3_bucket.s3_logging_bucket,
-  #   aws_s3_bucket.s3_metadata_bucket
-  # ]
+  runtime              = "python3.8"
+  lambda_source_folder = var.lambda_python_source
+  upload_to_s3         = true
+  upload_to_s3_path    = local.s3_path_to_lambda_zip
+
+  functions = {
+    for name, def in var.s3_triggers :
+    name => {
+      description = "'${name}' trigger for data lake events"
+      handler     = def.lambda_handler
+      environment = def.environment_vars
+      secrets     = def.environment_secrets
+    }
+  }
+  s3_triggers = [
+    for name, trigger in var.s3_triggers :
+    {
+      function_name = name
+      s3_bucket     = local.data_bucket_name
+      s3_path       = trigger.triggering_path
+    }
+  ]
 }

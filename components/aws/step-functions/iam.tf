@@ -83,11 +83,12 @@ resource "aws_iam_policy" "step_functions_ml_ops_policy" {
                 "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTrainingJobsRule",
                 "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTransformJobsRule",
                 "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
-                "arn:aws:lambda:*:*:function:ExtractModelName",
-                "arn:aws:lambda:*:*:function:ExtractModelPath",
-                "arn:aws:lambda:*:*:function:QueryTrainingStatus",
-                "arn:aws:lambda:*:*:function:CheckEndpointExists",
-                "arn:aws:lambda:*:*:function:UniqueJobName"
+                "${
+  join(
+    "\",\n                \"",
+    values(var.lambda_functions)
+  )
+}"
             ]
         },
         {

@@ -10,12 +10,12 @@
 # }
 
 resource "null_resource" "pip" {
-  count = local.is_disabled ? 0 : 1
+  count = local.is_disabled ? 0 : (fileexists("${var.lambda_source_folder}/requirements.txt") ? 1 : 0)
 
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
     version_increment = 1.2
-    requirements_hash = filebase64sha256("${var.lambda_source_folder}/requirements.txt")
+    requirements_hash = try(filebase64sha256("${var.lambda_source_folder}/requirements.txt"), "n/a")
     output_path       = local.temp_build_folder
     temp_build_folder = local.temp_build_folder
   }
@@ -51,7 +51,7 @@ data "null_data_source" "wait_for_lambda_exporter" {
   inputs = {
     # This ensures that this data resource will not be evaluated until
     # after the null_resource has been created.
-    lambda_exporter_id = "${null_resource.pip[0].id}"
+    lambda_exporter_id = fileexists("${var.lambda_source_folder}/requirements.txt") ? "${null_resource.pip[0].id}" : null
     copy_files_id      = "${null_resource.copy_files[0].id}"
 
     # This value gives us something to implicitly depend on
@@ -69,12 +69,12 @@ data "archive_file" "lambda_zip" {
 }
 
 resource "aws_s3_bucket_object" "s3_lambda_zip" {
-  count  = local.is_disabled ? 0 : 1
-  bucket = split("/", split("//", var.s3_path_to_lambda_zip)[1])[0]
+  count  = (var.upload_to_s3 && (local.is_disabled == false)) ? 1 : 0
+  bucket = split("/", split("//", var.upload_to_s3_path)[1])[0]
   key = join("/", slice(
-    split("/", split("//", var.s3_path_to_lambda_zip)[1]),
+    split("/", split("//", var.upload_to_s3_path)[1]),
     1,
-    length(split("/", split("//", var.s3_path_to_lambda_zip)[1]))
+    length(split("/", split("//", var.upload_to_s3_path)[1]))
   ))
   source = data.archive_file.lambda_zip[0].output_path
   etag   = data.archive_file.lambda_zip[0].output_md5

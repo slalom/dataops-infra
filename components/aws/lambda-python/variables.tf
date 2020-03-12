@@ -16,34 +16,53 @@ variable "lambda_source_folder" {
   type        = string
   default     = "resources/fn_log"
 }
-variable "s3_path_to_lambda_zip" {
-  description = "S3 Path to where the source code zip should be uploaded."
+variable "upload_to_s3" { type = bool }
+variable "upload_to_s3_path" {
+  description = <<EOF
+S3 Path to where the source code zip should be uploaded.
+Use in combination with: `upload_to_s3 = true`
+EOF
   type        = string
+  default     = null
 }
-# variable "dependency_urls" {
-#   description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs."
-#   type        = map(string)
-#   default     = {}
-# }
-variable "s3_trigger_bucket" {
-  type    = string
-  default = null
+variable "functions" {
+  description = <<EOF
+A map of function names to create and an object with properties describing the function.
+
+Example:
+  functions = [
+    "fn_log" = {
+      description = "Add an entry to the log whenever a file is created."
+      handler     = "main.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+  ]
+EOF
+  type = map(object({
+    description = string
+    handler     = string
+    environment = map(string)
+    secrets     = map(string)
+  }))
 }
 variable "s3_triggers" {
-  type = map(object({
-    # function_name       = string
-    triggering_path     = string
-    function_handler    = string
-    environment_vars    = map(string)
-    environment_secrets = map(string)
-  }))
-  default = {
-    "fn_log" = {
-      # function_name       = "fn_log"
-      triggering_path     = "*"
-      function_handler    = "main.lambda_handler"
-      environment_vars    = {}
-      environment_secrets = {}
+  description = <<EOF
+A list of objects describing the S3 trigger action.
+
+Example:
+  s3_triggers = [
+    {
+      function_name = "fn_log"
+      s3_bucket     = "*"
+      s3_path       = "*"
     }
-  }
+  ]
+EOF
+  type = list(object({
+    function_name = string
+    s3_bucket     = string
+    s3_path       = string
+  }))
+  default = []
 }

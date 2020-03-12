@@ -5,12 +5,13 @@ module "step-functions" {
   s3_bucket_name           = var.s3_bucket_name
   environment              = var.environment
   resource_tags            = var.resource_tags
+  lambda_functions         = module.lambda_functions.function_ids
   state_machine_definition = <<EOF
 {
  "StartAt": "Generate Unique Job Name",
   "States": {
     "Generate Unique Job Name": {
-      "Resource": "arn:aws:lambda:us-east-1::function:UniqueJobName",
+      "Resource": "${module.lambda_functions.function_ids["UniqueJobName"]}",
       "Parameters": {
         "JobName": "${var.job_name}"
       },
@@ -84,7 +85,7 @@ module "step-functions" {
       "Next": "Extract Best Model Path"
     },
     "Extract Best Model Path": {
-      "Resource": "arn:aws:lambda:us-east-1::function:ExtractModelPath",
+      "Resource": "${module.lambda_functions.function_ids["ExtractModelPath"]}",
       "Type": "Task",
       "Next": "Save Best Model"
     },
@@ -103,12 +104,12 @@ module "step-functions" {
       "Next": "Extract Model Name"
     },
     "Extract Model Name": {
-      "Resource": "arn:aws:lambda:us-east-1::function:ExtractModelName",
+      "Resource": "${module.lambda_functions.function_ids["ExtractModelName"]}",
       "Type": "Task",
       "Next": "Query Training Results"
     },
     "Query Training Results": {
-      "Resource": "arn:aws:lambda:us-east-1::function:QueryTrainingStatus",
+      "Resource": "${module.lambda_functions.function_ids["QueryTrainingStatus"]}",
       "Type": "Task",
       "Next": "Endpoint Rule"
     },
@@ -144,12 +145,12 @@ module "step-functions" {
       "Next": "Extract Endpoint Config Name"
     },
     "Extract Endpoint Config Name": {
-      "Resource": "arn:aws:lambda:us-east-1::function:ExtractModelName",
+      "Resource": "${module.lambda_functions.function_ids["ExtractModelName"]}",
       "Type": "Task",
       "Next": "Check Endpoint Exists"
     },
     "Check Endpoint Exists": {
-      "Resource": "arn:aws:lambda:us-east-1::function:CheckEndpointExists",
+      "Resource": "${module.lambda_functions.function_ids["CheckEndpointExists"]}",
       "Parameters": {
         "EndpointConfig.$": "$.modelName",
         "EndpointName": "${var.endpoint_name}"
