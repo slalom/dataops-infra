@@ -23,6 +23,23 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: -recursive
+      - name: "Terraform Code Standards Check"
+        run: |
+          pip install slalom.dataops
+          s-infra check_tf_metadata ./catalog \
+              --check_module_headers \
+              --required_input_vars=name_prefix,resource_tags,environment \
+              --required_output_vars=summary \
+              --nocheck_input_description \
+              --nocheck_output_description \
+              --raise_error
+          s-infra check_tf_metadata ./components \
+              --check_module_headers \
+              --required_input_vars=name_prefix,resource_tags,environment \
+              --required_output_vars="" \
+              --nocheck_input_description \
+              --nocheck_output_description \
+              --raise_error
 
   tf_test:
     runs-on: ubuntu-latest
