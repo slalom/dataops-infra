@@ -23,9 +23,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_CLI_ARGS: -recursive
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
       - name: "Terraform Code Standards Check"
         run: |
-          pip3 install setuptools
           pip3 install slalom.dataops
           s-infra check_tf_metadata ./catalog \
               --check_module_headers \
