@@ -14,9 +14,10 @@ credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
 | ami\_name\_filter | n/a | `string` | n/a | yes |
-| environment | n/a | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | instance\_type | n/a | `string` | n/a | yes |
-| name\_prefix | n/a | `any` | n/a | yes |
+| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | ssh\_key\_name | n/a | `string` | n/a | yes |
 | ssh\_private\_key\_filepath | n/a | `string` | n/a | yes |
 | admin\_cidr | n/a | `list` | `[]` | no |
@@ -29,7 +30,6 @@ credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 | instance\_storage\_gb | n/a | `number` | `100` | no |
 | is\_windows | n/a | `bool` | `false` | no |
 | num\_instances | n/a | `number` | `1` | no |
-| resource\_tags | n/a | `map` | `{}` | no |
 | use\_https | n/a | `bool` | `false` | no |
 
 ## Outputs

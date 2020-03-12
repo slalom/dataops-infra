@@ -13,8 +13,9 @@ The module supports both Linux and Windows versions of the Tableau Server Softwa
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| environment | n/a | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | n/a | `string` | n/a | yes |
+| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | admin\_cidr | n/a | `list` | `[]` | no |
 | default\_cidr | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | ec2\_instance\_storage\_gb | n/a | `number` | `100` | no |
@@ -24,7 +25,6 @@ The module supports both Linux and Windows versions of the Tableau Server Softwa
 | num\_linux\_instances | n/a | `number` | `1` | no |
 | num\_windows\_instances | n/a | `number` | `0` | no |
 | registration\_file | n/a | `string` | `"../../.secrets/registration.json"` | no |
-| resource\_tags | n/a | `map` | `{}` | no |
 | windows\_https\_domain | n/a | `string` | `""` | no |
 | windows\_use\_https | n/a | `bool` | `false` | no |
 

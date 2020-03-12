@@ -1,3 +1,30 @@
+##############################################
+### Standard variables for all AWS modules ###
+##############################################
+
+variable "name_prefix" {
+  description = "Standard `name_prefix` module input."
+  type        = string
+}
+variable "environment" {
+  description = "Standard `environment` module input. (Ignored for the `vpc` module.)"
+  type = object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+  default = null
+}
+variable "resource_tags" {
+  description = "Standard `resource_tags` module input."
+  type        = map(string)
+}
+
+########################################
+### Custom variables for this module ###
+########################################
+
 variable "name_prefix" { type = string }
 variable "aws_region" { default = null }
 variable "resource_tags" {
