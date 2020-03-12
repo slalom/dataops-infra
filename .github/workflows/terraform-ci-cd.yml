@@ -33,6 +33,7 @@ jobs:
       - name: "Terraform Code Standards Check"
         run: |
           GO111MODULE="off" go get github.com/segmentio/terraform-docs@v0.8.2
+          export PATH=$HOME/go/bin:$PATH
           pip3 install --pre slalom.dataops
           s-infra check_tf_metadata ./catalog \
               --check_module_headers \
