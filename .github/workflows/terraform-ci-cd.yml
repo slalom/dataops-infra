@@ -29,7 +29,8 @@ jobs:
           python-version: 3.7
       - uses: actions/setup-go@v1
         with:
-          go-version: "1.14" # The Go version to download (if necessary) and use.      - name: "Terraform Code Standards Check"
+          go-version: "1.14" # The Go version to download (if necessary) and use.
+      - name: "Terraform Code Standards Check"
         run: |
           go get github.com/segmentio/terraform-docs@v0.8.2
           pip3 install --pre slalom.dataops
