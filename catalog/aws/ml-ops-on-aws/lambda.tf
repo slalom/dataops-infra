@@ -42,3 +42,8 @@ module "lambda_functions" {
     }
   }
 }
+
+resource "aws_iam_role_policy_attachment" "lambda_sagemaker_policy_attachment" {
+  role       = module.lambda_functions.lambda_iam_role
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSageMakerReadOnly"
+}
