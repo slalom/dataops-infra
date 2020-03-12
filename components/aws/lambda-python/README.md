@@ -15,9 +15,9 @@ S3-based triggers, to run the function automatically whenever a file is landed i
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| environment | n/a | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | n/a | `string` | n/a | yes |
-| resource\_tags | n/a | `map(string)` | n/a | yes |
+| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | s3\_path\_to\_lambda\_zip | S3 Path to where the source code zip should be uploaded. | `string` | n/a | yes |
 | s3\_trigger\_bucket | variable "dependency\_urls" { description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs." type        = map(string) default     = {} } | `string` | n/a | yes |
 | lambda\_source\_folder | Local path to a folder containing the lambda source code | `string` | `"resources/fn_log"` | no |

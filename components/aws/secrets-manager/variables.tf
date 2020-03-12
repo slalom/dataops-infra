@@ -1,11 +1,28 @@
+##############################################
+### Standard variables for all AWS modules ###
+##############################################
+
 variable "name_prefix" {
-  description = "Common variable: the name prefix to use in all created resources."
+  description = "Standard `name_prefix` module input."
   type        = string
 }
-variable "resource_tags" {
-  description = "Common variable: the resource tags to use in all created resources."
-  type        = map
+variable "environment" {
+  description = "Standard `environment` module input."
+  type = object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
 }
+variable "resource_tags" {
+  description = "Standard `resource_tags` module input."
+  type        = map(string)
+}
+
+########################################
+### Custom variables for this module ###
+########################################
 
 variable "secrets_map" {
   description = <<EOF

@@ -1,3 +1,29 @@
+##############################################
+### Standard variables for all AWS modules ###
+##############################################
+
+variable "name_prefix" {
+  description = "Standard `name_prefix` module input."
+  type        = string
+}
+variable "environment" {
+  description = "Standard `environment` module input."
+  type = object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+}
+variable "resource_tags" {
+  description = "Standard `resource_tags` module input."
+  type        = map(string)
+}
+
+########################################
+### Custom variables for this module ###
+########################################
+
 variable "state_machine_name" {
   type = string
 }
@@ -8,9 +34,4 @@ variable "state_machine_definition" {
 
 variable "account_id" {
   type = string
-}
-
-variable "resource_tags" {
-  type    = map
-  default = {}
 }

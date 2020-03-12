@@ -1,5 +1,13 @@
-variable "name_prefix" { type = string }
+##############################################
+### Standard variables for all AWS modules ###
+##############################################
+
+variable "name_prefix" {
+  description = "Standard `name_prefix` module input."
+  type        = string
+}
 variable "environment" {
+  description = "Standard `environment` module input."
   type = object({
     vpc_id          = string
     aws_region      = string
@@ -7,14 +15,19 @@ variable "environment" {
     private_subnets = list(string)
   })
 }
+variable "resource_tags" {
+  description = "Standard `resource_tags` module input."
+  type        = map(string)
+}
+
+########################################
+### Custom variables for this module ###
+########################################
+
 variable "data_bucket_override" {
   description = "Optionally, you can override the default data bucket with a bucket that already exists."
   type        = string
   default     = null
-}
-variable "resource_tags" {
-  type    = map
-  default = {}
 }
 variable "lambda_python_source" {
   description = "Local path to a folder containing the lambda source code (e.g. 'resources/fn_log')"

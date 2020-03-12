@@ -61,7 +61,11 @@ Use in combination with the `ECS-Task` component.
 
 ### [AWS ECS-Task](../components/aws/ecs-task/README.md)
 
+ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
+features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
+to manage or pay for when tasks are not running.
 
+Use in combination with the `ECS-Cluster` component.
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-task?ref=master`
 * See the [AWS ECS-Task Readme](../components/aws/ecs-task/README.md) for input/output specs and additional info.

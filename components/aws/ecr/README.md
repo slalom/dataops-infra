@@ -13,9 +13,11 @@ should not be accessible to external users.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
+| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | image\_name | n/a | `any` | n/a | yes |
+| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | repository\_name | n/a | `any` | n/a | yes |
-| resource\_tags | n/a | `map` | `{}` | no |
+| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 
 ## Outputs
 

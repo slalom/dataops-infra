@@ -16,11 +16,11 @@ Use in combination with the `ECS-Task` component.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| environment | n/a | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | n/a | `string` | n/a | yes |
+| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | ec2\_instance\_count | n/a | `number` | `0` | no |
 | ec2\_instance\_type | n/a | `string` | `"m4.xlarge"` | no |
-| resource\_tags | n/a | `map(string)` | `{}` | no |
 
 ## Outputs
 

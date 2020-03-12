@@ -12,11 +12,11 @@ Airflow is an open source platform to programmatically author, schedule and moni
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| container\_command | Catalog Variables | `string` | n/a | yes |
-| environment | n/a | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| container\_command | n/a | `string` | n/a | yes |
+| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | github\_repo\_ref | The git repo reference to clone onto the airflow server | `string` | n/a | yes |
-| name\_prefix | Common Variables: | `string` | n/a | yes |
-| resource\_tags | n/a | `map(string)` | n/a | yes |
+| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | container\_image | n/a | `string` | `"airflow"` | no |
 | container\_num\_cores | n/a | `number` | `2` | no |
 | container\_ram\_gb | n/a | `number` | `4` | no |

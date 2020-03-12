@@ -4,7 +4,6 @@
 */
 
 data "aws_availability_zones" "az_list" {}
-data "aws_region" "current" {}
 
 locals {
   tz_hour_offset = (
