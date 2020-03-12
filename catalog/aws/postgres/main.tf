@@ -5,7 +5,7 @@ locals {
 }
 
 module "postgres" {
-  source              = "../../../components/aws/postgres"
+  source              = "../../../components/aws/rds"
   name_prefix         = local.name_prefix
   environment         = var.environment
   resource_tags       = var.resource_tags

@@ -3,8 +3,12 @@ variable "environment" {
 
 }
 variable "identifier" { default = "rds-db" }
-variable "engine" { default = "mysql" }
-variable "engine_version" { default = "5.7.26" }
+variable "engine" {
+  type = string
+}
+variable "engine_version" {
+  type = string
+}
 variable "storage_size_in_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
@@ -28,7 +32,9 @@ variable "instance_class" {
   default     = "db.t2.micro"
 }
 
-variable "jdbc_port" { default = 3306 }
+variable "jdbc_port" {
+  type = string
+}
 variable "kms_key_id" {
   type    = string
   default = null

@@ -5,7 +5,7 @@ locals {
 }
 
 module "mysql" {
-  source              = "../../../components/aws/mysql"
+  source              = "../../../components/aws/rds"
   name_prefix         = local.name_prefix
   environment         = var.environment
   resource_tags       = var.resource_tags
@@ -17,5 +17,4 @@ module "mysql" {
   engine_version      = var.mysql_version
   kms_key_id          = var.kms_key_id
   jdbc_port           = var.jdbc_port
-
 }
