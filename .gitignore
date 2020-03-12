@@ -24,6 +24,5 @@ tfplan
 # .tfvars files
 *.tfvars
 
-# Other (python)
-
+# Other (Python)
 .mypy_cache

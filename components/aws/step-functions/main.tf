@@ -1,3 +1,10 @@
+/*
+* AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
+* to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
+* for another step.
+*
+*/
+
 # Hack required to allow time for IAM execution role to propagate - customise to use desired interpreter
 resource "null_resource" "delay" {
   provisioner "local-exec" {

@@ -1,5 +1,13 @@
-variable "name_prefix" { type = string }
+##############################################
+### Standard variables for all AWS modules ###
+##############################################
+
+variable "name_prefix" {
+  description = "Standard `name_prefix` module input."
+  type        = string
+}
 variable "environment" {
+  description = "Standard `environment` module input."
   type = object({
     vpc_id          = string
     aws_region      = string
@@ -7,11 +15,16 @@ variable "environment" {
     private_subnets = list(string)
   })
 }
-variable "database_name" { default = "redshift_db" }
 variable "resource_tags" {
-  type    = map
-  default = {}
+  description = "Standard `resource_tags` module input."
+  type        = map(string)
 }
+
+########################################
+### Custom variables for this module ###
+########################################
+
+variable "database_name" { default = "redshift_db" }
 variable "skip_final_snapshot" { default = false }
 variable "admin_password" {
   description = "Must be 8 characters long."

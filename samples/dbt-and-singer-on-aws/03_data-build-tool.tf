@@ -5,8 +5,8 @@ module "dbt_on_aws" {
   # source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/dbt?ref=master"
   source        = "../../catalog/aws/dbt"
   name_prefix   = local.name_prefix
-  resource_tags = local.resource_tags
   environment   = module.env.environment
+  resource_tags = local.resource_tags
 
   # ADD OR MODIFY CONFIGURATION HERE:
 

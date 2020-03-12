@@ -1,3 +1,11 @@
+/*
+* AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
+* Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
+* packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
+* S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
+*
+*/
+
 resource "random_id" "suffix" {
   byte_length = 2
 }

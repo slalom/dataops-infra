@@ -1,8 +1,9 @@
 module "data_lake_on_aws" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-  source      = "../../catalog/aws/data-lake"
-  name_prefix = local.name_prefix
-  environment = module.env.environment
+  source        = "../../catalog/aws/data-lake"
+  name_prefix   = local.name_prefix
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
 
   # CONFIGURE HERE:
 
