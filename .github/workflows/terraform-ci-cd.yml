@@ -25,7 +25,7 @@ jobs:
           TF_CLI_ARGS: -recursive
       - name: "Terraform Code Standards Check"
         run: |
-          pip install slalom.dataops
+          pip3 install slalom.dataops
           s-infra check_tf_metadata ./catalog \
               --check_module_headers \
               --required_input_vars=name_prefix,resource_tags,environment \
