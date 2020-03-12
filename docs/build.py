@@ -112,13 +112,18 @@ def build_index(type: str, tf_dir: str, output_file: str, overview_desc: str):
 
     toc_str = ""
     for platform_i, platform in enumerate(content_metadata.keys(), start=1):
-        toc_str += f"{platform_i}. [{_proper(platform)} {type}](#{platform}-{type})\n"
+        toc_str += (
+            f"{platform_i}. [{_proper(platform)} {type}]"
+            f"(#{platform.lower()}-{type.lower()})\n"
+        )
 
         print(f"Exploring platform '{platform}'")
         catalog_modules = infra.get_tf_metadata(f"{tf_dir}/{platform}", recursive=True)
         for module, metadata in catalog_modules.items():
             module_title = f"{_proper(platform)} {_proper(os.path.basename(module))}"
-            toc_str += f"    - [{module_title}](#{module_title.replace(' ', '-')})\n"
+            toc_str += (
+                f"    - [{module_title}](#{module_title.replace(' ', '-').lower()})\n"
+            )
             print(f"Exploring module '{module}': {metadata}")
             source = git_url_pattern.format(
                 git_repo=git_repo, path=module.replace(".", ""), branch=git_branch

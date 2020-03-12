@@ -5,14 +5,14 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 
 ## Contents
 
-1. [AWS Catalog](#aws-Catalog)
-    - [AWS Airflow](#AWS-Airflow)
-    - [AWS Data-Lake](#AWS-Data-Lake)
-    - [AWS DBT](#AWS-DBT)
-    - [AWS Environment](#AWS-Environment)
-    - [AWS Redshift](#AWS-Redshift)
-    - [AWS Singer-Taps](#AWS-Singer-Taps)
-    - [AWS Tableau-Server](#AWS-Tableau-Server)
+1. [AWS Catalog](#aws-catalog)
+    - [AWS Airflow](#aws-airflow)
+    - [AWS Data-Lake](#aws-data-lake)
+    - [AWS DBT](#aws-dbt)
+    - [AWS Environment](#aws-environment)
+    - [AWS Redshift](#aws-redshift)
+    - [AWS Singer-Taps](#aws-singer-taps)
+    - [AWS Tableau-Server](#aws-tableau-server)
 
 2. Azure Catalog
     * _(Coming soon)_

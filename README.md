@@ -6,7 +6,7 @@ Catalog documentation is available from the [Infrastructure Catalog Index](docs/
 
 ## Contributions Guide
 
-For information on how to request enhancements, submit bug reports, or contribute code, please see [CONTRIBUTING.md](docs/CONTRIBUTING.md).
+For information on how to request enhancements, submit bug reports, or contribute code, please see the [Contributing Guide](docs/CONTRIBUTING.md).
 
 ## User Guide
 

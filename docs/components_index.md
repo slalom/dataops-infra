@@ -5,16 +5,16 @@ These components define the technical building blocks which enable advanced, rea
 
 ## Contents
 
-1. [AWS Components](#aws-Components)
-    - [AWS EC2](#AWS-EC2)
-    - [AWS ECR](#AWS-ECR)
-    - [AWS ECS-Cluster](#AWS-ECS-Cluster)
-    - [AWS ECS-Task](#AWS-ECS-Task)
-    - [AWS Lambda-Python](#AWS-Lambda-Python)
-    - [AWS Redshift](#AWS-Redshift)
-    - [AWS Secrets-Manager](#AWS-Secrets-Manager)
-    - [AWS Step-Functions](#AWS-Step-Functions)
-    - [AWS VPC](#AWS-VPC)
+1. [AWS Components](#aws-components)
+    - [AWS EC2](#aws-ec2)
+    - [AWS ECR](#aws-ecr)
+    - [AWS ECS-Cluster](#aws-ecs-cluster)
+    - [AWS ECS-Task](#aws-ecs-task)
+    - [AWS Lambda-Python](#aws-lambda-python)
+    - [AWS Redshift](#aws-redshift)
+    - [AWS Secrets-Manager](#aws-secrets-manager)
+    - [AWS Step-Functions](#aws-step-functions)
+    - [AWS VPC](#aws-vpc)
 
 2. Azure Components
     * _(Coming soon)_
