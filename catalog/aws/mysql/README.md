@@ -1,5 +1,5 @@
 
-# AWS Mysql
+# AWS MySQL
 
 `/catalog/aws/mysql`
 

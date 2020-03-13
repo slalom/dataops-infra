@@ -1,5 +1,5 @@
 
-# Samples Mysql-On-AWS
+# Samples MySQL-On-AWS
 
 `/samples/mysql-on-aws`
 

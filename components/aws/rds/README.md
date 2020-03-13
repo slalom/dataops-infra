@@ -1,5 +1,5 @@
 
-# AWS Rds
+# AWS RDS
 
 `/components/aws/rds`
 
