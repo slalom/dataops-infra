@@ -11,6 +11,7 @@ These components define the technical building blocks which enable advanced, rea
     - [AWS ECS-Cluster](#aws-ecs-cluster)
     - [AWS ECS-Task](#aws-ecs-task)
     - [AWS Lambda-Python](#aws-lambda-python)
+    - [AWS RDS](#aws-rds)
     - [AWS Redshift](#aws-redshift)
     - [AWS Secrets-Manager](#aws-secrets-manager)
     - [AWS Step-Functions](#aws-step-functions)
@@ -82,6 +83,26 @@ S3-based triggers, to run the function automatically whenever a file is landed i
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/lambda-python?ref=master`
 * See the [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS RDS](../components/aws/rds/README.md)
+
+Deploys an RDS-backed database. RDS currently supports the following database engines:
+* Aurora
+* MySQL
+* PostgreSQL
+* Oracle
+* SQL Server
+
+Each engine type has it's own required configuration. For already-configured database
+configurations, see the catalog modules: `catalog/aws/mysql` and `catalog/aws/postgres`
+which are built on top of this component module.
+
+* NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/rds?ref=master`
+* See the [AWS RDS Readme](../components/aws/rds/README.md) for input/output specs and additional info.
 
 -------------------
 

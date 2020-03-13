@@ -10,6 +10,8 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
     - [AWS Data-Lake](#aws-data-lake)
     - [AWS DBT](#aws-dbt)
     - [AWS Environment](#aws-environment)
+    - [AWS MySQL](#aws-mysql)
+    - [AWS Postgres](#aws-postgres)
     - [AWS Redshift](#aws-redshift)
     - [AWS Singer-Taps](#aws-singer-taps)
     - [AWS Tableau-Server](#aws-tableau-server)
@@ -62,6 +64,28 @@ from this module is designed to be passed easily to downstream modules, streamli
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/environment?ref=master`
 * See the [AWS Environment Readme](../catalog/aws/environment/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS MySQL](../catalog/aws/mysql/README.md)
+
+Deploys a MySQL server running on RDS.
+
+* NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/mysql?ref=master`
+* See the [AWS MySQL Readme](../catalog/aws/mysql/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS Postgres](../catalog/aws/postgres/README.md)
+
+Deploys a Postgres server running on RDS.
+
+* NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/postgres?ref=master`
+* See the [AWS Postgres Readme](../catalog/aws/postgres/README.md) for input/output specs and additional info.
 
 -------------------
 
