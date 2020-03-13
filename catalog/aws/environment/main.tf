@@ -1,3 +1,11 @@
+/*
+* The environment module sets up common infrastrcuture like VPCs and network subnets. The `envrionment` output
+* from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
+*
+*
+*/
+
+
 locals {
   is_windows_host = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   user_home       = pathexpand("~")
@@ -13,7 +21,7 @@ locals {
     local.aws_credentials_file == null ? "n/a" : (
       local.is_windows_host ?
       "SET AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}" :
-      "EXPORT AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}"
+      "export AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}"
     )
   )
 }

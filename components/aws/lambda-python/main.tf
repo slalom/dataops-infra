@@ -1,7 +1,25 @@
+/*
+* AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
+* Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
+* packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
+* S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
+*
+*/
+
+resource "random_id" "suffix" {
+  byte_length = 2
+}
+
 locals {
+  random_suffix  = lower(random_id.suffix.hex)
   is_disabled    = length(var.s3_triggers) == 0
   function_names = toset(keys(var.s3_triggers))
-  is_windows     = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+  functions_with_secrets = toset([
+    for name in local.function_names :
+    name
+    if length(var.s3_triggers[name].environment_secrets) > 0
+  ])
+  is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   source_files_hash = local.is_disabled ? "null" : join(",", [
     for filepath in fileset(var.lambda_source_folder, "*") :
     filebase64sha256("${var.lambda_source_folder}/${filepath}")
@@ -24,10 +42,8 @@ resource "aws_lambda_function" "python_lambda" {
   timeout          = var.timeout_seconds
   environment {
     variables = merge(
-      coalesce(
-        var.s3_triggers[each.value].environment_vars,
-        {}
-      ),
+      var.s3_triggers[each.value].environment_vars,
+      var.s3_triggers[each.value].environment_secrets,
       var.resource_tags
     )
   }
@@ -47,7 +63,7 @@ resource "aws_lambda_function" "python_lambda" {
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   count = local.is_disabled ? 0 : 1
-  name  = "/aws/lambda/${var.name_prefix}lambda"
+  name  = "/aws/lambda/${var.name_prefix}lambda-${local.random_suffix}"
   # retention_in_days = 14
 }
 
@@ -60,7 +76,6 @@ resource "aws_cloudwatch_log_group" "lambda_log_group" {
 resource "aws_s3_bucket_notification" "bucket_notification" {
   count  = local.is_disabled ? 0 : 1
   bucket = var.s3_trigger_bucket
-
   dynamic "lambda_function" {
     for_each = local.function_names
     content {

@@ -2,8 +2,8 @@ module "tableau_server_on_aws" {
   # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=master"
   source        = "../../catalog/aws/tableau-server"
   name_prefix   = local.name_prefix
-  resource_tags = local.resource_tags
   environment   = module.env.environment
+  resource_tags = local.resource_tags
 
   # CONFIGURE HERE:
 

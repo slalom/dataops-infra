@@ -1,3 +1,15 @@
+/*
+* The VPC module creates a number of network services which support other key AWS functions.
+*
+* Included automatically when creating this module:
+* * 1 VPC which contains the following:
+*     * 2 private subnets (for resources which **do not** need a public IP address)
+*     * 2 public subnets (for resources which do need a public IP address)
+*     * 1 NAT gateway (allows private sugnet resources to reach the outside world)
+*     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
+*     * route tables and routes to connect all of the above
+*/
+
 data "aws_region" "current" {}
 data "http" "icanhazip" { url = "http://icanhazip.com" }
 
@@ -8,8 +20,17 @@ locals {
   aws_region        = coalesce(var.aws_region, data.aws_region.current.name)
 }
 
+#TODO: Remove this old version after all legacy dependencies have cleared.
 provider "aws" {
-  alias                   = "region_lookup"
+  alias                   = "regional" # used for region-specific AZ lookup
+  version                 = "~> 2.10"
+  region                  = local.aws_region
+  shared_credentials_file = var.aws_credentials_file
+  profile                 = var.aws_profile
+}
+
+provider "aws" {
+  alias                   = "region_lookup" # used for region-specific AZ lookup
   version                 = "~> 2.10"
   region                  = local.aws_region
   shared_credentials_file = var.aws_credentials_file

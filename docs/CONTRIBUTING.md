@@ -3,12 +3,16 @@
 1. [Feature Requests](#feature-requests)
 2. [Bug Reports](#bug-reports)
 3. [Pull Requests](#pull-requests)
-4. [Contributing New Terraform Modules](#guide-to-creating-terraform-modules)
-   1. [Solution/Sample Modules (Layer 1)](#solutionsample-modules-layer-1)
+4. [3-Tiered Design Pattern](#3-tiered-design-pattern)
+   1. [Solution Modules or Sample Modules (Layer 1)](#solution-modules-or-sample-modules-layer-1)
    2. [Catalog Modules (Layer 2)](#catalog-modules-layer-2)
    3. [Component Modules (Layer 3)](#component-modules-layer-3)
 5. [Coding Standards](#coding-standards)
-6. [General Design Principles](#general-design-principles)
+   1. [Common Input and Output Variables](#common-input-and-output-variables)
+   2. [Show Usage in Samples](#show-usage-in-samples)
+   3. [Adhere to Formatting Standards](#adhere-to-formatting-standards)
+   4. [Be Self-documenting](#be-self-documenting)
+   5. [Follow Purpose-Driven Design Patterns](#follow-purpose-driven-design-patterns)
 
 ## Feature Requests
 
@@ -30,57 +34,68 @@ _Pull Requests (PRs) are the method used for intaking new code contributions_
 4. The maintainers will reply to your PR, generally within 3 business days, and may ask questions or suggest changes.
 5. After all outstanding reviews have passed, your code will be merged by the maintainers into the master branch, which is essentially "production".
 
-## Guide to Creating Terraform Modules
+## 3-Tiered Design Pattern
 
-When making changes to the terraform modules, please observe the following design patterns.
+When making changes to the terraform modules, please observe the following 3-tiered design pattern from targeted and business-focused (layer 1) to increasingly technical and generic (layer 3).
 
-### Solution/Sample Modules (Layer 1)
+### Solution Modules or Sample Modules (Layer 1)
 
 > _Solution modules should be configurable as simply as possible to align with the stated business requirements of the module._
 
-| Direction | Variable Name       | Required  | Description                                                                                                                               |
-| :-------: | ------------------- | :-------: | ----------------------------------------------------------------------------------------------------------------------------------------- |
-|  `input`  | `project_shortname` |     Y     | Should be in CamelCase and cannot have special characters. This will be used as a unique name prefix for resources created by the module. |
-|  `input`  | `aws_region`        |  Y (AWS)  | The AWS region code.                                                                                                                      |
-|  `input`  | `location`          | Y (Azure) | The Azure region code.                                                                                                                    |
-|  `input`  | `resource_tags`     |     N     | Allows user to add default tags to child modules. These should then be propagated to all child resources which support tagging.           |
-| `output`  | `summary`           |           | A human-readable summary of the resources which were deployed, especially unique resource IDs and connection strings (if applicable).     |
 
 ### Catalog Modules (Layer 2)
 
 > _**Catalog Modules (Layer 2)** should combine modules from Layer 3 in a method targeted to specific functional or business requirements._
 
-**Input and Output Variables for Catalog Modules:**
-
-* **AWS Catalog modules** should match parameters and conventions specified here: [catalog/aws/README.md](/catalog/aws/README.md).
-* **Azure Catalog modules** should match parameters and conventions specified here: [catalog/azure/README.md](/catalog/azure/README.md).
 
 ### Component Modules (Layer 3)
 
 > _**Component Modules (Layer 3)** define the technical solutions as mapped to individual cloud product offerings (EC2, EC2, Azure Functions, etc.), meeting a technical requirement from one or more catalog modules which reference them._
 
-**Input and Output Variables for Components Modules:**
 
-* **AWS Components** should match parameters and conventions specified here: [components/aws/README.md](/components/aws/README.md).
-* **Azure Components** should match parameters and conventions specified here: [components/azure/README.md](/components/azure/README.md).
 
-### Coding Standards
+## Coding Standards
 
 Submitted PRs should meet the following code standards before being merged into `master`:
 
-1. **Modules should have at least one sample** - As a rule, each component and category module should be referenced by at least one solution module in the `samples` folder, and the sample should demonstrate how to utilize the core functionality.
+### Common Input and Output Variables
+
+In addition to custom variables, each AWS catalog and component module should support the following standard input and output variables:
+
+| Direction | Variable Name   | Required | Description                                                                                                                                                         |
+| :-------: | --------------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  `input`  | `name_prefix`   |    Y     | Unless otherwise stated, this will be a concatenation like `{project_shortname}-` and will be used as a unique name prefix for resources created within the module. |
+|  `input`  | `environment`   |    N     | An object or map with values for `vpc_id`, `aws_region`, `public_subnets` and `private_subnets`, generally passed from the `aws/catalog/environment` module.        |
+|  `input`  | `resource_tags` |    N     | Allows designer to add default tags to child modules. These should then be propagated to all child resources which support tagging.                                 |
+| `output`  | `summary`       |    Y     | A human-readable summary of the resources which were deployed, especially unique resource IDs and connection strings (if applicable).                               |
+
+### Show Usage in Samples
+
+* As a rule, each component and category module should be referenced by at least one solution module in the `samples` folder, and the sample should demonstrate how to utilize the core functionality.
+
    * In addition to providing an easy on-ramp for new users to learn how to use your module, your sample module is also an entrypoint for the CI/CD pipeline to perform automated tests.
    * If your sample code ever stops working, the automated tests will catch this, giving us a means to catch and fix the breakages before they can impact users.
-2. **Modules should match formatting standards**. Terraform makes it very easy way to auto-format modules, which in turn ensures a consistent experience when reviewing code across multiple authors.
+
+### Adhere to Formatting Standards
+
+* Terraform makes it very easy way to auto-format modules, which in turn ensures a consistent experience when reviewing code across multiple authors.
+
    * If you use VS Code, the defaults specified in `settings.json` should automatically apply formatting on each file save.
    * Formatting is checked automatically after each commit by the CI/CD pipeline.
    * If you receive failures related to Terraform formatting, simply run `terraform fmt -recursive` from the root of the repo. This command will auto format the entire repo and then you can simply commit the resulting changes.
 
-### General Design Principles
+### Be Self-documenting
+
+* In order for components to be effectively used by a broad audience, each module must be self-documenting and should be included in the Catalog auto-document tool.
+   * Make sure each input and output variable has it's `description` field set.
+   * Make sure each module has a `main.tf` file and that the file contains a header comment with a paragraph description of the basic module functions. See [components/aws/secrets-manager/main.tf](../components/aws/secrets-manager/main.tf) for a sample.
+   * All input variables should be stored in `variables.tf` and all output variables should be stored in `outputs.tf`.
+   * After the above are met, update the project docs by navigating to the `docs` directory and running `build.py`. This command will update all module README files as well as [catalog_index.md](catalog_index.md) and [components_index.md](components_index.md).
+
+### Follow Purpose-Driven Design Patterns
 
 **Modules should be written as simply as possible, but no simpler.**
 
 * There is no expectation that modules should be fully generic or meet every use case.
 * Opinionated and purpose-driven approaches are preferred versus trying to build modules that are one-size-fits-all.
 
-_(More to come...)_
