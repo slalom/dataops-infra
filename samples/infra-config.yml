@@ -5,4 +5,4 @@
 aws_region: us-east-1
 project_shortname: ml-ops
 resource_tags:
-  admin_contact: jack.sandom-at-slalom.com
+  admin_contact: my.admin@sample.com
