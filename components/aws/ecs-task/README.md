@@ -18,7 +18,7 @@ Use in combination with the `ECS-Cluster` component.
 |------|-------------|------|---------|:-----:|
 | container\_command | n/a | `any` | n/a | yes |
 | container\_entrypoint | n/a | `any` | n/a | yes |
-| container\_image | e.g. [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name] | `any` | n/a | yes |
+| container\_image | Examples: 'python:3.8', '[aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name]' | `any` | n/a | yes |
 | ecs\_cluster\_name | n/a | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | load\_balancer\_arn | n/a | `string` | n/a | yes |
@@ -47,6 +47,7 @@ Use in combination with the `ECS-Cluster` component.
 | ecs\_logging\_url | n/a |
 | ecs\_runtask\_cli | n/a |
 | ecs\_security\_group | n/a |
+| ecs\_task\_iam\_role | n/a |
 | ecs\_task\_name | n/a |
 | load\_balancer\_arn | n/a |
 | load\_balancer\_dns | n/a |

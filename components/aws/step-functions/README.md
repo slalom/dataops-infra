@@ -14,10 +14,11 @@ for another step.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| account\_id | n/a | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| lambda\_functions | Map of function names to ARNs | `map(string)` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
+| s3\_bucket\_name | n/a | `string` | n/a | yes |
 | state\_machine\_definition | n/a | `string` | n/a | yes |
 | state\_machine\_name | n/a | `string` | n/a | yes |
 
@@ -25,6 +26,7 @@ for another step.
 
 | Name | Description |
 |------|-------------|
+| iam\_role\_arn | n/a |
 | summary | n/a |
 
 ---------------------
