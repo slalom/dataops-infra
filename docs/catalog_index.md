@@ -10,7 +10,7 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
     - [AWS Data-Lake](#aws-data-lake)
     - [AWS DBT](#aws-dbt)
     - [AWS Environment](#aws-environment)
-    - [AWS Ml-Ops-On-AWS](#aws-ml-ops-on-aws)
+    - [AWS ML-Ops-On-AWS](#aws-ml-ops-on-aws)
     - [AWS Redshift](#aws-redshift)
     - [AWS Singer-Taps](#aws-singer-taps)
     - [AWS Tableau-Server](#aws-tableau-server)
@@ -66,12 +66,14 @@ from this module is designed to be passed easily to downstream modules, streamli
 
 -------------------
 
-### [AWS Ml-Ops-On-AWS](../catalog/aws/ml-ops-on-aws/README.md)
+### [AWS ML-Ops-On-AWS](../catalog/aws/ml-ops-on-aws/README.md)
 
-
+This module automates MLOps tasks associated with building and maintaining Machine Learning models.
+The module leverages Step Functions, Lambda functions, and ECS Tasks as needed to accomplish ML
+lifecycle tasks and processing.
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/ml-ops-on-aws?ref=master`
-* See the [AWS Ml-Ops-On-AWS Readme](../catalog/aws/ml-ops-on-aws/README.md) for input/output specs and additional info.
+* See the [AWS ML-Ops-On-AWS Readme](../catalog/aws/ml-ops-on-aws/README.md) for input/output specs and additional info.
 
 -------------------
 

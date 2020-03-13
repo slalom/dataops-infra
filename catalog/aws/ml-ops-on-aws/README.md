@@ -6,6 +6,10 @@
 ## Overview
 
 
+This module automates MLOps tasks associated with building and maintaining Machine Learning models.
+The module leverages Step Functions, Lambda functions, and ECS Tasks as needed to accomplish ML
+lifecycle tasks and processing.
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
