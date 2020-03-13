@@ -26,7 +26,7 @@ variable "resource_tags" {
 
 variable "identifier" { default = "rds-db" }
 variable "mysql_version" { default = "5.7.26" }
-variable "allocated_storage" {
+variable "storage_size_in_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "20"

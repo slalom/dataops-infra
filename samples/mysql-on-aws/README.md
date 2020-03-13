@@ -1,7 +1,7 @@
 
-# Samples Rds-Postgres-On-AWS
+# Samples Mysql-On-AWS
 
-`/samples/rds-postgres-on-aws`
+`/samples/mysql-on-aws`
 
 ## Overview
 

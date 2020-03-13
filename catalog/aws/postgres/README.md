@@ -23,12 +23,12 @@ Deploys a Postgres server running on RDS.
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | s3\_logging\_bucket | n/a | `string` | n/a | yes |
 | s3\_logging\_path | n/a | `string` | n/a | yes |
-| allocated\_storage | The allocated storage value is denoted in GB | `string` | `"10"` | no |
 | identifier | n/a | `string` | `"rds-postgres-db"` | no |
 | instance\_class | Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr  (https://aws.amazon.com/rds/mysql/pricing/ ) | `string` | `"db.t2.micro"` | no |
 | jdbc\_port | n/a | `number` | `5432` | no |
 | postgres\_version | n/a | `string` | `"11.5"` | no |
 | skip\_final\_snapshot | n/a | `bool` | `false` | no |
+| storage\_size\_in\_gb | The allocated storage value is denoted in GB | `string` | `"10"` | no |
 
 ## Outputs
 

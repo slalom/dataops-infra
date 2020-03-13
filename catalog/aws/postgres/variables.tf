@@ -26,7 +26,7 @@ variable "resource_tags" {
 
 variable "identifier" { default = "rds-postgres-db" }
 variable "postgres_version" { default = "11.5" }
-variable "allocated_storage" {
+variable "storage_size_in_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "10"

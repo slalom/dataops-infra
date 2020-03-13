@@ -21,5 +21,5 @@ module "postgres" {
   engine_version      = var.postgres_version
   kms_key_id          = var.kms_key_id
   jdbc_port           = var.jdbc_port
-
+  storage_size_in_gb  = var.storage_size_in_gb
 }
