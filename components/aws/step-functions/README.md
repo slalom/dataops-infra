@@ -20,7 +20,6 @@ for another step.
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | s3\_bucket\_name | n/a | `string` | n/a | yes |
 | state\_machine\_definition | n/a | `string` | n/a | yes |
-| state\_machine\_name | n/a | `string` | n/a | yes |
 
 ## Outputs
 
