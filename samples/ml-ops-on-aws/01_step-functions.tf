@@ -16,14 +16,15 @@ module "ml-ops-on-aws" {
   */
 
   # State Machine input
-  job_name                        = "customerchurn"
-  endpoint_name                   = "customerchurn-endpoint"
-  training_image                  = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1"
-  tuning_objective                = "Minimize"
-  tuning_metric                   = "validation:error"
-  create_endpoint_error_threshold = 0.2
-  max_number_training_jobs        = 2
-  max_parallel_training_jobs      = 2
+  job_name                            = "customerchurn"
+  endpoint_name                       = "customerchurn-endpoint"
+  training_image                      = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1"
+  tuning_objective                    = "Minimize"
+  tuning_metric                       = "validation:error"
+  create_endpoint_comparison_operator = "NumericLessThan"
+  create_endpoint_metric_threshold    = 0.2
+  max_number_training_jobs            = 2
+  max_parallel_training_jobs          = 2
 
   parameter_ranges = {
     "ContinuousParameterRanges" = [

@@ -124,7 +124,7 @@ module "step-functions" {
       "Choices": [
         {
           "Variable": "$['trainingMetrics'][0]['Value']",
-          "NumericLessThan": ${var.create_endpoint_error_threshold},
+          "${var.create_endpoint_comparison_operator}": ${var.create_endpoint_metric_threshold},
           "Next": "Create Model Endpoint Config"
         }
       ],

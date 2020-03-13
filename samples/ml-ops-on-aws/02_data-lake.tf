@@ -1,8 +1,9 @@
 module "s3_store_and_lambdas" {
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  source      = "../../catalog/aws/data-lake"
-  name_prefix = "${lower(local.name_prefix)}extracts-store-"
-  environment = module.env.environment
+  source        = "../../catalog/aws/data-lake"
+  name_prefix   = "${lower(local.name_prefix)}extracts-store-"
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
