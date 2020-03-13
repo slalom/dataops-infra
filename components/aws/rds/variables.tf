@@ -26,7 +26,13 @@ variable "resource_tags" {
 
 variable "identifier" { default = "rds-db" }
 variable "engine" {
-  type = string
+  type        = string
+  description = <<EOF
+The type of database to launch. E.g.: `aurora`, `aurora-mysql`,`aurora-postgresql`,
+`mariadb`,`mysql`,`oracle-ee`,`oracle-se2`,`oracle-se1`,`oracle-se`,`postgres`,
+`sqlserver-ee`,`sqlserver-se`,`sqlserver-ex`,`sqlserver-web`.
+Check RDS documentation for updates to the supported list, and for details on each engine type.
+EOF
 }
 variable "engine_version" {
   type = string
