@@ -54,8 +54,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           working_directory: "." # Change working directory
-          reporter: github-pr-review # Change reporter
-          # flags: "--deep" # Add custom flags
+          reporter: github-pr-review
 
   tf_test:
     runs-on: ubuntu-latest
