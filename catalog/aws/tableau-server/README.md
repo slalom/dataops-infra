@@ -17,7 +17,7 @@ The module supports both Linux and Windows versions of the Tableau Server Softwa
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | admin\_cidr | n/a | `list` | `[]` | no |
-| default\_cidr | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| app\_cidr | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | ec2\_instance\_storage\_gb | n/a | `number` | `100` | no |
 | ec2\_instance\_type | n/a | `string` | `"m4.4xlarge"` | no |
 | linux\_https\_domain | n/a | `string` | `""` | no |
