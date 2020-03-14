@@ -1,4 +1,4 @@
-name: Terraform CI/CD
+name: Auto-Tag Release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       # - master
 
 jobs:
-  terraform_linter:
+  release_new_tag:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout source code"
@@ -17,8 +17,13 @@ jobs:
         uses: einaregilsson/build-number@v2
         with:
           token: ${{secrets.github_token}}
+      - name: Read VERSION file
+        id: getversion
+        uses: ./.github/actions/cat-file
+        with:
+          file: VERSION
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: v0.9.0.${{ steps.buildnumber.outputs.build_number }}
+          automatic_release_tag: v${{ steps.getversion.outputs.text }}.${{ steps.buildnumber.outputs.build_number }}
           prerelease: false
