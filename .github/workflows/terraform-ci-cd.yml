@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
+      - name: Run TFLint
+        uses: reviewdog/action-tflint@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          working_directory: "." # Change working directory
+          reporter: github-pr-review
       - name: "Terraform Linter Check (Formatting)"
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -49,12 +55,6 @@ jobs:
               --nocheck_input_descriptions \
               --nocheck_output_descriptions \
               --raise_error
-      - name: Run TFLint
-        uses: reviewdog/action-tflint@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          working_directory: "." # Change working directory
-          reporter: github-pr-review
 
   tf_test:
     runs-on: ubuntu-latest
