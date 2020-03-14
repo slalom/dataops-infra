@@ -19,11 +19,12 @@ jobs:
           token: ${{secrets.github_token}}
       - name: Read VERSION file
         id: getversion
-        uses: ./.github/actions/cat-file
-        with:
-          file: VERSION
+        run: echo "::set-output name=version::$(cat VERSION)"
+        # uses: ./.github/actions/cat-file
+        # with:
+        #   file: VERSION
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: v${{ steps.getversion.outputs.text }}.${{ steps.buildnumber.outputs.build_number }}
+          automatic_release_tag: v${{ steps.getversion.version.text }}.${{ steps.buildnumber.outputs.build_number }}
           prerelease: false
