@@ -1,0 +1,14 @@
+name: "Cat File"
+description: "Cat a file and send it to `output.text`"
+inputs:
+  file:
+    description: "The filename to cat."
+    required: true
+outputs:
+  text:
+    description: "The text contents of the specified file"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.file }}

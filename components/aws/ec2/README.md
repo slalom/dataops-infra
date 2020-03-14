@@ -21,10 +21,10 @@ credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 | ssh\_key\_name | n/a | `string` | n/a | yes |
 | ssh\_private\_key\_filepath | n/a | `string` | n/a | yes |
 | admin\_cidr | n/a | `list` | `[]` | no |
-| admin\_ports | n/a | `map` | `{}` | no |
+| admin\_ports | n/a | `map` | <pre>{<br>  "SSH": "22"<br>}</pre> | no |
 | ami\_owner | n/a | `string` | `"amazon"` | no |
-| app\_ports | map of port descriptions to port numbers (e.g. 22) or ranges (e.g. '0:65535') | `map` | <pre>{<br>  "SSH": "22"<br>}</pre> | no |
-| default\_cidr | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| app\_cidr | n/a | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| app\_ports | map of port descriptions to port numbers (e.g. 22) or ranges (e.g. '0:65535') | `map` | `{}` | no |
 | file\_resources | List of files to needed on the instance (e.g. 'http://url/to/remote/file', '/path/to/local/file', '/path/to/local/file:renamed') | `list` | `[]` | no |
 | https\_domain | n/a | `string` | `""` | no |
 | instance\_storage\_gb | n/a | `number` | `100` | no |

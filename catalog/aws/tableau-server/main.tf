@@ -11,7 +11,7 @@ data "aws_region" "current" {}
 locals {
   name_prefix              = "${var.name_prefix}Tableau-"
   admin_cidr               = var.admin_cidr
-  default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
+  app_cidr                 = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
   ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pub"
   ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pem"
