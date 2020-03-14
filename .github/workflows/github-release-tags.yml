@@ -20,5 +20,5 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: v0.9.0.${{ steps.buildnumber.outputs.build_number }}
           prerelease: false
-          BUILD_NUMBER: ${{ steps.buildnumber.outputs.build_number }}
