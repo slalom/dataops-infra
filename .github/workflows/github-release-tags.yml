@@ -3,8 +3,7 @@ name: Auto-Tag Release
 on:
   push:
     branches:
-      - "**"
-      # - master
+      - master
 
 jobs:
   release_new_tag:
@@ -20,9 +19,6 @@ jobs:
       - name: Read VERSION file
         id: getversion
         run: echo "::set-output name=version::$(cat VERSION)"
-        # uses: ./.github/actions/cat-file
-        # with:
-        #   file: VERSION
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
