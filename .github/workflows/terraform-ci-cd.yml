@@ -49,7 +49,7 @@ jobs:
               --nocheck_input_descriptions \
               --nocheck_output_descriptions \
               --raise_error
-      - name: tflint
+      - name: Run TFLint
         uses: reviewdog/action-tflint@master
         with:
           github_token: ${{ secrets.github_token }}
