@@ -27,6 +27,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           working_directory: "." # Change working directory
           reporter: github-pr-review
+          flags: "--deep" # Add custom flags
       - name: "Terraform Linter Check (Formatting)"
         uses: hashicorp/terraform-github-actions@master
         with:
