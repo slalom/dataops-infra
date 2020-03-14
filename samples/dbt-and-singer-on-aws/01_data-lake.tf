@@ -15,7 +15,7 @@ module "data_lake_on_aws" {
   public_subnets       = module.env.public_subnets
   private_subnets      = module.env.private_subnets
   admin_cidr           = []
-  default_cidr         = ["0.0.0.0/0"]
+  app_cidr             = ["0.0.0.0/0"]
   lambda_python_source = "${path.module}/python/fn_lambda_logger"
   s3_triggers = {
     "fn_lambda_logger" = {

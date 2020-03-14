@@ -1,0 +1,5 @@
+# https://help.github.com/articles/dealing-with-line-endings/
+# All files should use Unix-style (LF) line endings:
+*       text=auto eol=lf
+# Exception for Windows Batch files:
+*.bat   text      eol=crlf

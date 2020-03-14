@@ -12,8 +12,8 @@ module "data_lake_on_aws" {
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  admin_cidr            = []
-  default_cidr          = ["0.0.0.0/0"]
+  admin_cidr = []
+  app_cidr   = ["0.0.0.0/0"]
   */
 }
 
