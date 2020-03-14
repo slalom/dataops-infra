@@ -52,7 +52,7 @@ jobs:
       - name: Run TFLint
         uses: reviewdog/action-tflint@master
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           working_directory: "." # Change working directory
           reporter: github-pr-review # Change reporter
           # flags: "--deep" # Add custom flags
