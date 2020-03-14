@@ -13,10 +13,10 @@ module "tableau_server_on_aws" {
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  ec2_instance_type     = "p3.8xlarge"
-  ec2_instance_type     = "m4.4xlarge"
-  admin_cidr            = []
-  default_cidr          = ["0.0.0.0/0"]
+  ec2_instance_type = "p3.8xlarge"
+  ec2_instance_type = "m4.4xlarge"
+  admin_cidr        = []
+  app_cidr          = ["0.0.0.0/0"]
   */
 }
 
