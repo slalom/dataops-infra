@@ -7,15 +7,18 @@ data "aws_availability_zones" "az_list" {}
 
 locals {
   tz_hour_offset = (
-    contains(["PST", "Pacific"], var.scheduled_timezone) ? -8 : 0
+    contains(["PST"], var.scheduled_timezone) ? -8 :
+    contains(["EST"], var.scheduled_timezone) ? -5 :
+    contains(["UTC", "GMT"], var.scheduled_timezone) ? 0 :
+    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", and "PST"
   )
   name_prefix = "${var.name_prefix}Tap-"
   container_image = coalesce(
-    var.container_image, "slalomggp/singer:${var.taps[0].id}-to-${var.target.id}"
+    var.container_image, "slalomggp/singer:${var.taps[0].id}-to-${local.target.id}"
   )
   sync_commands = [
     for tap in var.taps :
-    "s-tap sync ${tap.id} ${var.target.id}"
+    "s-tap sync ${tap.id} ${local.target.id}"
   ]
   container_command = (
     length(local.sync_commands) == 1 ? local.sync_commands[0] :
@@ -25,6 +28,34 @@ locals {
 EOF
     ))
   )
+  target = (
+    var.data_lake_type == "S3" ?
+    {
+      id = "s3-csv"
+      settings = {
+        # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
+        # Parse the S3 path into 'bucket' and 'key' values:
+        s3_bucket = split("/", split("//", var.data_lake_storage_path)[1])[0]
+        s3_key_prefix = join("/",
+          [
+            join("/", slice(
+              split("/", split("//", var.data_lake_storage_path)[1]),
+              1,
+              length(split("/", split("//", var.data_lake_storage_path)[1]))
+            )),
+            replace(var.data_lake_naming_scheme, "{file}", "")
+          ]
+        )
+      }
+      secrets = {
+        # AWS creds secrets will be parsed from local env variables, provided by ECS Task Role
+        # aws_access_key_id     = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_access_key_id"
+        # aws_secret_access_key = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_secret_access_key"
+      }
+    } :
+    var.target
+  )
+
 }
 
 module "ecs_cluster" {
@@ -49,15 +80,15 @@ module "ecs_tap_sync_task" {
   use_fargate         = true
   environment_vars = merge(
     {
-      "TAP_CONFIG_DIR" : "s3://${var.source_code_s3_bucket}/${var.source_code_s3_path}/tap-snapshot-${local.unique_hash}"
+      "TAP_CONFIG_DIR" : "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}"
     },
     {
       for k, v in var.taps[0].settings :
       "TAP_${upper(replace(var.taps[0].id, "-", "_"))}_${k}" => v
     },
     {
-      for k, v in var.target.settings :
-      "TARGET_${upper(replace(var.target.id, "-", "_"))}_${k}" => v
+      for k, v in local.target.settings :
+      "TARGET_${upper(replace(local.target.id, "-", "_"))}_${k}" => v
     }
   )
   environment_secrets = merge(
@@ -66,8 +97,8 @@ module "ecs_tap_sync_task" {
       "TAP_${upper(replace(var.taps[0].id, "-", "_"))}_${k}" => v
     },
     {
-      for k, v in var.target.secrets :
-      "TARGET_${upper(replace(var.target.id, "-", "_"))}_${k}" => v
+      for k, v in local.target.secrets :
+      "TARGET_${upper(replace(local.target.id, "-", "_"))}_${k}" => v
     }
   )
   schedules = [
