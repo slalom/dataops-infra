@@ -43,7 +43,7 @@ EOF
               1,
               length(split("/", split("//", var.data_lake_storage_path)[1]))
             )),
-            replace(var.data_lake_naming_scheme, "{file}", "")
+            replace(var.data_file_naming_scheme, "{file}", "")
           ]
         )
       }
@@ -80,7 +80,8 @@ module "ecs_tap_sync_task" {
   use_fargate         = true
   environment_vars = merge(
     {
-      "TAP_CONFIG_DIR" : "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}"
+      "TAP_CONFIG_DIR" : "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
+      "TAP_STATE_FILE" : "${var.data_lake_storage_path}/${var.state_file_naming_scheme}",
     },
     {
       for k, v in var.taps[0].settings :

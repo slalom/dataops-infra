@@ -48,7 +48,7 @@ module "singer_taps_on_aws" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  data_lake_naming_scheme = "{tap}/{table}/{version}/{file}"
+  data_file_naming_scheme = "{tap}/{table}/{version}/{file}"
 
 
   */

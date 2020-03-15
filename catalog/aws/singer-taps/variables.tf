@@ -49,9 +49,13 @@ EOF
   type        = string
   default     = null
 }
-variable "data_lake_naming_scheme" {
+variable "data_file_naming_scheme" {
   type    = string
-  default = "{tap}/{table}/{version}/{file}"
+  default = "{tap}/{table}/v{version}/{file}"
+}
+variable "state_file_naming_scheme" {
+  type    = string
+  default = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
 }
 variable "taps" {
   type = list(object({
