@@ -8,8 +8,6 @@ module "singer_taps_on_aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  container_image = "slalomggp/singer:pardot-to-s3-csv--pre"
-
   local_metadata_path     = "./sample-taps" # For most projects, this will be: "../../data/taps"
   data_lake_type          = "S3"
   data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
@@ -48,8 +46,9 @@ module "singer_taps_on_aws" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  data_file_naming_scheme = "{tap}/{table}/{version}/{file}"
-
+  container_image          = "slalomggp/singer:pardot-to-s3-csv--pre"
+  data_file_naming_scheme  = "{tap}/{table}/{version}/{file}"
+  state_file_naming_scheme = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
 
   */
 }
