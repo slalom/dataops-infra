@@ -1,16 +1,27 @@
 locals {
-  source_files = fileset(var.source_code_folder, "*")
+  source_files = fileset(var.local_metadata_path, "*")
   source_files_hash = join(",", [
     for filepath in local.source_files :
-    filebase64sha256("${var.source_code_folder}/${filepath}")
+    filebase64sha256("${var.local_metadata_path}/${filepath}")
   ])
   unique_hash = md5(local.source_files_hash)
 }
 
 resource "aws_s3_bucket_object" "s3_source_uploads" {
   for_each = local.source_files
-  bucket   = var.source_code_s3_bucket
-  key      = "${var.source_code_s3_path}/tap-snapshot-${local.unique_hash}/${each.value}"
-  source   = "${var.source_code_folder}/${each.value}"
-  # etag     = filebase64sha256("${var.source_code_folder}/${each.value}")
+  # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
+  # Parse the S3 path into 'bucket' and 'key' values:
+  bucket = split("/", split("//", var.data_lake_metadata_path)[1])[0]
+  key = join("/",
+    [
+      join("/", slice(
+        split("/", split("//", var.data_lake_metadata_path)[1]),
+        1,
+        length(split("/", split("//", var.data_lake_metadata_path)[1]))
+      )),
+      "tap-snapshot-${local.unique_hash}/${each.value}"
+    ]
+  )
+  source = "${var.local_metadata_path}/${each.value}"
+  # etag     = filebase64sha256("${var.local_metadata_path}/${each.value}")
 }
