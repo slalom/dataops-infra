@@ -52,6 +52,11 @@ variable "container_entrypoint" { default = null }
 variable "container_command" { default = null }
 variable "container_ram_gb" { default = "8" }
 variable "container_num_cores" { default = "4" }
+variable "permitted_s3_buckets" {
+  description = "A list of bucket names, to which the ECS task will be granted read/write access."
+  type        = list(string)
+  default     = null
+}
 resource "null_resource" "validate_is_fargate_config_valid" {
   count = (
     var.use_fargate == false ? 0 :
