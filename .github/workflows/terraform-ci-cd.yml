@@ -60,6 +60,7 @@ jobs:
         sample-id:
           - airflow-on-aws
           - dbt-and-singer-on-aws
+          - matillion-on-aws
           - rds-on-aws
           - redshift-dw
           - s3-lambda-trigger
