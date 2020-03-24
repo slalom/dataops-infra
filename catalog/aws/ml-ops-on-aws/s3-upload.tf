@@ -8,12 +8,12 @@ resource "aws_s3_bucket_object" "train_data" {
   )
 }
 
-resource "aws_s3_bucket_object" "validation_data" {
+resource "aws_s3_bucket_object" "test_data" {
   bucket = var.s3_bucket_name
-  key    = "${var.data_s3_path}/validation/validation.csv"
-  source = "${var.data_folder}/validation.csv"
+  key    = "${var.data_s3_path}/test/test.csv"
+  source = "${var.data_folder}/test.csv"
 
   etag = filemd5(
-    "${var.data_folder}/validation.csv",
+    "${var.data_folder}/test.csv",
   )
 }

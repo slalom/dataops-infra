@@ -46,55 +46,64 @@ variable "data_s3_path" {
 variable "job_name" {
   description = "SageMaker Hyperparameter Tuning job name."
   type        = string
-  default     = "xgboost-job"
+  default     = "attrition-job"
 }
 
 variable "endpoint_name" {
   description = "SageMaker inference endpoint to be created/updated (depending on whether or not the endpoint already exists)."
   type        = string
-  default     = "xgboost-endpoint"
+  default     = "attrition-endpoint"
 }
 
 variable "training_image" {
   description = "SageMaker model container image."
   type        = string
-  default     = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1"
+  default     = null
 }
 
 variable "tuning_objective" {
   description = "Hyperparameter tuning objective (minimize or maximize)."
   type        = string
-  default     = "Minimize"
+  default     = "Maximize"
 }
 
 variable "tuning_metric" {
   description = "Hyperparameter tuning metric e.g. error, auc, f1."
   type        = string
-  default     = "validation:error"
+  default     = "accuracy"
 }
 
 variable "create_endpoint_comparison_operator" {
   description = "Comparison operator for endpoint creation metric threshold."
   type        = string
-  default     = "NumericLessThan"
+  default     = "NumericGreaterThan"
 }
 
 variable "create_endpoint_metric_threshold" {
   description = "Threshold for creating/updating SageMaker endpoint."
   type        = number
-  default     = 0.2
+  default     = 0.7
 }
 
 variable "max_number_training_jobs" {
   description = "Maximum number of total training jobs for hyperparameter tuning."
   type        = number
-  default     = 2
+  default     = 3
 }
 
 variable "max_parallel_training_jobs" {
   description = "Maximimum number of training jobs running in parallel for hyperparameter tuning."
   type        = number
-  default     = 2
+  default     = 3
+}
+
+variable "static_hyperparameters" {
+  description = "Static hyperparameters."
+  type        = map
+
+  default = {
+    "kfold_splits" = "5"
+  }
 }
 
 variable "parameter_ranges" {
@@ -137,21 +146,4 @@ variable "parameter_ranges" {
       }
     ]
   }
-}
-
-variable "container_image" {
-  description = "Container image for Shap dataset creation."
-  type        = string
-  default     = "954496255132.dkr.ecr.us-east-1.amazonaws.com/shap-xgboost:latest"
-}
-variable "container_num_cores" {
-  description = "Number of cores for ECS task."
-  default     = 2
-  type        = number
-}
-
-variable "container_ram_gb" {
-  description = "GB RAM for ECS task."
-  default     = 4
-  type        = number
 }

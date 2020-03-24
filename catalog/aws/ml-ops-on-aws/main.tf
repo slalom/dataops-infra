@@ -42,6 +42,12 @@ module "step-functions" {
         },
         "TrainingJobDefinition": {
           "AlgorithmSpecification": {
+            "MetricDefinitions": [
+              {
+                "Name": "${var.tuning_metric}",
+                "Regex": "${var.tuning_metric}: ([0-9\\.]+)"
+              }
+            ],
             "TrainingImage": "${var.training_image}",
             "TrainingInputMode": "File"
           },
@@ -68,23 +74,9 @@ module "step-functions" {
               },
               "ChannelName": "train",
               "ContentType": "csv"
-            },
-            {
-              "DataSource": {
-                "S3DataSource": {
-                  "S3DataDistributionType": "FullyReplicated",
-                  "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${var.s3_bucket_name}/${var.data_s3_path}/validation/validation.csv"
-                }
-              },
-              "ChannelName": "validation",
-              "ContentType": "csv"
             }
           ],
-          "StaticHyperParameters": {
-            "precision_dtype": "float32",
-            "num_round": "100"
-          }
+          "StaticHyperParameters": ${jsonencode(var.static_hyperparameters)}
         }
       },
       "Type": "Task",

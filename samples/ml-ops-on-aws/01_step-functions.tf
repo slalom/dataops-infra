@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {} # To delete when ECR module created
+
 module "ml-ops-on-aws" {
   #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
   source        = "../../catalog/aws/ml-ops-on-aws"
@@ -16,28 +18,28 @@ module "ml-ops-on-aws" {
   */
 
   # State Machine input
-  job_name                            = "customerchurn"
-  endpoint_name                       = "customerchurn-endpoint"
-  training_image                      = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1"
-  tuning_objective                    = "Minimize"
-  tuning_metric                       = "validation:error"
-  create_endpoint_comparison_operator = "NumericLessThan"
-  create_endpoint_metric_threshold    = 0.2
-  max_number_training_jobs            = 2
-  max_parallel_training_jobs          = 2
+  job_name                            = "attrition"
+  endpoint_name                       = "attrition-endpoint"
+  training_image                      = "${data.aws_caller_identity.current.account_id}.dkr.ecr.us-east-1.amazonaws.com/byo-xgboost:latest"
+  tuning_objective                    = "Maximize"
+  tuning_metric                       = "accuracy"
+  create_endpoint_comparison_operator = "NumericGreaterThan"
+  create_endpoint_metric_threshold    = 0.7
+  max_number_training_jobs            = 3
+  max_parallel_training_jobs          = 3
 
   parameter_ranges = {
     "ContinuousParameterRanges" = [
       {
-        "Name"        = "eta",
-        "MinValue"    = "0.1",
-        "MaxValue"    = "0.5",
+        "Name"        = "gamma",
+        "MinValue"    = "0",
+        "MaxValue"    = "10",
         "ScalingType" = "Auto"
       },
       {
         "Name"        = "min_child_weight",
-        "MinValue"    = "5",
-        "MaxValue"    = "100",
+        "MinValue"    = "1",
+        "MaxValue"    = "20",
         "ScalingType" = "Auto"
       },
       {
@@ -47,16 +49,22 @@ module "ml-ops-on-aws" {
         "ScalingType" = "Auto"
       },
       {
-        "Name"        = "gamma",
+        "Name"        = "max_delta_step",
         "MinValue"    = "0",
-        "MaxValue"    = "5",
+        "MaxValue"    = "1",
+        "ScalingType" = "Auto"
+      },
+      {
+        "Name"        = "scale_pos_weight",
+        "MinValue"    = "1",
+        "MaxValue"    = "10",
         "ScalingType" = "Auto"
       }
     ],
     "IntegerParameterRanges" = [
       {
         "Name"        = "max_depth",
-        "MinValue"    = "0",
+        "MinValue"    = "1",
         "MaxValue"    = "10",
         "ScalingType" = "Auto"
       }
