@@ -26,7 +26,8 @@ variable "resource_tags" {
 ########################################
 
 variable "aws_region" {
-  default = null
+  description = "Optional. Overrides the AWS region, otherwise will use the AWS region provided from context."
+  default     = null
 }
 variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."

@@ -30,7 +30,8 @@ variable "admin_password" {
   default     = null
 }
 variable "database_name" {
-  default = "redshift_db"
+  description = "The name of the initial Redshift database to be created."
+  default     = "redshift_db"
 }
 variable "elastic_ip" {
   description = "Optional. An Elastic IP endpoint which will be used to for routing incoming traffic."

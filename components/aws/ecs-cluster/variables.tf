@@ -25,8 +25,10 @@ variable "resource_tags" {
 ########################################
 
 variable "ec2_instance_type" {
-  default = "m4.xlarge"
+  description = "Optional. Overrides default instance type if using always-on EC2 instances (i.e. `ec2_instance_count` > 0)."
+  default     = "m4.xlarge"
 }
 variable "ec2_instance_count" {
-  default = 0
+  description = "Optional. Number of 'always-on' EC2 instances. (Default is 0, meaning no always-on EC2 resources.)."
+  default     = 0
 }
