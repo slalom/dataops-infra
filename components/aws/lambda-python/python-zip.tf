@@ -69,7 +69,7 @@ data "archive_file" "lambda_zip" {
 }
 
 resource "aws_s3_bucket_object" "s3_lambda_zip" {
-  count  = (var.upload_to_s3 && (local.is_disabled == false)) ? 1 : 0
+  count = (var.upload_to_s3 && (local.is_disabled == false)) ? 1 : 0
   # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
   # Parse the S3 path into 'bucket' and 'key' values:
   bucket = split("/", split("//", var.upload_to_s3_path)[1])[0]
