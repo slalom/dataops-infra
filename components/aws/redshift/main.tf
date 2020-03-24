@@ -1,4 +1,9 @@
-# NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
+/*
+* This is the underlying technical component which supports the Redshift catalog module.
+*
+* NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
+*/
+
 
 resource "random_id" "random_pass" {
   byte_length = 8

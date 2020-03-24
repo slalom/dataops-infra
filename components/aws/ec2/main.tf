@@ -1,3 +1,10 @@
+/*
+* EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
+* credentials (passwords and/or SSH keypairs) needed to connect to the instances.
+*
+*
+*/
+
 data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
@@ -21,7 +28,7 @@ locals {
   my_ip                    = "${chomp(data.http.icanhazip.body)}"
   my_ip_cidr               = "${chomp(data.http.icanhazip.body)}/32"
   admin_cidr               = flatten([local.my_ip_cidr, var.admin_cidr])
-  default_cidr             = length(var.default_cidr) == 0 ? local.admin_cidr : var.default_cidr
+  app_cidr                 = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
   ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
   ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
@@ -86,7 +93,7 @@ resource "aws_security_group" "ec2_sg_app_ports" {
       description = ingress.key
       from_port   = tonumber(split(":", ingress.value)[0])
       to_port     = length(split(":", ingress.value)) > 1 ? tonumber(split(":", ingress.value)[1]) : tonumber(ingress.value)
-      cidr_blocks = local.default_cidr
+      cidr_blocks = local.app_cidr
     }
   }
 }
@@ -100,7 +107,7 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
     protocol    = "tcp"
     from_port   = "0"
     to_port     = "65535"
-    cidr_blocks = var.default_cidr
+    cidr_blocks = var.app_cidr
   }
 }
 

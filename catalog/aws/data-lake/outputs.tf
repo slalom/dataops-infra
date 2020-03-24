@@ -1,5 +1,6 @@
 output "summary" {
-  value = <<EOF
+  description = "Summary of resources created by this module."
+  value       = <<EOF
 
 
 Data Lake Summary:
@@ -9,11 +10,14 @@ Data Lake Summary:
 EOF
 }
 output "s3_data_bucket" {
-  value = local.data_bucket_name
+  description = "The S3 bucket used for data storage."
+  value       = local.data_bucket_name
 }
 output "s3_metadata_bucket" {
-  value = aws_s3_bucket.s3_metadata_bucket.id
+  description = "The S3 bucket used for metadata file storage."
+  value       = aws_s3_bucket.s3_metadata_bucket.id
 }
 output "s3_logging_bucket" {
-  value = aws_s3_bucket.s3_logging_bucket.id
+  description = "The S3 bucket used for log file storage."
+  value       = aws_s3_bucket.s3_logging_bucket.id
 }

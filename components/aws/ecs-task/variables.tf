@@ -2,8 +2,12 @@
 ### Standard variables for all AWS modules ###
 ##############################################
 
-variable "name_prefix" { type = string }
+variable "name_prefix" {
+  description = "Standard `name_prefix` module input."
+  type        = string
+}
 variable "environment" {
+  description = "Standard `environment` module input."
   type = object({
     vpc_id          = string
     aws_region      = string
@@ -12,50 +16,61 @@ variable "environment" {
   })
 }
 variable "resource_tags" {
-  type    = map(string)
-  default = {}
+  description = "Standard `resource_tags` module input."
+  type        = map(string)
 }
+
 ########################################
 ### Custom variables for this module ###
 ########################################
 
-variable "use_fargate" { type = bool }
-variable "schedules" {
-  type        = set(string)
-  description = "A lists of scheduled execution times."
-  default     = []
-}
-
-variable "ecs_cluster_name" { type = string }
-variable "ecs_launch_type" {
-  description = "'FARGATE' or 'Standard'"
-  default     = "FARGATE"
-}
-variable "app_ports" {
-  type    = list(string)
-  default = ["8080"]
+variable "always_on" {
+  description = "True to create an ECS Service with a single 'always-on' task instance."
+  type        = bool
+  default     = false
 }
 variable "admin_ports" {
-  type    = list(string)
-  default = ["8080"]
+  description = "A list of admin ports (to be governed by `admin_cidr`)."
+  type        = list(string)
+  default     = ["8080"]
 }
-variable "container_name" { default = "DefaultContainer" }
+variable "app_ports" {
+  description = "A list of app ports (will be governed by `app_cidr`)."
+  type        = list(string)
+  default     = ["8080"]
+}
+variable "container_command" {
+  description = "Optional. Overrides 'command' for the image."
+  default     = null
+}
+variable "container_entrypoint" {
+  description = "Optional. Overrides the 'entrypoint' for the image."
+  default     = null
+}
 variable "container_image" {
   description = "e.g. [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
+  type        = string
 }
-variable "container_entrypoint" { default = null }
-variable "container_command" { default = null }
-variable "container_ram_gb" { default = "8" }
-variable "container_num_cores" { default = "4" }
-resource "null_resource" "validate_is_fargate_config_valid" {
-  count = (
-    var.use_fargate == false ? 0 :
-    # Check for invalid combinations of RAM and CPU for Fargate: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
-    var.container_ram_gb >= 2 * var.container_num_cores &&
-    var.container_ram_gb <= 8 * var.container_num_cores &&
-    var.container_ram_gb <= 30 ? 0 # OK if this check passes
-    : "error"                      # Force an error if check fails
-  )
+variable "container_name" {
+  description = "Optional. Overrides the name of the default container."
+  default     = "DefaultContainer"
+}
+variable "container_num_cores" {
+  description = "The number of CPU cores to dedicate to the container."
+  default     = "4"
+}
+variable "container_ram_gb" {
+  description = "The amount of RAM to dedicate to the container."
+  default     = "8"
+}
+variable "ecs_cluster_name" {
+  description = "The name of the ECS Cluster to use."
+  type        = string
+}
+variable "ecs_launch_type" {
+  # TODO: Replace with a condition on `use_fargate`
+  description = "'FARGATE' or 'Standard'"
+  default     = "FARGATE"
 }
 variable "environment_secrets" {
   type        = map(string)
@@ -67,24 +82,49 @@ Mapping of environment variable names to secret manager ARNs or local file secre
  - path/to/file.yml:MY_KEY_NAME_2
 EOF
 }
-variable "secrets_manager_kms_key_id" {
-  type    = string
-  default = null
-}
 variable "environment_vars" {
+  description = "Mapping of environment variable names to their values."
   type        = map(string)
   default     = {}
-  description = "Mapping of environment variable names to their values."
 }
 variable "load_balancer_arn" {
-  type    = string
-  default = null
+  description = "Required only if `use_load_balancer` = True. The load balancer to use for inbound traffic."
+  type        = string
+  default     = null
 }
-variable "always_on" {
-  type    = bool
-  default = false
+
+variable "permitted_s3_buckets" {
+  description = "A list of bucket names, to which the ECS task will be granted read/write access."
+  type        = list(string)
+  default     = null
+}
+resource "null_resource" "validate_is_fargate_config_valid" {
+  count = (
+    var.use_fargate == false ? 0 :
+    # Check for invalid combinations of RAM and CPU for Fargate: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
+    var.container_ram_gb >= 2 * var.container_num_cores &&
+    var.container_ram_gb <= 8 * var.container_num_cores &&
+    var.container_ram_gb <= 30 ? 0 # OK if this check passes
+    : "error"                      # Force an error if check fails
+  )
+}
+variable "schedules" {
+  description = "A lists of scheduled execution times."
+  type        = set(string)
+  default     = []
+}
+variable "secrets_manager_kms_key_id" {
+  description = "Optional. Overrides the KMS key used when storing secrets in AWS Secrets Manager."
+  type        = string
+  default     = null
 }
 variable "use_load_balancer" {
-  type    = bool
-  default = false
+  description = "True to receive inbound traffic from the load balancer specified in `load_balancer_arn`."
+  type        = bool
+  default     = false
+}
+variable "use_fargate" {
+  description = "True to use Fargate for task execution (default), False to use EC2 (classic)."
+  type        = bool
+  default     = true
 }

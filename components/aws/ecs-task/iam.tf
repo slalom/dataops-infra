@@ -94,6 +94,7 @@ resource "aws_iam_role_policy_attachment" "ecs_role_policy-handoff" {
 
 
 resource "aws_iam_policy" "ecs_policy_handoff" {
+  name   = "${var.name_prefix}ecs_task-policy_handoff"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -151,4 +152,39 @@ EOF
 resource "aws_iam_role_policy_attachment" "ecs_role_policy-S3" {
   role       = aws_iam_role.ecs_task_role.name
   policy_arn = data.aws_iam_policy.AmazonS3FullAccess.arn
+}
+
+
+resource "aws_iam_policy" "permitted_s3_buckets_policy" {
+  count       = var.permitted_s3_buckets == null ? 0 : length(var.permitted_s3_buckets) > 0 ? 1 : 0
+  name        = "${var.name_prefix}ecs_task-permitted_s3_bucket_access"
+  path        = "/"
+  description = "IAM policy for accessing S3 from a lambda"
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::${join("\", \"arn:aws:s3:::", var.permitted_s3_buckets)}"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": ["arn:aws:s3:::${join("/*\", \"arn:aws:s3:::", var.permitted_s3_buckets)}/*"]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "permitted_s3_buckets_policy_attachment" {
+  count      = var.permitted_s3_buckets == null ? 0 : length(var.permitted_s3_buckets) > 0 ? 1 : 0
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.permitted_s3_buckets_policy[0].arn
 }
