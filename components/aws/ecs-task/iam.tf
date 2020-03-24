@@ -94,6 +94,7 @@ resource "aws_iam_role_policy_attachment" "ecs_role_policy-handoff" {
 
 
 resource "aws_iam_policy" "ecs_policy_handoff" {
+  name   = "${var.name_prefix}ecs_task-policy_handoff"
   policy = <<EOF
 {
   "Version": "2012-10-17",
