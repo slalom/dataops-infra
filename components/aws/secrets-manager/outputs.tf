@@ -1,4 +1,5 @@
 output "summary" {
+  description = "Summary of resources created by this module."
   value = <<EOF
 
 
@@ -15,5 +16,6 @@ Secrets Summary:
 EOF
 }
 output "secrets_ids" {
-  value = local.merged_secrets_map
+  description = "A map of secrets names to each secret's unique ID within AWS Secrets Manager."
+  value       = local.merged_secrets_map
 }

@@ -39,15 +39,15 @@ jobs:
               --check_module_headers \
               --required_input_vars=[name_prefix,resource_tags,environment] \
               --required_output_vars=[summary] \
-              --nocheck_input_descriptions \
-              --nocheck_output_descriptions \
+              --check_input_descriptions \
+              --check_output_descriptions \
               --raise_error
           s-infra check_tf_metadata ./components \
               --check_module_headers \
               --required_input_vars=[name_prefix,resource_tags,environment] \
               --required_output_vars=[] \
-              --nocheck_input_descriptions \
-              --nocheck_output_descriptions \
+              --check_input_descriptions \
+              --check_output_descriptions \
               --raise_error
 
   tf_test:
