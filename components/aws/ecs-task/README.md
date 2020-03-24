@@ -16,40 +16,53 @@ Use in combination with the `ECS-Cluster` component.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| container\_command | n/a | `any` | n/a | yes |
-| container\_entrypoint | n/a | `any` | n/a | yes |
-| container\_image | e.g. [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name] | `any` | n/a | yes |
-| ecs\_cluster\_name | n/a | `string` | n/a | yes |
+| container\_command | Optional. Overrides 'command' for the image. | `any` | n/a | yes |
+| container\_entrypoint | Optional. Overrides the 'entrypoint' for the image. | `any` | n/a | yes |
+| container\_image | e.g. [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name] | `string` | n/a | yes |
+| ecs\_cluster\_name | The name of the ECS Cluster to use. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| load\_balancer\_arn | n/a | `string` | n/a | yes |
+| load\_balancer\_arn | Required only if `use_load_balancer` = True. The load balancer to use for inbound traffic. | `string` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| permitted\_s3\_buckets | A list of bucket names, to which the ECS task will be granted read/write access. | `list(string)` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| secrets\_manager\_kms\_key\_id | n/a | `string` | n/a | yes |
-| use\_fargate | n/a | `bool` | n/a | yes |
-| admin\_ports | n/a | `list(string)` | <pre>[<br>  "8080"<br>]</pre> | no |
-| always\_on | n/a | `bool` | `false` | no |
-| app\_ports | n/a | `list(string)` | <pre>[<br>  "8080"<br>]</pre> | no |
-| container\_name | n/a | `string` | `"DefaultContainer"` | no |
-| container\_num\_cores | n/a | `string` | `"4"` | no |
-| container\_ram\_gb | n/a | `string` | `"8"` | no |
+| secrets\_manager\_kms\_key\_id | Optional. Overrides the KMS key used when storing secrets in AWS Secrets Manager. | `string` | n/a | yes |
+| admin\_ports | A list of admin ports (to be governed by `admin_cidr`). | `list(string)` | <pre>[<br>  "8080"<br>]</pre> | no |
+| always\_on | True to create an ECS Service with a single 'always-on' task instance. | `bool` | `false` | no |
+| app\_ports | A list of app ports (will be governed by `app_cidr`). | `list(string)` | <pre>[<br>  "8080"<br>]</pre> | no |
+| container\_name | Optional. Overrides the name of the default container. | `string` | `"DefaultContainer"` | no |
+| container\_num\_cores | The number of CPU cores to dedicate to the container. | `string` | `"4"` | no |
+| container\_ram\_gb | The amount of RAM to dedicate to the container. | `string` | `"8"` | no |
 | ecs\_launch\_type | 'FARGATE' or 'Standard' | `string` | `"FARGATE"` | no |
 | environment\_secrets | Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:  - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/AWS\_SECRET\_ACCESS\_KEY  - path/to/file.json:MY\_KEY\_NAME\_1  - path/to/file.yml:MY\_KEY\_NAME\_2 | `map(string)` | `{}` | no |
 | environment\_vars | Mapping of environment variable names to their values. | `map(string)` | `{}` | no |
 | schedules | A lists of scheduled execution times. | `set(string)` | `[]` | no |
-| use\_load\_balancer | n/a | `bool` | `false` | no |
+| use\_fargate | True to use Fargate for task execution (default), False to use EC2 (classic). | `bool` | `true` | no |
+| use\_load\_balancer | True to receive inbound traffic from the load balancer specified in `load_balancer_arn`. | `bool` | `false` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| ecs\_checklogs\_cli | n/a |
-| ecs\_container\_name | n/a |
-| ecs\_logging\_url | n/a |
-| ecs\_runtask\_cli | n/a |
-| ecs\_security\_group | n/a |
-| ecs\_task\_name | n/a |
-| load\_balancer\_arn | n/a |
-| load\_balancer\_dns | n/a |
+| ecs\_checklogs\_cli | Command-ling string used to print Cloudwatch logs locally. |
+| ecs\_container\_name | The name of the task's primary container. |
+| ecs\_logging\_url | Link to Cloudwatch logs for this task. |
+| ecs\_runtask\_cli | Command-line string used to trigger on-demand execution of the Task. |
+| ecs\_security\_group | The name of the EC2 security group used by ECS. |
+| ecs\_task\_name | The name of the ECS task. |
+| load\_balancer\_arn | The unique ID (ARN) of the load balancer (if applicable). |
+| load\_balancer\_dns | The DNS of the load balancer (if applicable). |
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [alb.tf](alb.tf)
+* [iam.tf](iam.tf)
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
 
 ---------------------
 

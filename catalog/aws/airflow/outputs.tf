@@ -1,8 +1,18 @@
-output "logging_url" { value = module.airflow_ecs_task.ecs_logging_url }
-output "server_launch_cli" { value = module.airflow_ecs_task.ecs_runtask_cli }
+output "airflow_url" {
+  description = "Link to the airflow web UI."
+  value       = local.airflow_url
+}
+output "logging_url" {
+  description = "Link to Airflow logs in Cloudwatch."
+  value       = module.airflow_ecs_task.ecs_logging_url
+}
+output "server_launch_cli" {
+  description = "Command to launch the Airflow web server via ECS."
+  value       = module.airflow_ecs_task.ecs_runtask_cli
+}
 output "summary" {
-  # value = "test"
-  value = <<EOF
+  description = "Summary of resources created by this module."
+  value       = <<EOF
 
 
 Airflow Summary:
@@ -11,4 +21,3 @@ Airflow Summary:
  - Launch command: ${coalesce(module.airflow_ecs_task.ecs_runtask_cli, "n/a")}
 EOF
 }
-output "airflow_url" { value = local.airflow_url }

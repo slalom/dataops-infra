@@ -24,10 +24,20 @@ trigger automatically when new content is added.
 
 | Name | Description |
 |------|-------------|
-| s3\_data\_bucket | n/a |
-| s3\_logging\_bucket | n/a |
-| s3\_metadata\_bucket | n/a |
-| summary | n/a |
+| s3\_data\_bucket | The S3 bucket used for data storage. |
+| s3\_logging\_bucket | The S3 bucket used for log file storage. |
+| s3\_metadata\_bucket | The S3 bucket used for metadata file storage. |
+| summary | Summary of resources created by this module. |
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
 
 ---------------------
 

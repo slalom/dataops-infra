@@ -24,5 +24,11 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "repository_name" {}
-variable "image_name" {}
+variable "repository_name" {
+  description = "Required. A name for the ECR respository. (Will be concatenated with `image_name`.)"
+  type        = string
+}
+variable "image_name" {
+  description = "Required. The default name for the docker image. (Will be concatenated with `repository_name`.)"
+  type        = string
+}

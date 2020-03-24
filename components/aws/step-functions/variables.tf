@@ -25,13 +25,17 @@ variable "resource_tags" {
 ########################################
 
 variable "state_machine_name" {
-  type = string
+  description = "The name of the state machine to be created."
+  type        = string
 }
 
 variable "state_machine_definition" {
-  type = string
+  description = "The JSON definition of the state machine to be created."
+  type        = string
 }
 
 variable "account_id" {
-  type = string
+  # TODO: Deprecate if possible or detect dynamically.
+  description = "The account ID to use on resource ARNs and IDs."
+  type        = string
 }
