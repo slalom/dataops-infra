@@ -73,16 +73,22 @@ variable "tuning_metric" {
   default     = "accuracy"
 }
 
-variable "create_endpoint_comparison_operator" {
+variable "inference_comparison_operator" {
   description = "Comparison operator for endpoint creation metric threshold."
   type        = string
   default     = "NumericGreaterThan"
 }
 
-variable "create_endpoint_metric_threshold" {
+variable "inference_metric_threshold" {
   description = "Threshold for creating/updating SageMaker endpoint."
   type        = number
   default     = 0.7
+}
+
+variable "endpoint_or_batch_transform" {
+  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data"
+  type        = string
+  default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
 }
 
 variable "max_number_training_jobs" {

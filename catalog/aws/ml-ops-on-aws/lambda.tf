@@ -40,10 +40,21 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    RenameBatchOutput = {
+      description = "Renames batch transform output to .csv extension for Athena connection."
+      handler     = "rename_batch_output.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
   }
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_sagemaker_policy_attachment" {
   role       = module.lambda_functions.lambda_iam_role
   policy_arn = "arn:aws:iam::aws:policy/AmazonSageMakerReadOnly"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
+  role       = module.lambda_functions.lambda_iam_role
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }

@@ -18,15 +18,16 @@ module "ml-ops-on-aws" {
   */
 
   # State Machine input
-  job_name                            = "attrition"
-  endpoint_name                       = "attrition-endpoint"
-  training_image                      = "${data.aws_caller_identity.current.account_id}.dkr.ecr.us-east-1.amazonaws.com/byo-xgboost:latest"
-  tuning_objective                    = "Maximize"
-  tuning_metric                       = "accuracy"
-  create_endpoint_comparison_operator = "NumericGreaterThan"
-  create_endpoint_metric_threshold    = 0.7
-  max_number_training_jobs            = 3
-  max_parallel_training_jobs          = 3
+  job_name                      = "attrition"
+  endpoint_name                 = "attrition-endpoint"
+  training_image                = "${data.aws_caller_identity.current.account_id}.dkr.ecr.us-east-1.amazonaws.com/byo-xgboost:latest"
+  tuning_objective              = "Maximize"
+  tuning_metric                 = "accuracy"
+  inference_comparison_operator = "NumericGreaterThan"
+  inference_metric_threshold    = 0.7
+  endpoint_or_batch_transform   = "Batch Transform" # Batch Transform or Create Model Endpoint Config
+  max_number_training_jobs      = 3
+  max_parallel_training_jobs    = 3
 
   parameter_ranges = {
     "ContinuousParameterRanges" = [
