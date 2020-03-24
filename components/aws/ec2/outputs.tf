@@ -32,7 +32,7 @@ output "public_ips" {
   }
 }
 output "private_ip" {
-  description = ""
+  description = "The private IP address (if `num_instances` == 1)"
   value       = length(aws_instance.ec2_instances) == 0 ? "n/a" : aws_instance.ec2_instances[0].private_ip
 }
 output "private_ips" {
