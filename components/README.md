@@ -176,7 +176,7 @@ _(Coming soon)_
 
 -------------------
 
-_**NOTE:** This documentation was [auto-generated](build.py) using
+_**NOTE:** This documentation was [auto-generated](../docs/build.py) using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._
 
