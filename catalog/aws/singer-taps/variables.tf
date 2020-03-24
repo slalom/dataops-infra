@@ -50,14 +50,29 @@ EOF
   default     = null
 }
 variable "data_file_naming_scheme" {
-  type    = string
-  default = "{tap}/{table}/v{version}/{file}"
+  description = <<EOF
+The naming pattern to use when landing new files in the data lake. Allowed variables are:
+`{tap}`, `{table}`, `{version}`, and `{file}`"
+EOF
+  type        = string
+  default     = "{tap}/{table}/v{version}/{file}"
 }
 variable "state_file_naming_scheme" {
-  type    = string
-  default = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
+  description = <<EOF
+The naming pattern to use when writing or updating state files. State files keep track of
+data recency and are necessary for incremental loading. Allowed variables are:
+`{tap}`, `{table}`, `{version}`, and `{file}`"
+EOF
+  type        = string
+  default     = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
 }
 variable "taps" {
+  description = <<EOF
+A list of objects with the keys `id` (the name of the tap without the 'tap-' prefix),
+`settings` (a map of tap settings to their desired values), and `secrets` (same as
+`settings` but mapping setting names to the location of the secret and not the secret
+values themselves)
+EOF
   type = list(object({
     id       = string
     settings = map(string)
@@ -88,8 +103,23 @@ Currently the following codes are supported: PST, EST, UTC
 EOF
   default     = "PT"
 }
-variable "container_image" { default = null }
-variable "container_entrypoint" { default = null }
-variable "container_command" { default = null }
-variable "container_num_cores" { default = 0.5 }
-variable "container_ram_gb" { default = 1 }
+variable "container_image" {
+  description = "Optional. Override the docker image with a custom-managed image."
+  default     = null
+}
+variable "container_entrypoint" {
+  description = "Optional. Override the docker image's entrypoint."
+  default     = null
+}
+variable "container_command" {
+  description = "Optional. Override the docker image's command."
+  default     = null
+}
+variable "container_num_cores" {
+  description = "Optional. Specify the number of cores to use in the container."
+  default     = 0.5
+}
+variable "container_ram_gb" {
+  description = "Optional. Specify the amount of RAM to be available to the container."
+  default     = 1
+}

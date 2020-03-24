@@ -24,5 +24,9 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "ec2_instance_type" { default = "m4.xlarge" }
-variable "ec2_instance_count" { default = 0 }
+variable "ec2_instance_type" {
+  default = "m4.xlarge"
+}
+variable "ec2_instance_count" {
+  default = 0
+}

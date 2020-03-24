@@ -24,9 +24,15 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "runtime" { default = "python3.8" }
-variable "pip_path" { default = "pip3" }
-variable "timeout_seconds" { default = 60 * 5 }
+variable "runtime" {
+  default = "python3.8"
+}
+variable "pip_path" {
+  default = "pip3"
+}
+variable "timeout_seconds" {
+  default = 60 * 5
+}
 variable "lambda_source_folder" {
   description = "Local path to a folder containing the lambda source code"
   type        = string

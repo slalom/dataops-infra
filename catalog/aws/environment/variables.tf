@@ -25,16 +25,20 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "aws_region" { default = null }
+variable "aws_region" {
+  description = "Optional, used for multi-region deployments. Overrides the contextual AWS region with the region code provided."
+  default     = null
+}
 variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
   default     = false
 }
 variable "secrets_folder" {
-  type = string
+  description = "Path to the secrets folder (used when initializing the AWS provider.)"
+  type        = string
 }
 variable "aws_profile" {
-  description = "Optional, unless set at the main AWS provider level in which case it is required."
+  description = "The name of the AWS profile to use. Optional unless set at the main AWS provider level, in which case it is required."
   type        = string
   default     = null
 }

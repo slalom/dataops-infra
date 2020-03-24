@@ -25,7 +25,9 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "aws_region" { default = null }
+variable "aws_region" {
+  default = null
+}
 variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
   default     = false

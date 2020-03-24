@@ -24,14 +24,18 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "use_fargate" { type = bool }
+variable "use_fargate" {
+  type = bool
+}
 variable "schedules" {
   type        = set(string)
   description = "A lists of scheduled execution times."
   default     = []
 }
 
-variable "ecs_cluster_name" { type = string }
+variable "ecs_cluster_name" {
+  type = string
+}
 variable "ecs_launch_type" {
   description = "'FARGATE' or 'Standard'"
   default     = "FARGATE"
@@ -44,14 +48,24 @@ variable "admin_ports" {
   type    = list(string)
   default = ["8080"]
 }
-variable "container_name" { default = "DefaultContainer" }
+variable "container_name" {
+  default = "DefaultContainer"
+}
 variable "container_image" {
   description = "e.g. [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
 }
-variable "container_entrypoint" { default = null }
-variable "container_command" { default = null }
-variable "container_ram_gb" { default = "8" }
-variable "container_num_cores" { default = "4" }
+variable "container_entrypoint" {
+  default = null
+}
+variable "container_command" {
+  default = null
+}
+variable "container_ram_gb" {
+  default = "8"
+}
+variable "container_num_cores" {
+  default = "4"
+}
 variable "permitted_s3_buckets" {
   description = "A list of bucket names, to which the ECS task will be granted read/write access."
   type        = list(string)

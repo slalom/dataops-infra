@@ -24,5 +24,9 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "repository_name" {}
-variable "image_name" {}
+variable "repository_name" {
+
+}
+variable "image_name" {
+
+}
