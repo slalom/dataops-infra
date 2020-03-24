@@ -11,7 +11,7 @@
    1. [Common Input and Output Variables](#common-input-and-output-variables)
    2. [Show Usage in Samples](#show-usage-in-samples)
    3. [Adhere to Formatting Standards](#adhere-to-formatting-standards)
-   4. [Be Self-documenting](#be-self-documenting)
+   4. [Create Self-documenting Modules](#create-self-documenting-modules)
    5. [Follow Purpose-Driven Design Patterns](#follow-purpose-driven-design-patterns)
 
 ## Feature Requests
