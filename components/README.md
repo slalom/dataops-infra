@@ -1,7 +1,7 @@
 
 # DataOps Infrastructure Components
 
-These components define the technical building blocks which enable advanced, ready-to-deploy data solutions in the [Infrastructure Catalog](catalog_index.md).
+These components define the technical building blocks which enable advanced, ready-to-deploy data solutions in the [Infrastructure Catalog](../catalog/README.md).
 
 ## Contents
 

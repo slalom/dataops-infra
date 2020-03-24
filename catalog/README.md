@@ -1,7 +1,7 @@
 
 # DataOps Infrastructure Catalog
 
-The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](components_index.md).
+The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](../components/README.md).
 
 ## Contents
 

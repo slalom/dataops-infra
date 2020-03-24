@@ -44,6 +44,16 @@ The module supports both Linux and Windows versions of the Tableau Server Softwa
 
 ---------------------
 
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
+
+---------------------
+
 _**NOTE:** This documentation was auto-generated using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._

@@ -54,7 +54,7 @@ def build_catalog_index():
             "The Infrastructure Catalog contains ready-to-deploy terraform modules for "
             "a variety of production data project use cases and POCs. For information "
             "about the technical building blocks used in these modules, please see the "
-            "catalog [components index](components_index.md)."
+            "catalog [components index](../components/README.md)."
         ),
     )
 
@@ -67,7 +67,7 @@ def build_component_index():
         overview_desc=(
             "These components define the technical building blocks which enable "
             "advanced, ready-to-deploy data solutions in the "
-            "[Infrastructure Catalog](catalog_index.md)."
+            "[Infrastructure Catalog](../catalog/README.md)."
         ),
     )
 
