@@ -34,6 +34,16 @@ Redshift is an AWS database platform which applies MPP (Massively-Parallel-Proce
 
 ---------------------
 
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
+
+---------------------
+
 _**NOTE:** This documentation was auto-generated using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._

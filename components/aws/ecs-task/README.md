@@ -23,6 +23,7 @@ Use in combination with the `ECS-Cluster` component.
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | load\_balancer\_arn | n/a | `string` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
+| permitted\_s3\_buckets | A list of bucket names, to which the ECS task will be granted read/write access. | `list(string)` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | secrets\_manager\_kms\_key\_id | n/a | `string` | n/a | yes |
 | use\_fargate | n/a | `bool` | n/a | yes |
@@ -50,6 +51,18 @@ Use in combination with the `ECS-Cluster` component.
 | ecs\_task\_name | n/a |
 | load\_balancer\_arn | n/a |
 | load\_balancer\_dns | n/a |
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [alb.tf](alb.tf)
+* [iam.tf](iam.tf)
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
 
 ---------------------
 
