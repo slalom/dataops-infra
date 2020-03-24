@@ -14,18 +14,18 @@ for another step.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
-| account\_id | n/a | `string` | n/a | yes |
+| account\_id | The account ID to use on resource ARNs and IDs. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| state\_machine\_definition | n/a | `string` | n/a | yes |
-| state\_machine\_name | n/a | `string` | n/a | yes |
+| state\_machine\_definition | The JSON definition of the state machine to be created. | `string` | n/a | yes |
+| state\_machine\_name | The name of the state machine to be created. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| summary | n/a |
+| summary | Summary of resources created by this module. |
 
 ---------------------
 

@@ -19,16 +19,16 @@ Use in combination with the `ECS-Task` component.
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| ec2\_instance\_count | n/a | `number` | `0` | no |
-| ec2\_instance\_type | n/a | `string` | `"m4.xlarge"` | no |
+| ec2\_instance\_count | Optional. Number of 'always-on' EC2 instances. (Default is 0, meaning no always-on EC2 resources.). | `number` | `0` | no |
+| ec2\_instance\_type | Optional. Overrides default instance type if using always-on EC2 instances (i.e. `ec2_instance_count` > 0). | `string` | `"m4.xlarge"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| ecs\_cluster\_arn | n/a |
-| ecs\_cluster\_name | n/a |
-| ecs\_instance\_role | n/a |
+| ecs\_cluster\_arn | The unique ID (ARN) of the ECS cluster. |
+| ecs\_cluster\_name | The name of the ECS cluster. |
+| ecs\_instance\_role | The name of the IAM instance role used by the ECS cluster. (Can be used to grant additional permissions.) |
 
 ---------------------
 

@@ -30,8 +30,8 @@ on to other resources which required access to those secrets.
 
 | Name | Description |
 |------|-------------|
-| secrets\_ids | n/a |
-| summary | n/a |
+| secrets\_ids | A map of secrets names to each secret's unique ID within AWS Secrets Manager. |
+| summary | Summary of resources created by this module. |
 
 ## Usage Example
 

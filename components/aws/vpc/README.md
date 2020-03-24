@@ -22,7 +22,7 @@ Included automatically when creating this module:
 |------|-------------|------|---------|:-----:|
 | aws\_credentials\_file | Optional, unless set at the main AWS provider level in which case it is required. | `string` | n/a | yes |
 | aws\_profile | Optional, unless set at the main AWS provider level in which case it is required. | `string` | n/a | yes |
-| aws\_region | n/a | `any` | n/a | yes |
+| aws\_region | Optional. Overrides the AWS region, otherwise will use the AWS region provided from context. | `any` | n/a | yes |
 | environment | Standard `environment` module input. (Ignored for the `vpc` module.) | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
@@ -32,9 +32,9 @@ Included automatically when creating this module:
 
 | Name | Description |
 |------|-------------|
-| private\_subnets | n/a |
-| public\_subnets | n/a |
-| vpc\_id | n/a |
+| private\_subnets | The list of private subnets. |
+| public\_subnets | The list of public subnets. |
+| vpc\_id | The unique ID of the VPC. |
 
 ---------------------
 
