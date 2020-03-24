@@ -48,7 +48,7 @@ def build_catalog_index():
     build_index(
         "Catalog",
         tf_dir="../catalog",
-        output_file="catalog_index.md",
+        output_file="../catalog/README.md",
         overview_desc=(
             "The Infrastructure Catalog contains ready-to-deploy terraform modules for "
             "a variety of production data project use cases and POCs. For information "
@@ -62,7 +62,7 @@ def build_component_index():
     build_index(
         "Components",
         tf_dir="../components",
-        output_file="components_index.md",
+        output_file="../components/README.md",
         overview_desc=(
             "These components define the technical building blocks which enable "
             "advanced, ready-to-deploy data solutions in the "
@@ -90,13 +90,13 @@ def _proper(str, title_case=True):
     return " ".join(new_words)
 
 
-def build_index(type: str, tf_dir: str, output_file: str, overview_desc: str):
+def build_index(index_type: str, tf_dir: str, output_file: str, overview_desc: str):
     """
-    Update the Documentation index.
+    Update the documentation index.
 
     Parameters:
     ----------
-    type (str): Either 'Components' or 'Catalog'.
+    index_type (str): Either 'Components' or 'Catalog'.
     tf_dir (str): The directory to scan for modules.
     output_file (str): The location of the documentation file to create.
     overview_dsc (str): The overview that will appear at the top of the index.
