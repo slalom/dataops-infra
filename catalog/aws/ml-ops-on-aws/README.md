@@ -6,9 +6,11 @@
 ## Overview
 
 
-This module automates MLOps tasks associated with building and maintaining Machine Learning models.
-The module leverages Step Functions, Lambda functions, and ECS Tasks as needed to accomplish ML
-lifecycle tasks and processing.
+This module automates MLOps tasks associated with training Machine Learning models.
+
+The module leverages Step Functions and Lambda functions as needed. The state machine
+executes hyperparameter tuning, training, and deployments as needed. Deployment options
+supported are Sagemaker endpoints and/or batch inference.
 
 ## Inputs
 
@@ -18,28 +20,39 @@ lifecycle tasks and processing.
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
 | s3\_bucket\_name | Extract S3 bucket name. | `string` | n/a | yes |
-| container\_image | Container image for Shap dataset creation. | `string` | `"954496255132.dkr.ecr.us-east-1.amazonaws.com/shap-xgboost:latest"` | no |
-| container\_num\_cores | Number of cores for ECS task. | `number` | `2` | no |
-| container\_ram\_gb | GB RAM for ECS task. | `number` | `4` | no |
-| create\_endpoint\_comparison\_operator | Comparison operator for endpoint creation metric threshold. | `string` | `"NumericLessThan"` | no |
-| create\_endpoint\_metric\_threshold | Threshold for creating/updating SageMaker endpoint. | `number` | `0.2` | no |
-| data\_folder | Local folder for training and validation data extracts. | `string` | `"source/data"` | no |
-| data\_s3\_path | S3 path for training and validation data extracts. | `string` | `"data"` | no |
-| endpoint\_name | SageMaker inference endpoint to be created/updated (depending on whether or not the endpoint already exists). | `string` | `"xgboost-endpoint"` | no |
-| job\_name | SageMaker Hyperparameter Tuning job name. | `string` | `"xgboost-job"` | no |
-| max\_number\_training\_jobs | Maximum number of total training jobs for hyperparameter tuning. | `number` | `2` | no |
-| max\_parallel\_training\_jobs | Maximimum number of training jobs running in parallel for hyperparameter tuning. | `number` | `2` | no |
-| parameter\_ranges | Tuning ranges for hyperparameters. | `map` | <pre>{<br>  "ContinuousParameterRanges": [<br>    {<br>      "MaxValue": "0.5",<br>      "MinValue": "0.1",<br>      "Name": "eta",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "100",<br>      "MinValue": "5",<br>      "Name": "min_child_weight",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "0.5",<br>      "MinValue": "0.1",<br>      "Name": "subsample",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "5",<br>      "MinValue": "0",<br>      "Name": "gamma",<br>      "ScalingType": "Auto"<br>    }<br>  ],<br>  "IntegerParameterRanges": [<br>    {<br>      "MaxValue": "10",<br>      "MinValue": "0",<br>      "Name": "max_depth",<br>      "ScalingType": "Auto"<br>    }<br>  ]<br>}</pre> | no |
-| training\_image | SageMaker model container image. | `string` | `"811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:1"` | no |
-| tuning\_metric | Hyperparameter tuning metric e.g. error, auc, f1. | `string` | `"validation:error"` | no |
-| tuning\_objective | Hyperparameter tuning objective (minimize or maximize). | `string` | `"Minimize"` | no |
+| training\_image | SageMaker model container image URI from ECR repo. | `string` | n/a | yes |
+| data\_folder | Local folder for training data extract. | `string` | `"source/data"` | no |
+| data\_s3\_path | S3 path for training data extract. | `string` | `"data"` | no |
+| endpoint\_name | SageMaker inference endpoint to be created/updated. Endpoint will be created if<br>it does not already exist. | `string` | `"training-endpoint"` | no |
+| endpoint\_or\_batch\_transform | Choose whether to create/update an inference API endpoint or do batch inference on test data. | `string` | `"Batch Transform"` | no |
+| inference\_comparison\_operator | Comparison operator for deploying the trained SageMaker model.<br>Used in combination with `inference_metric_threshold`.<br>Examples: 'NumericGreaterThan', 'NumericLessThan', etc. | `string` | `"NumericGreaterThan"` | no |
+| inference\_metric\_threshold | Threshold for deploying the trained SageMaker model.<br>Used in combination with `inference_comparison_operator`. | `number` | `0.7` | no |
+| job\_name | SageMaker Hyperparameter Tuning job name. | `string` | `"hyperameter-tuning-job"` | no |
+| max\_number\_training\_jobs | Maximum number of total training jobs for hyperparameter tuning. | `number` | `3` | no |
+| max\_parallel\_training\_jobs | Maximimum number of training jobs running in parallel for hyperparameter tuning. | `number` | `3` | no |
+| parameter\_ranges | Tuning ranges for hyperparameters.<br>Expects a map of one or both "ContinuousParameterRanges" and "IntegerParameterRanges".<br>Each item in the map should point to a list of object with the following keys:  - Name        - name of the variable to be tuned  - MinValue    - min value of the range  - MaxValue    - max value of the range  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic' | <pre>map(list(object({<br>    Name        = string<br>    MinValue    = string<br>    MaxValue    = string<br>    ScalingType = string<br>  })))</pre> | <pre>{<br>  "ContinuousParameterRanges": [<br>    {<br>      "MaxValue": "0.5",<br>      "MinValue": "0.1",<br>      "Name": "eta",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "100",<br>      "MinValue": "5",<br>      "Name": "min_child_weight",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "0.5",<br>      "MinValue": "0.1",<br>      "Name": "subsample",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "5",<br>      "MinValue": "0",<br>      "Name": "gamma",<br>      "ScalingType": "Auto"<br>    }<br>  ],<br>  "IntegerParameterRanges": [<br>    {<br>      "MaxValue": "10",<br>      "MinValue": "0",<br>      "Name": "max_depth",<br>      "ScalingType": "Auto"<br>    }<br>  ]<br>}</pre> | no |
+| static\_hyperparameters | Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.<br>E.g. `{ "kfold_splits" = "5" }` | `map` | `{}` | no |
+| tuning\_metric | Hyperparameter tuning metric, e.g. 'error', 'auc', 'f1', 'accuracy'. | `string` | `"accuracy"` | no |
+| tuning\_objective | Hyperparameter tuning objective ('Minimize' or 'Maximize'). | `string` | `"Maximize"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| iam\_role\_arn | n/a |
-| summary | n/a |
+| iam\_role\_arn | The IAM role used by the step function to execute the step function and access related<br>resources. This can be used to grant additional permissions to the role as needed. |
+| summary | Summary of resources created. |
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [lambda.tf](lambda.tf)
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [s3-upload.tf](s3-upload.tf)
+* [variables.tf](variables.tf)
 
 ---------------------
 
