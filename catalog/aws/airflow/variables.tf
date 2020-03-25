@@ -24,20 +24,35 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "container_command" { type = string }
-variable "container_image" {
-  type    = string
-  default = "airflow"
+variable "container_command" {
+  description = "The command to run on the Airflow container."
+  type        = string
 }
-variable "container_num_cores" { default = 2 }
-variable "container_ram_gb" { default = 4 }
+variable "container_image" {
+  description = "Optional. Overrides the docker image used for Airflow execution."
+  type        = string
+  default     = "airflow"
+}
+variable "container_num_cores" {
+  description = "Optional. The number of CPU cores."
+  default     = 2
+}
+variable "container_ram_gb" {
+  description = "Optional. The amount of RAM to use, in GB."
+  default     = 4
+}
 variable "environment_vars" {
-  type    = map(string)
-  default = {}
+  description = "A map of environment variables to pass to the Airflow image."
+  type        = map(string)
+  default     = {}
 }
 variable "environment_secrets" {
-  type    = map(string)
-  default = {}
+  description = <<EOF
+A map of environment variable secrets to pass to the airflow image. Each secret value should be either a
+Secrets Manager URI or a local JSON or YAML file reference in the form `/path/to/file.yml:name_of_secret`.
+EOF
+  type        = map(string)
+  default     = {}
 }
 variable "github_repo_ref" {
   description = "The git repo reference to clone onto the airflow server"

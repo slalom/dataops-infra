@@ -24,31 +24,45 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "identifier" { default = "rds-db" }
-variable "mysql_version" { default = "5.7.26" }
-variable "storage_size_in_gb" {
-  description = "The allocated storage value is denoted in GB"
+variable "admin_username" {
+  description = "The initial admin username."
   type        = string
-  default     = "20"
 }
-variable "skip_final_snapshot" { default = false }
-
-variable "instance_class" {
-  description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr. Alternatively, the cost/month @ ~$12.25/mo.   (https://aws.amazon.com/rds/mysql/pricing/ )"
-  type        = string
-  default     = "db.t2.micro"
-}
-
-variable "admin_username" { type = string }
 variable "admin_password" {
-  description = "Must be 8 characters long."
+  description = "The initial admin password. Must be 8 characters long."
   type        = string
   default     = null
 }
 
-variable "jdbc_port" { default = 3306 }
+variable "identifier" {
+  description = "The database name which will be used within connection strings and URLs."
+  default     = "rds-db"
+}
+variable "instance_class" {
+  description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
+  type        = string
+  default     = "db.t2.micro"
+}
+variable "jdbc_port" {
+  description = "Optional. Overrides the default JDBC port for incoming SQL connections."
+  default     = 3306
+}
 variable "kms_key_id" {
-  type    = string
-  default = null
+  description = "Optional. The ARN for the KMS encryption key used in cluster encryption."
+  type        = string
+  default     = null
+}
+variable "mysql_version" {
+  description = "Optional. The specific MySQL version to use."
+  default     = "5.7.26"
 }
 
+variable "storage_size_in_gb" {
+  description = "The allocated storage value is denoted in GB."
+  type        = string
+  default     = "20"
+}
+variable "skip_final_snapshot" {
+  description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
+  default     = false
+}

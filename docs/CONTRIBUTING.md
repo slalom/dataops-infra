@@ -11,7 +11,7 @@
    1. [Common Input and Output Variables](#common-input-and-output-variables)
    2. [Show Usage in Samples](#show-usage-in-samples)
    3. [Adhere to Formatting Standards](#adhere-to-formatting-standards)
-   4. [Be Self-documenting](#be-self-documenting)
+   4. [Create Self-documenting Modules](#create-self-documenting-modules)
    5. [Follow Purpose-Driven Design Patterns](#follow-purpose-driven-design-patterns)
 
 ## Feature Requests
@@ -42,17 +42,13 @@ When making changes to the terraform modules, please observe the following 3-tie
 
 > _Solution modules should be configurable as simply as possible to align with the stated business requirements of the module._
 
-
 ### Catalog Modules (Layer 2)
 
 > _**Catalog Modules (Layer 2)** should combine modules from Layer 3 in a method targeted to specific functional or business requirements._
 
-
 ### Component Modules (Layer 3)
 
 > _**Component Modules (Layer 3)** define the technical solutions as mapped to individual cloud product offerings (EC2, EC2, Azure Functions, etc.), meeting a technical requirement from one or more catalog modules which reference them._
-
-
 
 ## Coding Standards
 
@@ -73,24 +69,24 @@ In addition to custom variables, each AWS catalog and component module should su
 
 * As a rule, each component and category module should be referenced by at least one solution module in the `samples` folder, and the sample should demonstrate how to utilize the core functionality.
 
-   * In addition to providing an easy on-ramp for new users to learn how to use your module, your sample module is also an entrypoint for the CI/CD pipeline to perform automated tests.
-   * If your sample code ever stops working, the automated tests will catch this, giving us a means to catch and fix the breakages before they can impact users.
+  * In addition to providing an easy on-ramp for new users to learn how to use your module, your sample module is also an entrypoint for the CI/CD pipeline to perform automated tests.
+  * If your sample code ever stops working, the automated tests will catch this, giving us a means to catch and fix the breakages before they can impact users.
 
 ### Adhere to Formatting Standards
 
 * Terraform makes it very easy way to auto-format modules, which in turn ensures a consistent experience when reviewing code across multiple authors.
 
-   * If you use VS Code, the defaults specified in `settings.json` should automatically apply formatting on each file save.
-   * Formatting is checked automatically after each commit by the CI/CD pipeline.
-   * If you receive failures related to Terraform formatting, simply run `terraform fmt -recursive` from the root of the repo. This command will auto format the entire repo and then you can simply commit the resulting changes.
+  * If you use VS Code, the defaults specified in `settings.json` should automatically apply formatting on each file save.
+  * Formatting is checked automatically after each commit by the CI/CD pipeline.
+  * If you receive failures related to Terraform formatting, simply run `terraform fmt -recursive` from the root of the repo. This command will auto format the entire repo and then you can simply commit the resulting changes.
 
-### Be Self-documenting
+### Create Self-documenting Modules
 
 * In order for components to be effectively used by a broad audience, each module must be self-documenting and should be included in the Catalog auto-document tool.
-   * Make sure each input and output variable has it's `description` field set.
-   * Make sure each module has a `main.tf` file and that the file contains a header comment with a paragraph description of the basic module functions. See [components/aws/secrets-manager/main.tf](../components/aws/secrets-manager/main.tf) for a sample.
-   * All input variables should be stored in `variables.tf` and all output variables should be stored in `outputs.tf`.
-   * After the above are met, update the project docs by navigating to the `docs` directory and running `build.py`. This command will update all module README files as well as [catalog_index.md](catalog_index.md) and [components_index.md](components_index.md).
+  * Make sure each input and output variable has it's `description` field set.
+  * Make sure each module has a `main.tf` file and that the file contains a header comment with a paragraph description of the basic module functions. See [components/aws/secrets-manager/main.tf](../components/aws/secrets-manager/main.tf) for a sample.
+  * All input variables should be stored in `variables.tf` and all output variables should be stored in `outputs.tf`.
+  * After the above are met, update the project docs by navigating to the `docs` directory and running `build.py` (more details [here](README.md)). This command will update all module README files as well as [catalog/README.md](../catalog/README.md) and [components/README.md](../components/README.md).
 
 ### Follow Purpose-Driven Design Patterns
 
@@ -98,4 +94,3 @@ In addition to custom variables, each AWS catalog and component module should su
 
 * There is no expectation that modules should be fully generic or meet every use case.
 * Opinionated and purpose-driven approaches are preferred versus trying to build modules that are one-size-fits-all.
-

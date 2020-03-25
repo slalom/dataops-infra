@@ -24,11 +24,20 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "runtime" { default = "python3.8" }
-variable "pip_path" { default = "pip3" }
-variable "timeout_seconds" { default = 60 * 5 }
+variable "runtime" {
+  description = "The python runtime, e.g. `python3.8`."
+  default     = "python3.8"
+}
+variable "pip_path" {
+  description = "The path to a local pip executable, used to package python dependencies."
+  default     = "pip3"
+}
+variable "timeout_seconds" {
+  description = "The amount of time which can pass before the function will timeout and fail execution."
+  default     = 60 * 5
+}
 variable "lambda_source_folder" {
-  description = "Local path to a folder containing the lambda source code"
+  description = "Local path to a folder containing the lambda source code."
   type        = string
   default     = "resources/fn_log"
 }
@@ -41,19 +50,23 @@ EOF
   type        = string
   default     = null
 }
-variable "functions" {
+# variable "dependency_urls" {
+#   description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs."
+#   type        = map(string)
+#   default     = {}
+# }
+variable "s3_trigger_bucket" {
+  description = "The name of an S3 bucket which will trigger this Lambda function."
+  type        = string
+  default     = null
+}
+variable "s3_triggers" {
   description = <<EOF
-A map of function names to create and an object with properties describing the function.
-
-Example:
-  functions = [
-    "fn_log" = {
-      description = "Add an entry to the log whenever a file is created."
-      handler     = "main.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
-  ]
+A map of function names to trigger definitions. Each definitions should contain the following attributes:
+`triggering_path` (the S3 key prefix on the bucket which should trigger the function), `function_handler`
+(a valid function handler reference, per the AWS Lambda spec), `environment_vars` (a map of environment
+variable names to their values), and `environment_secrets` (a map of secret IDs which the lambda function
+should be granted access to).
 EOF
   type = map(object({
     description = string

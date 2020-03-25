@@ -1,5 +1,6 @@
 output "summary" {
-  value = <<EOF
+  description = "Summary of resources created by this module."
+  value       = <<EOF
 
 
 DBT Summary:

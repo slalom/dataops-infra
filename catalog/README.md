@@ -1,7 +1,7 @@
 
 # DataOps Infrastructure Catalog
 
-The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](components_index.md).
+The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](../components/README.md).
 
 ## Contents
 
@@ -10,7 +10,6 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
     - [AWS Data-Lake](#aws-data-lake)
     - [AWS DBT](#aws-dbt)
     - [AWS Environment](#aws-environment)
-    - [AWS ML-Ops-On-AWS](#aws-ml-ops-on-aws)
     - [AWS MySQL](#aws-mysql)
     - [AWS Postgres](#aws-postgres)
     - [AWS Redshift](#aws-redshift)
@@ -65,17 +64,6 @@ from this module is designed to be passed easily to downstream modules, streamli
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/environment?ref=master`
 * See the [AWS Environment Readme](../catalog/aws/environment/README.md) for input/output specs and additional info.
-
--------------------
-
-### [AWS ML-Ops-On-AWS](../catalog/aws/ml-ops-on-aws/README.md)
-
-This module automates MLOps tasks associated with building and maintaining Machine Learning models.
-The module leverages Step Functions, Lambda functions, and ECS Tasks as needed to accomplish ML
-lifecycle tasks and processing.
-
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/ml-ops-on-aws?ref=master`
-* See the [AWS ML-Ops-On-AWS Readme](../catalog/aws/ml-ops-on-aws/README.md) for input/output specs and additional info.
 
 -------------------
 
@@ -144,7 +132,7 @@ _(Coming soon)_
 
 -------------------
 
-_**NOTE:** This documentation was [auto-generated](build.py) using
+_**NOTE:** This documentation was [auto-generated](../docs/build.py) using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._
 

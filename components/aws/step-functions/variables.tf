@@ -24,15 +24,17 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "state_machine_definition" {
-  type = string
+variable "s3_bucket_name" {
+  description = "Bucket which contains training data, model output, etc."
+  type        = string
 }
 
-variable "s3_bucket_name" {
-  type = string
+variable "state_machine_definition" {
+  description = "The JSON definition of the state machine to be created."
+  type        = string
 }
 
 variable "lambda_functions" {
-  description = "Map of function names to ARNs"
+  description = "Map of function names to ARNs. Used to ensure state machine access to functions."
   type        = map(string)
 }
