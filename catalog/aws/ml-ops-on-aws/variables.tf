@@ -30,13 +30,13 @@ variable "s3_bucket_name" {
 }
 
 variable "data_folder" {
-  description = "Local folder for training and validation data extracts."
+  description = "Local folder for training data extract."
   type        = string
   default     = "source/data"
 }
 
 variable "data_s3_path" {
-  description = "S3 path for training and validation data extracts."
+  description = "S3 path for training data extract."
   type        = string
   default     = "data"
 }
@@ -46,47 +46,56 @@ variable "data_s3_path" {
 variable "job_name" {
   description = "SageMaker Hyperparameter Tuning job name."
   type        = string
-  default     = "attrition-job"
+  default     = "hyperameter-tuning-job"
 }
 
 variable "endpoint_name" {
-  description = "SageMaker inference endpoint to be created/updated (depending on whether or not the endpoint already exists)."
+  description = <<EOF
+SageMaker inference endpoint to be created/updated. Endpoint will be created if
+it does not already exist.
+EOF
   type        = string
-  default     = "attrition-endpoint"
+  default     = "training-endpoint"
 }
 
 variable "training_image" {
-  description = "SageMaker model container image."
+  description = "SageMaker model container image URI from ECR repo."
   type        = string
-  default     = null
 }
 
 variable "tuning_objective" {
-  description = "Hyperparameter tuning objective (minimize or maximize)."
+  description = "Hyperparameter tuning objective ('Minimize' or 'Maximize')."
   type        = string
   default     = "Maximize"
 }
 
 variable "tuning_metric" {
-  description = "Hyperparameter tuning metric e.g. error, auc, f1."
+  description = "Hyperparameter tuning metric, e.g. 'error', 'auc', 'f1', 'accuracy'."
   type        = string
   default     = "accuracy"
 }
 
 variable "inference_comparison_operator" {
-  description = "Comparison operator for endpoint creation metric threshold."
+  description = <<EOF
+Comparison operator for deploying the trained SageMaker model.
+Used in combination with `inference_metric_threshold`.
+Examples: 'NumericGreaterThan', 'NumericLessThan', etc.
+EOF
   type        = string
   default     = "NumericGreaterThan"
 }
 
 variable "inference_metric_threshold" {
-  description = "Threshold for creating/updating SageMaker endpoint."
+  description = <<EOF
+Threshold for deploying the trained SageMaker model.
+Used in combination with `inference_comparison_operator`.
+EOF
   type        = number
   default     = 0.7
 }
 
 variable "endpoint_or_batch_transform" {
-  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data"
+  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data."
   type        = string
   default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
 }
@@ -104,18 +113,30 @@ variable "max_parallel_training_jobs" {
 }
 
 variable "static_hyperparameters" {
-  description = "Static hyperparameters."
+  description = <<EOF
+Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.
+E.g. `{ "kfold_splits" = "5" }`
+EOF
   type        = map
-
-  default = {
-    "kfold_splits" = "5"
-  }
+  default     = {}
 }
 
 variable "parameter_ranges" {
-  description = "Tuning ranges for hyperparameters."
-  type        = map
-
+  description = <<EOF
+Tuning ranges for hyperparameters.
+Expects a map of one or both "ContinuousParameterRanges" and "IntegerParameterRanges".
+Each item in the map should point to a list of object with the following keys:
+ - Name        - name of the variable to be tuned
+ - MinValue    - min value of the range
+ - MaxValue    - max value of the range
+ - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
+EOF
+  type        = map(list(object({
+    Name        = string
+    MinValue    = string
+    MaxValue    = string
+    ScalingType = string
+  })))
   default = {
     "ContinuousParameterRanges" = [
       {

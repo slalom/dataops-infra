@@ -1,7 +1,9 @@
 /*
-* This module automates MLOps tasks associated with building and maintaining Machine Learning models.
-* The module leverages Step Functions, Lambda functions, and ECS Tasks as needed to accomplish ML
-* lifecycle tasks and processing.
+* This module automates MLOps tasks associated with training Machine Learning models.
+*
+* The module leverages Step Functions and Lambda functions as needed. The state machine
+* executes hyperparameter tuning, training, and deployments as needed. Deployment options
+* supported are Sagemaker endpoints and/or batch inference.
 */
 
 
