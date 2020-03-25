@@ -60,13 +60,19 @@ variable "s3_trigger_bucket" {
   type        = string
   default     = null
 }
-variable "s3_triggers" {
+variable "functions" {
   description = <<EOF
-A map of function names to trigger definitions. Each definitions should contain the following attributes:
-`triggering_path` (the S3 key prefix on the bucket which should trigger the function), `function_handler`
-(a valid function handler reference, per the AWS Lambda spec), `environment_vars` (a map of environment
-variable names to their values), and `environment_secrets` (a map of secret IDs which the lambda function
-should be granted access to).
+A map of function names to create and an object with properties describing the function.
+
+Example:
+  functions = [
+    "fn_log" = {
+      description = "Add an entry to the log whenever a file is created."
+      handler     = "main.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+  ]
 EOF
   type = map(object({
     description = string
@@ -75,6 +81,7 @@ EOF
     secrets     = map(string)
   }))
 }
+
 variable "s3_triggers" {
   description = <<EOF
 A list of objects describing the S3 trigger action.
