@@ -131,7 +131,7 @@ Each item in the map should point to a list of object with the following keys:
  - MaxValue    - max value of the range
  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
 EOF
-  type        = map(list(object({
+  type = map(list(object({
     Name        = string
     MinValue    = string
     MaxValue    = string
