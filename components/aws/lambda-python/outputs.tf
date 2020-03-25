@@ -14,5 +14,5 @@ output "lambda_iam_role" {
 The IAM role used by the lambda function to access resources. Can be used to grant
 additional permissions to the role.
 EOF
-  value = aws_iam_role.iam_for_lambda.name
+  value       = aws_iam_role.iam_for_lambda.name
 }

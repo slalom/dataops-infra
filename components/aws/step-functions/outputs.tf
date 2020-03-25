@@ -12,5 +12,5 @@ output "iam_role_arn" {
 The IAM role used by the step function to access resources. Can be used to grant
 additional permissions to the role.
 EOF
-  value = aws_iam_role.step_functions_ml_ops_role.arn
+  value       = aws_iam_role.step_functions_ml_ops_role.arn
 }
