@@ -17,3 +17,23 @@ resource "aws_s3_bucket_object" "test_data" {
     "${var.data_folder}/test.csv",
   )
 }
+
+resource "aws_s3_bucket_object" "glue_script" {
+  bucket = var.s3_bucket_name
+  key    = "glue/transform.py"
+  source = "${var.script_folder}/transform.py"
+
+  etag = filemd5(
+    "${var.script_folder}/transform.py",
+  )
+}
+
+resource "aws_s3_bucket_object" "glue_python_lib" {
+  bucket = var.s3_bucket_name
+  key    = "glue/python/pandasmodule-0.1-py3-none-any.whl"
+  source = "${var.script_folder}/python/pandasmodule-0.1-py3-none-any.whl"
+
+  etag = filemd5(
+    "${var.script_folder}/python/pandasmodule-0.1-py3-none-any.whl",
+  )
+}

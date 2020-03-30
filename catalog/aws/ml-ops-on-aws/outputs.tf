@@ -10,3 +10,8 @@ resources. This can be used to grant additional permissions to the role as neede
 EOF
   value       = module.step-functions.iam_role_arn
 }
+
+output "byo_model_image_url" {
+  description = "The URL for the ECR bring your own model."
+  value       = "${module.ecr_image_byo_model.ecr_image_url}:${var.byo_model_tag}"
+}

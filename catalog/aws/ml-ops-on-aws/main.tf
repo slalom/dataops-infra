@@ -124,8 +124,24 @@ module "step-functions" {
   lambda_functions         = module.lambda_functions.function_ids
   state_machine_definition = <<EOF
 {
- "StartAt": "Generate Unique Job Name",
+ "StartAt": "Glue Data Transformation",
   "States": {
+    "Glue Data Transformation": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "${module.glue_job.glue_job_name}",
+        "Arguments": {
+          "--extra-py-files": "s3://${var.s3_bucket_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
+          "--S3_SOURCE": "${var.s3_bucket_name}",
+          "--S3_DEST": "${var.s3_bucket_name}",
+          "--DATA_KEY": "${var.data_s3_path}/data.csv",
+          "--TRAIN_KEY": "${var.data_s3_path}/train/train.csv",
+          "--TEST_KEY": "${var.data_s3_path}/test/test.csv"
+        }
+      },
+      "Next": "Generate Unique Job Name"
+    },
     "Generate Unique Job Name": {
       "Resource": "${module.lambda_functions.function_ids["UniqueJobName"]}",
       "Parameters": {

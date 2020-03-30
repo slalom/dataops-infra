@@ -35,6 +35,12 @@ variable "data_folder" {
   default     = "source/data"
 }
 
+variable "script_folder" {
+  description = "Local folder for Glue Python script."
+  type        = string
+  default     = "source/script"
+}
+
 variable "data_s3_path" {
   description = "S3 path for training data extract."
   type        = string
@@ -173,4 +179,66 @@ EOF
       }
     ]
   }
+}
+
+# ECS input variables
+
+variable "container_num_cores" {
+  description = "Number of cores for data transformation ECS task."
+  default     = 2
+  type        = number
+}
+
+variable "container_ram_gb" {
+  description = "GB RAM for data transformation ECS task."
+  default     = 4
+  type        = number
+}
+
+# ECR input variables
+
+variable "byo_model_repo_name" {
+  description = "Repo name for bring your own model."
+  type        = string
+}
+
+variable "byo_model_source_image_path" {
+  description = "Local source path for bring your own model docker image."
+  type        = string
+}
+
+variable "byo_model_tag" {
+  description = "Tag for bring your own model image."
+  default     = "latest"
+  type        = string
+}
+
+#variable "data_transform_repo_name" {
+#  description = "Repo name for data transformation."
+#  type        = string
+#}
+
+#variable "data_transform_source_image_path" {
+#  description = "Local source path for data transformation docker image."
+#  type        = string
+#}
+
+#variable "data_transform_tag" {
+#  description = "Tag for data transformation image."
+#  default     = "latest"
+#  type        = string
+#}
+
+# Glue variables
+
+variable "glue_job_name" {
+  description = "Name of the Glue data transformation job name."
+  default     = "data-transformation"
+  type        = string
+}
+
+variable "glue_job_type" {
+  description = "Type of Glue job (Spark or Python Shell)."
+  default     = "pythonshell"
+  type        = string
 }
