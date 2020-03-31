@@ -1,19 +1,31 @@
-module "s3_store_and_lambdas" {
+module "feature_store" {
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
+  source        = "../../catalog/aws/data-lake"
+  name_prefix   = "${lower(local.name_prefix)}feature-store-"
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
+}
+
+module "extracts_store" {
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
   source        = "../../catalog/aws/data-lake"
   name_prefix   = "${lower(local.name_prefix)}extracts-store-"
   environment   = module.env.environment
   resource_tags = local.resource_tags
+}
 
-  # ADD OR MODIFY CONFIGURATION HERE:
+module "model_store" {
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
+  source        = "../../catalog/aws/data-lake"
+  name_prefix   = "${lower(local.name_prefix)}model-store-"
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
+}
 
-  //  lambda_python_source = "${path.module}/python/fn_lambda_logger"
-  //  s3_triggers = {
-  //    "fn_lambda_logger" = {
-  //      triggering_path     = "uploads/*"
-  //      lambda_handler      = "main.lambda_handler"
-  //      environment_vars    = {}
-  //      environment_secrets = {}
-  //    }
-  //  }
+module "output_store" {
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
+  source        = "../../catalog/aws/data-lake"
+  name_prefix   = "${lower(local.name_prefix)}output-store-"
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
 }

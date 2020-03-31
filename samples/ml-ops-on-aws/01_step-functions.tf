@@ -7,13 +7,18 @@ module "ml-ops-on-aws" {
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
-  # Training data source and upload
-  s3_bucket_name = module.s3_store_and_lambdas.s3_data_bucket
+  # S3 Stores
+  feature_store_name  = module.feature_store.s3_data_bucket
+  extracts_store_name = module.extracts_store.s3_data_bucket
+  model_store_name    = module.model_store.s3_data_bucket
+  output_store_name   = module.output_store.s3_data_bucket
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
-  # data_s3_path = "data"
-  # data_folder  = "source/data" 
+  # train_s3_path     = "data/train/train.csv"
+  # train_local_path  = "source/data/train.csv"
+  # score_s3_path     = "data/score/score.csv"
+  # score_local_path  = "source/score/score.csv"
 
   */
 
@@ -23,11 +28,15 @@ module "ml-ops-on-aws" {
   #data_transform_repo_name         = "data-transform"
   #data_transform_source_image_path = "${path.module}/source/containers/ml-ops-data-transform"
 
+  # Glue input
+  script_path = "source/script/transform.py"
+  whl_path    = "source/script/python/pandasmodule-0.1-py3-none-any.whl"
+
   # State Machine input
   job_name       = "attrition"
   endpoint_name  = "attrition-endpoint"
   training_image = "${module.ml-ops-on-aws.byo_model_image_url}"
-  # Use instead to set training_image to AWS built-in algorithm
+  # (Use instead to set training_image to AWS built-in algorithm)
   #training_image                  = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
@@ -94,6 +103,6 @@ Step Functions summary:
 
 S3 summary:
 
- S3 Bucket Name: ${module.s3_store_and_lambdas.s3_data_bucket}
+ S3 Bucket Name: ${module.extracts_store.s3_data_bucket}
 EOF
 }

@@ -24,27 +24,48 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "s3_bucket_name" {
-  description = "Extract S3 bucket name."
+variable "feature_store_name" {
+  description = "Feature store S3 bucket name."
   type        = string
 }
 
-variable "data_folder" {
-  description = "Local folder for training data extract."
+variable "extracts_store_name" {
+  description = "Extract store S3 bucket name."
   type        = string
-  default     = "source/data"
 }
 
-variable "script_folder" {
-  description = "Local folder for Glue Python script."
+variable "model_store_name" {
+  description = "Model store S3 bucket name."
   type        = string
-  default     = "source/script"
 }
 
-variable "data_s3_path" {
-  description = "S3 path for training data extract."
+variable "output_store_name" {
+  description = "Output store S3 bucket name."
   type        = string
-  default     = "data"
+}
+
+variable "script_path" {
+  description = "Local path for Glue Python script."
+  type        = string
+  default     = "source/script/transform.py"
+}
+
+variable "whl_path" {
+  description = "Local path for Glue Python .whl file."
+  type        = string
+  default     = "source/script/python/pandasmodule-0.1-py3-none-any.whl"
+}
+
+variable "train_local_path" {
+  description = "Local path for training data."
+  type        = string
+  default     = "source/data/train.csv"
+}
+
+variable "score_local_path" {
+  description = "Local path for scoring data."
+  type        = string
+  default     = "source/data/score.csv"
 }
 
 # State Machine input variables

@@ -40,7 +40,8 @@ resource "aws_iam_policy" "glue_ml_ops_policy" {
                 "s3:ListBucket"
             ],
             "Resource": [
-                "arn:aws:s3:::${var.s3_bucket_name}"
+                "arn:aws:s3:::${var.s3_source_bucket_name}",
+                "arn:aws:s3:::${var.s3_destination_bucket_name}"
             ]
         },
         {
@@ -48,7 +49,8 @@ resource "aws_iam_policy" "glue_ml_ops_policy" {
             "Effect": "Allow",
             "Action": "s3:*Object",
             "Resource": [
-                "arn:aws:s3:::${var.s3_bucket_name}/*"
+                "arn:aws:s3:::${var.s3_source_bucket_name}/*",
+                "arn:aws:s3:::${var.s3_destination_bucket_name}/*"
             ]
         }
     ]

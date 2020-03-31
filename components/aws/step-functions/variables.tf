@@ -24,8 +24,23 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "s3_bucket_name" {
-  description = "Bucket which contains training data, model output, etc."
+variable "feature_store_name" {
+  description = "Bucket which contains pre-transformed training data and scoring data."
+  type        = string
+}
+
+variable "extracts_store_name" {
+  description = "Bucket which contains transformed training and scoring data."
+  type        = string
+}
+
+variable "model_store_name" {
+  description = "Bucket which contains model objects."
+  type        = string
+}
+
+variable "output_store_name" {
+  description = "Bucket which contains batch transformation output."
   type        = string
 }
 

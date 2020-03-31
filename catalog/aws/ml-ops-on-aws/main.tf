@@ -84,12 +84,12 @@ EOF
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${var.s3_bucket_name}/${var.data_s3_path}/test/test.csv"
+            "S3Uri": "s3://${var.extracts_store_name}/${var.job_name}/data/score/score.csv"
           }
         }
       },
       "TransformOutput": {
-        "S3OutputPath": "s3://${var.s3_bucket_name}/batch-transform-output"
+        "S3OutputPath": "s3://${var.output_store_name}/${var.job_name}/batch-transform-output"
       },
       "TransformResources": {
         "InstanceCount": 1,
@@ -104,8 +104,8 @@ EOF
   "Resource": "${module.lambda_functions.function_ids["RenameBatchOutput"]}",
   "Parameters": {
     "Payload": {
-      "BucketName": "${var.s3_bucket_name}",
-      "Path": "batch-transform-output"
+      "BucketName": "${var.output_store_name}",
+      "Path": "${var.job_name}/batch-transform-output"
     }
   },
   "End": true
@@ -118,7 +118,10 @@ module "step-functions" {
   #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
   source                   = "../../../components/aws/step-functions"
   name_prefix              = var.name_prefix
-  s3_bucket_name           = var.s3_bucket_name
+  feature_store_name       = var.feature_store_name
+  extracts_store_name      = var.extracts_store_name
+  model_store_name         = var.model_store_name
+  output_store_name        = var.output_store_name
   environment              = var.environment
   resource_tags            = var.resource_tags
   lambda_functions         = module.lambda_functions.function_ids
@@ -132,12 +135,11 @@ module "step-functions" {
       "Parameters": {
         "JobName": "${module.glue_job.glue_job_name}",
         "Arguments": {
-          "--extra-py-files": "s3://${var.s3_bucket_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
-          "--S3_SOURCE": "${var.s3_bucket_name}",
-          "--S3_DEST": "${var.s3_bucket_name}",
-          "--DATA_KEY": "${var.data_s3_path}/data.csv",
-          "--TRAIN_KEY": "${var.data_s3_path}/train/train.csv",
-          "--TEST_KEY": "${var.data_s3_path}/test/test.csv"
+          "--extra-py-files": "s3://${var.feature_store_name}/${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
+          "--S3_SOURCE": "${var.feature_store_name}",
+          "--S3_DEST": "${var.extracts_store_name}",
+          "--TRAIN_KEY": "${var.job_name}/data/train/train.csv",
+          "--SCORE_KEY": "${var.job_name}/data/score/score.csv"
         }
       },
       "Next": "Generate Unique Job Name"
@@ -178,7 +180,7 @@ module "step-functions" {
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
-            "S3OutputPath": "s3://${var.s3_bucket_name}/output"
+            "S3OutputPath": "s3://${var.model_store_name}/${var.job_name}/models"
           },
           "StoppingCondition": {
             "MaxRuntimeInSeconds": 86400
@@ -195,7 +197,7 @@ module "step-functions" {
                 "S3DataSource": {
                   "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${var.s3_bucket_name}/${var.data_s3_path}/train/train.csv"
+                  "S3Uri": "s3://${var.extracts_store_name}/${var.job_name}/data/train/train.csv"
                 }
               },
               "ChannelName": "train",

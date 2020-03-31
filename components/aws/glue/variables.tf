@@ -24,18 +24,18 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "s3_bucket_name" {
-  description = "Bucket which contains training data, model output, etc."
+variable "s3_source_bucket_name" {
+  description = "S3 source bucket for Glue transformation job."
+  type        = string
+}
+
+variable "s3_destination_bucket_name" {
+  description = "S3 destination bucket for Glue transformation job."
   type        = string
 }
 
 variable "script_path" {
   description = "Path to Glue script."
-  type        = string
-}
-
-variable "job_name" {
-  description = "Name of the Glue job."
   type        = string
 }
 

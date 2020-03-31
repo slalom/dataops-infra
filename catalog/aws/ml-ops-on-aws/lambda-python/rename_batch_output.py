@@ -10,10 +10,10 @@ def lambda_handler(event, context):
 
     # Copy csv.out as .csv
     s3_resource.Object(event["BucketName"], event["Path"]+"/out.csv").copy_from(
-        CopySource=event["BucketName"]+"/"+event["Path"]+"/test.csv.out")
+        CopySource=event["BucketName"]+"/"+event["Path"]+"/score.csv.out")
     # Delete the former .csv.out
     s3_resource.Object(event["BucketName"],
-                       event["Path"]+"/test.csv.out").delete()
+                       event["Path"]+"/score.csv.out").delete()
 
     return {
         'statusCode': 200,
