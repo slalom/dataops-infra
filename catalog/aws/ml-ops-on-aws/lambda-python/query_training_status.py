@@ -9,13 +9,8 @@ sm_client = boto3.client("sagemaker")
 
 def lambda_handler(event, context):
     """Retrieve transform job name from event and return transform job status."""
-    if "modelName" in event:
-        model_name = event["modelName"]
-    else:
-        raise KeyError(
-            "modelName key not found in function input! "
-            f"The input received was: {json.dumps(event)}."
-        )
+    model_name = event["ModelArn"].split("/")[-1]
+
     try:
         # Query boto3 API to check training status.
         response = sm_client.describe_training_job(TrainingJobName=model_name)

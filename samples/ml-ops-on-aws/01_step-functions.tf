@@ -8,10 +8,11 @@ module "ml-ops-on-aws" {
   resource_tags = local.resource_tags
 
   # S3 Stores
-  feature_store_name  = module.feature_store.s3_data_bucket
-  extracts_store_name = module.extracts_store.s3_data_bucket
-  model_store_name    = module.model_store.s3_data_bucket
-  output_store_name   = module.output_store.s3_data_bucket
+  source_repository_name = module.source_repository.s3_data_bucket
+  feature_store_name     = module.feature_store.s3_data_bucket
+  extracts_store_name    = module.extracts_store.s3_data_bucket
+  model_store_name       = module.model_store.s3_data_bucket
+  output_store_name      = module.output_store.s3_data_bucket
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
@@ -25,8 +26,6 @@ module "ml-ops-on-aws" {
   # ECR input
   byo_model_repo_name         = "byo-xgboost"
   byo_model_source_image_path = "${path.module}/source/containers/ml-ops-byo-xgboost"
-  #data_transform_repo_name         = "data-transform"
-  #data_transform_source_image_path = "${path.module}/source/containers/ml-ops-data-transform"
 
   # Glue input
   script_path = "source/script/transform.py"
@@ -34,7 +33,6 @@ module "ml-ops-on-aws" {
 
   # State Machine input
   job_name       = "attrition"
-  endpoint_name  = "attrition-endpoint"
   training_image = "${module.ml-ops-on-aws.byo_model_image_url}"
   # (Use instead to set training_image to AWS built-in algorithm)
   #training_image                  = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
@@ -42,9 +40,11 @@ module "ml-ops-on-aws" {
   tuning_metric                 = "accuracy"
   inference_comparison_operator = "NumericGreaterThan"
   inference_metric_threshold    = 0.7
-  endpoint_or_batch_transform   = "Batch Transform" # Batch Transform or Create Model Endpoint Config
-  max_number_training_jobs      = 3
-  max_parallel_training_jobs    = 3
+  endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
+  # (If using endpoint inference)
+  #endpoint_name  = "attrition-endpoint"
+  max_number_training_jobs   = 3
+  max_parallel_training_jobs = 3
 
   static_hyperparameters = {
     "kfold_splits" = "5"

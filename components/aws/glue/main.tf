@@ -10,7 +10,7 @@ resource "aws_glue_job" "glue_job" {
   max_capacity = 1
 
   command {
-    script_location = "s3://${var.s3_source_bucket_name}/${var.script_path}"
+    script_location = "s3://${var.s3_script_bucket_name}/${var.script_path}"
     name            = var.job_type
     python_version  = 3
   }

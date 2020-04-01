@@ -26,5 +26,4 @@ module "env" {
   aws_region     = local.aws_region
   resource_tags  = local.resource_tags
   secrets_folder = local.secrets_folder
-  disabled       = true
 }

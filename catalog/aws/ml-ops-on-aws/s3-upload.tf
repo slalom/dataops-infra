@@ -19,7 +19,7 @@ resource "aws_s3_bucket_object" "score_data" {
 }
 
 resource "aws_s3_bucket_object" "glue_script" {
-  bucket = var.feature_store_name
+  bucket = var.source_repository_name
   key    = "${var.job_name}/glue/transform.py"
   source = var.script_path
 
@@ -29,7 +29,7 @@ resource "aws_s3_bucket_object" "glue_script" {
 }
 
 resource "aws_s3_bucket_object" "glue_python_lib" {
-  bucket = var.feature_store_name
+  bucket = var.source_repository_name
   key    = "${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl"
   source = var.whl_path
 

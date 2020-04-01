@@ -22,12 +22,6 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
-    ExtractModelName = {
-      description = "Queries the SageMaker model to return the model name."
-      handler     = "extract_model_name.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
     CheckEndpointExists = {
       description = "Queries if endpoint exists to determine create or update job."
       handler     = "check_endpoint_exists.lambda_handler"
@@ -49,6 +43,34 @@ module "lambda_functions" {
   }
 }
 
+module "triggered_lambda" {
+  source        = "../../../components/aws/lambda-python"
+  name_prefix   = var.name_prefix
+  resource_tags = var.resource_tags
+  environment   = var.environment
+
+  runtime              = "python3.8"
+  lambda_source_folder = "${path.module}/lambda-python"
+  upload_to_s3         = false
+  upload_to_s3_path    = null
+
+  functions = {
+    ExecuteStateMachine = {
+      description = "Executes model training state machine when new training data lands in S3."
+      handler     = "execute_state_machine.lambda_handler"
+      environment = { "state_machine_arn" = "${module.step-functions.state_machine_arn}" }
+      secrets     = {}
+    }
+  }
+  s3_triggers = [
+    {
+      function_name = "ExecuteStateMachine"
+      s3_bucket     = var.feature_store_name
+      s3_path       = "${var.job_name}/data/train/*"
+    }
+  ]
+}
+
 resource "aws_iam_role_policy_attachment" "lambda_sagemaker_policy_attachment" {
   role       = module.lambda_functions.lambda_iam_role
   policy_arn = "arn:aws:iam::aws:policy/AmazonSageMakerReadOnly"
@@ -57,4 +79,28 @@ resource "aws_iam_role_policy_attachment" "lambda_sagemaker_policy_attachment" {
 resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
   role       = module.lambda_functions.lambda_iam_role
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_policy" "lambda_step_function_policy" {
+  name        = "${var.name_prefix}lambda_step_function_access"
+  description = "Policy for Lambda access to execute the Step Function"
+  path        = "/"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "states:StartExecution",
+            "Resource": "${module.step-functions.state_machine_arn}"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_step_functions_policy_attachment" {
+  role       = module.triggered_lambda.lambda_iam_role
+  policy_arn = aws_iam_policy.lambda_step_function_policy.arn
 }

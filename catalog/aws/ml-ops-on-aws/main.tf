@@ -25,17 +25,12 @@ data "null_data_source" "endpoint_or_batch_transform" {
       ]
     },
     "Type": "Task",
-    "Next": "Extract Endpoint Config Name"
-  },
-  "Extract Endpoint Config Name": {
-    "Resource": "${module.lambda_functions.function_ids["ExtractModelName"]}",
-    "Type": "Task",
     "Next": "Check Endpoint Exists"
   },
   "Check Endpoint Exists": {
     "Resource": "${module.lambda_functions.function_ids["CheckEndpointExists"]}",
     "Parameters": {
-      "EndpointConfig.$": "$.modelName",
+      "EndpointConfigName.$": "$.endpointConfig",
       "EndpointName": "${var.endpoint_name}"
     },
     "Type": "Task",
@@ -135,7 +130,7 @@ module "step-functions" {
       "Parameters": {
         "JobName": "${module.glue_job.glue_job_name}",
         "Arguments": {
-          "--extra-py-files": "s3://${var.feature_store_name}/${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
+          "--extra-py-files": "s3://${var.source_repository_name}/${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
           "--S3_SOURCE": "${var.feature_store_name}",
           "--S3_DEST": "${var.extracts_store_name}",
           "--TRAIN_KEY": "${var.job_name}/data/train/train.csv",
@@ -226,11 +221,6 @@ module "step-functions" {
         "ModelName.$": "$.bestTrainingJobName"
       },
       "Resource": "arn:aws:states:::sagemaker:createModel",
-      "Type": "Task",
-      "Next": "Extract Model Name"
-    },
-    "Extract Model Name": {
-      "Resource": "${module.lambda_functions.function_ids["ExtractModelName"]}",
       "Type": "Task",
       "Next": "Query Training Results"
     },

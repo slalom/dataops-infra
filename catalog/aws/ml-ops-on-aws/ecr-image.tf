@@ -10,14 +10,3 @@ module "ecr_image_byo_model" {
   source_image_path = var.byo_model_source_image_path
   tag               = var.byo_model_tag
 }
-
-#module "ecr_image_data_transform" {
-#  source            = "../../../components/aws/ecr-image-2"
-#  name_prefix       = var.name_prefix
-#  environment       = var.environment
-#  resource_tags     = var.resource_tags
-
-#  repository_name   = var.data_transform_repo_name
-#  source_image_path = var.data_transform_source_image_path
-#  tag               = var.data_transform_tag
-#}

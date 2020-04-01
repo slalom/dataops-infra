@@ -8,6 +8,8 @@ sm_client = boto3.client("sagemaker")
 
 
 def lambda_handler(event, context):
+    endpointConfig = event["EndpointConfigArn"].split("/")[-1]
+        
     create_or_update = "Create"
     response = sm_client.list_endpoints()
     for i in response["Endpoints"]:
@@ -16,6 +18,6 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "endpointName": event["EndpointName"],
-        "endpointConfig": event["EndpointConfig"],
+        "endpointConfig": endpointConfig,
         "CreateOrUpdate": create_or_update,
     }

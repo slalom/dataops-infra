@@ -24,6 +24,11 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
+variable "source_repository_name" {
+  description = "Source repository S3 bucket name."
+  type        = string
+}
+
 variable "feature_store_name" {
   description = "Feature store S3 bucket name."
   type        = string

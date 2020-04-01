@@ -24,6 +24,11 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
+variable "s3_script_bucket_name" {
+  description = "S3 script bucket for Glue transformation job."
+  type        = string
+}
+
 variable "s3_source_bucket_name" {
   description = "S3 source bucket for Glue transformation job."
   type        = string
