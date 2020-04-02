@@ -8,9 +8,10 @@ data "aws_availability_zones" "az_list" {}
 locals {
   tz_hour_offset = (
     contains(["PST"], var.scheduled_timezone) ? -8 :
+    contains(["PDT"], var.scheduled_timezone) ? -7 :
     contains(["EST"], var.scheduled_timezone) ? -5 :
     contains(["UTC", "GMT"], var.scheduled_timezone) ? 0 :
-    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", and "PST"
+    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
   )
   name_prefix = "${var.name_prefix}Tap-"
   container_image = coalesce(

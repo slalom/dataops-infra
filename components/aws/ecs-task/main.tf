@@ -154,6 +154,7 @@ resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
   for_each            = var.schedules
   name_prefix         = "${var.name_prefix}sched-"
   description         = "Daily Execution 'run' @ ${each.value}"
+  role_arn            = aws_iam_role.ecs_execution_role.arn
   schedule_expression = each.value
 }
 /*
@@ -167,7 +168,6 @@ resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
 
 resource "aws_cloudwatch_event_target" "daily_run_task" {
   for_each = var.schedules
-  # for_each   = aws_cloudwatch_event_rule.daily_run_schedule
   rule     = aws_cloudwatch_event_rule.daily_run_schedule[each.value].name
   arn      = data.aws_ecs_cluster.ecs_cluster.arn
   role_arn = aws_iam_role.ecs_execution_role.arn
@@ -179,7 +179,7 @@ resource "aws_cloudwatch_event_target" "daily_run_task" {
     network_configuration {
       subnets          = var.environment.public_subnets
       security_groups  = [aws_security_group.ecs_tasks_sg.id]
-      assign_public_ip = false
+      assign_public_ip = true
     }
   }
 }
