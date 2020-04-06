@@ -7,13 +7,6 @@ module "ml-ops-on-aws" {
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
-  # S3 Stores
-  source_repository_name = module.source_repository.s3_data_bucket
-  feature_store_name     = module.feature_store.s3_data_bucket
-  extracts_store_name    = module.extracts_store.s3_data_bucket
-  model_store_name       = module.model_store.s3_data_bucket
-  output_store_name      = module.output_store.s3_data_bucket
-
   /* OPTIONAL - CHANGE PATHS BELOW:
 
   # train_s3_path     = "data/train/train.csv"
@@ -37,14 +30,22 @@ module "ml-ops-on-aws" {
   # (Use instead to set training_image to AWS built-in algorithm)
   #training_image                  = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
   tuning_objective              = "Maximize"
-  tuning_metric                 = "accuracy"
+  tuning_metric                 = "f1"
   inference_comparison_operator = "NumericGreaterThan"
-  inference_metric_threshold    = 0.7
+  inference_metric_threshold    = 0.4
   endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
+  # (If using batch inference)
+  batch_transform_instance_type  = "ml.m4.xlarge"
+  batch_transform_instance_count = 1
   # (If using endpoint inference)
+  #endpoint_instance_Type        = "ml.m4.xlarge"
+  #endpoint_instance_count = 1
   #endpoint_name  = "attrition-endpoint"
-  max_number_training_jobs   = 3
-  max_parallel_training_jobs = 3
+  max_number_training_jobs    = 3
+  max_parallel_training_jobs  = 3
+  training_job_instance_type  = "ml.m5.xlarge"
+  training_job_instance_count = 1
+  training_job_volume_size_gb = 30
 
   static_hyperparameters = {
     "kfold_splits" = "5"
@@ -103,6 +104,6 @@ Step Functions summary:
 
 S3 summary:
 
- S3 Bucket Name: ${module.extracts_store.s3_data_bucket}
+ S3 Bucket Name: ...
 EOF
 }

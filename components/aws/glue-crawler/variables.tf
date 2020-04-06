@@ -24,32 +24,22 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "feature_store_bucket" {
-  description = "Bucket which contains pre-transformed training data and scoring data."
+variable "glue_database_name" {
+  description = "Name of the Glue catalog database."
   type        = string
 }
 
-variable "extracts_store_bucket" {
-  description = "Bucket which contains transformed training and scoring data."
+variable "glue_crawler_name" {
+  description = "Name of the Glue crawler."
   type        = string
 }
 
-variable "model_store_bucket" {
-  description = "Bucket which contains model objects."
+variable "s3_target_bucket_name" {
+  description = "S3 target bucket for Glue crawler."
   type        = string
 }
 
-variable "output_store_bucket" {
-  description = "Bucket which contains batch transformation output."
+variable "target_path" {
+  description = "Path to crawler target file(s)."
   type        = string
-}
-
-variable "state_machine_definition" {
-  description = "The JSON definition of the state machine to be created."
-  type        = string
-}
-
-variable "lambda_functions" {
-  description = "Map of function names to ARNs. Used to ensure state machine access to functions."
-  type        = map(string)
 }

@@ -24,29 +24,10 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "source_repository_name" {
-  description = "Source repository S3 bucket name."
+variable "feature_store_override" {
+  description = "Optionally, you can override the default feature store bucket with a bucket that already exists."
   type        = string
-}
-
-variable "feature_store_name" {
-  description = "Feature store S3 bucket name."
-  type        = string
-}
-
-variable "extracts_store_name" {
-  description = "Extract store S3 bucket name."
-  type        = string
-}
-
-variable "model_store_name" {
-  description = "Model store S3 bucket name."
-  type        = string
-}
-
-variable "output_store_name" {
-  description = "Output store S3 bucket name."
-  type        = string
+  default     = null
 }
 
 variable "script_path" {
@@ -132,6 +113,30 @@ variable "endpoint_or_batch_transform" {
   default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
 }
 
+variable "batch_transform_instance_count" {
+  description = "Number of batch transformation instances."
+  type        = number
+  default     = 1
+}
+
+variable "batch_transform_instance_type" {
+  description = "Instance type for batch inference."
+  type        = string
+  default     = "ml.m4.xlarge"
+}
+
+variable "endpoint_instance_count" {
+  description = "Number of initial endpoint instances."
+  type        = number
+  default     = 1
+}
+
+variable "endpoint_instance_type" {
+  description = "Instance type for inference endpoint."
+  type        = string
+  default     = "ml.m4.xlarge"
+}
+
 variable "max_number_training_jobs" {
   description = "Maximum number of total training jobs for hyperparameter tuning."
   type        = number
@@ -142,6 +147,24 @@ variable "max_parallel_training_jobs" {
   description = "Maximimum number of training jobs running in parallel for hyperparameter tuning."
   type        = number
   default     = 3
+}
+
+variable "training_job_instance_count" {
+  description = "Number of instances for training jobs."
+  type        = number
+  default     = 1
+}
+
+variable "training_job_instance_type" {
+  description = "Instance type for training jobs."
+  type        = string
+  default     = "ml.m4.xlarge"
+}
+
+variable "training_job_volume_size_gb" {
+  description = "Instance volume size in GB for training jobs."
+  type        = number
+  default     = 30
 }
 
 variable "static_hyperparameters" {

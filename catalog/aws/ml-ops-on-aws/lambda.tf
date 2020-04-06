@@ -40,6 +40,12 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    RunGlueCrawler = {
+      description = "Runs Glue Crawler to create table of batch transformation output for Athena."
+      handler     = "run_glue_crawler.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
   }
 }
 
@@ -65,20 +71,42 @@ module "triggered_lambda" {
   s3_triggers = [
     {
       function_name = "ExecuteStateMachine"
-      s3_bucket     = var.feature_store_name
+      s3_bucket     = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
       s3_path       = "${var.job_name}/data/train/*"
     }
   ]
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_sagemaker_policy_attachment" {
-  role       = module.lambda_functions.lambda_iam_role
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSageMakerReadOnly"
+resource "aws_iam_policy" "lambda_policy" {
+  name        = "${var.name_prefix}lambda_policy"
+  description = "Policy for Lambda functions"
+  path        = "/"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sagemaker:Describe*",
+                "sagemaker:List*",
+                "sagemaker:BatchGetMetrics",
+                "sagemaker:GetSearchSuggestions",
+                "sagemaker:Search",
+                "s3:*",
+                "glue:StartCrawler"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_s3_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   role       = module.lambda_functions.lambda_iam_role
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  policy_arn = aws_iam_policy.lambda_policy.arn
 }
 
 resource "aws_iam_policy" "lambda_step_function_policy" {

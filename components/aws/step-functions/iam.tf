@@ -83,10 +83,10 @@ resource "aws_iam_policy" "step_functions_ml_ops_policy" {
                 "events:PutRule"
             ],
             "Resource": [
-                "arn:aws:s3:::${var.feature_store_name}/*",
-                "arn:aws:s3:::${var.extracts_store_name}/*",
-                "arn:aws:s3:::${var.model_store_name}/*",
-                "arn:aws:s3:::${var.output_store_name}/*",
+                "arn:aws:s3:::${var.feature_store_bucket}/*",
+                "arn:aws:s3:::${var.extracts_store_bucket}/*",
+                "arn:aws:s3:::${var.model_store_bucket}/*",
+                "arn:aws:s3:::${var.output_store_bucket}/*",
                 "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTrainingJobsRule",
                 "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTransformJobsRule",
                 "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
@@ -102,10 +102,10 @@ resource "aws_iam_policy" "step_functions_ml_ops_policy" {
             "Effect": "Allow",
             "Action": "s3:ListBucket",
             "Resource": [
-              "arn:aws:s3:::${var.feature_store_name}",
-              "arn:aws:s3:::${var.extracts_store_name}",
-              "arn:aws:s3:::${var.model_store_name}",
-              "arn:aws:s3:::${var.output_store_name}"
+              "arn:aws:s3:::${var.feature_store_bucket}",
+              "arn:aws:s3:::${var.extracts_store_bucket}",
+              "arn:aws:s3:::${var.model_store_bucket}",
+              "arn:aws:s3:::${var.output_store_bucket}"
             ]
         }
     ]

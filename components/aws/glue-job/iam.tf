@@ -1,7 +1,7 @@
-# NOTE: IAM role includes actions for SageMaker and Lambda for ML Ops use-case
+# NOTE: IAM role includes actions for executing a Glue data transformation job
 
-resource "aws_iam_role" "glue_ml_ops_role" {
-  name = "${var.name_prefix}GlueRole"
+resource "aws_iam_role" "glue_job_role" {
+  name = "${var.name_prefix}GlueJobRole"
 
   tags = var.resource_tags
 
@@ -24,8 +24,8 @@ EOF
 
 }
 
-resource "aws_iam_policy" "glue_ml_ops_policy" {
-  name        = "${var.name_prefix}GluePolicy"
+resource "aws_iam_policy" "glue_job_policy" {
+  name        = "${var.name_prefix}GlueJobPolicy"
   description = "Policy for Glue role"
   path        = "/"
 
@@ -61,7 +61,7 @@ EOF
 }
 
 
-resource "aws_iam_role_policy_attachment" "glue_ml_ops_policy_attachment" {
-  role       = aws_iam_role.glue_ml_ops_role.name
-  policy_arn = aws_iam_policy.glue_ml_ops_policy.arn
+resource "aws_iam_role_policy_attachment" "glue_job_policy_attachment" {
+  role       = aws_iam_role.glue_job_role.name
+  policy_arn = aws_iam_policy.glue_job_policy.arn
 }

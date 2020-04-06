@@ -4,7 +4,7 @@
 
 resource "aws_glue_job" "glue_job" {
   name         = "${var.name_prefix}data-transformation"
-  role_arn     = aws_iam_role.glue_ml_ops_role.arn
+  role_arn     = aws_iam_role.glue_job_role.arn
   tags         = var.resource_tags
   glue_version = "1.0"
   max_capacity = 1

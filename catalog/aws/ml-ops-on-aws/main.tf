@@ -17,8 +17,8 @@ data "null_data_source" "endpoint_or_batch_transform" {
       "EndpointConfigName.$": "$.modelName",
       "ProductionVariants": [
         {
-          "InitialInstanceCount": 1,
-          "InstanceType": "ml.m4.xlarge",
+          "InitialInstanceCount": ${var.endpoint_instance_count},
+          "InstanceType": "${var.endpoint_instance_type}",
           "ModelName.$": "$.modelName",
           "VariantName": "AllTraffic"
         }
@@ -79,16 +79,16 @@ EOF
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${var.extracts_store_name}/${var.job_name}/data/score/score.csv"
+            "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/${var.job_name}/data/score/score.csv"
           }
         }
       },
       "TransformOutput": {
-        "S3OutputPath": "s3://${var.output_store_name}/${var.job_name}/batch-transform-output"
+        "S3OutputPath": "s3://${aws_s3_bucket.output_store.id}/${var.job_name}/batch-transform-output"
       },
       "TransformResources": {
-        "InstanceCount": 1,
-        "InstanceType": "ml.m4.xlarge"
+        "InstanceCount": ${var.batch_transform_instance_count},
+        "InstanceType": "${var.batch_transform_instance_type}"
       },
       "TransformJobName.$": "$.modelName"
     },
@@ -99,12 +99,22 @@ EOF
   "Resource": "${module.lambda_functions.function_ids["RenameBatchOutput"]}",
   "Parameters": {
     "Payload": {
-      "BucketName": "${var.output_store_name}",
+      "BucketName": "${aws_s3_bucket.output_store.id}",
       "Path": "${var.job_name}/batch-transform-output"
     }
   },
-  "End": true
-  }
+  "Next": "Run Glue Crawler"
+    },
+    "Run Glue Crawler": {
+      "Type": "Task",
+      "Resource": "${module.lambda_functions.function_ids["RunGlueCrawler"]}",
+      "Parameters": {
+        "Payload": {
+          "CrawlerName": "${module.glue_crawler.glue_crawler_name}"
+        }
+      },
+      "End": true
+    }
 EOF
   }
 }
@@ -113,10 +123,10 @@ module "step-functions" {
   #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
   source                   = "../../../components/aws/step-functions"
   name_prefix              = var.name_prefix
-  feature_store_name       = var.feature_store_name
-  extracts_store_name      = var.extracts_store_name
-  model_store_name         = var.model_store_name
-  output_store_name        = var.output_store_name
+  feature_store_bucket     = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
+  extracts_store_bucket    = aws_s3_bucket.extracts_store.id
+  model_store_bucket       = aws_s3_bucket.model_store.id
+  output_store_bucket      = aws_s3_bucket.output_store.id
   environment              = var.environment
   resource_tags            = var.resource_tags
   lambda_functions         = module.lambda_functions.function_ids
@@ -130,9 +140,9 @@ module "step-functions" {
       "Parameters": {
         "JobName": "${module.glue_job.glue_job_name}",
         "Arguments": {
-          "--extra-py-files": "s3://${var.source_repository_name}/${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
-          "--S3_SOURCE": "${var.feature_store_name}",
-          "--S3_DEST": "${var.extracts_store_name}",
+          "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
+          "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
+          "--S3_DEST": "${aws_s3_bucket.extracts_store.id}",
           "--TRAIN_KEY": "${var.job_name}/data/train/train.csv",
           "--SCORE_KEY": "${var.job_name}/data/score/score.csv"
         }
@@ -175,15 +185,15 @@ module "step-functions" {
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
-            "S3OutputPath": "s3://${var.model_store_name}/${var.job_name}/models"
+            "S3OutputPath": "s3://${aws_s3_bucket.model_store.id}/${var.job_name}/models"
           },
           "StoppingCondition": {
             "MaxRuntimeInSeconds": 86400
           },
           "ResourceConfig": {
-            "InstanceCount": 1,
-            "InstanceType": "ml.m5.xlarge",
-            "VolumeSizeInGB": 30
+            "InstanceCount": ${var.training_job_instance_count},
+            "InstanceType": "${var.training_job_instance_type}",
+            "VolumeSizeInGB": ${var.training_job_volume_size_gb}
           },
           "RoleArn": "${module.step-functions.iam_role_arn}",
           "InputDataConfig": [
@@ -192,7 +202,7 @@ module "step-functions" {
                 "S3DataSource": {
                   "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${var.extracts_store_name}/${var.job_name}/data/train/train.csv"
+                  "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/${var.job_name}/data/train/train.csv"
                 }
               },
               "ChannelName": "train",
