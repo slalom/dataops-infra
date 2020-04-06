@@ -71,9 +71,10 @@ EOF
   default     = "training-endpoint"
 }
 
-variable "training_image" {
+variable "training_image_override" {
   description = "SageMaker model container image URI from ECR repo."
   type        = string
+  default     = null
 }
 
 variable "tuning_objective" {
@@ -261,22 +262,6 @@ variable "byo_model_tag" {
   default     = "latest"
   type        = string
 }
-
-#variable "data_transform_repo_name" {
-#  description = "Repo name for data transformation."
-#  type        = string
-#}
-
-#variable "data_transform_source_image_path" {
-#  description = "Local source path for data transformation docker image."
-#  type        = string
-#}
-
-#variable "data_transform_tag" {
-#  description = "Tag for data transformation image."
-#  default     = "latest"
-#  type        = string
-#}
 
 # Glue variables
 

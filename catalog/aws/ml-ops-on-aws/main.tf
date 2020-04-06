@@ -181,7 +181,7 @@ module "step-functions" {
                 "Regex": "${var.tuning_metric}: ([0-9\\.]+)"
               }
             ],
-            "TrainingImage": "${var.training_image}",
+            "TrainingImage": "${var.training_image_override != null ? var.training_image_override : module.ecr_image_byo_model.ecr_image_url_and_tag}",
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
@@ -223,7 +223,7 @@ module "step-functions" {
     "Save Best Model": {
       "Parameters": {
         "PrimaryContainer": {
-          "Image": "${var.training_image}",
+          "Image": "${var.training_image_override != null ? var.training_image_override : module.ecr_image_byo_model.ecr_image_url_and_tag}",
           "Environment": {},
           "ModelDataUrl.$": "$.modelDataUrl"
         },

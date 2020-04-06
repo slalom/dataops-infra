@@ -19,17 +19,17 @@ supported are Sagemaker endpoints and/or batch inference.
 | byo\_model\_repo\_name | Repo name for bring your own model. | `string` | n/a | yes |
 | byo\_model\_source\_image\_path | Local source path for bring your own model docker image. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| extracts\_store\_name | Extract store S3 bucket name. | `string` | n/a | yes |
-| feature\_store\_name | Feature store S3 bucket name. | `string` | n/a | yes |
-| model\_store\_name | Model store S3 bucket name. | `string` | n/a | yes |
+| feature\_store\_override | Optionally, you can override the default feature store bucket with a bucket that already exists. | `string` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| output\_store\_name | Output store S3 bucket name. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| source\_repository\_name | Source repository S3 bucket name. | `string` | n/a | yes |
-| training\_image | SageMaker model container image URI from ECR repo. | `string` | n/a | yes |
+| training\_image\_override | SageMaker model container image URI from ECR repo. | `string` | n/a | yes |
+| batch\_transform\_instance\_count | Number of batch transformation instances. | `number` | `1` | no |
+| batch\_transform\_instance\_type | Instance type for batch inference. | `string` | `"ml.m4.xlarge"` | no |
 | byo\_model\_tag | Tag for bring your own model image. | `string` | `"latest"` | no |
 | container\_num\_cores | Number of cores for data transformation ECS task. | `number` | `2` | no |
 | container\_ram\_gb | GB RAM for data transformation ECS task. | `number` | `4` | no |
+| endpoint\_instance\_count | Number of initial endpoint instances. | `number` | `1` | no |
+| endpoint\_instance\_type | Instance type for inference endpoint. | `string` | `"ml.m4.xlarge"` | no |
 | endpoint\_name | SageMaker inference endpoint to be created/updated. Endpoint will be created if<br>it does not already exist. | `string` | `"training-endpoint"` | no |
 | endpoint\_or\_batch\_transform | Choose whether to create/update an inference API endpoint or do batch inference on test data. | `string` | `"Batch Transform"` | no |
 | glue\_job\_name | Name of the Glue data transformation job name. | `string` | `"data-transformation"` | no |
@@ -44,6 +44,9 @@ supported are Sagemaker endpoints and/or batch inference.
 | script\_path | Local path for Glue Python script. | `string` | `"source/script/transform.py"` | no |
 | static\_hyperparameters | Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.<br>E.g. `{ "kfold_splits" = "5" }` | `map` | `{}` | no |
 | train\_local\_path | Local path for training data. | `string` | `"source/data/train.csv"` | no |
+| training\_job\_instance\_count | Number of instances for training jobs. | `number` | `1` | no |
+| training\_job\_instance\_type | Instance type for training jobs. | `string` | `"ml.m4.xlarge"` | no |
+| training\_job\_volume\_size\_gb | Instance volume size in GB for training jobs. | `number` | `30` | no |
 | tuning\_metric | Hyperparameter tuning metric, e.g. 'error', 'auc', 'f1', 'accuracy'. | `string` | `"accuracy"` | no |
 | tuning\_objective | Hyperparameter tuning objective ('Minimize' or 'Maximize'). | `string` | `"Maximize"` | no |
 | whl\_path | Local path for Glue Python .whl file. | `string` | `"source/script/python/pandasmodule-0.1-py3-none-any.whl"` | no |

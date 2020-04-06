@@ -16,20 +16,6 @@ No input.
 |------|-------------|
 | env\_summary | n/a |
 | summary | n/a |
-## Usage Notes
-
-(TK - How to use this module...)
-
-
----------------------
-
-## Source Files
-
-_Source code for this module is available using the links below._
-
-* [00_environment.tf](00_environment.tf)
-* [01_step-functions.tf](01_step-functions.tf)
-* [02_data-lake.tf](02_data-lake.tf)
 
 ---------------------
 

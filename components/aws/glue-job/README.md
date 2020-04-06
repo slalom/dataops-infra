@@ -1,33 +1,31 @@
 
-# AWS ECR-Image-2
+# AWS Glue-Job
 
-`/components/aws/ecr-image-2`
+`/components/aws/glue-job`
 
 ## Overview
 
 
-ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. ECR allows you to securely publish docker images which
-should not be accessible to external users.
+Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue job can be used job to run ETL Python scripts.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| job\_type | Type of Glue job (Spark or Python Shell). | `string` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| repository\_name | Name of Docker repository. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| source\_image\_path | Path to Docker image source. | `string` | n/a | yes |
-| tag | Tag to use for deployed Docker image. | `string` | `"latest"` | no |
+| s3\_destination\_bucket\_name | S3 destination bucket for Glue transformation job. | `string` | n/a | yes |
+| s3\_script\_bucket\_name | S3 script bucket for Glue transformation job. | `string` | n/a | yes |
+| s3\_source\_bucket\_name | S3 source bucket for Glue transformation job. | `string` | n/a | yes |
+| script\_path | Path to Glue script. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| ecr\_image\_url | The full path to the ECR image, including image name. |
-| ecr\_image\_url\_and\_tag | The full path to the ECR image, including image name and tag. |
-| ecr\_repo\_arn | The unique ID (ARN) of the ECR repo. |
-| ecr\_repo\_root | The path to the ECR repo, excluding image name. |
+| glue\_job\_name | The name of the Glue job. |
 
 ---------------------
 

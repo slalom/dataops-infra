@@ -9,10 +9,10 @@ module "ml-ops-on-aws" {
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
-  # train_s3_path     = "data/train/train.csv"
-  # train_local_path  = "source/data/train.csv"
-  # score_s3_path     = "data/score/score.csv"
-  # score_local_path  = "source/score/score.csv"
+  train_s3_path     = "data/train/train.csv"
+  train_local_path  = "source/data/train.csv"
+  score_s3_path     = "data/score/score.csv"
+  score_local_path  = "source/score/score.csv"
 
   */
 
@@ -22,25 +22,29 @@ module "ml-ops-on-aws" {
 
   # Glue input
   script_path = "source/script/transform.py"
-  whl_path    = "source/script/python/pandasmodule-0.1-py3-none-any.whl"
+  whl_path    = "source/script/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
   # State Machine input
-  job_name       = "attrition"
-  training_image = "${module.ml-ops-on-aws.byo_model_image_url}"
-  # (Use instead to set training_image to AWS built-in algorithm)
-  #training_image                  = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
-  tuning_objective              = "Maximize"
-  tuning_metric                 = "f1"
-  inference_comparison_operator = "NumericGreaterThan"
-  inference_metric_threshold    = 0.4
-  endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
-  # (If using batch inference)
+  job_name = "attrition"
+
+  /* OPTIONAL - USE INSTEAD TO SET TRAINING_IMAGE TO AWS BUILT-IN ALGORITHM:
+  training_image_override = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
+  */
+
+  tuning_objective               = "Maximize"
+  tuning_metric                  = "f1"
+  inference_comparison_operator  = "NumericGreaterThan"
+  inference_metric_threshold     = 0.4
+  endpoint_or_batch_transform    = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
   batch_transform_instance_type  = "ml.m4.xlarge"
   batch_transform_instance_count = 1
-  # (If using endpoint inference)
-  #endpoint_instance_Type        = "ml.m4.xlarge"
-  #endpoint_instance_count = 1
-  #endpoint_name  = "attrition-endpoint"
+
+  /* OPTIONAL - IF USING ENDPOINT INFERENCE:
+  endpoint_instance_Type        = "ml.m4.xlarge"
+  endpoint_instance_count = 1
+  endpoint_name  = "attrition-endpoint"
+  */
+
   max_number_training_jobs    = 3
   max_parallel_training_jobs  = 3
   training_job_instance_type  = "ml.m5.xlarge"

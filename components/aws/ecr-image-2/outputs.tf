@@ -10,3 +10,7 @@ output "ecr_image_url" {
   description = "The full path to the ECR image, including image name."
   value       = "${aws_ecr_repository.ecr_repo.repository_url}"
 }
+output "ecr_image_url_and_tag" {
+  description = "The full path to the ECR image, including image name and tag."
+  value       = "${aws_ecr_repository.ecr_repo.repository_url}:${var.tag}"
+}
