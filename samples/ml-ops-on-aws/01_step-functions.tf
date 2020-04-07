@@ -21,8 +21,8 @@ module "ml-ops-on-aws" {
   byo_model_source_image_path = "${path.module}/source/containers/ml-ops-byo-xgboost"
 
   # Glue input
-  script_path = "source/script/transform.py"
-  whl_path    = "source/script/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
+  script_path = "source/scripts/transform.py"
+  whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
   # State Machine input
   job_name = "attrition"
@@ -100,14 +100,5 @@ module "ml-ops-on-aws" {
 }
 
 output "summary" {
-  value = <<EOF
-
-
-Step Functions summary:
- ${module.ml-ops-on-aws.summary}
-
-S3 summary:
-
- S3 Bucket Name: ...
-EOF
+  value = module.ml-ops-on-aws.summary
 }

@@ -1,17 +1,29 @@
 output "summary" {
-  description = "Summary of resources created."
-  value       = module.step-functions.summary
-}
+  description = "Summary of resources created by this module."
+  value       = <<EOF
 
-output "iam_role_arn" {
-  description = <<EOF
-The IAM role used by the step function to execute the step function and access related
-resources. This can be used to grant additional permissions to the role as needed.
+
+Step Functions summary:
+
+  State Machine Name: ${module.step-functions.state_machine_name}
+
+S3 summary:
+
+  Feature Store: ${aws_s3_bucket.feature_store[0].id}
+  Source Repository: ${aws_s3_bucket.source_repository.id}
+  Extracts Store: ${aws_s3_bucket.extracts_store.id}
+  Model Store: ${aws_s3_bucket.model_store.id}
+  Output Store: ${aws_s3_bucket.output_store.id}
+
+Commands:
+
+  Trigger Step Functions by dropping data into S3 Feature Store:
+
+    1) aws s3 cp ${var.score_local_path} s3://${aws_s3_bucket.feature_store[0].id}/${var.job_name}/data/score/score.csv
+    2) aws s3 cp ${var.train_local_path} s3://${aws_s3_bucket.feature_store[0].id}/${var.job_name}/data/train/train.csv
+
+  Or execute Step Functions directly:
+
+    1) aws stepfunctions start-execution --state-machine-arn ${module.step-functions.state_machine_arn}
 EOF
-  value       = module.step-functions.iam_role_arn
-}
-
-output "byo_model_image_url" {
-  description = "The URL for the ECR bring your own model."
-  value       = "${module.ecr_image_byo_model.ecr_image_url}:${var.byo_model_tag}"
 }

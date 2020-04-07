@@ -33,7 +33,7 @@ variable "feature_store_override" {
 variable "script_path" {
   description = "Local path for Glue Python script."
   type        = string
-  default     = "source/script/transform.py"
+  default     = "source/scripts/transform.py"
 }
 
 variable "whl_path" {
