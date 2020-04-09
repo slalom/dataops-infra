@@ -11,6 +11,8 @@
 *
 */
 
+resource "random_id" "suffix" { byte_length = 2 }
+
 locals {
   secrets_names = toset(keys(var.secrets_map))
   existing_secrets_ids_map = {
@@ -39,7 +41,7 @@ locals {
 
 resource "aws_secretsmanager_secret" "secrets" {
   for_each   = toset(keys(local.new_secrets_map))
-  name       = "${var.name_prefix}${each.key}"
+  name       = "${var.name_prefix}${each.key}-${random_id.suffix.dec}"
   kms_key_id = var.kms_key_id
 }
 
