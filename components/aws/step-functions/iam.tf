@@ -5,6 +5,8 @@ resource "aws_iam_role" "step_functions_ml_ops_role" {
 
   tags = var.resource_tags
 
+  force_detach_policies = true
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
