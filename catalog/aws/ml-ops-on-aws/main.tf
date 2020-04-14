@@ -79,12 +79,12 @@ EOF
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/${var.job_name}/data/score/score.csv"
+            "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/${var.model_name}/data/score/score.csv"
           }
         }
       },
       "TransformOutput": {
-        "S3OutputPath": "s3://${aws_s3_bucket.output_store.id}/${var.job_name}/batch-transform-output"
+        "S3OutputPath": "s3://${aws_s3_bucket.output_store.id}/${var.model_name}/batch-transform-output"
       },
       "TransformResources": {
         "InstanceCount": ${var.batch_transform_instance_count},
@@ -100,7 +100,7 @@ EOF
   "Parameters": {
     "Payload": {
       "BucketName": "${aws_s3_bucket.output_store.id}",
-      "Path": "${var.job_name}/batch-transform-output"
+      "Path": "${var.model_name}/batch-transform-output"
     }
   },
   "Next": "Run Glue Crawler"
@@ -140,11 +140,11 @@ module "step-functions" {
       "Parameters": {
         "JobName": "${module.glue_job.glue_job_name}",
         "Arguments": {
-          "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
+          "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/${var.model_name}/glue/python/pandasmodule-0.1-py3-none-any.whl",
           "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
           "--S3_DEST": "${aws_s3_bucket.extracts_store.id}",
-          "--TRAIN_KEY": "${var.job_name}/data/train/train.csv",
-          "--SCORE_KEY": "${var.job_name}/data/score/score.csv"
+          "--TRAIN_KEY": "${var.model_name}/data/train/train.csv",
+          "--SCORE_KEY": "${var.model_name}/data/score/score.csv"
         }
       },
       "Next": "Generate Unique Job Name"
@@ -152,7 +152,7 @@ module "step-functions" {
     "Generate Unique Job Name": {
       "Resource": "${module.lambda_functions.function_ids["UniqueJobName"]}",
       "Parameters": {
-        "JobName": "${var.job_name}"
+        "JobName": "${var.model_name}"
       },
       "Type": "Task",
       "Next": "Hyperparameter Tuning"
@@ -185,7 +185,7 @@ module "step-functions" {
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
-            "S3OutputPath": "s3://${aws_s3_bucket.model_store.id}/${var.job_name}/models"
+            "S3OutputPath": "s3://${aws_s3_bucket.model_store.id}/${var.model_name}/models"
           },
           "StoppingCondition": {
             "MaxRuntimeInSeconds": 86400
@@ -202,7 +202,7 @@ module "step-functions" {
                 "S3DataSource": {
                   "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/${var.job_name}/data/train/train.csv"
+                  "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/${var.model_name}/data/train/train.csv"
                 }
               },
               "ChannelName": "train",

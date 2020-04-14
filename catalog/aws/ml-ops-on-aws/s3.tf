@@ -80,7 +80,7 @@ resource "aws_s3_bucket" "output_store" {
 
 resource "aws_s3_bucket_object" "train_data" {
   bucket = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-  key    = "${var.job_name}/data/train/train.csv"
+  key    = "${var.model_name}/data/train/train.csv"
   source = var.train_local_path
 
   etag = filemd5(
@@ -90,7 +90,7 @@ resource "aws_s3_bucket_object" "train_data" {
 
 resource "aws_s3_bucket_object" "score_data" {
   bucket = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-  key    = "${var.job_name}/data/score/score.csv"
+  key    = "${var.model_name}/data/score/score.csv"
   source = var.score_local_path
 
   etag = filemd5(
@@ -100,7 +100,7 @@ resource "aws_s3_bucket_object" "score_data" {
 
 resource "aws_s3_bucket_object" "glue_script" {
   bucket = aws_s3_bucket.source_repository.id
-  key    = "${var.job_name}/glue/transform.py"
+  key    = "${var.model_name}/glue/transform.py"
   source = var.script_path
 
   etag = filemd5(
@@ -110,7 +110,7 @@ resource "aws_s3_bucket_object" "glue_script" {
 
 resource "aws_s3_bucket_object" "glue_python_lib" {
   bucket = aws_s3_bucket.source_repository.id
-  key    = "${var.job_name}/glue/python/pandasmodule-0.1-py3-none-any.whl"
+  key    = "${var.model_name}/glue/python/pandasmodule-0.1-py3-none-any.whl"
   source = var.whl_path
 
   etag = filemd5(

@@ -39,7 +39,7 @@ variable "script_path" {
 variable "whl_path" {
   description = "Local path for Glue Python .whl file."
   type        = string
-  default     = "source/script/python/pandasmodule-0.1-py3-none-any.whl"
+  default     = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl"
 }
 
 variable "train_local_path" {
@@ -56,10 +56,9 @@ variable "score_local_path" {
 
 # State Machine input variables
 
-variable "job_name" {
-  description = "SageMaker Hyperparameter Tuning job name."
+variable "model_name" {
+  description = "Name given to SageMaker model and training/tuning jobs (18 characters or less)."
   type        = string
-  default     = "hyperameter-tuning-job"
 }
 
 variable "endpoint_name" {
@@ -147,7 +146,7 @@ variable "max_number_training_jobs" {
 variable "max_parallel_training_jobs" {
   description = "Maximimum number of training jobs running in parallel for hyperparameter tuning."
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "training_job_instance_count" {
@@ -174,7 +173,9 @@ Map of hyperparameter names to static values, which should not be altered during
 E.g. `{ "kfold_splits" = "5" }`
 EOF
   type        = map
-  default     = {}
+  default = {
+    kfold_splits = "5"
+  }
 }
 
 variable "parameter_ranges" {
@@ -194,55 +195,47 @@ EOF
     ScalingType = string
   })))
   default = {
-    "ContinuousParameterRanges" = [
+    ContinuousParameterRanges = [
       {
-        "Name"        = "eta",
-        "MinValue"    = "0.1",
-        "MaxValue"    = "0.5",
-        "ScalingType" = "Auto"
+        Name        = "gamma",
+        MinValue    = "0",
+        MaxValue    = "10",
+        ScalingType = "Auto"
       },
       {
-        "Name"        = "min_child_weight",
-        "MinValue"    = "5",
-        "MaxValue"    = "100",
-        "ScalingType" = "Auto"
+        Name        = "min_child_weight",
+        MinValue    = "1",
+        MaxValue    = "20",
+        ScalingType = "Auto"
       },
       {
-        "Name"        = "subsample",
-        "MinValue"    = "0.1",
-        "MaxValue"    = "0.5",
-        "ScalingType" = "Auto"
+        Name        = "subsample",
+        MinValue    = "0.1",
+        MaxValue    = "0.5",
+        ScalingType = "Auto"
       },
       {
-        "Name"        = "gamma",
-        "MinValue"    = "0",
-        "MaxValue"    = "5",
-        "ScalingType" = "Auto"
+        Name        = "max_delta_step",
+        MinValue    = "0",
+        MaxValue    = "1",
+        ScalingType = "Auto"
+      },
+      {
+        Name        = "scale_pos_weight",
+        MinValue    = "1",
+        MaxValue    = "10",
+        ScalingType = "Auto"
       }
     ],
-    "IntegerParameterRanges" = [
+    IntegerParameterRanges = [
       {
-        "Name"        = "max_depth",
-        "MinValue"    = "0",
-        "MaxValue"    = "10",
-        "ScalingType" = "Auto"
+        Name        = "max_depth",
+        MinValue    = "1",
+        MaxValue    = "10",
+        ScalingType = "Auto"
       }
     ]
   }
-}
-
-# ECS input variables
-
-variable "container_num_cores" {
-  description = "Number of cores for data transformation ECS task."
-  default     = 2
-  type        = number
-}
-
-variable "container_ram_gb" {
-  description = "GB RAM for data transformation ECS task."
-  default     = 4
-  type        = number
 }
 
 # ECR input variables
@@ -250,29 +243,31 @@ variable "container_ram_gb" {
 variable "byo_model_repo_name" {
   description = "Repo name for bring your own model."
   type        = string
+  default     = "byo-xgboost"
 }
 
 variable "byo_model_source_image_path" {
   description = "Local source path for bring your own model docker image."
   type        = string
+  default     = "source/containers/ml-ops-byo-xgboost"
 }
 
 variable "byo_model_tag" {
   description = "Tag for bring your own model image."
-  default     = "latest"
   type        = string
+  default     = "latest"
 }
 
 # Glue variables
 
 variable "glue_job_name" {
   description = "Name of the Glue data transformation job name."
-  default     = "data-transformation"
   type        = string
+  default     = "data-transformation"
 }
 
 variable "glue_job_type" {
   description = "Type of Glue job (Spark or Python Shell)."
-  default     = "pythonshell"
   type        = string
+  default     = "pythonshell"
 }

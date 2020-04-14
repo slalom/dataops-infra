@@ -5,11 +5,15 @@
 *
 */
 
-# Hack required to allow time for IAM execution role to propagate - customise to use desired interpreter
+# Hack required to allow time for IAM execution role to propagate
+locals {
+  is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+}
+
 resource "null_resource" "delay" {
   provisioner "local-exec" {
-    command     = "sleep 30"
-    interpreter = ["PowerShell", "-Command"]
+    command     = "sleep 60"
+    interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
   }
   triggers = {
     "states_exec_role" = aws_iam_role.step_functions_ml_ops_role.arn

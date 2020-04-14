@@ -30,7 +30,7 @@ for another step.
 |------|-------------|
 | iam\_role\_arn | The IAM role used by the step function to access resources. Can be used to grant<br>additional permissions to the role. |
 | state\_machine\_arn | The State Machine arn. |
-| summary | Summary of resources created by this module. |
+| state\_machine\_name | The State Machine name. |
 
 ---------------------
 
