@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {} # To delete when ECR module created
-
 module "ml-ops-on-aws" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
@@ -15,9 +13,7 @@ module "ml-ops-on-aws" {
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
-  train_s3_path     = "data/train/train.csv"
   train_local_path  = "source/data/train.csv"
-  score_s3_path     = "data/score/score.csv"
   score_local_path  = "source/score/score.csv"
 
   script_path = "source/scripts/transform.py"
