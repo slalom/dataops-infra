@@ -218,20 +218,6 @@ module "step-functions" {
     "Extract Best Model Path": {
       "Resource": "${module.lambda_functions.function_ids["ExtractModelPath"]}",
       "Type": "Task",
-      "Next": "Save Best Model"
-    },
-    "Save Best Model": {
-      "Parameters": {
-        "PrimaryContainer": {
-          "Image": "${var.training_image_override != null ? var.training_image_override : module.ecr_image_byo_model.ecr_image_url_and_tag}",
-          "Environment": {},
-          "ModelDataUrl.$": "$.modelDataUrl"
-        },
-        "ExecutionRoleArn": "${module.step-functions.iam_role_arn}",
-        "ModelName.$": "$.bestTrainingJobName"
-      },
-      "Resource": "arn:aws:states:::sagemaker:createModel",
-      "Type": "Task",
       "Next": "Query Training Results"
     },
     "Query Training Results": {
@@ -245,7 +231,7 @@ module "step-functions" {
         {
           "Variable": "$['trainingMetrics'][0]['Value']",
           "${var.inference_comparison_operator}": ${var.inference_metric_threshold},
-          "Next": "${var.endpoint_or_batch_transform}"
+          "Next": "Save Best Model"
         }
       ],
       "Default": "Model Accuracy Too Low"
@@ -253,6 +239,21 @@ module "step-functions" {
     "Model Accuracy Too Low": {
       "Comment": "Validation accuracy lower than threshold",
       "Type": "Fail"
+    },
+    "Save Best Model": {
+      "Parameters": {
+        "PrimaryContainer": {
+          "Image": "${var.training_image_override != null ? var.training_image_override : module.ecr_image_byo_model.ecr_image_url_and_tag}",
+          "Environment": {},
+          "ModelDataUrl.$": "$.modelDataUrl"
+        },
+        "ExecutionRoleArn": "${module.step-functions.iam_role_arn}",
+        "ModelName.$": "$.modelName"
+      },
+      "ResultPath": "$.modelSaveResult",
+      "Resource": "arn:aws:states:::sagemaker:createModel",
+      "Type": "Task",
+      "Next": "${var.endpoint_or_batch_transform}"
     },
     ${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? data.null_data_source.endpoint_or_batch_transform.outputs["endpoint"] : data.null_data_source.endpoint_or_batch_transform.outputs["batch_transform"]}
   }

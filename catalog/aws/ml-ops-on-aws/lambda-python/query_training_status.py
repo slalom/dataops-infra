@@ -9,7 +9,8 @@ sm_client = boto3.client("sagemaker")
 
 def lambda_handler(event, context):
     """Retrieve transform job name from event and return transform job status."""
-    model_name = event["ModelArn"].split("/")[-1]
+    model_name = event["bestTrainingJobName"]
+    model_data_url = event["modelDataUrl"]
 
     try:
         # Query boto3 API to check training status.
@@ -34,4 +35,5 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "trainingMetrics": response["FinalMetricDataList"],
         "modelName": model_name,
+        "modelDataUrl": model_data_url
     }
