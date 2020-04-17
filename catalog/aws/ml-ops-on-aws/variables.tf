@@ -56,8 +56,8 @@ variable "score_local_path" {
 
 # State Machine input variables
 
-variable "model_name" {
-  description = "Name given to SageMaker model and training/tuning jobs (18 characters or less)."
+variable "job_name" {
+  description = "Name prefix given to SageMaker model and training/tuning jobs (18 characters or less)."
   type        = string
 }
 

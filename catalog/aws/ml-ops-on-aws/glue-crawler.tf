@@ -7,5 +7,5 @@ module "glue_crawler" {
   glue_database_name    = "${var.name_prefix}database"
   glue_crawler_name     = "${var.name_prefix}glue-crawler"
   s3_target_bucket_name = aws_s3_bucket.output_store.id
-  target_path           = "${var.model_name}/batch-transform-output/"
+  target_path           = "batch-transform-output/"
 }

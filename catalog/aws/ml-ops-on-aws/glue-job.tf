@@ -8,5 +8,5 @@ module "glue_job" {
   s3_script_bucket_name      = aws_s3_bucket.source_repository.id
   s3_source_bucket_name      = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
   s3_destination_bucket_name = aws_s3_bucket.extracts_store.id
-  script_path                = "${var.model_name}/glue/transform.py"
+  script_path                = "glue/transform.py"
 }

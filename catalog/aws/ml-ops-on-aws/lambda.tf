@@ -72,7 +72,7 @@ module "triggered_lambda" {
     {
       function_name = "ExecuteStateMachine"
       s3_bucket     = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-      s3_path       = "${var.model_name}/data/score/*"
+      s3_path       = "data/score/*"
     }
   ]
 }

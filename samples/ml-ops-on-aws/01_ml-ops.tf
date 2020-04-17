@@ -9,7 +9,7 @@ module "ml-ops-on-aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  model_name = "employee-attrition"
+  job_name = "employee-attrition"
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
