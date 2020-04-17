@@ -13,7 +13,7 @@ module "lambda_functions" {
     QueryTrainingStatus = {
       description = "Queries the SageMaker training job and return the results."
       handler     = "query_training_status.lambda_handler"
-      environment = {}
+      environment = { "dynamodb_table_name" = "${module.dynamodb.dynamodb_table_name}" }
       secrets     = {}
     }
     ExtractModelPath = {
@@ -98,6 +98,11 @@ resource "aws_iam_policy" "lambda_policy" {
                 "glue:StartCrawler"
             ],
             "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "dynamodb:PutItem",
+            "Resource": "${module.dynamodb.dynamodb_table_arn}"
         }
     ]
 }

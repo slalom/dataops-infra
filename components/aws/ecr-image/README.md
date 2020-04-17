@@ -1,7 +1,7 @@
 
-# AWS ECR-Image-2
+# AWS ECR-Image
 
-`/components/aws/ecr-image-2`
+`/components/aws/ecr-image`
 
 ## Overview
 

@@ -1,7 +1,7 @@
 # OPTIONAL: Only if using 'bring your own model'
 
 module "ecr_image_byo_model" {
-  source        = "../../../components/aws/ecr-image-2"
+  source        = "../../../components/aws/ecr-image"
   name_prefix   = var.name_prefix
   environment   = var.environment
   resource_tags = var.resource_tags
