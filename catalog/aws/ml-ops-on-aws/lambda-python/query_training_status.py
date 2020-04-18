@@ -6,14 +6,14 @@ import os
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 sm_client = boto3.client("sagemaker")
-dynamodb = boto3.client('dynamodb')
+s3_client = boto3.client("s3")
 
-dynamodb_table_name = os.environ['dynamodb_table_name']
+metadata_store_name = os.environ['metadata_store_name']
 
 def lambda_handler(event, context):
     """Retrieve transform job name from event and return transform job status."""
-    model_name = event["bestTrainingJobName"]
-    model_data_url = event["modelDataUrl"]
+    model_name = event["BestModelResult"]["bestTrainingJobName"]
+    model_data_url = event["BestModelResult"]["modelDataUrl"]
     
 
     try:
@@ -39,15 +39,12 @@ def lambda_handler(event, context):
     training_metrics = response["FinalMetricDataList"]
 
     # log model metadata    
-    dynamodb.put_item(
-                TableName=dynamodb_table_name,
-                Item={
-                       'modelName': {'S': model_name},
-                       'metricName': {'S': training_metrics[0]['MetricName']},
-                       'value': {'N': str(training_metrics[0]['Value'])}
-                }
-            )
-            
+    bucket = metadata_store_name
+    file_name = 'log/' + event['HyperParameterTuningJobName'] + '.json'
+    uploadByteStream = bytes(json.dumps(event).encode('UTF-8'))
+    s3_client.put_object(Bucket=bucket, Key=file_name, Body=uploadByteStream)
+    
+    
     return {
         "statusCode": 200,
         "trainingMetrics": training_metrics,

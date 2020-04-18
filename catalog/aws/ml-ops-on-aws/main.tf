@@ -217,6 +217,7 @@ module "step-functions" {
     },
     "Extract Best Model Path": {
       "Resource": "${module.lambda_functions.function_ids["ExtractModelPath"]}",
+      "ResultPath": "$.BestModelResult",
       "Type": "Task",
       "Next": "Query Training Results"
     },

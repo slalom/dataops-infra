@@ -13,6 +13,7 @@ S3 summary:
   Source Repository: ${aws_s3_bucket.source_repository.id}
   Extracts Store: ${aws_s3_bucket.extracts_store.id}
   Model Store: ${aws_s3_bucket.model_store.id}
+  Metadata Store: ${aws_s3_bucket.metadata_store.id}
   Output Store: ${aws_s3_bucket.output_store.id}
 
 Commands:

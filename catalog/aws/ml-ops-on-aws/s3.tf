@@ -65,6 +65,19 @@ resource "aws_s3_bucket" "model_store" {
   }
 }
 
+resource "aws_s3_bucket" "metadata_store" {
+  bucket = "${lower(var.name_prefix)}metadata-store-${local.random_bucket_suffix}"
+  acl    = "private"
+  tags   = var.resource_tags
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
 resource "aws_s3_bucket" "output_store" {
   bucket = "${lower(var.name_prefix)}output-store-${local.random_bucket_suffix}"
   acl    = "private"
