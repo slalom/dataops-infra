@@ -24,27 +24,43 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "s3_script_bucket_name" {
-  description = "S3 script bucket for Glue transformation job."
+variable "s3_script_path" {
+  description = <<EOF
+Full S3 path to the python Glue script. If `local_script_path` is also specified, the local
+file will automatically be uploaded to the S3 path, replacing the existing file if
+applicable.
+EOF
   type        = string
+  default     = null
 }
 
 variable "s3_source_bucket_name" {
-  description = "S3 source bucket for Glue transformation job."
+  description = <<EOF
+S3 source bucket for Glue transformation job. The glue job will automatically be granted
+access to read and write from this bucket.
+EOF
   type        = string
 }
 
 variable "s3_destination_bucket_name" {
-  description = "S3 destination bucket for Glue transformation job."
+  description = <<EOF
+S3 destination bucket for Glue transformation job. The glue job will automatically be
+granted access to read and write from this bucket.
+EOF
   type        = string
 }
 
-variable "script_path" {
-  description = "Path to Glue script."
+variable "local_script_path" {
+  description = <<EOF
+Optional. Local path to the python Glue script. If this is not provided, the script file
+will be assumed to already exist at the location specified in `s3_script_path`.
+EOF
   type        = string
+  default     = null
 }
 
-variable "job_type" {
-  description = "Type of Glue job (Spark or Python Shell)."
-  type        = string
+variable "use_spark" {
+  description = "True to use 'pyspark' engine, otherwise 'python'."
+  type        = bool
+  default     = true
 }

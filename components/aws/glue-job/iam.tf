@@ -2,7 +2,6 @@
 
 resource "aws_iam_role" "glue_job_role" {
   name = "${var.name_prefix}GlueJobRole"
-
   tags = var.resource_tags
 
   assume_role_policy = <<EOF
@@ -21,7 +20,6 @@ resource "aws_iam_role" "glue_job_role" {
   ]
 }
 EOF
-
 }
 
 resource "aws_iam_policy" "glue_job_policy" {
@@ -40,7 +38,7 @@ resource "aws_iam_policy" "glue_job_policy" {
                 "s3:ListBucket"
             ],
             "Resource": [
-                "arn:aws:s3:::${var.s3_script_bucket_name}",
+                "arn:aws:s3:::${local.s3_script_bucket_name}",
                 "arn:aws:s3:::${var.s3_source_bucket_name}",
                 "arn:aws:s3:::${var.s3_destination_bucket_name}"
             ]
@@ -50,7 +48,7 @@ resource "aws_iam_policy" "glue_job_policy" {
             "Effect": "Allow",
             "Action": "s3:*Object",
             "Resource": [
-                "arn:aws:s3:::${var.s3_script_bucket_name}/*",
+                "arn:aws:s3:::${local.s3_script_bucket_name}/*",
                 "arn:aws:s3:::${var.s3_source_bucket_name}/*",
                 "arn:aws:s3:::${var.s3_destination_bucket_name}/*"
             ]
@@ -59,7 +57,6 @@ resource "aws_iam_policy" "glue_job_policy" {
 }
 EOF
 }
-
 
 resource "aws_iam_role_policy_attachment" "glue_job_policy_attachment" {
   role       = aws_iam_role.glue_job_role.name
