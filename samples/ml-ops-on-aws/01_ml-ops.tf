@@ -1,7 +1,7 @@
-module "ml-ops-on-aws" {
+module "ml-ops" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-  source = "../../catalog/aws/ml-ops-on-aws"
+  source = "../../catalog/aws/ml-ops"
   #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
   name_prefix   = local.name_prefix
   environment   = module.env.environment
@@ -111,5 +111,5 @@ module "ml-ops-on-aws" {
 }
 
 output "summary" {
-  value = module.ml-ops-on-aws.summary
+  value = module.ml-ops.summary
 }
