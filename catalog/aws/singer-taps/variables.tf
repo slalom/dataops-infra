@@ -99,7 +99,7 @@ variable "scheduled_sync_times" {
 variable "scheduled_timezone" {
   description = <<EOF
 The timezone used in scheduling.
-Currently the following codes are supported: PST, EST, UTC
+Currently the following codes are supported: PST, PDT, EST, UTC
 EOF
   default     = "PT"
 }
