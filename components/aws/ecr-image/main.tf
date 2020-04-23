@@ -1,5 +1,5 @@
 /*
-* ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. 
+* ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub.
 * ECR allows you to securely publish docker images which should not be accessible to external users.
 */
 
@@ -16,6 +16,10 @@ resource "aws_ecr_repository" "ecr_repo" {
   # lifecycle { prevent_destroy = true }
 }
 
+locals {
+  is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+}
+
 resource "null_resource" "push" {
   triggers = {
     source_files_hash = local.source_image_hash
@@ -23,11 +27,11 @@ resource "null_resource" "push" {
 
   provisioner "local-exec" {
     command     = <<EOT
-      docker build -t ${aws_ecr_repository.ecr_repo.name} ${var.source_image_path}
-      $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo.repository_url})
-      docker tag ${aws_ecr_repository.ecr_repo.name}:${var.tag} ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag}
-      docker push ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag}
+docker build -t ${aws_ecr_repository.ecr_repo.name} ${var.source_image_path};
+$((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo.repository_url});
+docker tag ${aws_ecr_repository.ecr_repo.name}:${var.tag} ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
+docker push ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
 EOT
-    interpreter = ["powershell"]
+    interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
   }
 }
