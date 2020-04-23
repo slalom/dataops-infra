@@ -27,19 +27,13 @@ locals {
   unique_hash       = local.is_disabled ? "na" : md5(local.source_files_hash)
   temp_build_folder = "${path.root}/.terraform/tmp/${var.name_prefix}lambda-zip-${local.unique_hash}"
   zip_local_path    = "${local.temp_build_folder}/../${var.name_prefix}lambda-${local.unique_hash}.zip"
-  bucket_triggers = {
+  triggering_bucket_names = [
     for bucket in distinct([
       for trigger in var.s3_triggers :
       trigger.s3_bucket
     ]) :
-    bucket => [
-      distinct([
-        for trigger in var.s3_triggers :
-        trigger.function_name
-        if trigger.s3_bucket == bucket
-      ])
-    ]
-  }
+    bucket
+  ]
 }
 
 resource "aws_lambda_function" "python_lambda" {
