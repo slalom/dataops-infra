@@ -18,22 +18,18 @@ resource "aws_ecr_repository" "ecr_repo" {
   # lifecycle { prevent_destroy = true }
 }
 
-locals {
-  is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
-}
-
 resource "null_resource" "push" {
-  count    = var.is_disabled ? 0 : 1
+  count = var.is_disabled ? 0 : 1
   triggers = {
     source_files_hash = local.source_image_hash
   }
 
   provisioner "local-exec" {
     command     = <<EOT
-docker build -t ${aws_ecr_repository.ecr_repo.name} ${var.source_image_path};
-$((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo.repository_url});
-docker tag ${aws_ecr_repository.ecr_repo.name}:${var.tag} ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
-docker push ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
+docker build -t ${aws_ecr_repository.ecr_repo[0].name} ${var.source_image_path};
+$((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url});
+docker tag ${aws_ecr_repository.ecr_repo[0].name}:${var.tag} ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
+docker push ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
 EOT
     interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
   }

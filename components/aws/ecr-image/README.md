@@ -6,14 +6,15 @@
 ## Overview
 
 
-ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. ECR allows you to securely publish docker images which
-should not be accessible to external users.
+ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub.
+ECR allows you to securely publish docker images which should not be accessible to external users.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+| is\_disabled | Switch for disabling ECR image and push. | `bool` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | repository\_name | Name of Docker repository. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |

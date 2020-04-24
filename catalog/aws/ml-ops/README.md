@@ -1,7 +1,7 @@
 
-# AWS Ml-Ops-On-AWS
+# AWS Ml-Ops
 
-`/catalog/aws/ml-ops-on-aws`
+`/catalog/aws/ml-ops`
 
 ## Overview
 
@@ -16,17 +16,17 @@ supported are Sagemaker endpoints and/or batch inference.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
+| built\_in\_model\_image | Tuning ranges for hyperparameters.<br>Specifying this means that 'bring-your-own' model is not required and the ECR image not created. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | feature\_store\_override | Optionally, you can override the default feature store bucket with a bucket that already exists. | `string` | n/a | yes |
-| model\_name | Name given to SageMaker model and training/tuning jobs (18 characters or less). | `string` | n/a | yes |
+| job\_name | Name prefix given to SageMaker model and training/tuning jobs (18 characters or less). | `string` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| training\_image\_override | SageMaker model container image URI from ECR repo. | `string` | n/a | yes |
 | batch\_transform\_instance\_count | Number of batch transformation instances. | `number` | `1` | no |
 | batch\_transform\_instance\_type | Instance type for batch inference. | `string` | `"ml.m4.xlarge"` | no |
-| byo\_model\_repo\_name | Repo name for bring your own model. | `string` | `"byo-xgboost"` | no |
-| byo\_model\_source\_image\_path | Local source path for bring your own model docker image. | `string` | `"source/containers/ml-ops-byo-xgboost"` | no |
-| byo\_model\_tag | Tag for bring your own model image. | `string` | `"latest"` | no |
+| byo\_model\_image\_name | Image and repo name for bring your own model. | `string` | `"byo-xgboost"` | no |
+| byo\_model\_image\_source\_path | Local source path for bring your own model docker image. | `string` | `"source/containers/ml-ops-byo-xgboost"` | no |
+| byo\_model\_image\_tag | Tag for bring your own model image. | `string` | `"latest"` | no |
 | endpoint\_instance\_count | Number of initial endpoint instances. | `number` | `1` | no |
 | endpoint\_instance\_type | Instance type for inference endpoint. | `string` | `"ml.m4.xlarge"` | no |
 | endpoint\_name | SageMaker inference endpoint to be created/updated. Endpoint will be created if<br>it does not already exist. | `string` | `"training-endpoint"` | no |
@@ -44,7 +44,7 @@ supported are Sagemaker endpoints and/or batch inference.
 | train\_local\_path | Local path for training data. | `string` | `"source/data/train.csv"` | no |
 | training\_job\_instance\_count | Number of instances for training jobs. | `number` | `1` | no |
 | training\_job\_instance\_type | Instance type for training jobs. | `string` | `"ml.m4.xlarge"` | no |
-| training\_job\_volume\_size\_gb | Instance volume size in GB for training jobs. | `number` | `30` | no |
+| training\_job\_storage\_in\_gb | Instance volume size in GB for training jobs. | `number` | `30` | no |
 | tuning\_metric | Hyperparameter tuning metric, e.g. 'error', 'auc', 'f1', 'accuracy'. | `string` | `"accuracy"` | no |
 | tuning\_objective | Hyperparameter tuning objective ('Minimize' or 'Maximize'). | `string` | `"Maximize"` | no |
 | whl\_path | Local path for Glue Python .whl file. | `string` | `"source/scripts/python/pandasmodule-0.1-py3-none-any.whl"` | no |
