@@ -30,17 +30,10 @@ resource "null_resource" "push" {
 
   provisioner "local-exec" {
     command     = <<EOT
-<<<<<<< HEAD
-      docker build -t ${aws_ecr_repository.ecr_repo[0].name} ${var.source_image_path}
-      $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url})
-      docker tag ${aws_ecr_repository.ecr_repo[0].name}:${var.tag} ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag}
-      docker push ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag}
-=======
 docker build -t ${aws_ecr_repository.ecr_repo.name} ${var.source_image_path};
 $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo.repository_url});
 docker tag ${aws_ecr_repository.ecr_repo.name}:${var.tag} ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
 docker push ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
->>>>>>> c7cbc78f9ca681a12666dbc6786e14f365e362fa
 EOT
     interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
   }
