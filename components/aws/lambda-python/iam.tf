@@ -17,8 +17,8 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
-resource "aws_lambda_permission" "allow_bucket" {
-  for_each = {
+resource "aws_lambda_permission" "allow_bucket_to_trigger_lambda" {
+  for_each = var.s3_triggers == null ? {} : {
     for trigger in var.s3_triggers :
     trigger.function_name => trigger.s3_bucket
   }
@@ -30,6 +30,7 @@ resource "aws_lambda_permission" "allow_bucket" {
 }
 
 data "aws_iam_policy_document" "lambda_s3_access_policy" {
+  count   = var.s3_triggers == null ? 0 : 1
   version = "2012-10-17"
   statement {
     effect  = "Allow"
@@ -54,14 +55,17 @@ data "aws_iam_policy_document" "lambda_s3_access_policy" {
 }
 
 resource "aws_iam_policy" "lambda_s3_access" {
+  count       = var.s3_triggers == null ? 0 : 1
   name        = "${var.name_prefix}lambda_s3_access-${local.random_suffix}"
   path        = "/"
   description = "IAM policy for accessing S3 from a lambda"
-  policy      = data.aws_iam_policy_document.lambda_s3_access_policy.json
+  policy      = data.aws_iam_policy_document.lambda_s3_access_policy[0].json
 }
+
 resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
+  count      = var.s3_triggers == null ? 0 : 1
   role       = aws_iam_role.iam_for_lambda.name
-  policy_arn = aws_iam_policy.lambda_s3_access.arn
+  policy_arn = aws_iam_policy.lambda_s3_access[0].arn
 }
 
 resource "aws_iam_policy" "lambda_secrets_access" {

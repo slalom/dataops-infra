@@ -103,5 +103,5 @@ EOF
     s3_bucket     = string
     s3_path       = string
   }))
-  default = []
+  default = null
 }

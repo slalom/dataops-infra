@@ -21,12 +21,11 @@ resource "null_resource" "delay" {
 }
 
 resource "aws_sfn_state_machine" "state_machine" {
-  name     = "${lower(var.name_prefix)}state-machine"
-  role_arn = aws_iam_role.step_functions_ml_ops_role.arn
+  name = "${lower(var.name_prefix)}state-machine"
+  tags = var.resource_tags
 
   definition = var.state_machine_definition
-
-  tags = var.resource_tags
+  role_arn   = aws_iam_role.step_functions_ml_ops_role.arn
 
   depends_on = [null_resource.delay]
 }
