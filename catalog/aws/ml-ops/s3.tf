@@ -102,6 +102,7 @@ resource "aws_s3_bucket_object" "train_data" {
 }
 
 resource "aws_s3_bucket_object" "score_data" {
+  count  = var.score_local_path != null ? 1 : 0
   bucket = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
   key    = "data/score/score.csv"
   source = var.score_local_path

@@ -75,7 +75,7 @@ train = data_transform(train_obj, train=True)
 write_dataframe_to_csv_on_s3(train,s3_dest, train_key)
 
 # Transform scoring set if using batch inference
-if inference_type == 'BATCH':
+if inference_type == 'batch':
     score_obj = s3c.get_object(Bucket=s3_source, Key=score_key)
     score = data_transform(score_obj, train=False)
     write_dataframe_to_csv_on_s3(score,s3_dest, score_key)

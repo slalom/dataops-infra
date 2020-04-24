@@ -49,7 +49,7 @@ variable "train_local_path" {
 }
 
 variable "score_local_path" {
-  description = "Local path for scoring data."
+  description = "Local path for scoring data. Set to null for endpoint inference"
   type        = string
   default     = "source/data/score.csv"
 }

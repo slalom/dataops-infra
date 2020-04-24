@@ -30,7 +30,7 @@ data "null_data_source" "endpoint_or_batch_transform" {
   "Check Endpoint Exists": {
     "Resource": "${module.lambda_functions.function_ids["CheckEndpointExists"]}",
     "Parameters": {
-      "EndpointConfigName.$": "$.endpointConfig",
+      "EndpointConfigArn.$": "$.EndpointConfigArn",
       "EndpointName": "${var.endpoint_name}"
     },
     "Type": "Task",

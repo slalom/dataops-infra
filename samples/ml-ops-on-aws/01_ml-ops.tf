@@ -72,6 +72,8 @@ module "ml-ops" {
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
+  # set score_local_path to 'null' if running endpoint inference
+
   train_local_path  = "source/data/train.csv"
   score_local_path  = "source/score/score.csv"
 
