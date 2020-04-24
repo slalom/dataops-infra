@@ -11,25 +11,6 @@ module "ml-ops" {
 
   job_name = "employee-attrition"
 
-  /* OPTIONAL - CHANGE PATHS BELOW:
-
-  train_local_path  = "source/data/train.csv"
-  score_local_path  = "source/score/score.csv"
-
-  script_path = "source/scripts/transform.py"
-  whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
-
-  byo_model_source_image_path = "source/containers/ml-ops-byo-xgboost"
-  
-
-  /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
-
-  byo_model_repo_name = "byo-xgboost"
-  byo_model_tag       = "latest"
-
-  glue_job_name       = "data-transformation"
-  glue_job_type       = "pythonshell"
-
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
   inference_comparison_operator = "NumericGreaterThan"
@@ -40,7 +21,7 @@ module "ml-ops" {
   max_parallel_training_jobs  = 1
   training_job_instance_type  = "ml.m4.xlarge"
   training_job_instance_count = 1
-  training_job_volume_size_gb = 30
+  training_job_storage_in_gb  = 30
 
   static_hyperparameters = {
     kfold_splits = "5"
@@ -89,10 +70,26 @@ module "ml-ops" {
     ]
   }
 
+  /* OPTIONAL - CHANGE PATHS BELOW:
 
-  OPTIONAL - USE INSTEAD TO SET TRAINING_IMAGE TO AWS BUILT-IN ALGORITHM:
+  train_local_path  = "source/data/train.csv"
+  score_local_path  = "source/score/score.csv"
 
-  training_image_override = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
+  script_path = "source/scripts/transform.py"
+  whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
+
+
+  /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
+
+  # specifying built_in_model_image means that 'bring-your-own' model is not required and the ECR image not created 
+
+  built_in_model_image        = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
+  byo_model_image_source_path = "source/containers/ml-ops-byo-xgboost"
+  byo_model_image_name        = "byo-xgboost"
+  byo_model_image_tag         = "latest"
+
+  glue_job_name = "data-transformation"
+  glue_job_type = "pythonshell"
 
 
   OPTIONAL - IF USING BATCH TRANSFORMATION INFERENCE:
@@ -100,7 +97,7 @@ module "ml-ops" {
   batch_transform_instance_type  = "ml.m4.xlarge"
   batch_transform_instance_count = 1
 
-  
+
   OPTIONAL - IF USING ENDPOINT INFERENCE:
 
   endpoint_instance_Type  = "ml.m4.xlarge"

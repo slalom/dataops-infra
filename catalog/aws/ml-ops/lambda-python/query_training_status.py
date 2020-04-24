@@ -1,3 +1,4 @@
+"""Return details from SageMaker on the best training job and return training metrics (also logs details in S3)."""
 import boto3
 import logging
 import json

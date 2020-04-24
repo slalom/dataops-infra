@@ -9,12 +9,14 @@ args = getResolvedOptions(sys.argv,
                           ['S3_SOURCE',
                            'S3_DEST',
                            'TRAIN_KEY',
-                           'SCORE_KEY'])
+                           'SCORE_KEY',
+                           'INFERENCE_TYPE'])
 
 s3_source = args['S3_SOURCE']
 s3_dest = args['S3_DEST']
 train_key = args['TRAIN_KEY']
 score_key = args['SCORE_KEY']
+inference_type = args['INFERENCE_TYPE']
 
 #---FUNCTIONS-------------------------------
 
@@ -69,11 +71,12 @@ def write_dataframe_to_csv_on_s3(dataframe, bucket, filename):
 s3c = boto3.client('s3')
 
 train_obj = s3c.get_object(Bucket=s3_source, Key=train_key)
-score_obj = s3c.get_object(Bucket=s3_source, Key=score_key)
-
 train = data_transform(train_obj, train=True)
-score = data_transform(score_obj, train=False)
-
 write_dataframe_to_csv_on_s3(train,s3_dest, train_key)
-write_dataframe_to_csv_on_s3(score,s3_dest, score_key)
+
+# Transform scoring set if using batch inference
+if inference_type == 'BATCH':
+    score_obj = s3c.get_object(Bucket=s3_source, Key=score_key)
+    score = data_transform(score_obj, train=False)
+    write_dataframe_to_csv_on_s3(score,s3_dest, score_key)
 

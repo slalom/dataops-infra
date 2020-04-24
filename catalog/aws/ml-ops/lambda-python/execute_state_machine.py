@@ -1,3 +1,4 @@
+"""Execute the step function training and deployment pipeline triggered by new training data landing in S3."""
 import boto3
 import os
 

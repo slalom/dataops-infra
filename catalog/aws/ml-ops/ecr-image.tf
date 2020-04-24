@@ -6,7 +6,8 @@ module "ecr_image_byo_model" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  repository_name   = var.byo_model_repo_name
-  source_image_path = var.byo_model_source_image_path
-  tag               = var.byo_model_tag
+  is_disabled       = var.built_in_model_image != null ? true : false
+  repository_name   = var.byo_model_image_name
+  source_image_path = var.byo_model_image_source_path
+  tag               = var.byo_model_image_tag
 }

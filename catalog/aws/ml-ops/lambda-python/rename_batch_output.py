@@ -1,3 +1,4 @@
+"""Renames the output CSV from batch inference to replace the existing output data and automatically update the connection to Tableau (via Athena)."""
 import json
 import boto3
 

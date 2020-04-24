@@ -1,3 +1,4 @@
+"""Check if SageMaker endpoint already exists and update the endpoint if it does. Otherwise create a new one."""
 import boto3
 import logging
 import json

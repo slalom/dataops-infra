@@ -1,3 +1,4 @@
+"""Return a unique job name by concatenating the JobName variable with the current timestamp."""
 from datetime import datetime
 
 

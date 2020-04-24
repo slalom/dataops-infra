@@ -144,7 +144,8 @@ module "step-functions" {
           "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
           "--S3_DEST": "${aws_s3_bucket.extracts_store.id}",
           "--TRAIN_KEY": "data/train/train.csv",
-          "--SCORE_KEY": "data/score/score.csv"
+          "--SCORE_KEY": "data/score/score.csv",
+          "--INFERENCE_TYPE": "${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? "endpoint" : "batch"}"
         }
       },
       "Next": "Generate Unique Job Name"
@@ -181,7 +182,7 @@ module "step-functions" {
                 "Regex": "${var.tuning_metric}: ([0-9\\.]+)"
               }
             ],
-            "TrainingImage": "${var.training_image_override != null ? var.training_image_override : module.ecr_image_byo_model.ecr_image_url_and_tag}",
+            "TrainingImage": "${var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag}",
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
@@ -193,7 +194,7 @@ module "step-functions" {
           "ResourceConfig": {
             "InstanceCount": ${var.training_job_instance_count},
             "InstanceType": "${var.training_job_instance_type}",
-            "VolumeSizeInGB": ${var.training_job_volume_size_gb}
+            "VolumeSizeInGB": ${var.training_job_storage_in_gb}
           },
           "RoleArn": "${module.step-functions.iam_role_arn}",
           "InputDataConfig": [
@@ -244,7 +245,7 @@ module "step-functions" {
     "Save Best Model": {
       "Parameters": {
         "PrimaryContainer": {
-          "Image": "${var.training_image_override != null ? var.training_image_override : module.ecr_image_byo_model.ecr_image_url_and_tag}",
+          "Image": "${var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag}",
           "Environment": {},
           "ModelDataUrl.$": "$.modelDataUrl"
         },

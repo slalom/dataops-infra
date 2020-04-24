@@ -20,8 +20,8 @@ Commands:
 
   Trigger Step Functions by dropping data into S3 Feature Store:
 
-    1) aws s3 cp ${var.train_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/train/train.csv
-    2) aws s3 cp ${var.score_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/score/score.csv
+    1) (OPTIONAL - if using batch inference) aws s3 cp ${var.score_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/score/score.csv
+    2) aws s3 cp ${var.train_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/train/train.csv
 
   Or execute Step Functions directly:
 

@@ -1,3 +1,4 @@
+"""Crawls CSV output file from batch inference to create a Glue table which can be connected to Tableau (via Athena)."""
 import json
 import boto3
 

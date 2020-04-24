@@ -70,12 +70,6 @@ EOF
   default     = "training-endpoint"
 }
 
-variable "training_image_override" {
-  description = "SageMaker model container image URI from ECR repo."
-  type        = string
-  default     = null
-}
-
 variable "tuning_objective" {
   description = "Hyperparameter tuning objective ('Minimize' or 'Maximize')."
   type        = string
@@ -161,7 +155,7 @@ variable "training_job_instance_type" {
   default     = "ml.m4.xlarge"
 }
 
-variable "training_job_volume_size_gb" {
+variable "training_job_storage_in_gb" {
   description = "Instance volume size in GB for training jobs."
   type        = number
   default     = 30
@@ -238,21 +232,30 @@ EOF
   }
 }
 
+variable "built_in_model_image" {
+  description = <<EOF
+Tuning ranges for hyperparameters.
+Specifying this means that 'bring-your-own' model is not required and the ECR image not created.
+EOF
+  type        = string
+  default     = null
+}
+
 # ECR input variables
 
-variable "byo_model_repo_name" {
-  description = "Repo name for bring your own model."
+variable "byo_model_image_name" {
+  description = "Image and repo name for bring your own model."
   type        = string
   default     = "byo-xgboost"
 }
 
-variable "byo_model_source_image_path" {
+variable "byo_model_image_source_path" {
   description = "Local source path for bring your own model docker image."
   type        = string
   default     = "source/containers/ml-ops-byo-xgboost"
 }
 
-variable "byo_model_tag" {
+variable "byo_model_image_tag" {
   description = "Tag for bring your own model image."
   type        = string
   default     = "latest"
