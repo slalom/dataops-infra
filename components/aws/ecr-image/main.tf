@@ -27,7 +27,7 @@ resource "null_resource" "push" {
   provisioner "local-exec" {
     command     = <<EOT
 docker build -t ${aws_ecr_repository.ecr_repo[0].name} ${var.source_image_path};
-$((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url});
+${local.is_windows ? "$((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url})" : "aws ecr get-login-password --region ${var.environment.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url}"};
 docker tag ${aws_ecr_repository.ecr_repo[0].name}:${var.tag} ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
 docker push ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
 EOT
