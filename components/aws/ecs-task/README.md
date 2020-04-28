@@ -18,7 +18,7 @@ Use in combination with the `ECS-Cluster` component.
 |------|-------------|------|---------|:-----:|
 | container\_command | Optional. Overrides 'command' for the image. | `any` | n/a | yes |
 | container\_entrypoint | Optional. Overrides the 'entrypoint' for the image. | `any` | n/a | yes |
-| container\_image | e.g. [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name] | `string` | n/a | yes |
+| container\_image | Examples: 'python:3.8', [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name] | `string` | n/a | yes |
 | ecs\_cluster\_name | The name of the ECS Cluster to use. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | load\_balancer\_arn | Required only if `use_load_balancer` = True. The load balancer to use for inbound traffic. | `string` | n/a | yes |

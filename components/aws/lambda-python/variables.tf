@@ -41,9 +41,17 @@ variable "lambda_source_folder" {
   type        = string
   default     = "resources/fn_log"
 }
-variable "s3_path_to_lambda_zip" {
-  description = "S3 Path to where the source code zip should be uploaded."
+variable "upload_to_s3" {
+  description = "True to upload source code to S3, False to upload inline with the Lambda function."
+  type        = bool
+}
+variable "upload_to_s3_path" {
+  description = <<EOF
+S3 Path to where the source code zip should be uploaded.
+Use in combination with: `upload_to_s3 = true`
+EOF
   type        = string
+  default     = null
 }
 # variable "dependency_urls" {
 #   description = "If additional files should be packaged into the source code zip, please provide map of relative target paths to their respective download URLs."
@@ -55,28 +63,45 @@ variable "s3_trigger_bucket" {
   type        = string
   default     = null
 }
-variable "s3_triggers" {
+variable "functions" {
   description = <<EOF
-A map of function names to trigger definitions. Each definitions should contain the following attributes:
-`triggering_path` (the S3 key prefix on the bucket which should trigger the function), `function_handler`
-(a valid function handler reference, per the AWS Lambda spec), `environment_vars` (a map of environment
-variable names to their values), and `environment_secrets` (a map of secret IDs which the lambda function
-should be granted access to).
+A map of function names to create and an object with properties describing the function.
+
+Example:
+  functions = [
+    "fn_log" = {
+      description = "Add an entry to the log whenever a file is created."
+      handler     = "main.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+  ]
 EOF
   type = map(object({
-    # function_name       = string
-    triggering_path     = string
-    function_handler    = string
-    environment_vars    = map(string)
-    environment_secrets = map(string)
+    description = string
+    handler     = string
+    environment = map(string)
+    secrets     = map(string)
   }))
-  default = {
-    "fn_log" = {
-      # function_name       = "fn_log"
-      triggering_path     = "*"
-      function_handler    = "main.lambda_handler"
-      environment_vars    = {}
-      environment_secrets = {}
+}
+
+variable "s3_triggers" {
+  description = <<EOF
+A list of objects describing the S3 trigger action.
+
+Example:
+  s3_triggers = [
+    {
+      function_name = "fn_log"
+      s3_bucket     = "*"
+      s3_path       = "*"
     }
-  }
+  ]
+EOF
+  type = list(object({
+    function_name = string
+    s3_bucket     = string
+    s3_path       = string
+  }))
+  default = null
 }

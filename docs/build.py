@@ -2,7 +2,19 @@ import os
 
 from slalom.dataops import io, jobs, infra
 
-SPECIAL_CASE_WORDS = ["AWS", "ECR", "ECS", "IAM", "VPC", "DBT", "EC2", "RDS", "MySQL"]
+SPECIAL_CASE_WORDS = [
+    "AWS",
+    "ECR",
+    "ECS",
+    "IAM",
+    "VPC",
+    "DBT",
+    "EC2",
+    "RDS",
+    "MySQL",
+    "ML",
+    "MLOps",
+]
 
 CATALOG_TEMPLATE = """
 # DataOps Infrastructure {index_type}
