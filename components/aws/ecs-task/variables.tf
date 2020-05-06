@@ -48,7 +48,7 @@ variable "container_entrypoint" {
   default     = null
 }
 variable "container_image" {
-  description = "e.g. [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
+  description = "Examples: 'python:3.8', [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
   type        = string
 }
 variable "container_name" {

@@ -1,0 +1,142 @@
+#!/usr/bin/env python3.6
+
+# A sample training component that trains a simple scikit-learn decision tree model.
+# This implementation works in File mode and makes no assumptions about the input file names.
+# Input is specified as CSV with a data point in each row and the labels in the first column.
+
+from __future__ import print_function
+
+import os
+import json
+import pickle
+import sys
+import traceback
+
+import pandas as pd
+import sklearn.model_selection as skms
+import numpy as np
+
+import xgboost as xgb
+import shap
+
+# These are the paths to where SageMaker mounts interesting things in your container.
+
+prefix = "/opt/ml/"
+
+input_path = prefix + "input/data"
+hyperparams_path = prefix + "input/config/hyperparameters.json"
+output_path = os.path.join(prefix, "output")
+model_path = os.path.join(prefix, "model")
+
+# This algorithm has a single channel of input data called 'train'. Since we run in
+# File mode, the input files are copied to the directory specified here.
+channel_name = "train"
+train_path = os.path.join(input_path, channel_name)
+
+# The function to execute the training.
+def train():
+    print("Starting the training.")
+    try:
+
+        # Take the set of files and read them all into a single pandas dataframe
+        input_files = [
+            os.path.join(train_path, file) for file in os.listdir(train_path)
+        ]
+        if len(input_files) == 0:
+            raise ValueError(
+                (
+                    "There are no files in {}.\n"
+                    + "This usually indicates that the channel ({}) was incorrectly specified,\n"
+                    + "the data specification in S3 was incorrectly specified or the role specified\n"
+                    + "does not have permission to access the data."
+                ).format(train_path, channel_name)
+            )
+        raw_data = [pd.read_csv(file, index_col=0) for file in input_files]
+        train_data = pd.concat(raw_data)
+
+        # labels are in the first column
+        train_y = train_data.iloc[:, 0]
+        train_X = train_data.iloc[:, 1:]
+
+        # Read the hyperparameter config json file
+        with open(hyperparams_path) as _in_file:
+            hyperparams_dict = json.load(_in_file)
+
+        # Usually max_delta_step is not needed, but it might help in logistic regression when class is extremely imbalanced.
+        params = {
+            'base_score': 0.5, 
+            'booster': 'gbtree', 
+            'missing': None, 
+            'n_jobs': 1, 
+            'nthread': None,
+            'objective': 'binary:logistic', 
+            'random_state': 0, 
+            'silent': True, 
+            'reg_alpha': 0, 
+            'reg_lambda': 1, 
+            #hyperparameters
+            "gamma": float(hyperparams_dict['gamma']),
+            "max_depth": int(hyperparams_dict['max_depth']),
+            "min_child_weight": float(hyperparams_dict['min_child_weight']),
+            "subsample": float(hyperparams_dict['subsample']),
+            "max_delta_step": float(hyperparams_dict['max_delta_step']),
+            "scale_pos_weight": float(hyperparams_dict['scale_pos_weight'])
+        }
+
+        cv = skms.StratifiedKFold(n_splits=int(hyperparams_dict['kfold_splits']), random_state=1, shuffle=True)
+
+        booster = xgb.XGBClassifier(**params)
+        scorings = ("roc_auc","accuracy","precision","recall","f1",)
+
+        cv_results = skms.cross_validate(
+            booster,
+            X=train_X,
+            y=train_y,
+            scoring=scorings,
+            cv=cv,
+            return_estimator=True,
+            return_train_score=True,
+            verbose=1,
+            n_jobs=None,
+        )
+
+        # Log the objective metric name with its calculated value. In tis example is Precision.
+        # The objective name should be exactly the same with the one specified in the hyperparams congig json file.
+        # The value must be a numeric (float or int).
+        roc_auc = np.mean(cv_results['test_roc_auc'])
+        accuracy = np.mean(cv_results['test_accuracy'])
+        precision = np.mean(cv_results['test_precision'])
+        recall = np.mean(cv_results['test_recall'])
+        f1 = np.mean(cv_results['test_f1'])
+        
+        print("{}: {}".format('roc_auc', roc_auc))
+        print("{}: {}".format('accuracy', accuracy))
+        print("{}: {}".format('precision', precision))
+        print("{}: {}".format('recall', recall))
+        print("{}: {}".format('f1', f1))
+
+        # train model on whole dataset
+        clf = booster.fit(X=train_X, y=train_y)
+
+        # save the model
+        with open(os.path.join(model_path, "xgboost-model.pkl"), "wb") as out:
+            pickle.dump(clf, out, protocol=0)
+            print("Training complete.")
+
+    except Exception as e:
+        # Write out an error file. This will be returned as the failureReason in the
+        # DescribeTrainingJob result.
+        trc = traceback.format_exc()
+        with open(os.path.join(output_path, "failure"), "w") as s:
+            s.write("Exception during training: " + str(e) + "\n" + trc)
+        # Printing this causes the exception to be in the training job logs, as well.
+        print("Exception during training: " + str(e) + "\n" + trc, file=sys.stderr)
+        # A non-zero exit code causes the training job to be marked as Failed.
+        sys.exit(255)
+
+
+if __name__ == "__main__":
+    train()
+
+    # A zero exit code causes the job to be marked a Succeeded.
+    sys.exit(0)
