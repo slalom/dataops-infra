@@ -3,6 +3,6 @@
 # NOTE: 1. Changing the project shortname also requires updating the credentials file: ~/.aws/credentials
 #       2. Before changing access keys to a new account, remember to run `terraform destroy`
 aws_region: us-east-1
-project_shortname: TestProject
+project_shortname: employee-attrition
 resource_tags:
-  admin_contact: my.admin@sample.com
+  admin_contact: jack.sandom@slalom.com

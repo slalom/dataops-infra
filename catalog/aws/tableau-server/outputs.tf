@@ -1,5 +1,3 @@
-output "ssh_public_key_path" { value = local.ssh_public_key_filepath }
-output "ssh_private_key_path" { value = local.ssh_private_key_filepath }
 locals {
   ec2_instance_ids          = flatten([module.linux_tableau_servers.instance_ids, module.windows_tableau_servers.instance_ids])
   ec2_instance_public_ips   = merge(module.linux_tableau_servers.public_ips, module.windows_tableau_servers.public_ips)
@@ -7,19 +5,46 @@ locals {
   ec2_instance_states       = merge(module.linux_tableau_servers.instance_states, module.windows_tableau_servers.instance_states)
   ec2_remote_admin_commands = merge(module.linux_tableau_servers.remote_admin_commands, module.windows_tableau_servers.remote_admin_commands)
 }
-output "ec2_instance_ids" { value = local.ec2_instance_ids }
-output "ec2_instance_public_ips" { value = local.ec2_instance_public_ips }
-output "ec2_instance_private_ips" { value = local.ec2_instance_private_ips }
-output "ec2_instance_states" { value = local.ec2_instance_states }
-output "ec2_remote_admin_commands" { value = local.ec2_remote_admin_commands }
-output "ec2_windows_instance_passwords" { value = module.windows_tableau_servers.windows_instance_passwords }
+output "ec2_instance_ids" {
+  description = "The EC2 intance ID(s) created by the module."
+  value       = local.ec2_instance_ids
+}
+output "ec2_instance_private_ips" {
+  description = "The private IP address for each EC2 instance."
+  value       = local.ec2_instance_private_ips
+}
+output "ec2_instance_public_ips" {
+  description = "The public IP address for each EC2 instance (if applicable)."
+  value       = local.ec2_instance_public_ips
+}
+output "ec2_instance_states" {
+  description = "The current EC2 instance status for each Tableau Server instance, as of time of plan execution."
+  value       = local.ec2_instance_states
+}
+output "ec2_remote_admin_commands" {
+  description = "Command line command to connect to the Tableau Server instance(s) via RDP or SSH."
+  value       = local.ec2_remote_admin_commands
+}
+output "ec2_windows_instance_passwords" {
+  description = "The admin passwords for Windows instances (if applicable)."
+  value       = module.windows_tableau_servers.windows_instance_passwords
+}
 # output "ssh_key_name" { value = var.num_linux_instances == 0 ? "n/a" : module.linux_tableau_servers[0].key_name }
 # TODO: Detect EC2 Pricing
 # output "ec2_instance_hr_base_price" {
 #   # estimated base price of the (linux) instance type, excluding upcharge for Windows instance and excluding any special pricing or reservation discounts.
 #   value = module.linux_tableau_servers.instance_hr_list_price
 # }
+output "ssh_public_key_path" {
+  description = "Local path to public key file for connecting to the server via SSH."
+  value       = local.ssh_public_key_filepath
+}
+output "ssh_private_key_path" {
+  description = "Local path to private key file for connecting to the server via SSH."
+  value       = local.ssh_private_key_filepath
+}
 output "summary" {
+  description = "Summary of resources created by this module."
   value = <<EOF
 
 Instances Launched:

@@ -2,7 +2,7 @@
 
 ## Catalog Documentation
 
-Catalog documentation is available from the [Infrastructure Catalog Index](docs/catalog_index.md).
+Catalog documentation is available from the [Infrastructure Catalog Index](catalog/README.md).
 
 ## Contributions Guide
 

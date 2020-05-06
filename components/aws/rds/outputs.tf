@@ -1,6 +1,10 @@
-output "endpoint" { value = aws_db_instance.rds_db.endpoint }
+output "endpoint" {
+  description = "The connection endpoint for the new RDS instance."
+  value       = aws_db_instance.rds_db.endpoint
+}
 output "summary" {
-  value = <<EOF
+  description = "Summary of resources created by this module."
+  value       = <<EOF
 
 RDS ID:         ${aws_db_instance.rds_db.id}
 RDS ARN:        ${aws_db_instance.rds_db.arn}

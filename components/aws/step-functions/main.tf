@@ -5,24 +5,27 @@
 *
 */
 
-# Hack required to allow time for IAM execution role to propagate - customise to use desired interpreter
+# Hack required to allow time for IAM execution role to propagate
+locals {
+  is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+}
+
 resource "null_resource" "delay" {
   provisioner "local-exec" {
-    command     = "sleep 30"
-    interpreter = ["PowerShell", "-Command"]
+    command     = "sleep 60"
+    interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
   }
   triggers = {
-    "states_exec_role" = "arn:aws:iam::${var.account_id}:role/StepFunctionsWorkflowExecutionRole"
+    "states_exec_role" = aws_iam_role.step_functions_ml_ops_role.arn
   }
 }
 
 resource "aws_sfn_state_machine" "state_machine" {
-  name     = var.state_machine_name
-  role_arn = "arn:aws:iam::${var.account_id}:role/StepFunctionsWorkflowExecutionRole"
+  name = "${lower(var.name_prefix)}state-machine"
+  tags = var.resource_tags
 
   definition = var.state_machine_definition
-
-  tags = var.resource_tags
+  role_arn   = aws_iam_role.step_functions_ml_ops_role.arn
 
   depends_on = [null_resource.delay]
 }

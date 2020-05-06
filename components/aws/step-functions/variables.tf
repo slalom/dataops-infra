@@ -24,14 +24,32 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "state_machine_name" {
-  type = string
+variable "feature_store_bucket" {
+  description = "Bucket which contains pre-transformed training data and scoring data."
+  type        = string
+}
+
+variable "extracts_store_bucket" {
+  description = "Bucket which contains transformed training and scoring data."
+  type        = string
+}
+
+variable "model_store_bucket" {
+  description = "Bucket which contains model objects."
+  type        = string
+}
+
+variable "output_store_bucket" {
+  description = "Bucket which contains batch transformation output."
+  type        = string
 }
 
 variable "state_machine_definition" {
-  type = string
+  description = "The JSON definition of the state machine to be created."
+  type        = string
 }
 
-variable "account_id" {
-  type = string
+variable "lambda_functions" {
+  description = "Map of function names to ARNs. Used to ensure state machine access to functions."
+  type        = map(string)
 }

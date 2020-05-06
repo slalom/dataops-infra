@@ -20,6 +20,9 @@ build
 *.tfstate
 *.tfstate.*
 
+# tfplan
+tfplan
+
 # .tfvars files
 *.tfvars
 

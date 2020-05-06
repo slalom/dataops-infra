@@ -18,16 +18,26 @@ trigger automatically when new content is added.
 | lambda\_python\_source | Local path to a folder containing the lambda source code (e.g. 'resources/fn\_log') | `string` | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| s3\_triggers | List of S3 triggers objects, for example: [{   function\_name       = "fn\_log"   triggering\_path     = "\*"   function\_handler    = "main.lambda\_handler"   environment\_vars    = {}   environment\_secrets = {} }] | <pre>map(object({<br>    # function_name       = string<br>    triggering_path     = string<br>    function_handler    = string<br>    environment_vars    = map(string)<br>    environment_secrets = map(string)<br>  }))</pre> | `{}` | no |
+| s3\_triggers | List of S3 triggers objects, for example:<pre>[{<br>  function_name       = "fn_log"<br>  triggering_path     = "*"<br>  lambda_handler      = "main.lambda_handler"<br>  environment_vars    = {}<br>  environment_secrets = {}<br>}]</pre> | <pre>map(<br>    # function_name as map key<br>    object({<br>      triggering_path     = string<br>      lambda_handler      = string<br>      environment_vars    = map(string)<br>      environment_secrets = map(string)<br>    })<br>  )</pre> | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| s3\_data\_bucket | n/a |
-| s3\_logging\_bucket | n/a |
-| s3\_metadata\_bucket | n/a |
-| summary | n/a |
+| s3\_data\_bucket | The S3 bucket used for data storage. |
+| s3\_logging\_bucket | The S3 bucket used for log file storage. |
+| s3\_metadata\_bucket | The S3 bucket used for metadata file storage. |
+| summary | Summary of resources created by this module. |
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
 
 ---------------------
 
