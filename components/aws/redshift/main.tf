@@ -16,11 +16,11 @@ resource "aws_redshift_subnet_group" "subnet_group" {
 }
 
 resource "aws_redshift_cluster" "redshift" {
-  cluster_identifier        = "${lower(var.name_prefix)}redshift"
+  cluster_identifier        = coalesce(var.identifier, "${lower(replace(var.name_prefix, "--", "-"))}redshift")
   cluster_subnet_group_name = aws_redshift_subnet_group.subnet_group.name
   database_name             = var.database_name
 
-  master_username = "rsadmin"
+  master_username = var.admin_username
   master_password = (
     var.admin_password == null
     ? "${lower(substr(random_id.random_pass.hex, 0, 4))}${upper(substr(random_id.random_pass.hex, 4, 4))}"

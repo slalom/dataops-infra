@@ -24,6 +24,16 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
+variable "identifier" {
+  description = "Optional. The unique identifier for the redshift cluster."
+  type        = string
+  default     = null
+}
+variable "admin_username" {
+  description = "Optional (default=''). The initial admin username."
+  type        = string
+  default     = "rsadmin"
+}
 variable "admin_password" {
   description = "The initial admin password. Must be 8 characters long."
   type        = string

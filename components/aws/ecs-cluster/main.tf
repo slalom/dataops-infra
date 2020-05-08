@@ -8,6 +8,10 @@
 
 data "aws_availability_zones" "az_list" {}
 
+resource "random_id" "suffix" {
+  byte_length = 2
+}
+
 locals {
   project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
 }
@@ -73,6 +77,6 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_iam_instance_profile" "ecs_iam_instance_profile" {
-  name = "${var.name_prefix}ecs_iam_instance_profile"
+  name = "${var.name_prefix}ecs_iam_instance_profile-${random_id.suffix.dec}"
   role = aws_iam_role.ecs_instance_role.id
 }

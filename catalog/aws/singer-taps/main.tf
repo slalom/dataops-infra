@@ -81,7 +81,7 @@ module "ecs_tap_sync_task" {
   environment_vars = merge(
     {
       "TAP_CONFIG_DIR" : "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
-      "TAP_STATE_FILE" : "${var.data_lake_storage_path}/${var.state_file_naming_scheme}",
+      "TAP_STATE_FILE" : "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
     },
     {
       for k, v in var.taps[0].settings :

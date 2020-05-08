@@ -10,6 +10,10 @@ data "aws_ecs_cluster" "ecs_cluster" {
   cluster_name = var.ecs_cluster_name
 }
 
+resource "random_id" "suffix" {
+  byte_length = 2
+}
+
 locals {
   env_vars = merge(
     {
@@ -42,13 +46,13 @@ module "secrets" {
 }
 
 resource "aws_cloudwatch_log_group" "cw_log_group" {
-  name = "${var.name_prefix}AWSLogs"
+  name = "${var.name_prefix}AWSLogs-${random_id.suffix.dec}"
   tags = var.resource_tags
   # lifecycle { prevent_destroy = true }
 }
 
 resource "aws_ecs_task_definition" "ecs_task" {
-  family                   = "${var.name_prefix}Task"
+  family                   = "${var.name_prefix}Task-${random_id.suffix.dec}"
   network_mode             = local.network_mode
   requires_compatibilities = [local.launch_type]
   cpu                      = var.container_num_cores * 1024
@@ -93,7 +97,7 @@ DEFINITION
 }
 
 resource "aws_security_group" "ecs_tasks_sg" {
-  name        = "${var.name_prefix}ECSSecurityGroup"
+  name        = "${var.name_prefix}ECSSecurityGroup-${random_id.suffix.dec}"
   description = "allow inbound access on specific ports, outbound on all ports"
   vpc_id      = var.environment.vpc_id
   tags        = var.resource_tags
@@ -124,7 +128,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  name            = "${var.name_prefix}ECSService"
+  name            = "${var.name_prefix}ECSService-${random_id.suffix.dec}"
   desired_count   = var.always_on ? 1 : 0
   cluster         = data.aws_ecs_cluster.ecs_cluster.arn
   task_definition = aws_ecs_task_definition.ecs_task.arn

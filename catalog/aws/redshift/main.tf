@@ -18,6 +18,7 @@ module "redshift" {
   resource_tags       = var.resource_tags
   skip_final_snapshot = var.skip_final_snapshot
   admin_password      = var.admin_password
+  admin_username      = var.admin_username
   node_type           = var.node_type
   num_nodes           = var.num_nodes
   kms_key_id          = var.kms_key_id

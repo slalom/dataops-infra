@@ -12,7 +12,7 @@ module "rds_mysql" {
   identifier          = "rds-db"
   admin_username      = "mysqladmin"
   admin_password      = "asdfASDF12"
-  skip_final_snapshot = true
+  skip_final_snapshot = true  # allows simple DB deletion for POC environments
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
