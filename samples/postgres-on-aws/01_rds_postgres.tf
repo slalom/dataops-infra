@@ -1,7 +1,8 @@
 # NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
+output "summary" { value = module.rds_postgres.summary }
 module "rds_postgres" {
-  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/rds?ref=master"
+  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=master"
   source        = "../../catalog/aws/postgres"
   name_prefix   = "${local.project_shortname}-"
   environment   = module.env.environment
@@ -26,5 +27,4 @@ module "rds_postgres" {
 
 #OPTIONAL CONFIGURATION HERE
 
-output "summary" { value = module.rds_postgres.summary }
 

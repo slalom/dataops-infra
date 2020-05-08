@@ -1,7 +1,8 @@
 # NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
+output "summary" { value = module.redshift_dw.summary }
 module "redshift_dw" {
-  # source            = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/redshift?ref=master"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/redshift?ref=master"
   source        = "../../catalog/aws/redshift"
   name_prefix   = "${local.project_shortname}-"
   environment   = module.env.environment
@@ -18,8 +19,5 @@ module "redshift_dw" {
   num_nodes         = 1
 
   admin_password    = "asdfAS12"
-  aws_region        = local.aws_region
   */
 }
-
-output "summary" { value = module.redshift_dw.summary }
