@@ -77,3 +77,14 @@ variable "s3_logging_path" {
   type        = string
   default     = null
 }
+
+variable "jdbc_cidr" {
+  description = "List of CIDR blocks which should be allowed to connect to the instance on the JDBC port."
+  type        = list(string)
+  default     = []
+}
+variable "whitelist_terraform_ip" {
+  description = "True to allow the terraform user to connect to the DB instance."
+  type        = bool
+  default     = true
+}

@@ -23,4 +23,7 @@ module "mysql" {
   kms_key_id          = var.kms_key_id
   jdbc_port           = var.jdbc_port
   storage_size_in_gb  = var.storage_size_in_gb
+
+  jdbc_cidr              = var.jdbc_cidr
+  whitelist_terraform_ip = var.whitelist_terraform_ip
 }

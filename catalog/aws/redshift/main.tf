@@ -26,4 +26,7 @@ module "redshift" {
   jdbc_port           = var.jdbc_port
   s3_logging_bucket   = var.s3_logging_bucket
   s3_logging_path     = var.s3_logging_path
+
+  jdbc_cidr              = var.jdbc_cidr
+  whitelist_terraform_ip = var.whitelist_terraform_ip
 }
