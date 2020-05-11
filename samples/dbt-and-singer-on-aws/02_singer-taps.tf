@@ -46,7 +46,7 @@ module "singer_taps_on_aws" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  container_image          = "slalomggp/singer:pardot-to-s3-csv--pre"
+  container_image          = "dataopstk/tapdance:pardot-to-s3-csv--pre"
   data_file_naming_scheme  = "{tap}/{table}/{version}/{file}"
   state_file_naming_scheme = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
 

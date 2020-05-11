@@ -14,6 +14,7 @@ module "postgres" {
   environment         = var.environment
   resource_tags       = var.resource_tags
   skip_final_snapshot = var.skip_final_snapshot
+  database_name       = var.database_name
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   instance_class      = var.instance_class

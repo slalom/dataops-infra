@@ -34,6 +34,10 @@ variable "admin_password" {
   type        = string
   default     = null
 }
+variable "database_name" {
+  description = "The name of the initial database to be created."
+  default     = "default_db"
+}
 variable "elastic_ip" {
   description = "Optional. An Elastic IP endpoint which will be used to for routing incoming traffic."
   type        = string

@@ -47,8 +47,17 @@ variable "engine_version" {
   type        = string
 }
 variable "identifier" {
-  description = "The database name which will be used within connection strings and URLs."
+  description = "The endpoint id which will be used within connection strings and URLs."
   default     = "rds-db"
+}
+variable "database_name" {
+  description = "The name of the initial database to be created."
+  default     = "default_db"
+}
+variable "whitelist_terraform_ip" {
+  description = "True to allow the terraform user to connect to the DB instance."
+  type        = bool
+  default     = true
 }
 variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )"

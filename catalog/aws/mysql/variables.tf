@@ -33,7 +33,10 @@ variable "admin_password" {
   type        = string
   default     = null
 }
-
+variable "database_name" {
+  description = "The name of the initial database to be created."
+  default     = "default_db"
+}
 variable "identifier" {
   description = "The database name which will be used within connection strings and URLs."
   default     = "rds-db"

@@ -52,7 +52,7 @@ EOF
     var.target
   )
   container_image = coalesce(
-    var.container_image, "slalomggp/singer:${var.taps[0].id}-to-${local.target.id}"
+    var.container_image, "dataopstk/tapdance:${var.taps[0].id}-to-${local.target.id}"
   )
   sync_commands = [
     for tap in var.taps :
