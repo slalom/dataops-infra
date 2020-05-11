@@ -56,7 +56,7 @@ EOF
   )
   sync_commands = [
     for tap in var.taps :
-    "s-tap sync ${tap.id} ${local.target.id}"
+    "tapdance sync ${tap.id} ${local.target.id}"
   ]
 }
 
