@@ -269,8 +269,8 @@ variable "glue_job_name" {
   default     = "data-transformation"
 }
 
-variable "glue_job_type" {
-  description = "Type of Glue job (Spark or Python Shell)."
+variable "glue_job_spark_flag" {
+  description = "(Default=True). True to use the default (Spark) Glue job type. False to use Python Shell."
   type        = string
-  default     = "pythonshell"
+  default     = false
 }

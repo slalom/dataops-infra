@@ -39,12 +39,20 @@ variable "s3_destination_bucket_name" {
   type        = string
 }
 
-variable "script_path" {
-  description = "Path to Glue script."
+variable "local_script_path" {
+  description = "Optional. If provided, the local script will automatically be uploaded to the remote bucket path. In not provided, will use s3_script_path instead."
   type        = string
+  default     = null
 }
 
-variable "job_type" {
-  description = "Type of Glue job (Spark or Python Shell)."
+variable "s3_script_path" {
+  description = "Ignored if `local_script_path` is provided. Otherwise, the file at this path will be used for the Glue script."
   type        = string
+  default     = null
+}
+
+variable "with_spark" {
+  description = "(Default=True). True for standard PySpark Glue job. False for Python Shell."
+  type        = bool
+  default     = true
 }

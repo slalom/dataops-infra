@@ -10,8 +10,12 @@ resource "aws_glue_job" "glue_job" {
   max_capacity = 1
 
   command {
-    script_location = "s3://${var.s3_script_bucket_name}/${var.script_path}"
-    name            = var.job_type
-    python_version  = 3
+    script_location = (
+      var.local_script_path == null ?
+      "s3://${var.s3_script_bucket_name}/${var.s3_script_path}" :
+      "s3://${aws_s3_bucket_object.py_script_upload[0].bucket}/${aws_s3_bucket_object.py_script_upload[0].key}"
+    )
+    name           = var.with_spark ? null : "pythonshell"
+    python_version = var.with_spark ? null : 3
   }
 }
