@@ -5,7 +5,6 @@
 *
 */
 
-
 locals {
   is_windows_host = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   user_home       = pathexpand("~")
@@ -35,9 +34,11 @@ module "vpc" {
   aws_profile          = var.aws_profile
 }
 
+resource "random_id" "suffix" { byte_length = 2 }
+
 module "ssh_key_pair" {
   source                = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
-  namespace             = "${var.name_prefix}ssh"
+  namespace             = "${var.name_prefix}ssh-${lower(random_id.suffix.dec)}"
   stage                 = "prod"
   name                  = "keypair"
   ssh_public_key_path   = local.secrets_folder
