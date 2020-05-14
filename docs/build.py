@@ -1,6 +1,10 @@
+#!/bin/python3
+
 import os
 
-from slalom.dataops import io, jobs, infra
+from slalom.dataops import infra
+import uio
+
 
 SPECIAL_CASE_WORDS = [
     "AWS",
@@ -158,7 +162,7 @@ def build_index(index_type: str, tf_dir: str, output_file: str, overview_desc: s
         index_type=index_type,
         overview=overview_desc,
     )
-    io.create_text_file(output_file, content)
+    uio.create_text_file(output_file, content)
 
 
 if __name__ == "__main__":

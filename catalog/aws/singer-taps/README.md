@@ -28,7 +28,7 @@ The Singer Taps platform is the open source stack which powers the [Stitcher](ht
 | container\_ram\_gb | Optional. Specify the amount of RAM to be available to the container. | `number` | `1` | no |
 | data\_file\_naming\_scheme | The naming pattern to use when landing new files in the data lake. Allowed variables are: `{tap}`, `{table}`, `{version}`, and `{file}`" | `string` | `"{tap}/{table}/v{version}/{file}"` | no |
 | scheduled\_sync\_times | A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm | `list(string)` | `[]` | no |
-| scheduled\_timezone | The timezone used in scheduling.<br>Currently the following codes are supported: PST, EST, UTC | `string` | `"PT"` | no |
+| scheduled\_timezone | The timezone used in scheduling.<br>Currently the following codes are supported: PST, PDT, EST, UTC | `string` | `"PT"` | no |
 | state\_file\_naming\_scheme | The naming pattern to use when writing or updating state files. State files keep track of<br>data recency and are necessary for incremental loading. Allowed variables are: `{tap}`, `{table}`, `{version}`, and `{file}`" | `string` | `"{tap}/{table}/state/{tap}-{table}-v{version}-state.json"` | no |
 
 ## Outputs

@@ -29,6 +29,17 @@ Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue j
 
 ---------------------
 
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [iam.tf](iam.tf)
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [variables.tf](variables.tf)
+
+---------------------
+
 _**NOTE:** This documentation was auto-generated using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._

@@ -38,7 +38,7 @@ supported are Sagemaker endpoints and/or batch inference.
 | max\_number\_training\_jobs | Maximum number of total training jobs for hyperparameter tuning. | `number` | `3` | no |
 | max\_parallel\_training\_jobs | Maximimum number of training jobs running in parallel for hyperparameter tuning. | `number` | `1` | no |
 | parameter\_ranges | Tuning ranges for hyperparameters.<br>Expects a map of one or both "ContinuousParameterRanges" and "IntegerParameterRanges".<br>Each item in the map should point to a list of object with the following keys:  - Name        - name of the variable to be tuned  - MinValue    - min value of the range  - MaxValue    - max value of the range  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic' | <pre>map(list(object({<br>    Name        = string<br>    MinValue    = string<br>    MaxValue    = string<br>    ScalingType = string<br>  })))</pre> | <pre>{<br>  "ContinuousParameterRanges": [<br>    {<br>      "MaxValue": "10",<br>      "MinValue": "0",<br>      "Name": "gamma",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "20",<br>      "MinValue": "1",<br>      "Name": "min_child_weight",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "0.5",<br>      "MinValue": "0.1",<br>      "Name": "subsample",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "1",<br>      "MinValue": "0",<br>      "Name": "max_delta_step",<br>      "ScalingType": "Auto"<br>    },<br>    {<br>      "MaxValue": "10",<br>      "MinValue": "1",<br>      "Name": "scale_pos_weight",<br>      "ScalingType": "Auto"<br>    }<br>  ],<br>  "IntegerParameterRanges": [<br>    {<br>      "MaxValue": "10",<br>      "MinValue": "1",<br>      "Name": "max_depth",<br>      "ScalingType": "Auto"<br>    }<br>  ]<br>}</pre> | no |
-| score\_local\_path | Local path for scoring data. | `string` | `"source/data/score.csv"` | no |
+| score\_local\_path | Local path for scoring data. Set to null for endpoint inference | `string` | `"source/data/score.csv"` | no |
 | script\_path | Local path for Glue Python script. | `string` | `"source/scripts/transform.py"` | no |
 | static\_hyperparameters | Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.<br>E.g. `{ "kfold_splits" = "5" }` | `map` | <pre>{<br>  "kfold_splits": "5"<br>}</pre> | no |
 | train\_local\_path | Local path for training data. | `string` | `"source/data/train.csv"` | no |
@@ -54,6 +54,77 @@ supported are Sagemaker endpoints and/or batch inference.
 | Name | Description |
 |------|-------------|
 | summary | Summary of resources created by this module. |
+## Usage
+
+### General Usage Instructions
+
+#### Prereqs:
+
+1. Create glue jobs (see sample code in `transform.py`).
+
+#### Terraform Config:
+
+1. If additional python dependencies are needed, list these in [TK] config variable. These will be packaged into python wheels (`.whl` files) and uploaded to S3 automatically.
+2. Configure terraform variable `script_path` with location of Glue transform code.
+
+#### Terraform Deploy:
+
+1. Run `terraform apply` which will create all resources and upload files to the correct bucket (enter 'yes' when prompted).
+
+#### Execute State Machine:
+
+1. Execute the state machine by landing first your training data and then your scoring (prediction) data into the feature store S3 bucket.
+
+### Bring Your Own Model
+
+_BYOM (Bring your own Model) allows you to build a custom docker image which will be used during state machine execution, in place of the generic training image._
+
+For BYOM, perform all of the above and also the steps below.
+
+#### Additional Configuration
+
+Create a local folder in the code repository which contains at least the following files:
+
+    * `Dockerfile`
+    * `.Dockerignore`
+    * `build_and_push.sh`
+    * subfolder containing the following files:
+      * Custom python:
+        * `train` (with no file extension)
+        * `predictor.py`
+      * Generic / boilerplate (copy from standard sample):
+        * `serve` (with no file extension)
+        * `wsgi.py` (wrapper for gunicorn to find your app)
+        * `nginx.conf`
+
+## File Stores Used by MLOps Module
+
+#### File Stores (S3 Buckets):
+
+1. Input Buckets:
+   1. Feature Store - Input training and scoring data.
+2. Managed Buckets:
+   1. Source Repository - Location where Glue python scripts are stored.
+   2. Extract Store - Training data (model inputs) stored to be consumed by the training model. Default output location for the Glue transformation job(s).
+   3. Model Store - Landing zone for pickled models as they are created and tuned by SageMaker training jobs.
+   4. Metadata Store - For logging SageMaker metadata information about the tuning and training jobs.
+   5. Output Store - Output from batch transformations (csv). Ignored when running endpoint inference.
+
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [ecr-image.tf](ecr-image.tf)
+* [glue-crawler.tf](glue-crawler.tf)
+* [glue-job.tf](glue-job.tf)
+* [lambda.tf](lambda.tf)
+* [main.tf](main.tf)
+* [outputs.tf](outputs.tf)
+* [s3.tf](s3.tf)
+* [variables.tf](variables.tf)
 
 ---------------------
 

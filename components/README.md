@@ -8,8 +8,11 @@ These components define the technical building blocks which enable advanced, rea
 1. [AWS Components](#aws-components)
     - [AWS EC2](#aws-ec2)
     - [AWS ECR](#aws-ecr)
+    - [AWS ECR-Image](#aws-ecr-image)
     - [AWS ECS-Cluster](#aws-ecs-cluster)
     - [AWS ECS-Task](#aws-ecs-task)
+    - [AWS Glue-Crawler](#aws-glue-crawler)
+    - [AWS Glue-Job](#aws-glue-job)
     - [AWS Lambda-Python](#aws-lambda-python)
     - [AWS RDS](#aws-rds)
     - [AWS Redshift](#aws-redshift)
@@ -47,6 +50,29 @@ should not be accessible to external users.
 
 -------------------
 
+### [AWS ECR-Image](../components/aws/ecr-image/README.md)
+
+ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub.
+ECR allows you to securely publish docker images which should not be accessible to external users.
+
+Known Issue (TODO): ECR push requires that CLI credentials at runtime (terraform apply) match with the
+project's AWS credentails, as specified in .screts/aws-credentials.
+
+This _might_ help:
+
+```bash
+cd dataops-infra
+SET AWS_SHARED_CREDENTIALS_FILE=($pwd)/.secrets/aws-credentials
+SET AWS_PROFILE=default
+cd infra
+terraform apply
+```
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecr-image?ref=master`
+* See the [AWS ECR-Image Readme](../components/aws/ecr-image/README.md) for input/output specs and additional info.
+
+-------------------
+
 ### [AWS ECS-Cluster](../components/aws/ecs-cluster/README.md)
 
 ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
@@ -70,6 +96,26 @@ Use in combination with the `ECS-Cluster` component.
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-task?ref=master`
 * See the [AWS ECS-Task Readme](../components/aws/ecs-task/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS Glue-Crawler](../components/aws/glue-crawler/README.md)
+
+Glue is AWS's fully managed extract, transform, and load (ETL) service.
+A Glue crawler is used to access a data store and create table definitions.
+This can be used in conjuction with Amazon Athena to query flat files in S3 buckets using SQL.
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/glue-crawler?ref=master`
+* See the [AWS Glue-Crawler Readme](../components/aws/glue-crawler/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS Glue-Job](../components/aws/glue-job/README.md)
+
+Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue job can be used job to run ETL Python scripts.
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/glue-job?ref=master`
+* See the [AWS Glue-Job Readme](../components/aws/glue-job/README.md) for input/output specs and additional info.
 
 -------------------
 
@@ -155,7 +201,7 @@ Included automatically when creating this module:
 * 1 VPC which contains the following:
     * 2 private subnets (for resources which **do not** need a public IP address)
     * 2 public subnets (for resources which do need a public IP address)
-    * 1 NAT gateway (allows private sugnet resources to reach the outside world)
+    * 1 NAT gateway (allows private subnet resources to reach the outside world)
     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
     * route tables and routes to connect all of the above
 
@@ -176,7 +222,7 @@ _(Coming soon)_
 
 -------------------
 
-_**NOTE:** This documentation was [auto-generated](../docs/build.py) using
+_**NOTE:** This documentation was [auto-generated](build.py) using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._
 

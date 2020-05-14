@@ -10,6 +10,7 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
     - [AWS Data-Lake](#aws-data-lake)
     - [AWS DBT](#aws-dbt)
     - [AWS Environment](#aws-environment)
+    - [AWS ML-Ops](#aws-ml-ops)
     - [AWS MySQL](#aws-mysql)
     - [AWS Postgres](#aws-postgres)
     - [AWS Redshift](#aws-redshift)
@@ -64,6 +65,19 @@ from this module is designed to be passed easily to downstream modules, streamli
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/environment?ref=master`
 * See the [AWS Environment Readme](../catalog/aws/environment/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS ML-Ops](../catalog/aws/ml-ops/README.md)
+
+This module automates MLOps tasks associated with training Machine Learning models.
+
+The module leverages Step Functions and Lambda functions as needed. The state machine
+executes hyperparameter tuning, training, and deployments as needed. Deployment options
+supported are Sagemaker endpoints and/or batch inference.
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/ml-ops?ref=master`
+* See the [AWS ML-Ops Readme](../catalog/aws/ml-ops/README.md) for input/output specs and additional info.
 
 -------------------
 
@@ -132,7 +146,7 @@ _(Coming soon)_
 
 -------------------
 
-_**NOTE:** This documentation was [auto-generated](../docs/build.py) using
+_**NOTE:** This documentation was [auto-generated](build.py) using
 `terraform-docs` and `s-infra` from `slalom.dataops`.
 Please do not attempt to manually update this file._
 

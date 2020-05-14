@@ -12,7 +12,7 @@ Included automatically when creating this module:
 * 1 VPC which contains the following:
     * 2 private subnets (for resources which **do not** need a public IP address)
     * 2 public subnets (for resources which do need a public IP address)
-    * 1 NAT gateway (allows private sugnet resources to reach the outside world)
+    * 1 NAT gateway (allows private subnet resources to reach the outside world)
     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
     * route tables and routes to connect all of the above
 
