@@ -7,7 +7,10 @@ resource "aws_glue_job" "glue_job" {
   role_arn     = aws_iam_role.glue_job_role.arn
   tags         = var.resource_tags
   glue_version = "1.0"
-  max_capacity = 1
+  max_capacity = var.with_spark ? null : 1
+
+  worker_type       = "Standard"
+  number_of_workers = var.num_workers
 
   command {
     script_location = (
@@ -16,6 +19,6 @@ resource "aws_glue_job" "glue_job" {
       "s3://${aws_s3_bucket_object.py_script_upload[0].bucket}/${aws_s3_bucket_object.py_script_upload[0].key}"
     )
     name           = var.with_spark ? null : "pythonshell"
-    python_version = var.with_spark ? null : 3
+    python_version = 3
   }
 }

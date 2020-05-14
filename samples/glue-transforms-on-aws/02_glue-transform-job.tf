@@ -1,4 +1,4 @@
-output "glue_job_name" { value = module.glue_job.glue_job_name }
+output "glue_job_summary" { value = module.glue_job.summary }
 module "glue_job" {
   source        = "../../components/aws/glue-job"
   name_prefix   = local.name_prefix

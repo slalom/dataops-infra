@@ -56,3 +56,15 @@ variable "with_spark" {
   type        = bool
   default     = true
 }
+
+variable "num_workers" {
+  description = "Min 2. The number or worker nodes to dedicate to each instance of the job."
+  type        = number
+  default     = 2
+}
+
+variable "max_instances" {
+  description = "The maximum number of simultaneous executions."
+  type        = number
+  default     = 10
+}
