@@ -17,6 +17,7 @@ args = getResolvedOptions(sys.argv,
 bucket = args['S3_DATA_BUCKET']
 
 sc = SparkContext()
+glue_context = GlueContext(sc)
 sqlContext = SQLContext(sc)
 spark = sqlContext.sparkSession
 
