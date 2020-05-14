@@ -1,3 +1,4 @@
+output "data_lake_summary" { value = module.data_lake.summary }
 module "data_lake" {
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
   source        = "../../catalog/aws/data-lake"

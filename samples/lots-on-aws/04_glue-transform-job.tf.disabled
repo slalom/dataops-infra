@@ -13,7 +13,7 @@ module "glue_job" {
 
   /* Optional config here:
 
-  # with_spark = trueS
+  # with_spark = true
 
 
   */

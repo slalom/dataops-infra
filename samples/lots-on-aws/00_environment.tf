@@ -1,7 +1,7 @@
 # STANDARD ENVIRONMENT DEFINITION
 # NO NEED TO MODIFY THIS FILE
 
-data "local_file" "config_yml" { filename = "${path.module}/../infra-config.yml" }
+data "local_file" "config_yml" { filename = "${path.module}/infra-config.yml" }
 locals {
   config            = yamldecode(data.local_file.config_yml.content)
   secrets_folder    = "${path.module}/../../.secrets"

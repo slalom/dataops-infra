@@ -4,6 +4,7 @@ build
 !build/README.md
 
 #  Local .terraform directories
+.output
 .terraform
 
 **/secrets/**
