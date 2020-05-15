@@ -15,7 +15,7 @@ locals {
 provider "aws" {
   version                 = "~> 2.10"
   region                  = local.aws_region
-  shared_credentials_file = "${local.secrets_folder}/credentials"
+  shared_credentials_file = "${local.secrets_folder}/aws-credentials"
   profile                 = "default"
 }
 

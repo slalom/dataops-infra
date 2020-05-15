@@ -56,7 +56,7 @@ ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerH
 ECR allows you to securely publish docker images which should not be accessible to external users.
 
 Known Issue (TODO): ECR push requires that CLI credentials at runtime (terraform apply) match with the
-project's AWS credentails, as specified in .screts/aws-credentials.
+project's AWS credentials, as specified in .secrets/aws-credentials.
 
 This _might_ help:
 
