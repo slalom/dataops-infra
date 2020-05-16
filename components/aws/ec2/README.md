@@ -56,9 +56,9 @@ credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ec2/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ec2/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ec2/variables.tf)
 
 ---------------------
 

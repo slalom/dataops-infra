@@ -38,10 +38,10 @@ for another step.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/variables.tf)
 
 ---------------------
 

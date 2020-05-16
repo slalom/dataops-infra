@@ -42,9 +42,9 @@ Included automatically when creating this module:
 
 _Source code for this module is available using the links below._
 
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/vpc/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/vpc/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/vpc/variables.tf)
 
 ---------------------
 

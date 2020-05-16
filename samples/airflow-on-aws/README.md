@@ -24,9 +24,9 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](00_environment.tf)
-* [01_data-lake.tf](01_data-lake.tf)
-* [02_airflow.tf](02_airflow.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/airflow-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/airflow-on-aws/01_data-lake.tf)
+* [02_airflow.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/airflow-on-aws/02_airflow.tf)
 
 ---------------------
 

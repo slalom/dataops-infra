@@ -36,10 +36,10 @@ Use in combination with the `ECS-Task` component.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-cluster/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-cluster/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-cluster/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-cluster/variables.tf)
 
 ---------------------
 
