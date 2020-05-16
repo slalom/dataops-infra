@@ -43,8 +43,8 @@ module "singer_taps_on_aws" {
       s3_key_prefix = "data/raw/{tap}/{table}/v{version}/"
     }
     secrets = {
-      aws_access_key_id     = "${local.secrets_file_path}:aws_access_key_id"
-      aws_secret_access_key = "${local.secrets_file_path}:aws_secret_access_key"
+      aws_access_key_id     = "${local.aws_credentials_file}:aws_access_key_id"
+      aws_secret_access_key = "${local.aws_credentials_file}:aws_secret_access_key"
     }
   }
 }
