@@ -42,11 +42,11 @@ S3-based triggers, to run the function automatically whenever a file is landed i
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [python-zip.tf](python-zip.tf)
-* [variables.tf](variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/lambda-python/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/lambda-python/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/lambda-python/outputs.tf)
+* [python-zip.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/lambda-python/python-zip.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/lambda-python/variables.tf)
 
 ---------------------
 

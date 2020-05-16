@@ -38,9 +38,9 @@ Airflow is an open source platform to programmatically author, schedule and moni
 
 _Source code for this module is available using the links below._
 
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/airflow/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/airflow/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/airflow/variables.tf)
 
 ---------------------
 

@@ -1,5 +1,5 @@
 
-# Samples Ml-Ops-On-AWS
+# Samples ML-Ops-On-AWS
 
 `/samples/ml-ops-on-aws`
 
@@ -17,19 +17,14 @@ No input.
 | env\_summary | n/a |
 | summary | n/a |
 
-## Usage Notes
-
-(TK - How to use this module...)
-
-
 ---------------------
 
 ## Source Files
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](00_environment.tf)
-* [01_ml-ops.tf](01_ml-ops.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/ml-ops-on-aws/00_environment.tf)
+* [01_ml-ops.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/ml-ops-on-aws/01_ml-ops.tf)
 
 ---------------------
 

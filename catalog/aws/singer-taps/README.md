@@ -43,10 +43,10 @@ The Singer Taps platform is the open source stack which powers the [Stitcher](ht
 
 _Source code for this module is available using the links below._
 
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [s3-upload.tf](s3-upload.tf)
-* [variables.tf](variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/outputs.tf)
+* [s3-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/s3-upload.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/variables.tf)
 
 ---------------------
 

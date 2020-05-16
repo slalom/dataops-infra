@@ -1,5 +1,5 @@
 
-# AWS Ml-Ops
+# AWS ML-Ops
 
 `/catalog/aws/ml-ops`
 
@@ -32,7 +32,7 @@ supported are Sagemaker endpoints and/or batch inference.
 | endpoint\_name | SageMaker inference endpoint to be created/updated. Endpoint will be created if<br>it does not already exist. | `string` | `"training-endpoint"` | no |
 | endpoint\_or\_batch\_transform | Choose whether to create/update an inference API endpoint or do batch inference on test data. | `string` | `"Batch Transform"` | no |
 | glue\_job\_name | Name of the Glue data transformation job name. | `string` | `"data-transformation"` | no |
-| glue\_job\_type | Type of Glue job (Spark or Python Shell). | `string` | `"pythonshell"` | no |
+| glue\_job\_spark\_flag | (Default=True). True to use the default (Spark) Glue job type. False to use Python Shell. | `string` | `false` | no |
 | inference\_comparison\_operator | Comparison operator for deploying the trained SageMaker model.<br>Used in combination with `inference_metric_threshold`.<br>Examples: 'NumericGreaterThan', 'NumericLessThan', etc. | `string` | `"NumericGreaterThan"` | no |
 | inference\_metric\_threshold | Threshold for deploying the trained SageMaker model.<br>Used in combination with `inference_comparison_operator`. | `number` | `0.7` | no |
 | max\_number\_training\_jobs | Maximum number of total training jobs for hyperparameter tuning. | `number` | `3` | no |
@@ -117,14 +117,14 @@ Create a local folder in the code repository which contains at least the followi
 
 _Source code for this module is available using the links below._
 
-* [ecr-image.tf](ecr-image.tf)
-* [glue-crawler.tf](glue-crawler.tf)
-* [glue-job.tf](glue-job.tf)
-* [lambda.tf](lambda.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [s3.tf](s3.tf)
-* [variables.tf](variables.tf)
+* [ecr-image.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/ecr-image.tf)
+* [glue-crawler.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/glue-crawler.tf)
+* [glue-job.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/glue-job.tf)
+* [lambda.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/lambda.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/outputs.tf)
+* [s3.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/s3.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/ml-ops/variables.tf)
 
 ---------------------
 

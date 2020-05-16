@@ -35,9 +35,9 @@ trigger automatically when new content is added.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/data-lake/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/data-lake/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/data-lake/variables.tf)
 
 ---------------------
 

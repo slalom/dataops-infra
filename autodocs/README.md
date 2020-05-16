@@ -1,4 +1,4 @@
-# `dataops-infra` Docs
+# `dataops-infra` Auto-Docs
 
 _These documents are published automatically to [infra.dataops.tk](https://infra.dataops.tk) using [Github Pages](https://help.github.com/en/github/working-with-github-pages) and [Jekyll](https://jekyllrb.com/docs/)._
 
@@ -7,7 +7,7 @@ _These documents are published automatically to [infra.dataops.tk](https://infra
 To rebuild or update all module README docs, run the following command on your dev machine:
 
 ```bash
-cd docs
+cd autodocs
 python build.py
 ```
 

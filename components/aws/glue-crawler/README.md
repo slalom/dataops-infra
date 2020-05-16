@@ -34,10 +34,10 @@ This can be used in conjuction with Amazon Athena to query flat files in S3 buck
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/variables.tf)
 
 ---------------------
 

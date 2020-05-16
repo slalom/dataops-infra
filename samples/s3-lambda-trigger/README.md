@@ -23,8 +23,8 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](00_environment.tf)
-* [01_data-lake-w-lambda.tf](01_data-lake-w-lambda.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/s3-lambda-trigger/00_environment.tf)
+* [01_data-lake-w-lambda.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/s3-lambda-trigger/01_data-lake-w-lambda.tf)
 
 ---------------------
 

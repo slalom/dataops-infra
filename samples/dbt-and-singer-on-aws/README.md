@@ -25,10 +25,10 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](00_environment.tf)
-* [01_data-lake.tf](01_data-lake.tf)
-* [02_singer-taps.tf](02_singer-taps.tf)
-* [03_data-build-tool.tf](03_data-build-tool.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/dbt-and-singer-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/dbt-and-singer-on-aws/01_data-lake.tf)
+* [02_singer-taps.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/dbt-and-singer-on-aws/02_singer-taps.tf)
+* [03_data-build-tool.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/dbt-and-singer-on-aws/03_data-build-tool.tf)
 
 ---------------------
 
