@@ -58,11 +58,11 @@ Use in combination with the `ECS-Cluster` component.
 
 _Source code for this module is available using the links below._
 
-* [alb.tf](alb.tf)
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [alb.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-task/alb.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-task/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-task/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-task/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecs-task/variables.tf)
 
 ---------------------
 

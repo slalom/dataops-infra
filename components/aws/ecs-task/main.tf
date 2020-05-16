@@ -157,7 +157,7 @@ resource "aws_ecs_service" "ecs_always_on_service" {
 
 resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
   for_each            = var.schedules
-  name_prefix         = "${var.name_prefix}sched-"
+  name                = "${var.name_prefix}sched-${random_id.suffix.dec}"
   description         = "Daily Execution 'run' @ ${each.value}"
   role_arn            = aws_iam_role.ecs_execution_role.arn
   schedule_expression = each.value

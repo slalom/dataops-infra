@@ -1,0 +1,5 @@
+{
+    "api_token": "******",
+    "user_agent": "tap-covid-19 <sample@email.com>",
+    "start_date": "2019-01-01T00:00:00Z"
+}

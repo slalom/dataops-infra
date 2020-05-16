@@ -60,8 +60,11 @@ jobs:
         sample-id:
           - airflow-on-aws
           - dbt-and-singer-on-aws
-          - rds-on-aws
-          - redshift-dw
+          - lots-on-aws
+          - ml-ops-on-aws
+          - mysql-on-aws
+          - postgres-on-aws
+          - redshift-on-aws
           - s3-lambda-trigger
           - secrets-manager-on-aws
           - tableau-on-aws

@@ -222,7 +222,7 @@ _(Coming soon)_
 
 -------------------
 
-_**NOTE:** This documentation was [auto-generated](build.py) using
-`terraform-docs` and `s-infra` from `slalom.dataops`.
-Please do not attempt to manually update this file._
+_**NOTE:** This documentation was auto-generated using
+`terraform-docs`. Please do not attempt to manually update
+this file._
 

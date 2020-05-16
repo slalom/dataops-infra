@@ -40,9 +40,9 @@ DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating dat
 
 _Source code for this module is available using the links below._
 
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/dbt/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/dbt/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/dbt/variables.tf)
 
 ---------------------
 

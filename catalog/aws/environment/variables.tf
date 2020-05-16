@@ -33,8 +33,8 @@ variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
   default     = false
 }
-variable "secrets_folder" {
-  description = "Path to the secrets folder (used when initializing the AWS provider.)"
+variable "aws_credentials_file" {
+  description = "Path to a valid AWS Credentials file. Used when initializing the AWS provider."
   type        = string
 }
 variable "aws_profile" {

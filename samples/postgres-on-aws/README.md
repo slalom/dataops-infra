@@ -23,8 +23,8 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](00_environment.tf)
-* [01_rds_postgres.tf](01_rds_postgres.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/postgres-on-aws/00_environment.tf)
+* [01_rds_postgres.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/postgres-on-aws/01_rds_postgres.tf)
 
 ---------------------
 
