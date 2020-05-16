@@ -86,7 +86,7 @@ In addition to custom variables, each AWS catalog and component module should su
   * Make sure each input and output variable has it's `description` field set.
   * Make sure each module has a `main.tf` file and that the file contains a header comment with a paragraph description of the basic module functions. See [components/aws/secrets-manager/main.tf](../components/aws/secrets-manager/main.tf) for a sample.
   * All input variables should be stored in `variables.tf` and all output variables should be stored in `outputs.tf`.
-  * After the above are met, update the project docs by navigating to the `docs` directory and running `build.py` (more details [here](README.md)). This command will update all module README files as well as [catalog/README.md](../catalog/README.md) and [components/README.md](../components/README.md).
+  * After the above are met, update the project docs by navigating to the `docs` directory and running `build.py` (more details [here](../autodocs/README.md)). This command will update all module README files as well as [catalog/README.md](../catalog/README.md) and [components/README.md](../components/README.md).
 
 ### Follow Purpose-Driven Design Patterns
 
