@@ -1,3 +1,7 @@
+output "cloudwatch_log_group_name" {
+  description = "Name of Cloudwatch log group used for this task."
+  value       = aws_cloudwatch_log_group.cw_log_group.name
+}
 output "ecs_checklogs_cli" {
   description = "Command-ling string used to print Cloudwatch logs locally."
   value       = "aws logs get-log-events --log-group-name ${aws_cloudwatch_log_group.cw_log_group.name} --limit 100"
