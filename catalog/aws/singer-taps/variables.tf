@@ -133,3 +133,8 @@ EOF
   type        = string
   default     = "1"
 }
+variable "container_args" {
+  type        = list(string)
+  description = "Optional. A list of additional args to send to the container."
+  default     = []
+}

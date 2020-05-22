@@ -16,8 +16,13 @@ locals {
     1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
   )
   name_prefix = "${var.name_prefix}Tap-"
+  sync_commands = [
+    for tap in var.taps :
+    "tapdance sync ${tap.id} ${local.target.id} ${join(" ", var.container_args)}"
+  ]
   container_command = (
-    length(local.sync_commands) == 1 ? local.sync_commands[0] :
+    length(local.sync_commands) == 1 ?
+    "${local.sync_commands[0]}" :
     chomp(coalesce(var.container_command,
       <<EOF
 /bin/bash -c "${join(" && ", local.sync_commands)}"
@@ -54,10 +59,6 @@ EOF
   container_image = coalesce(
     var.container_image, "dataopstk/tapdance:${var.taps[0].id}-to-${local.target.id}"
   )
-  sync_commands = [
-    for tap in var.taps :
-    "tapdance sync ${tap.id} ${local.target.id}"
-  ]
 }
 
 module "ecs_cluster" {

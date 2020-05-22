@@ -1,5 +1,5 @@
 locals {
-  cloudwatch_query_text = <<EOF
+  cloudwatch_query_text      = <<EOF
 filter @message like /(Beginning|Completed) running/
 | filter @message not like /running discovery/
 | filter @message not like /\s--discover\s/
@@ -8,7 +8,14 @@ filter @message like /(Beginning|Completed) running/
 | fields @timestamp, @message
 | sort tablename desc, @timestamp desc
 EOF
-  dashboard_markdown    = <<EOF
+  cloudwatch_clean_log_query = <<EOF
+filter @message not like /INFO\sUsed/
+| filter @message not like /INFO\sMaking\sGET\srequest/
+| filter @message not like /INFO\sMETRIC/
+| fields @timestamp, @message
+| sort @timestamp desc
+EOF
+  dashboard_markdown         = <<EOF
 ## Data Pipeline (${var.taps[0].id}-to-${local.target.id})
 
 Additional Actions:
@@ -20,7 +27,7 @@ EOF
 }
 
 resource "aws_cloudwatch_dashboard" "main" {
-  dashboard_name = "${var.taps[0].id}-to-${local.target.id}-v${var.pipeline_version_number}-dashboard"
+  dashboard_name = "${var.taps[0].id}-to-${local.target.id}-v${var.pipeline_version_number}-dashboard--${var.name_prefix}-Tap"
   dashboard_body = <<EOF
 {
   "periodOverride": "auto",
@@ -29,8 +36,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "type": "text",
       "x": 0,
       "y": 0,
-      "width": 24,
-      "height": 3,
+      "width": 10,
+      "height": 4,
       "properties": {
         "markdown": "${
   replace(replace(replace(local.dashboard_markdown, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
@@ -41,8 +48,8 @@ resource "aws_cloudwatch_dashboard" "main" {
       "type": "metric",
       "x": 0,
       "y": 4,
-      "width": 12,
-      "height": 6,
+      "width": 10,
+      "height": 4,
       "properties": {
         "metrics": [
           [
@@ -64,10 +71,10 @@ resource "aws_cloudwatch_dashboard" "main" {
     },
     {
       "type": "metric",
-      "x": 12,
-      "y": 4,
-      "width": 12,
-      "height": 6,
+      "x": 0,
+      "y": 8,
+      "width": 10,
+      "height": 4,
       "properties": {
         "metrics": [
           [ "ECS/ContainerInsights", "CpuReserved", "ClusterName", "${module.ecs_cluster.ecs_cluster_name}", { "id": "m1", "yAxis": "right", "visible": false  } ],
@@ -101,13 +108,28 @@ resource "aws_cloudwatch_dashboard" "main" {
     },
     {
       "type": "log",
-      "x": 0,
-      "y": 9,
-      "width": 24,
+      "x": 10,
+      "y": 0,
+      "width": 14,
       "height": 12,
       "properties": {
         "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_query_text, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
+  }",
+        "region": "${var.environment.aws_region}",
+        "stacked": "false",
+        "view": "table"
+      }
+    },
+    {
+      "type": "log",
+      "x": 0,
+      "y": 10,
+      "width": 24,
+      "height": 12,
+      "properties": {
+        "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
+  replace(replace(replace(local.cloudwatch_clean_log_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
 }",
         "region": "${var.environment.aws_region}",
         "stacked": "false",

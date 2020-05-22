@@ -90,7 +90,10 @@ resource "aws_ecs_task_definition" "ecs_task" {
     ],
     "secrets": [
       ${local.container_secrets_str}
-    ]
+    ],
+    "mountPoints": [],
+    "volumesFrom": [],
+    "essential" : true
   }
 ]
 DEFINITION
