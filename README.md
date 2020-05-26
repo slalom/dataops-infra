@@ -35,3 +35,7 @@ terraform apply
 ## Troubleshooting
 
 For troubleshooting help, please see [Troubleshooting](docs/troubleshooting.md).
+
+# About Slalom
+
+_Slalom is a modern consulting firm focused on strategy, technology, and business transformation. If you'd like to learn more about how we can help accelerate your business transformation and deliver best-in-class DataOps solutions, please visit us on Slalom.com, reach out to your [local Slalom representative](https://www.slalom.com/locations), or ping any one of our many Slalom open source software contributors here on GitHub._
