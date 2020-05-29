@@ -24,7 +24,19 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "data_bucket" { type = string }
+variable "data_bucket" {
+  description = "The S3 bucket to connect to via SFTP."
+  type        = string
+  default     = null
+}
+variable "sftp_server_id" {
+  description = "The ID of the AWS Transfer Server for SFTP connections."
+  type        = string
+}
+variable "secrets_folder" {
+  description = "A relative or absolute path of the folder in which to store key files."
+  type        = string
+}
 variable "group_permissions" {
   description = <<EOF
 Mapping of group names to list of objects containing the applicable permissions.
@@ -67,23 +79,23 @@ variable "users" {
   default     = ["ajsteers"]
 }
 variable "user_groups" {
-  descrption = "A mapping of user IDs to group name."
-  type       = map(list(string))
+  description = "A mapping of user IDs to group name."
+  type        = map(list(string))
   default = {
     ajsteers = ["global_reader", "uploader"]
   }
 }
-variable "admin_keybase_id" {
-  description = <<EOF
-The default keybase.io user ID to use for PGP password encryption.
+# variable "admin_keybase_id" {
+#   description = <<EOF
+# The default keybase.io user ID to use for PGP password encryption.
 
-If you do not yet have keybase ID, please install Keybase and then use Keybase to publish a new PGP key.
+# If you do not yet have keybase ID, please install Keybase and then use Keybase to publish a new PGP key.
 
-To install Keybase:
- - Windows Users: choco install keybase
- - MacOSX Users:  brew cask install keybase
+# To install Keybase:
+#  - Windows Users: choco install keybase
+#  - MacOSX Users:  brew cask install keybase
 
-To generate and publish a PGP key:
- > keybase pgp gen
-EOF
-}
+# To generate and publish a PGP key:
+#  > keybase pgp gen
+# EOF
+# }
