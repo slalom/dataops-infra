@@ -130,9 +130,9 @@ variable "use_fargate" {
 }
 variable "use_private_subnet" {
   description = <<EOF
-If True, tasks will use a private subnet and will require a NAT gateway
-(use_nat_gateway=True) for any outbound traffic. If False, tasks will use the public subnet
-and will not require a NAT gateway for outbound traffic.
+If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will not
+require a NAT gateway.
 EOF
   type        = bool
   default     = false

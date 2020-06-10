@@ -29,7 +29,7 @@ output "ecs_runtask_cli" {
       } ${
       ! var.use_fargate ? "" :
       "--network-configuration awsvpcConfiguration={subnets=[${
-        element(var.environment.public_subnets, 0)
+        element(local.subnets, 0)
         }],securityGroups=[${
         aws_security_group.ecs_tasks_sg.id
         }]${
