@@ -17,7 +17,26 @@ output "ecs_logging_url" {
 }
 output "ecs_runtask_cli" {
   description = "Command-line string used to trigger on-demand execution of the Task."
-  value       = "aws ecs run-task --task-definition ${aws_ecs_task_definition.ecs_task.family} --cluster ${var.ecs_cluster_name} --launch-type ${local.launch_type} --region ${var.environment.aws_region} ${var.use_fargate ? "--network-configuration awsvpcConfiguration={subnets=[${element(var.environment.public_subnets, 0)}],securityGroups=[${aws_security_group.ecs_tasks_sg.id}],assignPublicIp=ENABLED}" : ""}"
+  value = (
+    "aws ecs run-task --task-definition ${
+      aws_ecs_task_definition.ecs_task.family
+      } --cluster ${
+      var.ecs_cluster_name
+      } --launch-type ${
+      local.launch_type
+      } --region ${
+      var.environment.aws_region
+      } ${
+      ! var.use_fargate ? "" :
+      "--network-configuration awsvpcConfiguration={subnets=[${
+        element(var.environment.public_subnets, 0)
+        }],securityGroups=[${
+        aws_security_group.ecs_tasks_sg.id
+        }]${
+        var.use_private_subnet ? "" : ",assignPublicIp=ENABLED"
+      }}"
+    }"
+  )
 }
 output "ecs_task_name" {
   description = "The name of the ECS task."

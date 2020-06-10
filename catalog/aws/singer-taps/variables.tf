@@ -25,7 +25,7 @@ variable "resource_tags" {
 ########################################
 
 variable "local_metadata_path" {
-  description = "The local folder which countains tap definitions files: `data.select` and `plan-*.yml`"
+  description = "The local folder which countains tap definitions files: `{tap-name}.rules.txt` and `{tap-name}.plan.yml`"
   type        = string
 }
 variable "data_lake_type" {
@@ -136,5 +136,5 @@ EOF
 variable "container_args" {
   type        = list(string)
   description = "Optional. A list of additional args to send to the container."
-  default     = []
+  default     = ["--config_file=False", "--target_config_file=False"]
 }
