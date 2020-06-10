@@ -28,93 +28,91 @@ EOF
 
 }
 
+data "aws_iam_policy_document" "step_functions_ml_ops_policy_doc" {
+  statement {
+    sid = "1"
+    actions = [
+      "cloudwatch:PutMetricData",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
+      "iam:PassRole"
+      "glue:StartJobRun",
+      "glue:GetJobRun",
+      "glue:BatchStopJobRun",
+      "glue:GetJobRuns",
+      "logs:DescribeLogStreams",
+      "logs:CreateLogGroup",
+      "logs:PutLogEvents",
+      "logs:CreateLogStream",
+      "sagemaker:CreateModel",
+      "sagemaker:ListTags",
+      "sagemaker:DescribeTrainingJob",
+      "sagemaker:CreateEndpoint",
+      "sagemaker:CreateTransformJob",
+      "sagemaker:UpdateEndpoint",
+      "sagemaker:CreateEndpointConfig",
+      "sagemaker:CreateHyperParameterTuningJob",
+      "sagemaker:ListEndpoints",
+      "sagemaker:DescribeHyperParameterTuningJob",
+      "sagemaker:StopHyperParameterTuningJob",
+      "states:DescribeStateMachine",
+      "states:UpdateStateMachine",
+      "states:ListStateMachines",
+      "states:DeleteStateMachine",
+      "states:CreateStateMachine",
+      "states:DescribeStateMachine",
+    ]
+    resources = ["*"]
+  }
+  statement {
+    sid = "2"
+    actions = ["s3:ListBucket"]
+    resources = [
+      for b in var.writeable_buckets :
+      "arn:aws:s3:::${b}/*"
+    ]
+  }
+  statement {
+    sid = "3"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+    ]
+    resources = [
+      for b in var.writeable_buckets :
+      "arn:aws:s3:::${b}"
+    ]
+  }
+  statement {
+    sid = "2"
+    actions = [
+      "events:PutTargets",
+      "events:DescribeRule",
+      "events:PutRule"
+      "lambda:InvokeFunction",
+    ]
+    resources = flatten([
+      [
+        "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTrainingJobsRule",
+        "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTransformJobsRule",
+        "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
+      ],
+      [
+        for l in values(var.lambda_functions): l
+      ]
+    ])
+  }
+}
+
 resource "aws_iam_policy" "step_functions_ml_ops_policy" {
   name        = "${var.name_prefix}StepFunctionsPolicy"
   description = "Policy for Step Function MLOps Workflow"
   path        = "/"
 
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "states:DescribeStateMachine",
-                "states:UpdateStateMachine",
-                "states:ListStateMachines",
-                "states:DeleteStateMachine",
-                "states:CreateStateMachine",
-                "states:DescribeStateMachine",
-                "sagemaker:CreateModel",
-                "sagemaker:ListTags",
-                "sagemaker:DescribeTrainingJob",
-                "sagemaker:CreateEndpoint",
-                "sagemaker:CreateTransformJob",
-                "sagemaker:UpdateEndpoint",
-                "sagemaker:CreateEndpointConfig",
-                "sagemaker:CreateHyperParameterTuningJob",
-                "sagemaker:ListEndpoints",
-                "sagemaker:DescribeHyperParameterTuningJob",
-                "sagemaker:StopHyperParameterTuningJob",
-                "glue:StartJobRun",
-                "glue:GetJobRun",
-                "glue:BatchStopJobRun",
-                "glue:GetJobRuns",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:GetAuthorizationToken",
-                "ecr:BatchGetImage",
-                "cloudwatch:PutMetricData",
-                "logs:DescribeLogStreams",
-                "logs:CreateLogGroup",
-                "logs:PutLogEvents",
-                "logs:CreateLogStream",
-                "iam:PassRole"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "events:PutTargets",
-                "events:DescribeRule",
-                "lambda:InvokeFunction",
-                "events:PutRule"
-            ],
-            "Resource": [
-                "arn:aws:s3:::${var.feature_store_bucket}/*",
-                "arn:aws:s3:::${var.extracts_store_bucket}/*",
-                "arn:aws:s3:::${var.model_store_bucket}/*",
-                "arn:aws:s3:::${var.output_store_bucket}/*",
-                "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTrainingJobsRule",
-                "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTransformJobsRule",
-                "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
-                "${
-  join(
-    "\",\n                \"",
-    values(var.lambda_functions)
-  )
-}"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": "s3:ListBucket",
-            "Resource": [
-              "arn:aws:s3:::${var.feature_store_bucket}",
-              "arn:aws:s3:::${var.extracts_store_bucket}",
-              "arn:aws:s3:::${var.model_store_bucket}",
-              "arn:aws:s3:::${var.output_store_bucket}"
-            ]
-        }
-    ]
+  policy = data.aws_iam_policy_document.step_functions_ml_ops_policy_doc.json
 }
-EOF
-}
-
 
 resource "aws_iam_role_policy_attachment" "step_functions_ml_ops_policy_attachment" {
   role       = aws_iam_role.step_functions_ml_ops_role.name

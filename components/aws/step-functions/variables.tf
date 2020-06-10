@@ -24,25 +24,16 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "feature_store_bucket" {
-  description = "Bucket which contains pre-transformed training data and scoring data."
-  type        = string
+variable "writeable_buckets" {
+  description = "Buckets which should be granted write access."
+  type        = list(string)
+  default     = []
 }
-
-variable "extracts_store_bucket" {
-  description = "Bucket which contains transformed training and scoring data."
-  type        = string
-}
-
-variable "model_store_bucket" {
-  description = "Bucket which contains model objects."
-  type        = string
-}
-
-variable "output_store_bucket" {
-  description = "Bucket which contains batch transformation output."
-  type        = string
-}
+# variable "readonly_buckets" {
+#   description = "Buckets which should be granted read-only access."
+#   type        = list(string)
+#   default     = []
+# }
 
 variable "state_machine_definition" {
   description = "The JSON definition of the state machine to be created."
