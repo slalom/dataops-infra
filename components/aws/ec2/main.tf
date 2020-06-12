@@ -24,11 +24,11 @@ data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 
 
 locals {
-  project_shortname       = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  my_ip                   = "${chomp(data.http.icanhazip.body)}"
-  my_ip_cidr              = "${chomp(data.http.icanhazip.body)}/32"
-  admin_cidr              = flatten([local.my_ip_cidr, var.admin_cidr])
-  app_cidr                = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
+  project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  my_ip             = "${chomp(data.http.icanhazip.body)}"
+  my_ip_cidr        = "${chomp(data.http.icanhazip.body)}/32"
+  admin_cidr        = flatten([local.my_ip_cidr, var.admin_cidr])
+  app_cidr          = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
   pricing_regex = chomp(
     <<EOF
 ${var.environment.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"

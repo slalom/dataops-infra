@@ -121,8 +121,8 @@ EOF
 
 module "step-functions" {
   #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  source                   = "../../../components/aws/step-functions"
-  name_prefix              = var.name_prefix
+  source      = "../../../components/aws/step-functions"
+  name_prefix = var.name_prefix
   writeable_buckets = [
     var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id,
     aws_s3_bucket.extracts_store.id,

@@ -9,10 +9,10 @@ data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 
 locals {
-  name_prefix              = "${var.name_prefix}Tableau-"
-  admin_cidr               = var.admin_cidr
-  app_cidr                 = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
-  ssh_key_dir              = pathexpand("~/.ssh")
+  name_prefix = "${var.name_prefix}Tableau-"
+  admin_cidr  = var.admin_cidr
+  app_cidr    = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
+  ssh_key_dir = pathexpand("~/.ssh")
   win_files = flatten([
     fileset(path.module, "resources/win/*"),
     fileset(path.module, "resources/*"),
