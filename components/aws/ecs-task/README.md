@@ -38,11 +38,13 @@ Use in combination with the `ECS-Cluster` component.
 | schedules | A lists of scheduled execution times. | `set(string)` | `[]` | no |
 | use\_fargate | True to use Fargate for task execution (default), False to use EC2 (classic). | `bool` | `true` | no |
 | use\_load\_balancer | True to receive inbound traffic from the load balancer specified in `load_balancer_arn`. | `bool` | `false` | no |
+| use\_private\_subnet | If True, tasks will use a private subnet and will require a NAT gateway to pull the docker<br>image, and for any outbound traffic. If False, tasks will use a public subnet and will not<br>require a NAT gateway. | `bool` | `false` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| cloudwatch\_log\_group\_name | Name of Cloudwatch log group used for this task. |
 | ecs\_checklogs\_cli | Command-ling string used to print Cloudwatch logs locally. |
 | ecs\_container\_name | The name of the task's primary container. |
 | ecs\_logging\_url | Link to Cloudwatch logs for this task. |
