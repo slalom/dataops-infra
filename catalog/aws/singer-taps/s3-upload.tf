@@ -22,6 +22,8 @@ resource "aws_s3_bucket_object" "s3_source_uploads" {
       "tap-snapshot-${local.unique_hash}/${each.value}"
     ]
   )
-  source = "${var.local_metadata_path}/${each.value}"
+  source   = "${var.local_metadata_path}/${each.value}"
+  tags     = var.resource_tags
+  metadata = {}
   # etag     = filebase64sha256("${var.local_metadata_path}/${each.value}")
 }
