@@ -2,10 +2,6 @@ output "ssh_key_name" {
   description = "The SSH key name for EC2 remote access."
   value       = length(aws_instance.ec2_instances) == 0 ? "n/a" : aws_instance.ec2_instances[0].key_name
 }
-output "ssh_public_key_path" {
-  description = "The local path to the public key file used for EC2 remote access."
-  value       = var.ssh_public_key_filepath
-}
 output "ssh_private_key_path" {
   description = "The local path to the private key file used for EC2 remote access."
   value       = var.ssh_private_key_filepath
