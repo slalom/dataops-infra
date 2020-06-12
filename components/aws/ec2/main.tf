@@ -24,14 +24,11 @@ data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
 
 
 locals {
-  project_shortname        = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
-  my_ip                    = "${chomp(data.http.icanhazip.body)}"
-  my_ip_cidr               = "${chomp(data.http.icanhazip.body)}/32"
-  admin_cidr               = flatten([local.my_ip_cidr, var.admin_cidr])
-  app_cidr                 = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
-  ssh_key_dir              = pathexpand("~/.ssh")
-  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pub"
-  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(var.name_prefix)}prod-ec2keypair.pem"
+  project_shortname       = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
+  my_ip                   = "${chomp(data.http.icanhazip.body)}"
+  my_ip_cidr              = "${chomp(data.http.icanhazip.body)}/32"
+  admin_cidr              = flatten([local.my_ip_cidr, var.admin_cidr])
+  app_cidr                = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
   pricing_regex = chomp(
     <<EOF
 ${var.environment.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"
@@ -110,11 +107,6 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
     cidr_blocks = var.app_cidr
   }
 }
-
-# resource "aws_key_pair" "mykey" {
-#   key_name   = "${var.name_prefix}ec2-keypair"
-#   public_key = file(local.ssh_public_key_filepath)
-# }
 
 resource "aws_instance" "ec2_instances" {
   count                       = var.num_instances

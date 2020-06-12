@@ -13,8 +13,6 @@ locals {
   admin_cidr               = var.admin_cidr
   app_cidr                 = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
   ssh_key_dir              = pathexpand("~/.ssh")
-  ssh_public_key_filepath  = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pub"
-  ssh_private_key_filepath = "${local.ssh_key_dir}/${lower(local.name_prefix)}prod-ec2keypair.pem"
   win_files = flatten([
     fileset(path.module, "resources/win/*"),
     fileset(path.module, "resources/*"),
@@ -38,8 +36,9 @@ locals {
 }
 
 resource "aws_key_pair" "mykey" {
+  count      = var.ssh_public_key_filepath == null ? 0 : 1
   key_name   = "${local.name_prefix}ec2-keypair"
-  public_key = file(local.ssh_public_key_filepath)
+  public_key = file(var.ssh_public_key_filepath)
 }
 
 module "windows_tableau_servers" {
@@ -55,8 +54,8 @@ module "windows_tableau_servers" {
   ami_name_filter          = "Windows_Server-2016-English-Full-Base-*"
   admin_ports              = merge(local.tableau_admin_ports, { "RDP" : 3389 })
   app_ports                = local.tableau_app_ports
-  ssh_key_name             = aws_key_pair.mykey.key_name
-  ssh_private_key_filepath = local.ssh_private_key_filepath
+  ssh_key_name             = var.ssh_public_key_filepath == null ? "" : aws_key_pair.mykey[0].key_name
+  ssh_private_key_filepath = var.ssh_private_key_filepath == null ? "" : var.ssh_private_key_filepath
 }
 
 module "linux_tableau_servers" {
@@ -71,6 +70,6 @@ module "linux_tableau_servers" {
   ami_name_filter          = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
   admin_ports              = merge(local.tableau_admin_ports, { "SSH" : 22 })
   app_ports                = local.tableau_app_ports
-  ssh_key_name             = aws_key_pair.mykey.key_name
-  ssh_private_key_filepath = local.ssh_private_key_filepath
+  ssh_key_name             = var.ssh_public_key_filepath == null ? "" : aws_key_pair.mykey[0].key_name
+  ssh_private_key_filepath = var.ssh_private_key_filepath == null ? "" : var.ssh_private_key_filepath
 }

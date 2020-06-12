@@ -78,3 +78,13 @@ variable "windows_https_domain" {
   description = "The https domain if the Windows instances should use HTTPS."
   default     = ""
 }
+variable "ssh_public_key_filepath" {
+  description = "Optional. Path to a valid public key for SSH connectivity."
+  type        = string
+  default     = null
+}
+variable "ssh_private_key_filepath" {
+  description = "Optional. Path to a valid public key for SSH connectivity."
+  type        = string
+  default     = null
+}

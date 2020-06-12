@@ -35,13 +35,13 @@ output "ec2_windows_instance_passwords" {
 #   # estimated base price of the (linux) instance type, excluding upcharge for Windows instance and excluding any special pricing or reservation discounts.
 #   value = module.linux_tableau_servers.instance_hr_list_price
 # }
-output "ssh_public_key_path" {
+output "ssh_public_key_filepath" {
   description = "Local path to public key file for connecting to the server via SSH."
-  value       = local.ssh_public_key_filepath
+  value       = var.ssh_public_key_filepath
 }
-output "ssh_private_key_path" {
+output "ssh_private_key_filepath" {
   description = "Local path to private key file for connecting to the server via SSH."
-  value       = local.ssh_private_key_filepath
+  value       = var.ssh_private_key_filepath
 }
 output "summary" {
   description = "Summary of resources created by this module."
@@ -64,12 +64,3 @@ ${join("\n  ",
 }
 EOF
 }
-
-# HOW TO CONNECT:
-# ---------------
-# ${var.is_windows == true ? "Windows" : "Linux"}:
-#   TSM Admin:    https://${module.linux_tableau_servers[0].public_ip}:8850
-#   Tableau:      https://${module.linux_tableau_servers[0].public_ip}"
-#   Remote Admin: ${local.instance_connect_cmd}
-#   Creds:        Administrator:${aws_instance.ec2_instance.windows_instance_password}
-# ---------------
