@@ -1,13 +1,10 @@
 # NOTE: IAM role includes actions for SageMaker and Lambda for ML Ops use-case
 
 resource "aws_iam_role" "step_functions_ml_ops_role" {
-  name = "${var.name_prefix}StepFunctionsRole"
-
-  tags = var.resource_tags
-
+  name                  = "${var.name_prefix}StepFunctionsRole"
+  tags                  = var.resource_tags
   force_detach_policies = true
-
-  assume_role_policy = <<EOF
+  assume_role_policy    = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -37,7 +34,7 @@ data "aws_iam_policy_document" "step_functions_ml_ops_policy_doc" {
       "ecr:GetDownloadUrlForLayer",
       "ecr:GetAuthorizationToken",
       "ecr:BatchGetImage",
-      "iam:PassRole"
+      "iam:PassRole",
       "glue:StartJobRun",
       "glue:GetJobRun",
       "glue:BatchStopJobRun",
@@ -62,12 +59,12 @@ data "aws_iam_policy_document" "step_functions_ml_ops_policy_doc" {
       "states:ListStateMachines",
       "states:DeleteStateMachine",
       "states:CreateStateMachine",
-      "states:DescribeStateMachine",
+      "states:DescribeStateMachine"
     ]
     resources = ["*"]
   }
   statement {
-    sid = "2"
+    sid     = "2"
     actions = ["s3:ListBucket"]
     resources = [
       for b in var.writeable_buckets :
@@ -90,7 +87,7 @@ data "aws_iam_policy_document" "step_functions_ml_ops_policy_doc" {
     actions = [
       "events:PutTargets",
       "events:DescribeRule",
-      "events:PutRule"
+      "events:PutRule",
       "lambda:InvokeFunction",
     ]
     resources = flatten([
@@ -100,7 +97,7 @@ data "aws_iam_policy_document" "step_functions_ml_ops_policy_doc" {
         "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
       ],
       [
-        for l in values(var.lambda_functions): l
+        for l in values(var.lambda_functions) : l
       ]
     ])
   }
