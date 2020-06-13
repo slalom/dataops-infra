@@ -27,6 +27,7 @@ variable "resource_tags" {
 variable "is_disabled" {
   description = "Switch for disabling ECR image and push."
   type        = bool
+  default     = false
 }
 
 variable "repository_name" {

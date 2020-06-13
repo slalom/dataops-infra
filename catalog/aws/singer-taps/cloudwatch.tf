@@ -22,6 +22,7 @@ Additional Actions:
 
  - [View Running ECS Tasks](https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks)
  - [View ECS CloudWatch Logs](${module.ecs_tap_sync_task.ecs_logging_url})
+ - [Open Step Function Console](${module.step_function.state_machine_url})
 
 EOF
 }

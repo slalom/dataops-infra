@@ -1,7 +1,11 @@
 # NOTE: IAM role includes actions for SageMaker and Lambda for ML Ops use-case
 
-resource "aws_iam_role" "step_functions_ml_ops_role" {
-  name                  = "${var.name_prefix}StepFunctionsRole"
+resource "random_id" "suffix" {
+  byte_length = 2
+}
+
+resource "aws_iam_role" "step_functions_role" {
+  name                  = "${var.name_prefix}StepFunctionsRole-${random_id.suffix.dec}"
   tags                  = var.resource_tags
   force_detach_policies = true
   assume_role_policy    = <<EOF
@@ -22,96 +26,112 @@ resource "aws_iam_role" "step_functions_ml_ops_role" {
   ]
 }
 EOF
-
 }
 
-data "aws_iam_policy_document" "step_functions_ml_ops_policy_doc" {
+data "aws_iam_policy_document" "step_functions_policy_doc" {
   statement {
     sid = "1"
     actions = [
       "cloudwatch:PutMetricData",
       "ecr:BatchCheckLayerAvailability",
-      "ecr:GetDownloadUrlForLayer",
-      "ecr:GetAuthorizationToken",
       "ecr:BatchGetImage",
+      "ecr:GetAuthorizationToken",
+      "ecr:GetDownloadUrlForLayer",
+      "ecs:RunTask",
+      "ecs:StopTask",
+      "ecs:DescribeTasks",
       "iam:PassRole",
-      "glue:StartJobRun",
-      "glue:GetJobRun",
       "glue:BatchStopJobRun",
+      "glue:GetJobRun",
       "glue:GetJobRuns",
-      "logs:DescribeLogStreams",
+      "glue:StartJobRun",
       "logs:CreateLogGroup",
-      "logs:PutLogEvents",
       "logs:CreateLogStream",
-      "sagemaker:CreateModel",
-      "sagemaker:ListTags",
-      "sagemaker:DescribeTrainingJob",
+      "logs:DescribeLogStreams",
+      "logs:PutLogEvents",
       "sagemaker:CreateEndpoint",
-      "sagemaker:CreateTransformJob",
-      "sagemaker:UpdateEndpoint",
       "sagemaker:CreateEndpointConfig",
       "sagemaker:CreateHyperParameterTuningJob",
-      "sagemaker:ListEndpoints",
+      "sagemaker:CreateModel",
+      "sagemaker:CreateTransformJob",
       "sagemaker:DescribeHyperParameterTuningJob",
+      "sagemaker:DescribeTrainingJob",
+      "sagemaker:ListEndpoints",
+      "sagemaker:ListTags",
       "sagemaker:StopHyperParameterTuningJob",
-      "states:DescribeStateMachine",
-      "states:UpdateStateMachine",
-      "states:ListStateMachines",
-      "states:DeleteStateMachine",
+      "sagemaker:UpdateEndpoint",
       "states:CreateStateMachine",
-      "states:DescribeStateMachine"
+      "states:DeleteStateMachine",
+      "states:DescribeStateMachine",
+      "states:ListStateMachines",
+      "states:UpdateStateMachine",
     ]
     resources = ["*"]
   }
-  statement {
-    sid     = "2"
-    actions = ["s3:ListBucket"]
-    resources = [
-      for b in var.writeable_buckets :
-      "arn:aws:s3:::${b}/*"
-    ]
+  dynamic "statement" {
+    # Must be dynamic, to prevent failure when case number of grants is zero.
+    for_each = length(var.writeable_buckets) > 0 ? ["1"] : []
+    content {
+      sid     = "2"
+      actions = ["s3:ListBucket"]
+      resources = [
+        for b in var.writeable_buckets :
+        "arn:aws:s3:::${b}/*"
+      ]
+    }
+  }
+  dynamic "statement" {
+    # Must be dynamic, to prevent failure when case number of grants is zero.
+    for_each = length(var.writeable_buckets) > 0 ? ["1"] : []
+    content {
+      sid     = "3"
+      actions = [
+        "s3:PutObject",
+        "s3:GetObject",
+      ]
+      resources = [
+        for b in var.writeable_buckets :
+        "arn:aws:s3:::${b}"
+      ]
+    }
   }
   statement {
-    sid = "3"
+    sid = "4"
     actions = [
-      "s3:PutObject",
-      "s3:GetObject",
-    ]
-    resources = [
-      for b in var.writeable_buckets :
-      "arn:aws:s3:::${b}"
-    ]
-  }
-  statement {
-    sid = "2"
-    actions = [
-      "events:PutTargets",
       "events:DescribeRule",
       "events:PutRule",
-      "lambda:InvokeFunction",
+      "events:PutTargets",
     ]
-    resources = flatten([
-      [
-        "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTrainingJobsRule",
-        "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTransformJobsRule",
-        "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
-      ],
-      [
+    resources = [
+      "arn:aws:events:*:*:rule/StepFunctionsGetEventsForECSTaskRule",
+      "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTrainingJobsRule",
+      "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTransformJobsRule",
+      "arn:aws:events:*:*:rule/StepFunctionsGetEventsForSageMakerTuningJobsRule",
+    ]
+  }
+  dynamic "statement" {
+    # Must be dynamic, to prevent failure when case number of grants is zero.
+    for_each = length(values(var.lambda_functions)) > 0 ? ["1"] : []
+    content {
+      sid = "5"
+      actions = [
+        "lambda:InvokeFunction",
+      ]
+      resources = [
         for l in values(var.lambda_functions) : l
       ]
-    ])
+    }
   }
 }
 
-resource "aws_iam_policy" "step_functions_ml_ops_policy" {
+resource "aws_iam_policy" "step_functions_policy" {
   name        = "${var.name_prefix}StepFunctionsPolicy"
-  description = "Policy for Step Function MLOps Workflow"
+  description = "Policy for Step Function Workflow"
   path        = "/"
-
-  policy = data.aws_iam_policy_document.step_functions_ml_ops_policy_doc.json
+  policy      = data.aws_iam_policy_document.step_functions_policy_doc.json
 }
 
-resource "aws_iam_role_policy_attachment" "step_functions_ml_ops_policy_attachment" {
-  role       = aws_iam_role.step_functions_ml_ops_role.name
-  policy_arn = aws_iam_policy.step_functions_ml_ops_policy.arn
+resource "aws_iam_role_policy_attachment" "step_functions_policy_attachment" {
+  role       = aws_iam_role.step_functions_role.name
+  policy_arn = aws_iam_policy.step_functions_policy.arn
 }

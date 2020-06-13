@@ -123,6 +123,15 @@ variable "container_ram_gb" {
   description = "Optional. Specify the amount of RAM to be available to the container."
   default     = 1
 }
+variable "num_retries" {
+  description = "Optional. The number of retries to attempt if the task fails."
+  default     = 0
+}
+variable "timeout_hours" {
+  description = "Optional. The number of hours before the sync task is canceled and retried."
+  type        = number
+  default     = 48
+}
 variable "pipeline_version_number" {
   description = <<EOF
 Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
