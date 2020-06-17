@@ -78,7 +78,6 @@ resource "aws_ecs_task_definition" "ecs_task" {
         "awslogs-stream-prefix":  "container-log"
       }
     },
-    "networkMode":  "${local.network_mode}",
     "portMappings": [
       {
         "containerPort": ${var.app_ports[0]},

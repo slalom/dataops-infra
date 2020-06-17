@@ -24,16 +24,22 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "container_image" {
-  description = "Optional. Override the docker image with a custom-managed image."
-  default     = null
+variable "source_image" {
+  description = "Required. The docker image to execute in the container (e.g. 'ubuntu:18.04')."
+  type        = string
+}
+variable "settings" {
+  description = "Map of environment variables."
+  type       = map(string)
+  default    = {}
+}
+variable "secrets" {
+  description = "Map of environment secrets."
+  type       = map(string)
+  default    = {}
 }
 variable "container_entrypoint" {
   description = "Optional. Override the docker image's entrypoint."
-  default     = null
-}
-variable "container_command" {
-  description = "Optional. Override the docker image's command."
   default     = null
 }
 variable "container_num_cores" {
@@ -43,11 +49,6 @@ variable "container_num_cores" {
 variable "container_ram_gb" {
   description = "Optional. Specify the amount of RAM to be available to the container."
   default     = 1
-}
-variable "container_args" {
-  type        = list(string)
-  description = "Optional. A list of additional args to send to the container."
-  default     = ["--config_file=False", "--target_config_file=False"]
 }
 variable "use_private_subnet" {
   description = <<EOF
@@ -67,4 +68,8 @@ variable "ssh_private_key_filepath" {
   description = "Optional. Path to a valid public key for SSH connectivity."
   type        = string
   default     = null
+}
+variable "aws_credentials_file" {
+  description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
+  type        = string
 }

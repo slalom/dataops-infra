@@ -6,6 +6,7 @@ module "ml-ops" {
   name_prefix   = local.name_prefix
   environment   = module.env.environment
   resource_tags = local.resource_tags
+  aws_credentials_file     = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
 

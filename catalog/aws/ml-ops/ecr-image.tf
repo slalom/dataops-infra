@@ -5,9 +5,9 @@ module "ecr_image_byo_model" {
   name_prefix   = var.name_prefix
   environment   = var.environment
   resource_tags = var.resource_tags
+  aws_credentials_file = var.aws_credentials_file
 
-  is_disabled       = var.built_in_model_image != null ? true : false
-  repository_name   = var.byo_model_image_name
-  source_image_path = var.byo_model_image_source_path
-  tag               = var.byo_model_image_tag
+  repository_name      = var.byo_model_image_name
+  source_image_path    = var.byo_model_image_source_path
+  tag                  = var.byo_model_image_tag
 }
