@@ -44,9 +44,11 @@ variable "state_machine_definition" {
 variable "lambda_functions" {
   description = "Map of function names to ARNs. Used to ensure state machine access to functions."
   type        = map(string)
+  default     = []
 }
 
 variable "ecs_tasks" {
   description = "List of ECS tasks, to ensure state machine access permissions."
   type        = list(string)
+  default     = []
 }
