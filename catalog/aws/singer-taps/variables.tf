@@ -123,3 +123,18 @@ variable "container_ram_gb" {
   description = "Optional. Specify the amount of RAM to be available to the container."
   default     = 1
 }
+variable "pipeline_version_number" {
+  description = <<EOF
+Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
+isolation. Note if you want to avoid overlap between versions, be sure to (1) cancel the
+previous version and (2) specify a `start_date` on the new version which is not duplicative
+of the previously covered time period.
+EOF
+  type        = string
+  default     = "1"
+}
+variable "container_args" {
+  type        = list(string)
+  description = "Optional. A list of additional args to send to the container."
+  default     = []
+}

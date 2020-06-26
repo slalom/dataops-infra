@@ -16,8 +16,13 @@ locals {
     1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
   )
   name_prefix = "${var.name_prefix}Tap-"
+  sync_commands = [
+    for tap in var.taps :
+    "tapdance sync ${tap.id} ${local.target.id} ${join(" ", var.container_args)}"
+  ]
   container_command = (
-    length(local.sync_commands) == 1 ? local.sync_commands[0] :
+    length(local.sync_commands) == 1 ?
+    "${local.sync_commands[0]}" :
     chomp(coalesce(var.container_command,
       <<EOF
 /bin/bash -c "${join(" && ", local.sync_commands)}"
@@ -54,10 +59,6 @@ EOF
   container_image = coalesce(
     var.container_image, "dataopstk/tapdance:${var.taps[0].id}-to-${local.target.id}"
   )
-  sync_commands = [
-    for tap in var.taps :
-    "tapdance sync ${tap.id} ${local.target.id}"
-  ]
 }
 
 module "ecs_cluster" {
@@ -82,8 +83,9 @@ module "ecs_tap_sync_task" {
   use_fargate         = true
   environment_vars = merge(
     {
-      "TAP_CONFIG_DIR" : "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
-      "TAP_STATE_FILE" : "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
+      TAP_CONFIG_DIR          = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
+      TAP_STATE_FILE          = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
+      PIPELINE_VERSION_NUMBER = var.pipeline_version_number
     },
     {
       for k, v in var.taps[0].settings :
