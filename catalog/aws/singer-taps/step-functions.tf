@@ -42,7 +42,7 @@ module "step_function" {
             "States.TaskFailed"
           ],
           "IntervalSeconds": 10,
-          "MaxAttempts": ${var.num_retries + 1},
+          "MaxAttempts": ${var.num_retries},
           "BackoffRate": 2
         }
       ],

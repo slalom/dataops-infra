@@ -11,8 +11,8 @@ locals {
     filebase64sha256("${var.source_image_path}/${filepath}")
   ])
   is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
-  build_args_str = join(" ",[
-    for k, v in var.build_args:
+  build_args_str = join(" ", [
+    for k, v in var.build_args :
     "--build-arg ${k}=${v}"
   ])
 }
@@ -40,6 +40,6 @@ docker push ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
 EOT
     interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
 
-# ${local.is_windows ? "Import-Module AWSPowerShell.NetCore; $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url})" : "aws ecr get-login-password --region ${var.environment.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url}"};
+    # ${local.is_windows ? "Import-Module AWSPowerShell.NetCore; $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url})" : "aws ecr get-login-password --region ${var.environment.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url}"};
   }
 }

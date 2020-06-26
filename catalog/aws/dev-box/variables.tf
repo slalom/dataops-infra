@@ -30,13 +30,13 @@ variable "source_image" {
 }
 variable "settings" {
   description = "Map of environment variables."
-  type       = map(string)
-  default    = {}
+  type        = map(string)
+  default     = {}
 }
 variable "secrets" {
   description = "Map of environment secrets."
-  type       = map(string)
-  default    = {}
+  type        = map(string)
+  default     = {}
 }
 variable "container_entrypoint" {
   description = "Optional. Override the docker image's entrypoint."

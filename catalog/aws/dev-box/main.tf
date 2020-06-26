@@ -6,7 +6,7 @@
 data "aws_availability_zones" "az_list" {}
 
 locals {
-  name_prefix         = "${var.name_prefix}devbox-"
+  name_prefix = "${var.name_prefix}devbox-"
   # container_command = ()
   ssh_public_key_base64 = filebase64(var.ssh_public_key_filepath)
 }
@@ -36,8 +36,8 @@ module "ecs_dev_box_task" {
     SSH_PUBLIC_KEY_BASE64 = local.ssh_public_key_base64
   })
   environment_secrets = var.secrets
-  app_ports=["22"]
-  admin_ports=["22"]
+  app_ports           = ["22"]
+  admin_ports         = ["22"]
 }
 
 module "ecr_image" {
@@ -49,9 +49,9 @@ module "ecr_image" {
   resource_tags        = var.resource_tags
   aws_credentials_file = var.aws_credentials_file
 
-  repository_name      = "devbox"
-  tag                  = "latest"
-  source_image_path    = "${path.module}/resources"
+  repository_name   = "devbox"
+  tag               = "latest"
+  source_image_path = "${path.module}/resources"
   build_args = {
     source_image = var.source_image
   }

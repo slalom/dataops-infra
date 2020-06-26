@@ -8,6 +8,12 @@ filter @message like /(Beginning|Completed) running/
 | fields @timestamp, @message
 | sort tablename desc, @timestamp desc
 EOF
+  cloudwatch_errors_query    = <<EOF
+filter @message like /level=CRITICAL/
+| fields @timestamp, @message
+| sort @timestamp desc
+| limit 20
+EOF
   cloudwatch_clean_log_query = <<EOF
 filter @message not like /INFO\sUsed/
 | filter @message not like /INFO\sMaking\sGET\srequest/
@@ -126,6 +132,21 @@ resource "aws_cloudwatch_dashboard" "main" {
       "type": "log",
       "x": 0,
       "y": 10,
+      "width": 24,
+      "height": 3,
+      "properties": {
+        "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
+  replace(replace(replace(local.cloudwatch_errors_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
+  }",
+        "region": "${var.environment.aws_region}",
+        "stacked": "false",
+        "view": "table"
+      }
+    },
+    {
+      "type": "log",
+      "x": 0,
+      "y": 13,
       "width": 24,
       "height": 12,
       "properties": {

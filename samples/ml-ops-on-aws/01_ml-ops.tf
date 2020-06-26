@@ -3,10 +3,10 @@ module "ml-ops" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source = "../../catalog/aws/ml-ops"
   #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  name_prefix   = local.name_prefix
-  environment   = module.env.environment
-  resource_tags = local.resource_tags
-  aws_credentials_file     = local.aws_credentials_file
+  name_prefix          = local.name_prefix
+  environment          = module.env.environment
+  resource_tags        = local.resource_tags
+  aws_credentials_file = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
 

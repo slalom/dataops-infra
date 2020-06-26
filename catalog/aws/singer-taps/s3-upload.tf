@@ -1,6 +1,6 @@
 locals {
   source_files = toset([
-    for f in fileset(var.local_metadata_path, "*"):
+    for f in fileset(var.local_metadata_path, "*") :
     f
     if replace(f, var.taps[0].id, "") != f
   ])

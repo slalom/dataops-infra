@@ -84,7 +84,7 @@ data "aws_iam_policy_document" "step_functions_policy_doc" {
     # Must be dynamic, to prevent failure when case number of grants is zero.
     for_each = length(var.writeable_buckets) > 0 ? ["1"] : []
     content {
-      sid     = "3"
+      sid = "3"
       actions = [
         "s3:PutObject",
         "s3:GetObject",

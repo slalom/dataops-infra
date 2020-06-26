@@ -20,5 +20,5 @@ output "state_machine_url" {
   description = <<EOF
 
 EOF
-  value = "https://${var.environment.aws_region}.console.aws.amazon.com/states/home?region=${var.environment.aws_region}#/statemachines/view/${aws_sfn_state_machine.state_machine.id}"
+  value       = "https://${var.environment.aws_region}.console.aws.amazon.com/states/home?region=${var.environment.aws_region}#/statemachines/view/${aws_sfn_state_machine.state_machine.id}"
 }
