@@ -1,5 +1,11 @@
 /*
-* The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+* The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
+* or develop using the native cloud environment. Applicable use cases include:
+*
+* * Debugging network firewall and routing rules
+* * Debugging components which can only be run from whitelisted IP ranges
+* * Offloading heavy processing from the developer's local laptop
+* * Mitigating network relability issues when working from WiFi or home networks
 *
 */
 
