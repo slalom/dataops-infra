@@ -83,6 +83,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "width": 10,
       "height": 4,
       "properties": {
+        "title": "CPU and Memory Utilization",
         "metrics": [
           [ "ECS/ContainerInsights", "CpuReserved", "ClusterName", "${module.ecs_cluster.ecs_cluster_name}", { "id": "m1", "yAxis": "right", "visible": false  } ],
           [ ".", "CpuUtilized", ".", ".", { "id": "m2", "yAxis": "right" } ],
@@ -120,6 +121,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "width": 14,
       "height": 12,
       "properties": {
+        "title": "Table-Level Summary",
         "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_query_text, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
   }",
@@ -135,6 +137,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "width": 24,
       "height": 3,
       "properties": {
+        "title": "Fatal Errors",
         "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_errors_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
   }",
@@ -150,6 +153,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "width": 24,
       "height": 12,
       "properties": {
+        "title": "Detailed Logs",
         "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_clean_log_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
 }",
