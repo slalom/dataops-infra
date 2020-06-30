@@ -22,14 +22,14 @@ locals {
     },
     var.environment_vars
   )
-  container_secrets_str = join(",\n", [
+  container_secrets_str = join(",\n", sort([
     for k, v in module.secrets.secrets_ids :
     "{\"name\": \"${k}\", \"valueFrom\": \"${v}\"}"
-  ])
-  container_env_vars_str = join(",\n", [
+  ]))
+  container_env_vars_str = join(",\n", sort([
     for k, v in local.env_vars :
     "{\"name\": \"${k}\", \"value\": \"${v}\"}"
-  ])
+  ]))
   entrypoint_str = var.container_entrypoint == null ? "" : "\"entryPoint\": [\"${var.container_entrypoint}\"],"
   command_str    = var.container_command == null ? "" : "\"command\": [\"${replace(replace(var.container_command, "\"", "\\\""), " ", "\", \"")}\"],"
   network_mode   = var.use_fargate ? "awsvpc" : "bridge"
