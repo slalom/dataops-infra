@@ -2,13 +2,9 @@ output "ssh_key_name" {
   description = "The SSH key name for EC2 remote access."
   value       = length(aws_instance.ec2_instances) == 0 ? "n/a" : aws_instance.ec2_instances[0].key_name
 }
-output "ssh_public_key_path" {
-  description = "The local path to the public key file used for EC2 remote access."
-  value       = local.ssh_public_key_filepath
-}
 output "ssh_private_key_path" {
   description = "The local path to the private key file used for EC2 remote access."
-  value       = local.ssh_private_key_filepath
+  value       = var.ssh_private_key_filepath
 }
 output "instance_id" {
   description = "The instance ID (if `num_instances` == 1)."
@@ -77,7 +73,7 @@ locals {
       s.id => (
         var.is_windows == true ?
         "cmdkey /generic:TERMSRV/${s.public_ip} /user:Administrator /pass:\"${local.windows_instance_passwords[s.id]}\" && mstsc /v:${s.public_ip} /w:1100 /h:900" :
-        "ssh -o StrictHostKeyChecking=no -i \"${local.ssh_private_key_filepath}\" ubuntu@${s.public_ip}"
+        "ssh -o StrictHostKeyChecking=no -i \"${coalesce(var.ssh_private_key_filepath, "n\\a")}\" ubuntu@${s.public_ip}"
       )
     })
   )

@@ -274,3 +274,7 @@ variable "glue_job_spark_flag" {
   type        = string
   default     = false
 }
+variable "aws_credentials_file" {
+  description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
+  type        = string
+}

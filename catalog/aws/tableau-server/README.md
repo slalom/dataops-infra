@@ -9,10 +9,14 @@
 This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
 The module supports both Linux and Windows versions of the Tableau Server Software.
 
+## Requirements
+
+No requirements.
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
@@ -25,6 +29,8 @@ The module supports both Linux and Windows versions of the Tableau Server Softwa
 | num\_linux\_instances | The number of Tableau Server instances to create on Linux. | `number` | `1` | no |
 | num\_windows\_instances | The number of Tableau Server instances to create on Windows. | `number` | `0` | no |
 | registration\_file | A path to a local or remote file for Tableau registration. | `string` | `"../../.secrets/registration.json"` | no |
+| ssh\_private\_key\_filepath | Optional. Path to a valid public key for SSH connectivity. | `string` | `null` | no |
+| ssh\_public\_key\_filepath | Optional. Path to a valid public key for SSH connectivity. | `string` | `null` | no |
 | windows\_https\_domain | The https domain if the Windows instances should use HTTPS. | `string` | `""` | no |
 | windows\_use\_https | True if the Windows instances should use HTTPS. | `bool` | `false` | no |
 
@@ -38,8 +44,8 @@ The module supports both Linux and Windows versions of the Tableau Server Softwa
 | ec2\_instance\_states | The current EC2 instance status for each Tableau Server instance, as of time of plan execution. |
 | ec2\_remote\_admin\_commands | Command line command to connect to the Tableau Server instance(s) via RDP or SSH. |
 | ec2\_windows\_instance\_passwords | The admin passwords for Windows instances (if applicable). |
-| ssh\_private\_key\_path | Local path to private key file for connecting to the server via SSH. |
-| ssh\_public\_key\_path | Local path to public key file for connecting to the server via SSH. |
+| ssh\_private\_key\_filepath | Local path to private key file for connecting to the server via SSH. |
+| ssh\_public\_key\_filepath | Local path to public key file for connecting to the server via SSH. |
 | summary | Summary of resources created by this module. |
 
 ---------------------

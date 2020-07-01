@@ -9,6 +9,7 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
     - [AWS Airflow](#aws-airflow)
     - [AWS Data-Lake](#aws-data-lake)
     - [AWS DBT](#aws-dbt)
+    - [AWS Dev-Box](#aws-dev-box)
     - [AWS Environment](#aws-environment)
     - [AWS ML-Ops](#aws-ml-ops)
     - [AWS MySQL](#aws-mysql)
@@ -53,6 +54,22 @@ DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating dat
 
 * Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/dbt?ref=master`
 * See the [AWS DBT Readme](../catalog/aws/dbt/README.md) for input/output specs and additional info.
+
+-------------------
+
+### [AWS Dev-Box](../catalog/aws/dev-box/README.md)
+
+The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
+or develop using the native cloud environment. Applicable use cases include:
+
+* Debugging network firewall and routing rules
+* Debugging components which can only be run from whitelisted IP ranges
+* Offloading heavy processing from the developer's local laptop
+* Mitigating network relability issues when working from WiFi or home networks
+
+
+* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/dev-box?ref=master`
+* See the [AWS Dev-Box Readme](../catalog/aws/dev-box/README.md) for input/output specs and additional info.
 
 -------------------
 

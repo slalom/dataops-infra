@@ -6,6 +6,12 @@
 ## Overview
 
 
+## Requirements
+
+| Name | Version |
+|------|---------|
+| aws | ~> 2.10 |
+
 ## Inputs
 
 No input.

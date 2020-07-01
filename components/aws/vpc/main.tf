@@ -18,6 +18,10 @@ locals {
   my_ip             = chomp(data.http.icanhazip.body)
   my_ip_cidr        = "${chomp(data.http.icanhazip.body)}/32"
   aws_region        = coalesce(var.aws_region, data.aws_region.current.name)
+  subnet_cidrs = coalesce(
+    var.subnet_cidrs,
+    cidrsubnets(var.vpc_cidr, 2, 2, 2, 2)
+  )
 }
 
 #TODO: Remove this old version after all legacy dependencies have cleared.
@@ -43,7 +47,7 @@ data "aws_availability_zones" "az_list" {
 
 resource "aws_vpc" "my_vpc" {
   count      = var.disabled ? 0 : 1
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
 
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -57,7 +61,7 @@ resource "aws_vpc" "my_vpc" {
 resource "aws_subnet" "public_subnets" {
   count                   = var.disabled ? 0 : 2
   availability_zone       = data.aws_availability_zones.az_list.names[count.index]
-  cidr_block              = "10.0.${count.index + 2}.0/24"
+  cidr_block              = local.subnet_cidrs[count.index]
   vpc_id                  = aws_vpc.my_vpc[0].id
   map_public_ip_on_launch = true
   tags = merge(
@@ -69,7 +73,7 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_subnet" "private_subnets" {
   count                   = var.disabled ? 0 : 2
   availability_zone       = data.aws_availability_zones.az_list.names[count.index]
-  cidr_block              = "10.0.${count.index}.0/24"
+  cidr_block              = local.subnet_cidrs[count.index + 2]
   vpc_id                  = aws_vpc.my_vpc[0].id
   map_public_ip_on_launch = false
   tags = merge(

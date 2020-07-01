@@ -22,18 +22,19 @@ locals {
     },
     var.environment_vars
   )
-  container_secrets_str = join(",\n", [
+  container_secrets_str = join(",\n", sort([
     for k, v in module.secrets.secrets_ids :
     "{\"name\": \"${k}\", \"valueFrom\": \"${v}\"}"
-  ])
-  container_env_vars_str = join(",\n", [
+  ]))
+  container_env_vars_str = join(",\n", sort([
     for k, v in local.env_vars :
     "{\"name\": \"${k}\", \"value\": \"${v}\"}"
-  ])
+  ]))
   entrypoint_str = var.container_entrypoint == null ? "" : "\"entryPoint\": [\"${var.container_entrypoint}\"],"
   command_str    = var.container_command == null ? "" : "\"command\": [\"${replace(replace(var.container_command, "\"", "\\\""), " ", "\", \"")}\"],"
   network_mode   = var.use_fargate ? "awsvpc" : "bridge"
   launch_type    = var.use_fargate ? "FARGATE" : "EC2"
+  subnets        = var.use_private_subnet ? var.environment.private_subnets : var.environment.public_subnets
 }
 
 module "secrets" {
@@ -77,7 +78,6 @@ resource "aws_ecs_task_definition" "ecs_task" {
         "awslogs-stream-prefix":  "container-log"
       }
     },
-    "networkMode":  "${local.network_mode}",
     "portMappings": [
       {
         "containerPort": ${var.app_ports[0]},
@@ -140,10 +140,8 @@ resource "aws_ecs_service" "ecs_always_on_service" {
   # iam_role        = aws_iam_role.ecs_execution_role.name
   depends_on = [aws_lb.alb]
   network_configuration {
-    subnets = var.environment.public_subnets
-    security_groups = [
-      aws_security_group.ecs_tasks_sg.id
-    ]
+    subnets          = local.subnets
+    security_groups  = [aws_security_group.ecs_tasks_sg.id]
     assign_public_ip = true
   }
   dynamic "load_balancer" {
@@ -159,20 +157,16 @@ resource "aws_ecs_service" "ecs_always_on_service" {
 }
 
 resource "aws_cloudwatch_event_rule" "daily_run_schedule" {
-  for_each            = var.schedules
-  name                = "${var.name_prefix}sched-${random_id.suffix.dec}"
+  for_each = var.schedules
+  name = "${var.name_prefix}sched-${random_id.suffix.dec}-${
+    replace(replace(replace(replace(replace(
+      each.value,
+    " ", ""), "(", ""), ")", ""), "*", ""), "?", "")
+  }"
   description         = "Daily Execution 'run' @ ${each.value}"
   role_arn            = aws_iam_role.ecs_execution_role.arn
   schedule_expression = each.value
 }
-/*
-* ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
-* features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
-* to manage or pay for when tasks are not running.
-*
-* Use in combination with the `ECS-Cluster` component.
-*
-*/
 
 resource "aws_cloudwatch_event_target" "daily_run_task" {
   for_each = var.schedules
@@ -185,7 +179,7 @@ resource "aws_cloudwatch_event_target" "daily_run_task" {
     launch_type         = var.ecs_launch_type
     group               = "${var.name_prefix}ScheduledTasks"
     network_configuration {
-      subnets          = var.environment.public_subnets
+      subnets          = local.subnets
       security_groups  = [aws_security_group.ecs_tasks_sg.id]
       assign_public_ip = true
     }
