@@ -28,10 +28,12 @@ The Singer Taps platform is the open source stack which powers the [Stitcher](ht
 | container\_num\_cores | Optional. Specify the number of cores to use in the container. | `number` | `0.5` | no |
 | container\_ram\_gb | Optional. Specify the amount of RAM to be available to the container. | `number` | `1` | no |
 | data\_file\_naming\_scheme | The naming pattern to use when landing new files in the data lake. Allowed variables are: `{tap}`, `{table}`, `{version}`, and `{file}`" | `string` | `"{tap}/{table}/v{version}/{file}"` | no |
+| num\_retries | Optional. The number of retries to attempt if the task fails. | `number` | `0` | no |
 | pipeline\_version\_number | Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require<br>isolation. Note if you want to avoid overlap between versions, be sure to (1) cancel the<br>previous version and (2) specify a `start_date` on the new version which is not duplicative<br>of the previously covered time period. | `string` | `"1"` | no |
 | scheduled\_sync\_times | A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm | `list(string)` | `[]` | no |
 | scheduled\_timezone | The timezone used in scheduling.<br>Currently the following codes are supported: PST, PDT, EST, UTC | `string` | `"PT"` | no |
 | state\_file\_naming\_scheme | The naming pattern to use when writing or updating state files. State files keep track of<br>data recency and are necessary for incremental loading. Allowed variables are: `{tap}`, `{table}`, `{version}`, and `{file}`" | `string` | `"{tap}/{table}/state/{tap}-{table}-v{version}-state.json"` | no |
+| timeout\_hours | Optional. The number of hours before the sync task is canceled and retried. | `number` | `48` | no |
 | use\_private\_subnet | If True, tasks will use a private subnet and will require a NAT gateway to pull the docker<br>image, and for any outbound traffic. If False, tasks will use a public subnet and will<br>not require a NAT gateway. | `bool` | `false` | no |
 
 ## Outputs
@@ -50,6 +52,7 @@ _Source code for this module is available using the links below._
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/outputs.tf)
 * [s3-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/s3-upload.tf)
+* [step-functions.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/step-functions.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/singer-taps/variables.tf)
 
 ---------------------

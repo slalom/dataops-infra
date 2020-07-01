@@ -16,6 +16,7 @@ supported are Sagemaker endpoints and/or batch inference.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
+| aws\_credentials\_file | Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image. | `string` | n/a | yes |
 | built\_in\_model\_image | Tuning ranges for hyperparameters.<br>Specifying this means that 'bring-your-own' model is not required and the ECR image not created. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | feature\_store\_override | Optionally, you can override the default feature store bucket with a bucket that already exists. | `string` | n/a | yes |

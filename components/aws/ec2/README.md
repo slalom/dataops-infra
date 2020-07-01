@@ -47,7 +47,6 @@ credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 | remote\_admin\_commands | A map of instance IDs to command-line strings which can be used to connect to each instance. |
 | ssh\_key\_name | The SSH key name for EC2 remote access. |
 | ssh\_private\_key\_path | The local path to the private key file used for EC2 remote access. |
-| ssh\_public\_key\_path | The local path to the public key file used for EC2 remote access. |
 | windows\_instance\_passwords | A map of instance IDs to Windows passwords (if applicable). |
 
 ---------------------

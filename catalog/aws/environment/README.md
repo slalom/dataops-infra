@@ -19,7 +19,9 @@ from this module is designed to be passed easily to downstream modules, streamli
 | environment | Standard `environment` module input. (Ignored for the `environment` module.) | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
+| subnet\_cidrs | Optional. The CIDR blocks to use for the subnets.<br>The list should have the 2 public subnet cidrs first, followed by the 2 private subnet cidrs.<br>If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets. | `list(string)` | n/a | yes |
 | disabled | As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely. | `bool` | `false` | no |
+| vpc\_cidr | Optional. The CIDR block to use for the VPC network. | `string` | `"10.0.0.0/16"` | no |
 
 ## Outputs
 
@@ -28,6 +30,8 @@ from this module is designed to be passed easily to downstream modules, streamli
 | aws\_credentials\_file | Path to AWS credentials file for the project. |
 | environment | The `environment` object to be passed as a standard input to other Infrastructure Catalog modules. |
 | is\_windows\_host | True if running on a Windows machine, otherwise False. |
+| private\_route\_table | The ID of the route table for private subnets. |
+| public\_route\_table | The ID of the route table for public subnets. |
 | summary | Summary of resources created by this module. |
 | user\_home | Path to the admin user's home directory. |
 

@@ -26,13 +26,17 @@ Included automatically when creating this module:
 | environment | Standard `environment` module input. (Ignored for the `vpc` module.) | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
+| subnet\_cidrs | Optional. The CIDR blocks to use for the subnets.<br>The list should have the 2 public subnet cidrs first, followed by the 2 private subnet cidrs.<br>If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets. | `list(string)` | n/a | yes |
 | disabled | As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely. | `bool` | `false` | no |
+| vpc\_cidr | Optional. The CIDR block to use for the VPC network. | `string` | `"10.0.0.0/16"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| private\_route\_table | The ID of the route table for private subnets. |
 | private\_subnets | The list of private subnets. |
+| public\_route\_table | The ID of the route table for public subnets. |
 | public\_subnets | The list of public subnets. |
 | vpc\_id | The unique ID of the VPC. |
 

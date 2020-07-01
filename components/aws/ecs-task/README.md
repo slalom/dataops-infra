@@ -50,9 +50,11 @@ Use in combination with the `ECS-Cluster` component.
 | ecs\_logging\_url | Link to Cloudwatch logs for this task. |
 | ecs\_runtask\_cli | Command-line string used to trigger on-demand execution of the Task. |
 | ecs\_security\_group | The name of the EC2 security group used by ECS. |
+| ecs\_task\_execution\_role | An IAM role which has access to execute the ECS Task. |
 | ecs\_task\_name | The name of the ECS task. |
 | load\_balancer\_arn | The unique ID (ARN) of the load balancer (if applicable). |
 | load\_balancer\_dns | The DNS of the load balancer (if applicable). |
+| subnets | A list of subnets used for task execution. |
 
 ---------------------
 
