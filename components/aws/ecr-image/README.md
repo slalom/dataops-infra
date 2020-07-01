@@ -10,10 +10,14 @@ ECR (Elastic Compute Repository) is the private-hosted AWS
 equivalent of DockerHub. ECR allows you to securely publish
 docker images which should not be accessible to external users.
 
+## Requirements
+
+No requirements.
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | aws\_credentials\_file | Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image. | `string` | n/a | yes |
 | environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |

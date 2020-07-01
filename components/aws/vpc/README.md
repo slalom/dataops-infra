@@ -16,18 +16,25 @@ Included automatically when creating this module:
     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
     * route tables and routes to connect all of the above
 
+## Requirements
+
+| Name | Version |
+|------|---------|
+| aws | ~> 2.10 |
+| aws | ~> 2.10 |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
-| aws\_credentials\_file | Optional, unless set at the main AWS provider level in which case it is required. | `string` | n/a | yes |
-| aws\_profile | Optional, unless set at the main AWS provider level in which case it is required. | `string` | n/a | yes |
-| aws\_region | Optional. Overrides the AWS region, otherwise will use the AWS region provided from context. | `any` | n/a | yes |
-| environment | Standard `environment` module input. (Ignored for the `vpc` module.) | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
+|------|-------------|------|---------|:--------:|
 | name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
 | resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| subnet\_cidrs | Optional. The CIDR blocks to use for the subnets.<br>The list should have the 2 public subnet cidrs first, followed by the 2 private subnet cidrs.<br>If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets. | `list(string)` | n/a | yes |
+| aws\_credentials\_file | Optional, unless set at the main AWS provider level in which case it is required. | `string` | `null` | no |
+| aws\_profile | Optional, unless set at the main AWS provider level in which case it is required. | `string` | `null` | no |
+| aws\_region | Optional. Overrides the AWS region, otherwise will use the AWS region provided from context. | `any` | `null` | no |
 | disabled | As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely. | `bool` | `false` | no |
+| environment | Standard `environment` module input. (Ignored for the `vpc` module.) | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | `null` | no |
+| subnet\_cidrs | Optional. The CIDR blocks to use for the subnets.<br>The list should have the 2 public subnet cidrs first, followed by the 2 private subnet cidrs.<br>If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets. | `list(string)` | `null` | no |
 | vpc\_cidr | Optional. The CIDR block to use for the VPC network. | `string` | `"10.0.0.0/16"` | no |
 
 ## Outputs
