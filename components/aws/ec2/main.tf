@@ -112,7 +112,7 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
 }
 
 resource "aws_security_group" "ecs_cluster_traffic" {
-  count = length(var.cluster_ports) > 0 && var.num_instances > 1 ? 1 : 0
+  count       = length(var.cluster_ports) > 0 && var.num_instances > 1 ? 1 : 0
   name_prefix = "${var.name_prefix}SecurityGroupForClustering"
   description = "allow cluster traffic between instances"
   vpc_id      = var.environment.vpc_id
@@ -156,11 +156,11 @@ resource "aws_instance" "ec2_instances" {
     { name = "${var.name_prefix}EC2${count.index}" }
   )
   vpc_security_group_ids = flatten([[
-      aws_security_group.ec2_sg_admin_ports[0].id,
-      aws_security_group.ec2_sg_allow_outbound[0].id,
-      aws_security_group.ec2_sg_app_ports[0].id
+    aws_security_group.ec2_sg_admin_ports[0].id,
+    aws_security_group.ec2_sg_allow_outbound[0].id,
+    aws_security_group.ec2_sg_app_ports[0].id
     ], length(var.cluster_ports) == 0 && var.num_instances > 1 ? [] : [
-      aws_security_group.ecs_cluster_traffic[0].id
+    aws_security_group.ecs_cluster_traffic[0].id
   ]])
   root_block_device {
     volume_type = "gp2"
