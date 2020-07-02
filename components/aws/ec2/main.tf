@@ -193,7 +193,7 @@ ${join("\n",
 echo "" > __BOOTSTRAP_COMPLETE_
 echo "" > __USERDATA_SCRIPT_STARTED_
 sudo chmod -R 777 $HOMEDIR
-./userdata_lin.sh
+./bootstrap.sh
 echo "" > _USERDATA_SCRIPT_COMPLETE_
 EOF
 }
@@ -219,7 +219,7 @@ ${join("\n",
 dism.exe /online /import-defaultappassociations:defaultapps.xml
 echo "" > __BOOTSTRAP_COMPLETE_
 echo "" > __USERDATA_SCRIPT_STARTED_
-userdata_win.bat
+bootstrap.bat
 cd %HOMEDIR%
 echo "" > _USERDATA_SCRIPT_COMPLETE_
 </script>

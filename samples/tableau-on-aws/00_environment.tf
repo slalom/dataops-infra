@@ -45,7 +45,7 @@ resource "null_resource" "secrets_folder_protection5" {
     # interpreter = module.env.is_windows_host ? ["PowerShell", "-Command"] : []
     # on_failure = continue
     command = (
-      module.env.is_windows_host == false ? "echo chmod 0700 ${local.secrets_folder}" : join(" && ", [
+      module.env.is_windows_host == false ? "chmod -R 700 ${local.secrets_folder}" : join(" && ", [
         "echo Orverriding permissions on ${local.secrets_folder} (running as %username%)...",
         "icacls ${local.secrets_folder} /grant:r %username%:(F) /t",
         "icacls ${local.secrets_folder} /inheritance:r /t"

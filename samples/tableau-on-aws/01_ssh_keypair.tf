@@ -1,4 +1,4 @@
-# To enable remote admininstration SSH of linux virtual machines, enable one of the
+# To enable remote SSH admininstration of linux virtual machines, enable one of the
 # following options and comment-out or delete the other.
 
 # Optional A: Automatically create and upload a new SSH keypair (recommended)

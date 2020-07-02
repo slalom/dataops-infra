@@ -8,6 +8,9 @@ mkdir -p /home/ubuntu/tableau/
 LOG_FILE="/home/ubuntu/tableau/setuplog.txt"
 exec > >(tee -a $LOG_FILE) 2>&1 # Log everything to setuplog.txt
 
+export TABLEAU_VERSION_STRING="2020-1-0"
+export TABLEAU_INSTALL_SOURCE="s3://tableau-quickstart/tableau-server-${TABLEAU_VERSION_STRING}_amd64.deb"
+
 echo Configuring SSH banner...
 BANNER="/etc/motd"
 sudo touch $BANNER && chmod 777 $BANNER
@@ -70,21 +73,25 @@ echo "Showing contents of S3 bucket..."
 $AWS s3 ls s3://tableau-quickstart --no-sign-request
 
 echo "Downloading scripts from S3..."
-mkdir -p /home/ubuntu/tableau
+mkdir -p /home/ubuntu/tableau/installer
 $AWS s3 cp s3://tableau-quickstart/automated-installer tableau/ --no-sign-request
 $AWS s3 cp s3://tableau-quickstart/manageFirewallPorts.py tableau/ --no-sign-request
 $AWS s3 cp s3://tableau-quickstart/SilentInstaller.py tableau/ --no-sign-request
 $AWS s3 cp s3://tableau-quickstart/ScriptedInstaller.py tableau/ --no-sign-request
 
-echo "Downloading installers from S3..."
-$AWS s3 cp s3://tableau-quickstart/tableau-server-2018_amd64.deb tableau/ --no-sign-request
-$AWS s3 cp s3://tableau-quickstart/tableau-server_amd64.deb tableau/ --no-sign-request
+echo "Downloading Postgres installer from S3..."
 $AWS s3 cp s3://tableau-quickstart/tableau-postgresql-odbc_9.5.3_amd64.deb tableau/ --no-sign-request
+
+echo "Downloading Tableau installer from S3..."
+$AWS s3 cp ${TABLEAU_INSTALL_SOURCE} tableau/installer/ --no-sign-request
 
 cd tableau
 
+echo "Showing downloaded installer:"""
+ls installer/* -la
+
 echo "Installing Tableau Server..."
-sudo gdebi -n tableau-server_amd64.deb
+sudo gdebi -n installer/tableau-server-*.deb
 
 echo "Initializing TSM (Tableau Services Manager)..."
 cd /opt/tableau/tableau_server/packages/scripts.*
