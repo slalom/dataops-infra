@@ -23,7 +23,7 @@ No requirements.
 | admin\_cidr | Optional. The IP address range(s) which should have access to the admin<br>on the Tableau Server instances. By default this will default to only allow<br>connections from the terraform user's current IP address. | `list` | `[]` | no |
 | app\_cidr | Optional. The IP address range(s) which should have access to the view the<br>Tableau Server web instance (excluding the TMS admin portal and other admin<br>ports). If not set, this will default to allow incoming connections from<br>any IP address (['0.0.0.0/0']). In general, this should be omitted unless the<br>site has a VPN or other internal list of IP whitelist ranges. | `list` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | ec2\_instance\_storage\_gb | The amount of storage to provision on each instance, in GB. | `number` | `100` | no |
-| ec2\_instance\_type | Optional. Overrides the Tableau Server instance type. | `string` | `"m4.4xlarge"` | no |
+| ec2\_instance\_type | Optional. Overrides the Tableau Server instance type. | `string` | `"m5.4xlarge"` | no |
 | linux\_https\_domain | The https domain if the Linux instances should use HTTPS. | `string` | `""` | no |
 | linux\_use\_https | True if the Linux instances should use HTTPS. | `bool` | `false` | no |
 | num\_linux\_instances | The number of Tableau Server instances to create on Linux. | `number` | `1` | no |

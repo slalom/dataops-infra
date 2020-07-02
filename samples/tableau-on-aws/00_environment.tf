@@ -38,3 +38,18 @@ module "env" {
   aws_credentials_file = local.aws_credentials_file
   resource_tags        = local.resource_tags
 }
+
+resource "null_resource" "secrets_folder_protection5" {
+  provisioner "local-exec" {
+    interpreter = module.env.is_windows_host ? ["cmd", "/C"] : []
+    # interpreter = module.env.is_windows_host ? ["PowerShell", "-Command"] : []
+    # on_failure = continue
+    command = (
+      module.env.is_windows_host == false ? "echo chmod 0700 ${local.secrets_folder}" : join(" && ", [
+        "echo Orverriding permissions on ${local.secrets_folder} (running as %username%)...",
+        "icacls ${local.secrets_folder} /grant:r %username%:(F) /t",
+        "icacls ${local.secrets_folder} /inheritance:r /t"
+      ])
+    )
+  }
+}

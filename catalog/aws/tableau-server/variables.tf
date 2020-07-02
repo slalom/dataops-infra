@@ -44,7 +44,7 @@ EOF
 }
 variable "ec2_instance_type" {
   description = "Optional. Overrides the Tableau Server instance type."
-  default     = "m4.4xlarge"
+  default     = "m5.4xlarge"
 }
 variable "ec2_instance_storage_gb" {
   description = "The amount of storage to provision on each instance, in GB."
@@ -78,8 +78,8 @@ variable "windows_https_domain" {
   description = "The https domain if the Windows instances should use HTTPS."
   default     = ""
 }
-variable "ssh_public_key_filepath" {
-  description = "Optional. Path to a valid public key for SSH connectivity."
+variable "ssh_keypair_name" {
+  description = "Optional. Name of SSH Keypair in AWS."
   type        = string
   default     = null
 }

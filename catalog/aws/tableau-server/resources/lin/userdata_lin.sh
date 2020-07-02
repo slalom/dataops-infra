@@ -35,6 +35,15 @@ echo -e "                         tsm pending-changes apply" >> $BANNER
 echo -e "                         tsm initialize" >> $BANNER
 echo -e "    Configure https:     bash ./ssl_setup.sh bi.mydomain.com" >> $BANNER
 echo "------------------------------------------------------" >> $BANNER
+echo -e "Cluster setup steps:     https://help.tableau.com/current/server-linux/en-us/install_additional_nodes.htm" >> $BANNER
+echo -e "  On Leader Node:      " >> $BANNER
+echo -e "    1. Get bootstrap file:    tsm topology nodes get-bootstrap-file --file ~/bootstrap.sh" >> $BANNER
+echo -e "    2. Print, then copy:      cat ~/bootstrap.sh" >> $BANNER
+echo -e "  On Secondary Nodes:  " >> $BANNER
+echo -e "    3. Create file and paste: nano ~/bootstrap.sh" >> $BANNER
+echo -e "    4. Run setup script:      cd /opt/tableau/tableau_server/packages/scripts.*/" >> $BANNER
+echo -e "                              sudo ./initialize-tsm -b ~/bootstrap.sh --accepteula" >> $BANNER
+echo "------------------------------------------------------" >> $BANNER
 
 cd /home/ubuntu
 set -v # log verbose

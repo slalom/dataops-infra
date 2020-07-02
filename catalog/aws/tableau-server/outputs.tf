@@ -29,16 +29,11 @@ output "ec2_windows_instance_passwords" {
   description = "The admin passwords for Windows instances (if applicable)."
   value       = module.windows_tableau_servers.windows_instance_passwords
 }
-# output "ssh_key_name" { value = var.num_linux_instances == 0 ? "n/a" : module.linux_tableau_servers[0].key_name }
 # TODO: Detect EC2 Pricing
 # output "ec2_instance_hr_base_price" {
 #   # estimated base price of the (linux) instance type, excluding upcharge for Windows instance and excluding any special pricing or reservation discounts.
 #   value = module.linux_tableau_servers.instance_hr_list_price
 # }
-output "ssh_public_key_filepath" {
-  description = "Local path to public key file for connecting to the server via SSH."
-  value       = var.ssh_public_key_filepath
-}
 output "ssh_private_key_filepath" {
   description = "Local path to private key file for connecting to the server via SSH."
   value       = var.ssh_private_key_filepath

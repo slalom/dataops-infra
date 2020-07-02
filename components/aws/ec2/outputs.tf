@@ -1,4 +1,4 @@
-output "ssh_key_name" {
+output "ssh_keypair_name" {
   description = "The SSH key name for EC2 remote access."
   value       = length(aws_instance.ec2_instances) == 0 ? "n/a" : aws_instance.ec2_instances[0].key_name
 }
