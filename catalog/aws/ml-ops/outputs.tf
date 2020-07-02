@@ -29,6 +29,7 @@ S3 summary:
   Model Store: ${aws_s3_bucket.model_store.id}
   Metadata Store: ${aws_s3_bucket.metadata_store.id}
   Output Store: ${aws_s3_bucket.output_store.id}
+  Monitor Output Store: ${aws_s3_bucket.monitor_output_store.id}
 
 Commands:
 

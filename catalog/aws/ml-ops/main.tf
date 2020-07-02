@@ -121,16 +121,17 @@ EOF
 
 module "step-functions" {
   #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  source                   = "../../../components/aws/step-functions"
-  name_prefix              = var.name_prefix
-  feature_store_bucket     = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-  extracts_store_bucket    = aws_s3_bucket.extracts_store.id
-  model_store_bucket       = aws_s3_bucket.model_store.id
-  output_store_bucket      = aws_s3_bucket.output_store.id
-  environment              = var.environment
-  resource_tags            = var.resource_tags
-  lambda_functions         = module.lambda_functions.function_ids
-  state_machine_definition = <<EOF
+  source                      = "../../../components/aws/step-functions"
+  name_prefix                 = var.name_prefix
+  feature_store_bucket        = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
+  extracts_store_bucket       = aws_s3_bucket.extracts_store.id
+  model_store_bucket          = aws_s3_bucket.model_store.id
+  output_store_bucket         = aws_s3_bucket.output_store.id
+  monitor_output_store_bucket = aws_s3_bucket.monitor_output_store.id
+  environment                 = var.environment
+  resource_tags               = var.resource_tags
+  lambda_functions            = module.lambda_functions.function_ids
+  state_machine_definition    = <<EOF
 {
  "StartAt": "Glue Data Transformation",
   "States": {
@@ -180,6 +181,18 @@ module "step-functions" {
               {
                 "Name": "${var.tuning_metric}",
                 "Regex": "${var.tuning_metric}: ([0-9\\.]+)"
+              }, 
+              {
+                "Name": "train:auc",
+                "Regex": ".*\\[[0-9]+\\]#011train-auc:(\\S+).*"
+              }, 
+              {
+                "Name": "train:f1",
+                "Regex": ".*\\[[0-9]+\\]#011train-f1:(\\S+).*"
+              },
+              {
+                "Name": "train:error",
+                "Regex": ".*\\[[0-9]+\\]#011train-error:(\\S+).*"
               }
             ],
             "TrainingImage": "${var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag}",
@@ -254,6 +267,21 @@ module "step-functions" {
       },
       "ResultPath": "$.modelSaveResult",
       "Resource": "arn:aws:states:::sagemaker:createModel",
+      "Type": "Task",
+      "Next": "Monitor Input Data"
+    },
+    "Monitor Input Data": {
+      "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
+      "Type": "Task",
+      "Next": "Monitor Model Performance"
+    },
+    "Monitor Model Performance": {
+      "Resource": "${module.lambda_functions.function_ids["ModelPerformanceMonitor"]}",
+      "Type": "Task",
+      "Next": "Cloud Watch Alarm"
+    },
+    "Cloud Watch Alarm": {
+      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Task",
       "Next": "${var.endpoint_or_batch_transform}"
     },

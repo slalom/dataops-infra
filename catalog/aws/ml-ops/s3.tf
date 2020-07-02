@@ -91,6 +91,19 @@ resource "aws_s3_bucket" "output_store" {
   }
 }
 
+resource "aws_s3_bucket" "monitor_output_store" {
+  bucket = "${lower(var.name_prefix)}monitor-output-store-${local.random_bucket_suffix}"
+  acl    = "private"
+  tags   = var.resource_tags
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
 resource "aws_s3_bucket_object" "train_data" {
   bucket = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
   key    = "data/train/train.csv"

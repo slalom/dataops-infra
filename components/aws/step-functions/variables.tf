@@ -44,6 +44,11 @@ variable "output_store_bucket" {
   type        = string
 }
 
+variable "monitor_output_store_bucket" {
+  description = "Bucket which contains model performance and data drift monitoring outputs."
+  type        = string
+}
+
 variable "state_machine_definition" {
   description = "The JSON definition of the state machine to be created."
   type        = string

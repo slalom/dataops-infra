@@ -28,6 +28,24 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    CloudWatchAlarm = {
+      description = "Send developers an email alarm when the model is overfitting."
+      handler     = "clodwatch_alarm.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    DataDriftMonitor = {
+      description = "Monitor data drift on input data."
+      handler     = "data_drift_monitor.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ModelPerformanceMonitor = {
+      description = "Monitor model performance for any degradation issues."
+      handler     = "model_performance_monitor.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
     UniqueJobName = {
       description = "Creates a unique identifier for the hyperparameter tuning job."
       handler     = "unique_job_name.lambda_handler"
