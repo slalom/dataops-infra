@@ -121,17 +121,21 @@ EOF
 
 module "step-functions" {
   #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  source                      = "../../../components/aws/step-functions"
-  name_prefix                 = var.name_prefix
-  feature_store_bucket        = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-  extracts_store_bucket       = aws_s3_bucket.extracts_store.id
-  model_store_bucket          = aws_s3_bucket.model_store.id
-  output_store_bucket         = aws_s3_bucket.output_store.id
-  monitor_output_store_bucket = aws_s3_bucket.monitor_output_store.id
-  environment                 = var.environment
-  resource_tags               = var.resource_tags
-  lambda_functions            = module.lambda_functions.function_ids
-  state_machine_definition    = <<EOF
+  source        = "../../../components/aws/step-functions"
+  name_prefix   = var.name_prefix
+  environment   = var.environment
+  resource_tags = var.resource_tags
+
+  lambda_functions = module.lambda_functions.function_ids
+  writeable_buckets = [
+    var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id,
+    aws_s3_bucket.extracts_store.id,
+    aws_s3_bucket.model_store.id,
+    aws_s3_bucket.output_store.id,
+    aws_s3_bucket.monitor_output_store.id,
+  ]
+
+  state_machine_definition = <<EOF
 {
  "StartAt": "Glue Data Transformation",
   "States": {

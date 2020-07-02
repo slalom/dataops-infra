@@ -42,3 +42,16 @@ variable "aws_profile" {
   type        = string
   default     = null
 }
+variable "vpc_cidr" {
+  description = "Optional. The CIDR block to use for the VPC network."
+  default     = "10.0.0.0/16"
+}
+variable "subnet_cidrs" {
+  description = <<EOF
+Optional. The CIDR blocks to use for the subnets.
+The list should have the 2 public subnet cidrs first, followed by the 2 private subnet cidrs.
+If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets.
+EOF
+  type        = list(string)
+  default     = null
+}

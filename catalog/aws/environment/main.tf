@@ -26,4 +26,6 @@ module "vpc" {
   resource_tags        = var.resource_tags
   aws_credentials_file = local.aws_credentials_file
   aws_profile          = var.aws_profile
+  vpc_cidr             = var.vpc_cidr
+  subnet_cidrs         = var.subnet_cidrs
 }
