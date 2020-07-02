@@ -97,7 +97,7 @@ resource "aws_security_group" "ec2_sg_app_ports" {
   }
 }
 
-resource "aws_security_group" "ec2_sg_allow_outbound" {
+resource "aws_security_group" "ec2_sg_allow_all_outbound" {
   count       = var.num_instances > 0 ? 1 : 0
   name_prefix = "${var.name_prefix}SecurityGroupForOutbound"
   description = "allow all outbound traffic"
@@ -107,7 +107,7 @@ resource "aws_security_group" "ec2_sg_allow_outbound" {
     protocol    = "tcp"
     from_port   = "0"
     to_port     = "65535"
-    cidr_blocks = var.app_cidr
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -157,7 +157,7 @@ resource "aws_instance" "ec2_instances" {
   )
   vpc_security_group_ids = flatten([[
     aws_security_group.ec2_sg_admin_ports[0].id,
-    aws_security_group.ec2_sg_allow_outbound[0].id,
+    aws_security_group.ec2_sg_allow_all_outbound[0].id,
     aws_security_group.ec2_sg_app_ports[0].id
     ], length(var.cluster_ports) == 0 && var.num_instances > 1 ? [] : [
     aws_security_group.ecs_cluster_traffic[0].id
