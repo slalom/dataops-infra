@@ -97,7 +97,7 @@ def build_index(index_type: str, tf_dir: str, output_file: str, overview_desc: s
     }
     git_url_pattern = "git::{git_repo}/{path}?ref={branch}"
     git_repo = "https://github.com/slalom-ggp/dataops-infra"
-    git_branch = "master"
+    git_branch = "main"
 
     toc_str = ""
     for platform_i, platform in enumerate(content_metadata.keys(), start=1):
@@ -201,7 +201,7 @@ def update_module_docs(
                 markdown_text += DOCS_FOOTER.format(
                     src="\n".join(
                         [
-                            "* [{file}]({repo}/tree/master/{dir}/{file})".format(
+                            "* [{file}]({repo}/tree/main/{dir}/{file})".format(
                                 repo=git_repo,
                                 dir=module_path,
                                 file=os.path.basename(tf_file),
