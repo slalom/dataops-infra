@@ -145,12 +145,13 @@ resource "aws_instance" "ec2_instances" {
   instance_type               = var.instance_type
   key_name                    = var.ssh_keypair_name
   subnet_id                   = var.environment.public_subnets[0]
-  user_data                   = var.is_windows ? local.userdata_win : local.userdata_lin
   get_password_data           = var.is_windows
   associate_public_ip_address = true
   ebs_optimized               = true
   monitoring                  = true
   disable_api_termination     = false
+
+  user_data = var.is_windows ? replace(local.userdata_win, "<script>", "<script>\nSET EC2_NODE_INDEX=${count.index}\n") : replace(local.userdata_lin, "#!/bin/bash", "#!/bin/bash\nexport EC2_NODE_INDEX=${count.index}\n")
   tags = merge(
     var.resource_tags,
     { name = "${var.name_prefix}EC2${count.index}" }
@@ -180,7 +181,7 @@ export HOMEDIR=/home/ubuntu/tableau
 mkdir -p $HOMEDIR
 cd $HOMEDIR
 sudo chmod 777 $HOMEDIR
-echo "" > ___BOOSTSTRAP_STARTED_
+echo "" > ___BOOSTSTRAP_UNPACK_STARTED_
 export PROJECT=${local.project_shortname}
 ${var.use_https == false ? "" : "export HTTPS_DOMAIN=${var.https_domain}"}
 ${join("\n",
@@ -190,11 +191,11 @@ ${join("\n",
     : "echo ${base64encode(file("${split("::", x)[0]}"))} | base64 --decode > ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]}"
   ]
 )}
-echo "" > __BOOTSTRAP_COMPLETE_
-echo "" > __USERDATA_SCRIPT_STARTED_
+echo "" > __BOOTSTRAP_UNPACK_COMPLETE_
+echo "" > _BOOTSTRAP_SCRIPT_STARTED_
 sudo chmod -R 777 $HOMEDIR
 ./bootstrap.sh
-echo "" > _USERDATA_SCRIPT_COMPLETE_
+echo "" > _BOOTSTRAP_SCRIPT_COMPLETE_
 EOF
 }
 

@@ -21,6 +21,7 @@ figlet "Welcome to $PROJECT!" >> $BANNER
 set -e
 echo "------------------------------------------------------" >> $BANNER
 echo "Welcome to the Tableau Server at $IP!" >> $BANNER
+echo -e "    EC2 Node Index:      $EC2_NODE_INDEX" >> $BANNER
 echo -e "    TSM Config:          https://$IP:8850/" >> $BANNER
 echo -e "    Tableau Server:      http://$IP/" >> $BANNER
 echo -e "    Default Admin Acct:  tabadmin:tabadmin" >> $BANNER
@@ -44,8 +45,9 @@ echo -e "    1. Get bootstrap file:    tsm topology nodes get-bootstrap-file --f
 echo -e "    2. Print, then copy:      cat ~/bootstrap.sh" >> $BANNER
 echo -e "  On Secondary Nodes:  " >> $BANNER
 echo -e "    3. Create file and paste: nano ~/bootstrap.sh" >> $BANNER
-echo -e "    4. Run setup script:      cd /opt/tableau/tableau_server/packages/scripts.*/" >> $BANNER
-echo -e "                              sudo ./initialize-tsm -b ~/bootstrap.sh --accepteula" >> $BANNER
+echo -e "    4. Run join script:       ~/tableau/tableau_join.sh" >> $BANNER
+echo -e "                        OR:   cd /opt/tableau/tableau_server/packages/scripts.*" >> $BANNER
+echo -e "                              sudo ./initialize-tsm --accepteula -a ubuntu -b ~/bootstrap.json" >> $BANNER
 echo "------------------------------------------------------" >> $BANNER
 
 cd /home/ubuntu
@@ -61,6 +63,10 @@ sudo add-apt-repository -y ppa:certbot/certbot
 sudo apt-get update
 sudo apt-get -y install gdebi-core
 sudo apt-get install -y certbot
+
+echo "Configuring locale in the OS..."
+export LANG=en_US.UTF-8
+sudo localectl set-locale LANG=en_US.UTF-8
 
 echo "Installing AWS CLI..."
 snap install aws-cli --classic
@@ -93,24 +99,19 @@ ls installer/* -la
 echo "Installing Tableau Server..."
 sudo gdebi -n installer/tableau-server-*.deb
 
-echo "Initializing TSM (Tableau Services Manager)..."
-cd /opt/tableau/tableau_server/packages/scripts.*
-SCRIPTS_DIR=$(pwd)
-export LANG=en_US.UTF-8
-sudo localectl set-locale LANG=en_US.UTF-8
-sudo $SCRIPTS_DIR/initialize-tsm --accepteula -a ubuntu
-source /etc/profile.d/tableau_server.sh  # Updates PATH
-tsm licenses activate -t # Activate 14-day Trial
-
 echo "Creating 'tabadmin' account..."
 sudo adduser --disabled-password --gecos "Tableau Admin,,," tabadmin
-sudo usermod -G tsmadmin -a tabadmin
 echo "tabadmin:tabadmin" | sudo chpasswd
 
-echo ------------
-echo -e "TSM is initialized and taking requests at: https://$IP:8850/"
-
-echo "Beginning tableau_setup.sh..."
 cd /home/ubuntu/tableau
 sudo chmod 777 *
-./tableau_setup.sh
+if [[ $EC2_NODE_INDEX -eq 0 ]]; then
+    echo "Running on primary node (EC2_NODE_INDEX=$EC2_NODE_INDEX)."
+    echo "Beginning tableau_setup.sh..."
+    ./tableau_setup.sh
+else
+    echo "Running on secondary node (EC2_NODE_INDEX=$EC2_NODE_INDEX)."
+    echo "Skipping tableau_setup.sh..."
+    echo "To join this node to the cluster, generate a file called ~/boostrap.json from TSM on the leader node and then run:"
+    echo " > tableau/tableau_join.sh"
+fi
