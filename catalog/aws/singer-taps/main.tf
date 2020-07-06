@@ -80,6 +80,7 @@ module "ecs_tap_sync_task" {
   container_command   = local.container_command
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores
+  use_private_subnet  = var.use_private_subnet
   use_fargate         = true
   environment_vars = merge(
     {
