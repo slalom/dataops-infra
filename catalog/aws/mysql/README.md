@@ -14,32 +14,150 @@ Deploys a MySQL server running on RDS.
 
 No requirements.
 
-## Inputs
+## Providers
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| admin\_username | The initial admin username. | `string` | n/a | yes |
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| admin\_password | The initial admin password. Must be 8 characters long. | `string` | `null` | no |
-| database\_name | The name of the initial database to be created. | `string` | `"default_db"` | no |
-| identifier | The database name which will be used within connection strings and URLs. | `string` | `"rds-db"` | no |
-| instance\_class | Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ ) | `string` | `"db.t2.micro"` | no |
-| jdbc\_cidr | List of CIDR blocks which should be allowed to connect to the instance on the JDBC port. | `list(string)` | `[]` | no |
-| jdbc\_port | Optional. Overrides the default JDBC port for incoming SQL connections. | `number` | `3306` | no |
-| kms\_key\_id | Optional. The ARN for the KMS encryption key used in cluster encryption. | `string` | `null` | no |
-| mysql\_version | Optional. The specific MySQL version to use. | `string` | `"5.7.26"` | no |
-| skip\_final\_snapshot | If true, will allow terraform to destroy the RDS cluster without performing a final backup. | `bool` | `false` | no |
-| storage\_size\_in\_gb | The allocated storage value is denoted in GB. | `string` | `"20"` | no |
-| whitelist\_terraform\_ip | True to allow the terraform user to connect to the DB instance. | `bool` | `true` | no |
+No provider.
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### admin\_username
+
+Description: The initial admin username.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### admin\_password
+
+Description: The initial admin password. Must be 8 characters long.
+
+Type: `string`
+
+Default: `null`
+
+### database\_name
+
+Description: The name of the initial database to be created.
+
+Type: `string`
+
+Default: `"default_db"`
+
+### identifier
+
+Description: The database name which will be used within connection strings and URLs.
+
+Type: `string`
+
+Default: `"rds-db"`
+
+### instance\_class
+
+Description: Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )
+
+Type: `string`
+
+Default: `"db.t2.micro"`
+
+### jdbc\_port
+
+Description: Optional. Overrides the default JDBC port for incoming SQL connections.
+
+Type: `number`
+
+Default: `3306`
+
+### kms\_key\_id
+
+Description: Optional. The ARN for the KMS encryption key used in cluster encryption.
+
+Type: `string`
+
+Default: `null`
+
+### mysql\_version
+
+Description: Optional. The specific MySQL version to use.
+
+Type: `string`
+
+Default: `"5.7.26"`
+
+### storage\_size\_in\_gb
+
+Description: The allocated storage value is denoted in GB.
+
+Type: `string`
+
+Default: `"20"`
+
+### skip\_final\_snapshot
+
+Description: If true, will allow terraform to destroy the RDS cluster without performing a final backup.
+
+Type: `bool`
+
+Default: `false`
+
+### jdbc\_cidr
+
+Description: List of CIDR blocks which should be allowed to connect to the instance on the JDBC port.
+
+Type: `list(string)`
+
+Default: `[]`
+
+### whitelist\_terraform\_ip
+
+Description: True to allow the terraform user to connect to the DB instance.
+
+Type: `bool`
+
+Default: `true`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| endpoint | The MySQL connection endpoint for the new server. |
-| summary | Summary of resources created by this module. |
+The following outputs are exported:
+
+### endpoint
+
+Description: The MySQL connection endpoint for the new server.
+
+### summary
+
+Description: Summary of resources created by this module.
 
 ---------------------
 
@@ -47,9 +165,9 @@ No requirements.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/mysql/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/mysql/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/mysql/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/mysql/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/mysql/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/mysql/variables.tf)
 
 ---------------------
 

@@ -14,28 +14,110 @@ docker images which should not be accessible to external users.
 
 No requirements.
 
-## Inputs
+## Providers
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| aws\_credentials\_file | Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image. | `string` | n/a | yes |
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| repository\_name | Name of Docker repository. | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| source\_image\_path | Path to Docker image source. | `string` | n/a | yes |
-| build\_args | Optional. Build arguments to use during `docker build`. | `map(string)` | `{}` | no |
-| is\_disabled | Switch for disabling ECR image and push. | `bool` | `false` | no |
-| tag | Tag to use for deployed Docker image. | `string` | `"latest"` | no |
+The following providers are used by this module:
+
+- aws
+
+- null
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### repository\_name
+
+Description: Name of Docker repository.
+
+Type: `string`
+
+### source\_image\_path
+
+Description: Path to Docker image source.
+
+Type: `string`
+
+### aws\_credentials\_file
+
+Description: Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### is\_disabled
+
+Description: Switch for disabling ECR image and push.
+
+Type: `bool`
+
+Default: `false`
+
+### build\_args
+
+Description: Optional. Build arguments to use during `docker build`.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### tag
+
+Description: Tag to use for deployed Docker image.
+
+Type: `string`
+
+Default: `"latest"`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| ecr\_image\_url | The full path to the ECR image, including image name. |
-| ecr\_image\_url\_and\_tag | The full path to the ECR image, including image name and tag. |
-| ecr\_repo\_arn | The unique ID (ARN) of the ECR repo. |
-| ecr\_repo\_root | The path to the ECR repo, excluding image name. |
+The following outputs are exported:
+
+### ecr\_repo\_arn
+
+Description: The unique ID (ARN) of the ECR repo.
+
+### ecr\_repo\_root
+
+Description: The path to the ECR repo, excluding image name.
+
+### ecr\_image\_url
+
+Description: The full path to the ECR image, including image name.
+
+### ecr\_image\_url\_and\_tag
+
+Description: The full path to the ECR image, including image name and tag.
 ## Prereqs:
 
 _To use this module, you will need the following components:_
@@ -103,9 +185,9 @@ For more info: [https://docs.aws.amazon.com/powershell/latest/userguide/pstools-
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecr-image/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecr-image/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecr-image/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/variables.tf)
 
 ---------------------
 
