@@ -2,7 +2,7 @@
 
 output "summary" { value = module.rds_postgres.summary }
 module "rds_postgres" {
-  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=master"
+  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=main"
   source        = "../../catalog/aws/postgres"
   name_prefix   = "${local.project_shortname}-"
   environment   = module.env.environment

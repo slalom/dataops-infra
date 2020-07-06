@@ -6,7 +6,7 @@ locals {
 output "tap_to_rs_summary" { value = module.tap_to_rs.summary }
 module "tap_to_rs" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-  source        = "git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/singer-taps?ref=master"
+  source        = "git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/singer-taps?ref=main"
   name_prefix   = "${local.name_prefix}RSTap-"
   environment   = module.env.environment
   resource_tags = local.resource_tags

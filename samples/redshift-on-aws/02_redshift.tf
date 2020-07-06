@@ -2,7 +2,7 @@
 
 output "summary" { value = module.redshift_dw.summary }
 module "redshift_dw" {
-  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/redshift?ref=master"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/redshift?ref=main"
   source        = "../../catalog/aws/redshift"
   name_prefix   = "${local.project_shortname}-"
   environment   = module.env.environment
