@@ -39,10 +39,9 @@ module "env" {
   resource_tags        = local.resource_tags
 }
 
-resource "null_resource" "secrets_folder_protection5" {
+resource "null_resource" "secrets_folder_protection" {
   provisioner "local-exec" {
     interpreter = module.env.is_windows_host ? ["cmd", "/C"] : []
-    # interpreter = module.env.is_windows_host ? ["PowerShell", "-Command"] : []
     # on_failure = continue
     command = (
       module.env.is_windows_host == false ? "chmod -R 700 ${local.secrets_folder}" : join(" && ", [
