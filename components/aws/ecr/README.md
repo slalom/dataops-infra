@@ -13,23 +13,74 @@ should not be accessible to external users.
 
 No requirements.
 
-## Inputs
+## Providers
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| image\_name | Required. The default name for the docker image. (Will be concatenated with `repository_name`.) | `string` | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| repository\_name | Required. A name for the ECR respository. (Will be concatenated with `image_name`.) | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
+The following providers are used by this module:
+
+- aws
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### repository\_name
+
+Description: Required. A name for the ECR respository. (Will be concatenated with `image_name`.)
+
+Type: `string`
+
+### image\_name
+
+Description: Required. The default name for the docker image. (Will be concatenated with `repository_name`.)
+
+Type: `string`
+
+## Optional Inputs
+
+No optional input.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| ecr\_image\_url | The full path to the ECR image, including image name. |
-| ecr\_repo\_arn | The unique ID (ARN) of the ECR repo. |
-| ecr\_repo\_root | The path to the ECR repo, excluding image name. |
+The following outputs are exported:
+
+### ecr\_repo\_arn
+
+Description: The unique ID (ARN) of the ECR repo.
+
+### ecr\_repo\_root
+
+Description: The path to the ECR repo, excluding image name.
+
+### ecr\_image\_url
+
+Description: The full path to the ECR image, including image name.
 
 ---------------------
 
@@ -37,9 +88,9 @@ No requirements.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecr/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecr/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/ecr/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr/variables.tf)
 
 ---------------------
 

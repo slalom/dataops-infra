@@ -14,23 +14,78 @@ This can be used in conjuction with Amazon Athena to query flat files in S3 buck
 
 No requirements.
 
-## Inputs
+## Providers
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| glue\_crawler\_name | Name of the Glue crawler. | `string` | n/a | yes |
-| glue\_database\_name | Name of the Glue catalog database. | `string` | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| s3\_target\_bucket\_name | S3 target bucket for Glue crawler. | `string` | n/a | yes |
-| target\_path | Path to crawler target file(s). | `string` | n/a | yes |
+The following providers are used by this module:
+
+- aws
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### glue\_database\_name
+
+Description: Name of the Glue catalog database.
+
+Type: `string`
+
+### glue\_crawler\_name
+
+Description: Name of the Glue crawler.
+
+Type: `string`
+
+### s3\_target\_bucket\_name
+
+Description: S3 target bucket for Glue crawler.
+
+Type: `string`
+
+### target\_path
+
+Description: Path to crawler target file(s).
+
+Type: `string`
+
+## Optional Inputs
+
+No optional input.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| glue\_crawler\_name | The name of the Glue crawler. |
+The following outputs are exported:
+
+### glue\_crawler\_name
+
+Description: The name of the Glue crawler.
 
 ---------------------
 
@@ -38,10 +93,10 @@ No requirements.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/glue-crawler/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/variables.tf)
 
 ---------------------
 

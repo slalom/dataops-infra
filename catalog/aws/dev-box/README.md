@@ -18,29 +18,132 @@ or develop using the native cloud environment. Applicable use cases include:
 
 No requirements.
 
-## Inputs
+## Providers
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| aws\_credentials\_file | Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image. | `string` | n/a | yes |
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| source\_image | Required. The docker image to execute in the container (e.g. 'ubuntu:18.04'). | `string` | n/a | yes |
-| container\_entrypoint | Optional. Override the docker image's entrypoint. | `any` | `null` | no |
-| container\_num\_cores | Optional. Specify the number of cores to use in the container. | `number` | `0.5` | no |
-| container\_ram\_gb | Optional. Specify the amount of RAM to be available to the container. | `number` | `1` | no |
-| secrets | Map of environment secrets. | `map(string)` | `{}` | no |
-| settings | Map of environment variables. | `map(string)` | `{}` | no |
-| ssh\_private\_key\_filepath | Optional. Path to a valid public key for SSH connectivity. | `string` | `null` | no |
-| ssh\_public\_key\_filepath | Optional. Path to a valid public key for SSH connectivity. | `string` | `null` | no |
-| use\_private\_subnet | If True, tasks will use a private subnet and will require a NAT gateway to pull the docker<br>image, and for any outbound traffic. If False, tasks will use a public subnet and will<br>not require a NAT gateway. | `bool` | `false` | no |
+The following providers are used by this module:
+
+- aws
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### source\_image
+
+Description: Required. The docker image to execute in the container (e.g. 'ubuntu:18.04').
+
+Type: `string`
+
+### aws\_credentials\_file
+
+Description: Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### settings
+
+Description: Map of environment variables.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### secrets
+
+Description: Map of environment secrets.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### container\_entrypoint
+
+Description: Optional. Override the docker image's entrypoint.
+
+Type: `any`
+
+Default: `null`
+
+### container\_num\_cores
+
+Description: Optional. Specify the number of cores to use in the container.
+
+Type: `number`
+
+Default: `0.5`
+
+### container\_ram\_gb
+
+Description: Optional. Specify the amount of RAM to be available to the container.
+
+Type: `number`
+
+Default: `1`
+
+### use\_private\_subnet
+
+Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway.
+
+Type: `bool`
+
+Default: `false`
+
+### ssh\_public\_key\_filepath
+
+Description: Optional. Path to a valid public key for SSH connectivity.
+
+Type: `string`
+
+Default: `null`
+
+### ssh\_private\_key\_filepath
+
+Description: Optional. Path to a valid public key for SSH connectivity.
+
+Type: `string`
+
+Default: `null`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| summary | Summary of resources created by this module. |
+The following outputs are exported:
+
+### summary
+
+Description: Summary of resources created by this module.
 
 ---------------------
 
@@ -48,9 +151,9 @@ No requirements.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/dev-box/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/dev-box/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//catalog/aws/dev-box/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/variables.tf)
 
 ---------------------
 
