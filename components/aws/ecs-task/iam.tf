@@ -91,8 +91,6 @@ resource "aws_iam_role_policy_attachment" "ecs_role_policy-handoff" {
   role       = aws_iam_role.ecs_execution_role.name
   policy_arn = aws_iam_policy.ecs_policy_handoff.id
 }
-
-
 resource "aws_iam_policy" "ecs_policy_handoff" {
   name   = "${var.name_prefix}ecs_task-policy_handoff-${random_id.suffix.dec}"
   policy = <<EOF

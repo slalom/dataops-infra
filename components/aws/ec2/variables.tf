@@ -57,6 +57,10 @@ EOF
   type        = map
   default     = {}
 }
+variable "cluster_ports" {
+  description = "A map defining which ports should be openen for instances to talk with one another."
+  default     = {}
+}
 variable "ami_owner" {
   description = "The name or account number of the owner who publishes the AMI."
   default     = "amazon"
@@ -89,7 +93,7 @@ variable "num_instances" {
   description = "The number of EC2 instances to launch."
   default     = 1
 }
-variable "ssh_key_name" {
+variable "ssh_keypair_name" {
   description = "The name of a SSH key pair which has been uploaded to AWS. This is used to access Linux instances remotely."
   type        = string
 }

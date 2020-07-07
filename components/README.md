@@ -27,53 +27,53 @@ These components define the technical building blocks which enable advanced, rea
 
 ## AWS Components
 
-### [AWS EC2](../components/aws/ec2/README.md)
+### AWS EC2
+
+#### Overview
 
 EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
 credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ec2?ref=master`
-* See the [AWS EC2 Readme](../components/aws/ec2/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS EC2 Readme](../components/aws/ec2/README.md)
 
 -------------------
 
-### [AWS ECR](../components/aws/ecr/README.md)
+### AWS ECR
+
+#### Overview
 
 ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. ECR allows you to securely publish docker images which
 should not be accessible to external users.
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecr?ref=master`
-* See the [AWS ECR Readme](../components/aws/ecr/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS ECR Readme](../components/aws/ecr/README.md)
 
 -------------------
 
-### [AWS ECR-Image](../components/aws/ecr-image/README.md)
+### AWS ECR-Image
 
-ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub.
-ECR allows you to securely publish docker images which should not be accessible to external users.
+#### Overview
 
-Known Issue (TODO): ECR push requires that CLI credentials at runtime (terraform apply) match with the
-project's AWS credentails, as specified in .screts/aws-credentials.
+ECR (Elastic Compute Repository) is the private-hosted AWS
+equivalent of DockerHub. ECR allows you to securely publish
+docker images which should not be accessible to external users.
 
-This _might_ help:
 
-```bash
-cd dataops-infra
-SET AWS_SHARED_CREDENTIALS_FILE=($pwd)/.secrets/aws-credentials
-SET AWS_PROFILE=default
-cd infra
-terraform apply
-```
+#### Documentation
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecr-image?ref=master`
-* See the [AWS ECR-Image Readme](../components/aws/ecr-image/README.md) for input/output specs and additional info.
+- [AWS ECR-Image Readme](../components/aws/ecr-image/README.md)
 
 -------------------
 
-### [AWS ECS-Cluster](../components/aws/ecs-cluster/README.md)
+### AWS ECS-Cluster
+
+#### Overview
 
 ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
 features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
@@ -81,12 +81,15 @@ to manage or pay for when tasks are not running.
 
 Use in combination with the `ECS-Task` component.
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-cluster?ref=master`
-* See the [AWS ECS-Cluster Readme](../components/aws/ecs-cluster/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS ECS-Cluster Readme](../components/aws/ecs-cluster/README.md)
 
 -------------------
 
-### [AWS ECS-Task](../components/aws/ecs-task/README.md)
+### AWS ECS-Task
+
+#### Overview
 
 ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
 features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
@@ -94,32 +97,41 @@ to manage or pay for when tasks are not running.
 
 Use in combination with the `ECS-Cluster` component.
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/ecs-task?ref=master`
-* See the [AWS ECS-Task Readme](../components/aws/ecs-task/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS ECS-Task Readme](../components/aws/ecs-task/README.md)
 
 -------------------
 
-### [AWS Glue-Crawler](../components/aws/glue-crawler/README.md)
+### AWS Glue-Crawler
+
+#### Overview
 
 Glue is AWS's fully managed extract, transform, and load (ETL) service.
 A Glue crawler is used to access a data store and create table definitions.
 This can be used in conjuction with Amazon Athena to query flat files in S3 buckets using SQL.
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/glue-crawler?ref=master`
-* See the [AWS Glue-Crawler Readme](../components/aws/glue-crawler/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Glue-Crawler Readme](../components/aws/glue-crawler/README.md)
 
 -------------------
 
-### [AWS Glue-Job](../components/aws/glue-job/README.md)
+### AWS Glue-Job
+
+#### Overview
 
 Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue job can be used job to run ETL Python scripts.
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/glue-job?ref=master`
-* See the [AWS Glue-Job Readme](../components/aws/glue-job/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Glue-Job Readme](../components/aws/glue-job/README.md)
 
 -------------------
 
-### [AWS Lambda-Python](../components/aws/lambda-python/README.md)
+### AWS Lambda-Python
+
+#### Overview
 
 AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
 Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
@@ -127,12 +139,15 @@ packaging the python code into a zip and uploading to a new Lambda Function in A
 S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/lambda-python?ref=master`
-* See the [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md)
 
 -------------------
 
-### [AWS RDS](../components/aws/rds/README.md)
+### AWS RDS
+
+#### Overview
 
 Deploys an RDS-backed database. RDS currently supports the following database engines:
 * Aurora
@@ -147,23 +162,29 @@ which are built on top of this component module.
 
 * NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/rds?ref=master`
-* See the [AWS RDS Readme](../components/aws/rds/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS RDS Readme](../components/aws/rds/README.md)
 
 -------------------
 
-### [AWS Redshift](../components/aws/redshift/README.md)
+### AWS Redshift
+
+#### Overview
 
 This is the underlying technical component which supports the Redshift catalog module.
 
 NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/redshift?ref=master`
-* See the [AWS Redshift Readme](../components/aws/redshift/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Redshift Readme](../components/aws/redshift/README.md)
 
 -------------------
 
-### [AWS Secrets-Manager](../components/aws/secrets-manager/README.md)
+### AWS Secrets-Manager
+
+#### Overview
 
 This module takes as input a set of maps from variable names to secrets locations (in YAML or
 JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing
@@ -176,24 +197,30 @@ on to other resources which required access to those secrets.
 * For security reasons, this module does not accept inputs for secrets using the clear text of the secrets themselves. To properly use this module, first save the secrets to a YAML or JSON file which is excluded from source control.
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/secrets-manager?ref=master`
-* See the [AWS Secrets-Manager Readme](../components/aws/secrets-manager/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Secrets-Manager Readme](../components/aws/secrets-manager/README.md)
 
 -------------------
 
-### [AWS Step-Functions](../components/aws/step-functions/README.md)
+### AWS Step-Functions
+
+#### Overview
 
 AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
 to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
 for another step.
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/step-functions?ref=master`
-* See the [AWS Step-Functions Readme](../components/aws/step-functions/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Step-Functions Readme](../components/aws/step-functions/README.md)
 
 -------------------
 
-### [AWS VPC](../components/aws/vpc/README.md)
+### AWS VPC
+
+#### Overview
 
 The VPC module creates a number of network services which support other key AWS functions.
 
@@ -205,8 +232,9 @@ Included automatically when creating this module:
     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
     * route tables and routes to connect all of the above
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//components/aws/vpc?ref=master`
-* See the [AWS VPC Readme](../components/aws/vpc/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS VPC Readme](../components/aws/vpc/README.md)
 
 -------------------
 

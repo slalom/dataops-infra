@@ -25,7 +25,7 @@ variable "resource_tags" {
 ########################################
 
 variable "local_metadata_path" {
-  description = "The local folder which countains tap definitions files: `data.select` and `plan-*.yml`"
+  description = "The local folder which countains tap definitions files: `{tap-name}.rules.txt` and `{tap-name}.plan.yml`"
   type        = string
 }
 variable "data_lake_type" {
@@ -123,6 +123,15 @@ variable "container_ram_gb" {
   description = "Optional. Specify the amount of RAM to be available to the container."
   default     = 1
 }
+variable "num_retries" {
+  description = "Optional. The number of retries to attempt if the task fails."
+  default     = 0
+}
+variable "timeout_hours" {
+  description = "Optional. The number of hours before the sync task is canceled and retried."
+  type        = number
+  default     = 48
+}
 variable "pipeline_version_number" {
   description = <<EOF
 Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
@@ -136,5 +145,14 @@ EOF
 variable "container_args" {
   type        = list(string)
   description = "Optional. A list of additional args to send to the container."
-  default     = []
+  default     = ["--config_file=False", "--target_config_file=False"]
+}
+variable "use_private_subnet" {
+  description = <<EOF
+If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway.
+EOF
+  type        = bool
+  default     = false
 }

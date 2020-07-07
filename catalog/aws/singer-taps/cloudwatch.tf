@@ -8,6 +8,12 @@ filter @message like /(Beginning|Completed) running/
 | fields @timestamp, @message
 | sort tablename desc, @timestamp desc
 EOF
+  cloudwatch_errors_query    = <<EOF
+filter @message like /level=CRITICAL/
+| fields @timestamp, @message
+| sort @timestamp desc
+| limit 20
+EOF
   cloudwatch_clean_log_query = <<EOF
 filter @message not like /INFO\sUsed/
 | filter @message not like /INFO\sMaking\sGET\srequest/
@@ -22,6 +28,7 @@ Additional Actions:
 
  - [View Running ECS Tasks](https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks)
  - [View ECS CloudWatch Logs](${module.ecs_tap_sync_task.ecs_logging_url})
+ - [Open Step Function Console](${module.step_function.state_machine_url})
 
 EOF
 }
@@ -76,6 +83,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "width": 10,
       "height": 4,
       "properties": {
+        "title": "CPU and Memory Utilization",
         "metrics": [
           [ "ECS/ContainerInsights", "CpuReserved", "ClusterName", "${module.ecs_cluster.ecs_cluster_name}", { "id": "m1", "yAxis": "right", "visible": false  } ],
           [ ".", "CpuUtilized", ".", ".", { "id": "m2", "yAxis": "right" } ],
@@ -113,6 +121,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "width": 14,
       "height": 12,
       "properties": {
+        "title": "Table-Level Summary",
         "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_query_text, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
   }",
@@ -126,8 +135,25 @@ resource "aws_cloudwatch_dashboard" "main" {
       "x": 0,
       "y": 10,
       "width": 24,
+      "height": 3,
+      "properties": {
+        "title": "Fatal Errors",
+        "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
+  replace(replace(replace(local.cloudwatch_errors_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
+  }",
+        "region": "${var.environment.aws_region}",
+        "stacked": "false",
+        "view": "table"
+      }
+    },
+    {
+      "type": "log",
+      "x": 0,
+      "y": 13,
+      "width": 24,
       "height": 12,
       "properties": {
+        "title": "Detailed Logs",
         "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_clean_log_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
 }",

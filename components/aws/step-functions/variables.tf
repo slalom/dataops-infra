@@ -24,25 +24,17 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "feature_store_bucket" {
-  description = "Bucket which contains pre-transformed training data and scoring data."
-  type        = string
+variable "writeable_buckets" {
+  description = "Buckets which should be granted write access."
+  type        = list(string)
+  default     = []
 }
 
-variable "extracts_store_bucket" {
-  description = "Bucket which contains transformed training and scoring data."
-  type        = string
-}
-
-variable "model_store_bucket" {
-  description = "Bucket which contains model objects."
-  type        = string
-}
-
-variable "output_store_bucket" {
-  description = "Bucket which contains batch transformation output."
-  type        = string
-}
+# variable "readonly_buckets" {
+#   description = "Buckets which should be granted read-only access."
+#   type        = list(string)
+#   default     = []
+# }
 
 variable "state_machine_definition" {
   description = "The JSON definition of the state machine to be created."
@@ -52,4 +44,11 @@ variable "state_machine_definition" {
 variable "lambda_functions" {
   description = "Map of function names to ARNs. Used to ensure state machine access to functions."
   type        = map(string)
+  default     = {}
+}
+
+variable "ecs_tasks" {
+  description = "List of ECS tasks, to ensure state machine access permissions."
+  type        = list(string)
+  default     = []
 }
