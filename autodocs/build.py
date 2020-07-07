@@ -5,10 +5,13 @@ from pathlib import Path
 import os
 from typing import Dict, List
 
-import uio
+from logless import get_logger, logged_block
 import runnow
+import uio
 
 from templates import DOCS_HEADER, DOCS_FOOTER, CATALOG_TEMPLATE
+
+logging = get_logger("infra-catalog.build")
 
 SPECIAL_CASE_WORDS = [
     "AWS",
@@ -22,6 +25,7 @@ SPECIAL_CASE_WORDS = [
     "MySQL",
     "ML",
     "MLOps",
+    "SFTP",
 ]
 
 
@@ -97,7 +101,7 @@ def build_index(index_type: str, tf_dir: str, output_file: str, overview_desc: s
     }
     git_url_pattern = "git::{git_repo}/{path}?ref={branch}"
     git_repo = "https://github.com/slalom-ggp/dataops-infra"
-    git_branch = "master"
+    git_branch = "main"
 
     toc_str = ""
     for platform_i, platform in enumerate(content_metadata.keys(), start=1):
@@ -106,26 +110,23 @@ def build_index(index_type: str, tf_dir: str, output_file: str, overview_desc: s
             f"(#{platform.lower()}-{index_type.lower()})\n"
         )
 
-        print(f"Exploring platform '{platform}'")
+        logging.info(f"Exploring platform '{platform}'")
         catalog_modules = get_tf_metadata(f"{tf_dir}/{platform}", recursive=True)
         for module, metadata in catalog_modules.items():
             module_title = f"{_proper(platform)} {_proper(os.path.basename(module))}"
             toc_str += (
                 f"    - [{module_title}](#{module_title.replace(' ', '-').lower()})\n"
             )
-            print(f"Exploring module '{module}': {metadata}")
-            source = git_url_pattern.format(
-                git_repo=git_repo, path=module.replace(".", ""), branch=git_branch
-            )
+            logging.debug(f"Exploring module '{module}': {metadata}")
             readme_path = f"{module}/README.md"
             content_metadata[platform] += (
-                f"### [{module_title}]({readme_path})\n\n"
+                f"### {module_title}\n\n"
+                f"#### Overview\n\n"
                 f"{metadata['header']}\n\n"
-                f"* Source: `{source}`\n"
-                f"* See the [{module_title} Readme]({readme_path}) for input/output specs and additional info.\n\n"
+                f"#### Documentation\n\n"
+                f"- [{module_title} Readme]({readme_path})\n\n"
                 f"-------------------\n\n"
             )
-
     content = CATALOG_TEMPLATE.format(
         toc=toc_str,
         aws=content_metadata["aws"],
@@ -147,25 +148,32 @@ def update_module_docs(
     special_case_words: List[str] = None,
     extra_docs_names: List[str] = ["USAGE.md", "NOTES.md"],
     git_repo: str = "https://github.com/slalom-ggp/dataops-infra",
-):
+) -> None:
     """
-    Replace all README.md files with auto-generated documentation, a wrapper
-    around the `terraform-docs` tool.
+    Replace all README.md files with auto-generated documentation
 
-    Parameters:
+    This is a wrapper around the `terraform-docs` tool.
+
+    Parameters
     ----------
-    tf_dir: Directory of terraform scripts to document.
-    recursive : Optional (default=True). 'True' to run on all subdirectories, recursively.
-    readme : Optional (default="README.md"). The filename to create when generating docs.
-    footnote: Optional (default=True). 'True' to include the standard footnote.
-    special_case_words: Optional. A list of words to override special casing rules.
-    extra_docs_names: (Optional.) A list of filenames which, if found, will be appended
-      to each module's README.md file.
-    git_repo: Optional. The git repo path to use in rendering 'source' paths.
-
-    Returns:
-    -------
-    None
+    tf_dir : str
+        Directory of terraform scripts to document.
+    recursive : bool, optional
+        Run on all subdirectories, recursively. By default True.
+    readme : str, optional
+        The filename to create when generating docs, by default "README.md".
+    footer : bool, optional
+        Include the standard footnote, by default True.
+    header : bool, optional
+        Include the standard footnote, by default True.
+    special_case_words : List[str], optional
+        A list of words to override special casing rules, by default None.
+    extra_docs_names : List[str], optional
+        A list of filenames which, if found, will be appended to each
+        module's README.md file, by default ["USAGE.md", "NOTES.md"].
+    git_repo : str, optional
+        The git repo path to use in rendering 'source' paths, by
+        default "https://github.com/slalom-ggp/dataops-infra".
     """
     markdown_text = ""
     if ".git" not in tf_dir and ".terraform" not in tf_dir:
@@ -187,7 +195,8 @@ def update_module_docs(
                 )
             module_path = tf_dir.replace(".", "").replace("//", "/").replace("\\", "/")
             _, markdown_output = runnow.run(
-                f"terraform-docs md --no-providers --sort-by-required {tf_dir}",
+                f"terraform-docs markdown document --no-sort {tf_dir}",
+                # " --no-requirements"
                 echo=False,
             )
             if header:
@@ -201,7 +210,7 @@ def update_module_docs(
                 markdown_text += DOCS_FOOTER.format(
                     src="\n".join(
                         [
-                            "* [{file}]({repo}/tree/master/{dir}/{file})".format(
+                            "* [{file}]({repo}/tree/main/{dir}/{file})".format(
                                 repo=git_repo,
                                 dir=module_path,
                                 file=os.path.basename(tf_file),
@@ -217,9 +226,7 @@ def update_module_docs(
                 update_module_docs(folder, recursive=recursive, readme=readme)
 
 
-def get_tf_metadata(
-    tf_dir: str, recursive: bool = False,
-):
+def get_tf_metadata(tf_dir: str, recursive: bool = False, save_to_dir: bool = True):
     """
     Return a dictionary of Terraform module paths to JSON metadata about each module,
     a wrapper around the `terraform-docs` tool.
@@ -243,6 +250,11 @@ def get_tf_metadata(
         if [x for x in uio.list_files(tf_dir) if x.endswith(".tf")]:
             _, json_text = runnow.run(f"terraform-docs json {tf_dir}", echo=False)
             result[tf_dir] = json.loads(json_text)
+            if save_to_dir:
+                uio.create_folder(f"{tf_dir}/.terraform")
+                uio.create_text_file(
+                    f"{tf_dir}/.terraform/terraform-docs.json", json_text
+                )
     if recursive:
         for folder in uio.list_files(tf_dir):
             folder = folder.replace("\\", "/")

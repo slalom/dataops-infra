@@ -18,7 +18,7 @@ DOCS_HEADER = """
 
 # ```hcl
 # module "{clean_name}" {
-#     source = "git::{git_repo}/{module_path}?ref=master"
+#     source = "git::{git_repo}/{module_path}?ref=main"
 
 #     // ...
 # }

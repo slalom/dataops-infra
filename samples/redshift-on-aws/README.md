@@ -1,21 +1,42 @@
 
-# Samples Redshift-Dw
+# Samples Redshift-On-AWS
 
-`/samples/redshift-dw`
+`/samples/redshift-on-aws`
 
 ## Overview
 
 
-## Inputs
+## Requirements
 
-No input.
+The following requirements are needed by this module:
+
+- aws (~> 2.10)
+
+## Providers
+
+The following providers are used by this module:
+
+- local
+
+## Required Inputs
+
+No required input.
+
+## Optional Inputs
+
+No optional input.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| env\_summary | n/a |
-| summary | n/a |
+The following outputs are exported:
+
+### summary
+
+Description: n/a
+
+### env\_summary
+
+Description: n/a
 
 ---------------------
 
@@ -23,9 +44,9 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/redshift-dw/00_environment.tf)
-* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/redshift-dw/01_data-lake.tf)
-* [02_redshift.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/redshift-dw/02_redshift.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/redshift-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/redshift-on-aws/01_data-lake.tf)
+* [02_redshift.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/redshift-on-aws/02_redshift.tf)
 
 ---------------------
 

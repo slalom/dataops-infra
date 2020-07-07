@@ -3,7 +3,7 @@ name: Auto-Tag Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   release_new_tag:
