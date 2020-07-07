@@ -88,3 +88,14 @@ variable "ssh_private_key_filepath" {
   type        = string
   default     = null
 }
+
+variable "use_private_subnets" {
+  description = <<EOF
+If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway. Note: a load balancer configuration will also be required in
+order to forward incoming traffic to the Tableau Server instances.
+EOF
+  type        = bool
+  default     = false
+}

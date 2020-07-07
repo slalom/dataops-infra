@@ -140,11 +140,14 @@ resource "aws_security_group" "ecs_cluster_traffic" {
 }
 
 resource "aws_instance" "ec2_instances" {
-  count                       = var.num_instances
-  ami                         = data.aws_ami.ec2_ami.id
-  instance_type               = var.instance_type
-  key_name                    = var.ssh_keypair_name
-  subnet_id                   = var.environment.public_subnets[0]
+  count         = var.num_instances
+  ami           = data.aws_ami.ec2_ami.id
+  instance_type = var.instance_type
+  key_name      = var.ssh_keypair_name
+
+  # Distribute instances into the public or private subnets using round-robin distribution.
+  subnet_id = element(var.use_private_subnets ? var.environment.private_subnets : var.environment.public_subnets, count.index)
+
   get_password_data           = var.is_windows
   associate_public_ip_address = true
   ebs_optimized               = true
