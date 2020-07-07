@@ -35,11 +35,11 @@ output "user_home" {
   description = "Path to the admin user's home directory."
   value       = local.user_home
 }
-output "ssh_private_key_filename" {
-  description = "Path to private key for SSH connections."
-  value       = module.ssh_key_pair.private_key_filename
+output "public_route_table" {
+  description = "The ID of the route table for public subnets."
+  value       = module.vpc.public_route_table
 }
-output "ssh_public_key_filename" {
-  description = "Path to public key for SSH connections."
-  value       = module.ssh_key_pair.public_key_filename
+output "private_route_table" {
+  description = "The ID of the route table for private subnets."
+  value       = module.vpc.private_route_table
 }

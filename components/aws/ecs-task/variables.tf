@@ -48,7 +48,7 @@ variable "container_entrypoint" {
   default     = null
 }
 variable "container_image" {
-  description = "e.g. [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
+  description = "Examples: 'python:3.8', [aws_account_id].dkr.ecr.[aws_region].amazonaws.com/[repo_name]"
   type        = string
 }
 variable "container_name" {
@@ -127,4 +127,13 @@ variable "use_fargate" {
   description = "True to use Fargate for task execution (default), False to use EC2 (classic)."
   type        = bool
   default     = true
+}
+variable "use_private_subnet" {
+  description = <<EOF
+If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will not
+require a NAT gateway.
+EOF
+  type        = bool
+  default     = false
 }

@@ -12,45 +12,275 @@ to manage or pay for when tasks are not running.
 
 Use in combination with the `ECS-Cluster` component.
 
-## Inputs
+## Requirements
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
-| container\_command | Optional. Overrides 'command' for the image. | `any` | n/a | yes |
-| container\_entrypoint | Optional. Overrides the 'entrypoint' for the image. | `any` | n/a | yes |
-| container\_image | e.g. [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name] | `string` | n/a | yes |
-| ecs\_cluster\_name | The name of the ECS Cluster to use. | `string` | n/a | yes |
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| load\_balancer\_arn | Required only if `use_load_balancer` = True. The load balancer to use for inbound traffic. | `string` | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| permitted\_s3\_buckets | A list of bucket names, to which the ECS task will be granted read/write access. | `list(string)` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| secrets\_manager\_kms\_key\_id | Optional. Overrides the KMS key used when storing secrets in AWS Secrets Manager. | `string` | n/a | yes |
-| admin\_ports | A list of admin ports (to be governed by `admin_cidr`). | `list(string)` | <pre>[<br>  "8080"<br>]</pre> | no |
-| always\_on | True to create an ECS Service with a single 'always-on' task instance. | `bool` | `false` | no |
-| app\_ports | A list of app ports (will be governed by `app_cidr`). | `list(string)` | <pre>[<br>  "8080"<br>]</pre> | no |
-| container\_name | Optional. Overrides the name of the default container. | `string` | `"DefaultContainer"` | no |
-| container\_num\_cores | The number of CPU cores to dedicate to the container. | `string` | `"4"` | no |
-| container\_ram\_gb | The amount of RAM to dedicate to the container. | `string` | `"8"` | no |
-| ecs\_launch\_type | 'FARGATE' or 'Standard' | `string` | `"FARGATE"` | no |
-| environment\_secrets | Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:  - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/AWS\_SECRET\_ACCESS\_KEY  - path/to/file.json:MY\_KEY\_NAME\_1  - path/to/file.yml:MY\_KEY\_NAME\_2 | `map(string)` | `{}` | no |
-| environment\_vars | Mapping of environment variable names to their values. | `map(string)` | `{}` | no |
-| schedules | A lists of scheduled execution times. | `set(string)` | `[]` | no |
-| use\_fargate | True to use Fargate for task execution (default), False to use EC2 (classic). | `bool` | `true` | no |
-| use\_load\_balancer | True to receive inbound traffic from the load balancer specified in `load_balancer_arn`. | `bool` | `false` | no |
+No requirements.
+
+## Providers
+
+The following providers are used by this module:
+
+- aws
+
+- random
+
+- null
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### container\_image
+
+Description: Examples: 'python:3.8', [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name]
+
+Type: `string`
+
+### ecs\_cluster\_name
+
+Description: The name of the ECS Cluster to use.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### always\_on
+
+Description: True to create an ECS Service with a single 'always-on' task instance.
+
+Type: `bool`
+
+Default: `false`
+
+### admin\_ports
+
+Description: A list of admin ports (to be governed by `admin_cidr`).
+
+Type: `list(string)`
+
+Default:
+
+```json
+[
+  "8080"
+]
+```
+
+### app\_ports
+
+Description: A list of app ports (will be governed by `app_cidr`).
+
+Type: `list(string)`
+
+Default:
+
+```json
+[
+  "8080"
+]
+```
+
+### container\_command
+
+Description: Optional. Overrides 'command' for the image.
+
+Type: `any`
+
+Default: `null`
+
+### container\_entrypoint
+
+Description: Optional. Overrides the 'entrypoint' for the image.
+
+Type: `any`
+
+Default: `null`
+
+### container\_name
+
+Description: Optional. Overrides the name of the default container.
+
+Type: `string`
+
+Default: `"DefaultContainer"`
+
+### container\_num\_cores
+
+Description: The number of CPU cores to dedicate to the container.
+
+Type: `string`
+
+Default: `"4"`
+
+### container\_ram\_gb
+
+Description: The amount of RAM to dedicate to the container.
+
+Type: `string`
+
+Default: `"8"`
+
+### ecs\_launch\_type
+
+Description: 'FARGATE' or 'Standard'
+
+Type: `string`
+
+Default: `"FARGATE"`
+
+### environment\_secrets
+
+Description: Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:
+ - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/AWS\_SECRET\_ACCESS\_KEY
+ - path/to/file.json:MY\_KEY\_NAME\_1
+ - path/to/file.yml:MY\_KEY\_NAME\_2
+
+Type: `map(string)`
+
+Default: `{}`
+
+### environment\_vars
+
+Description: Mapping of environment variable names to their values.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### load\_balancer\_arn
+
+Description: Required only if `use_load_balancer` = True. The load balancer to use for inbound traffic.
+
+Type: `string`
+
+Default: `null`
+
+### permitted\_s3\_buckets
+
+Description: A list of bucket names, to which the ECS task will be granted read/write access.
+
+Type: `list(string)`
+
+Default: `null`
+
+### schedules
+
+Description: A lists of scheduled execution times.
+
+Type: `set(string)`
+
+Default: `[]`
+
+### secrets\_manager\_kms\_key\_id
+
+Description: Optional. Overrides the KMS key used when storing secrets in AWS Secrets Manager.
+
+Type: `string`
+
+Default: `null`
+
+### use\_load\_balancer
+
+Description: True to receive inbound traffic from the load balancer specified in `load_balancer_arn`.
+
+Type: `bool`
+
+Default: `false`
+
+### use\_fargate
+
+Description: True to use Fargate for task execution (default), False to use EC2 (classic).
+
+Type: `bool`
+
+Default: `true`
+
+### use\_private\_subnet
+
+Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will not
+require a NAT gateway.
+
+Type: `bool`
+
+Default: `false`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| ecs\_checklogs\_cli | Command-ling string used to print Cloudwatch logs locally. |
-| ecs\_container\_name | The name of the task's primary container. |
-| ecs\_logging\_url | Link to Cloudwatch logs for this task. |
-| ecs\_runtask\_cli | Command-line string used to trigger on-demand execution of the Task. |
-| ecs\_security\_group | The name of the EC2 security group used by ECS. |
-| ecs\_task\_name | The name of the ECS task. |
-| load\_balancer\_arn | The unique ID (ARN) of the load balancer (if applicable). |
-| load\_balancer\_dns | The DNS of the load balancer (if applicable). |
+The following outputs are exported:
+
+### cloudwatch\_log\_group\_name
+
+Description: Name of Cloudwatch log group used for this task.
+
+### ecs\_checklogs\_cli
+
+Description: Command-ling string used to print Cloudwatch logs locally.
+
+### ecs\_container\_name
+
+Description: The name of the task's primary container.
+
+### ecs\_task\_execution\_role
+
+Description: An IAM role which has access to execute the ECS Task.
+
+### ecs\_logging\_url
+
+Description: Link to Cloudwatch logs for this task.
+
+### ecs\_runtask\_cli
+
+Description: Command-line string used to trigger on-demand execution of the Task.
+
+### ecs\_task\_name
+
+Description: The name of the ECS task.
+
+### ecs\_security\_group
+
+Description: The name of the EC2 security group used by ECS.
+
+### load\_balancer\_arn
+
+Description: The unique ID (ARN) of the load balancer (if applicable).
+
+### load\_balancer\_dns
+
+Description: The DNS of the load balancer (if applicable).
+
+### subnets
+
+Description: A list of subnets used for task execution.
 
 ---------------------
 
@@ -58,11 +288,11 @@ Use in combination with the `ECS-Cluster` component.
 
 _Source code for this module is available using the links below._
 
-* [alb.tf](alb.tf)
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [variables.tf](variables.tf)
+* [alb.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/alb.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/variables.tf)
 
 ---------------------
 

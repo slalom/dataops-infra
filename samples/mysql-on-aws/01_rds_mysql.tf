@@ -1,7 +1,8 @@
 # NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
+output "summary" { value = module.rds_mysql.summary }
 module "rds_mysql" {
-  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/rds?ref=master"
+  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/mysql?ref=main"
   source        = "../../catalog/aws/mysql"
   name_prefix   = "${local.project_shortname}-"
   environment   = module.env.environment
@@ -12,7 +13,7 @@ module "rds_mysql" {
   identifier          = "rds-db"
   admin_username      = "mysqladmin"
   admin_password      = "asdfASDF12"
-  skip_final_snapshot = true
+  skip_final_snapshot = true # allows simple DB deletion for POC environments
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
@@ -24,7 +25,3 @@ module "rds_mysql" {
   */
 
 }
-
-
-output "summary" { value = module.rds_mysql.summary }
-

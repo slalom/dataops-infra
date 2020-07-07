@@ -8,20 +8,21 @@ data "aws_availability_zones" "az_list" {}
 locals {
   tz_hour_offset = (
     contains(["PST"], var.scheduled_timezone) ? -8 :
+    contains(["PDT"], var.scheduled_timezone) ? -7 :
+    contains(["MST"], var.scheduled_timezone) ? -7 :
+    contains(["CST"], var.scheduled_timezone) ? -6 :
     contains(["EST"], var.scheduled_timezone) ? -5 :
     contains(["UTC", "GMT"], var.scheduled_timezone) ? 0 :
-    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", and "PST"
+    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
   )
   name_prefix = "${var.name_prefix}Tap-"
-  container_image = coalesce(
-    var.container_image, "slalomggp/singer:${var.taps[0].id}-to-${local.target.id}"
-  )
   sync_commands = [
     for tap in var.taps :
-    "s-tap sync ${tap.id} ${local.target.id}"
+    "tapdance sync ${tap.id} ${local.target.id} ${join(" ", var.container_args)}"
   ]
   container_command = (
-    length(local.sync_commands) == 1 ? local.sync_commands[0] :
+    length(local.sync_commands) == 1 ?
+    "${local.sync_commands[0]}" :
     chomp(coalesce(var.container_command,
       <<EOF
 /bin/bash -c "${join(" && ", local.sync_commands)}"
@@ -29,7 +30,7 @@ EOF
     ))
   )
   target = (
-    var.data_lake_type == "S3" ?
+    (var.data_lake_type == "S3") || (var.target == null) ?
     {
       id = "s3-csv"
       settings = {
@@ -55,7 +56,9 @@ EOF
     } :
     var.target
   )
-
+  container_image = coalesce(
+    var.container_image, "dataopstk/tapdance:${var.taps[0].id}-to-${local.target.id}"
+  )
 }
 
 module "ecs_cluster" {
@@ -77,11 +80,13 @@ module "ecs_tap_sync_task" {
   container_command   = local.container_command
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores
+  use_private_subnet  = var.use_private_subnet
   use_fargate         = true
   environment_vars = merge(
     {
-      "TAP_CONFIG_DIR" : "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
-      "TAP_STATE_FILE" : "${var.data_lake_storage_path}/${var.state_file_naming_scheme}",
+      TAP_CONFIG_DIR          = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
+      TAP_STATE_FILE          = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
+      PIPELINE_VERSION_NUMBER = var.pipeline_version_number
     },
     {
       for k, v in var.taps[0].settings :

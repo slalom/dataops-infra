@@ -24,18 +24,31 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "state_machine_name" {
-  description = "The name of the state machine to be created."
-  type        = string
+variable "writeable_buckets" {
+  description = "Buckets which should be granted write access."
+  type        = list(string)
+  default     = []
 }
+
+# variable "readonly_buckets" {
+#   description = "Buckets which should be granted read-only access."
+#   type        = list(string)
+#   default     = []
+# }
 
 variable "state_machine_definition" {
   description = "The JSON definition of the state machine to be created."
   type        = string
 }
 
-variable "account_id" {
-  # TODO: Deprecate if possible or detect dynamically.
-  description = "The account ID to use on resource ARNs and IDs."
-  type        = string
+variable "lambda_functions" {
+  description = "Map of function names to ARNs. Used to ensure state machine access to functions."
+  type        = map(string)
+  default     = {}
+}
+
+variable "ecs_tasks" {
+  description = "List of ECS tasks, to ensure state machine access permissions."
+  type        = list(string)
+  default     = []
 }

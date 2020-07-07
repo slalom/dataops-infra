@@ -1,0 +1,21 @@
+output "tableau_server_summmary" { value = module.tableau_server.summary }
+module "tableau_server" {
+  # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=main"
+  source        = "../../catalog/aws/tableau-server"
+  name_prefix   = local.name_prefix
+  environment   = module.env.environment
+  resource_tags = local.resource_tags
+
+  # CONFIGURE HERE:
+
+  num_linux_instances   = 0
+  num_windows_instances = 0
+
+  /*
+  # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
+
+  ec2_instance_type = "m5.4xlarge"
+  admin_cidr        = []
+  app_cidr          = ["0.0.0.0/0"]
+  */
+}

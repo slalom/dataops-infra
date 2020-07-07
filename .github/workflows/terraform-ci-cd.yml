@@ -32,7 +32,7 @@ jobs:
           go-version: "1.14" # The Go version to download (if necessary) and use.
       - name: "Terraform Code Standards Check"
         run: |
-          GO111MODULE="off" go get github.com/segmentio/terraform-docs
+          GO111MODULE="on" go get github.com/segmentio/terraform-docs
           export PATH=$HOME/go/bin:$PATH
           pip3 install --pre slalom.dataops
           s-infra check_tf_metadata ./catalog \
@@ -60,8 +60,11 @@ jobs:
         sample-id:
           - airflow-on-aws
           - dbt-and-singer-on-aws
-          - rds-on-aws
-          - redshift-dw
+          - lots-on-aws
+          - ml-ops-on-aws
+          - mysql-on-aws
+          - postgres-on-aws
+          - redshift-on-aws
           - s3-lambda-trigger
           - secrets-manager-on-aws
           - tableau-on-aws

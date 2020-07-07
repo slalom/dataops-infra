@@ -11,26 +11,178 @@ Python implementatin of Lambda functions. Given a path to a folder of one or mor
 packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
 S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
 
-## Inputs
+## Requirements
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| s3\_path\_to\_lambda\_zip | S3 Path to where the source code zip should be uploaded. | `string` | n/a | yes |
-| s3\_trigger\_bucket | The name of an S3 bucket which will trigger this Lambda function. | `string` | n/a | yes |
-| lambda\_source\_folder | Local path to a folder containing the lambda source code. | `string` | `"resources/fn_log"` | no |
-| pip\_path | The path to a local pip executable, used to package python dependencies. | `string` | `"pip3"` | no |
-| runtime | The python runtime, e.g. `python3.8`. | `string` | `"python3.8"` | no |
-| s3\_triggers | A map of function names to trigger definitions. Each definitions should contain the following attributes: `triggering_path` (the S3 key prefix on the bucket which should trigger the function), `function_handler` (a valid function handler reference, per the AWS Lambda spec), `environment_vars` (a map of environment<br>variable names to their values), and `environment_secrets` (a map of secret IDs which the lambda function<br>should be granted access to). | <pre>map(object({<br>    # function_name       = string<br>    triggering_path     = string<br>    function_handler    = string<br>    environment_vars    = map(string)<br>    environment_secrets = map(string)<br>  }))</pre> | <pre>{<br>  "fn_log": {<br>    "environment_secrets": {},<br>    "environment_vars": {},<br>    "function_handler": "main.lambda_handler",<br>    "triggering_path": "*"<br>  }<br>}</pre> | no |
-| timeout\_seconds | The amount of time which can pass before the function will timeout and fail execution. | `number` | `300` | no |
+No requirements.
+
+## Providers
+
+The following providers are used by this module:
+
+- random
+
+- aws
+
+- null
+
+- archive
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### upload\_to\_s3
+
+Description: True to upload source code to S3, False to upload inline with the Lambda function.
+
+Type: `bool`
+
+### functions
+
+Description: A map of function names to create and an object with properties describing the function.
+
+Example:
+  functions = [
+    "fn\_log" = {
+      description = "Add an entry to the log whenever a file is created."
+      handler     = "main.lambda\_handler"
+      environment = {}
+      secrets     = {}
+    }
+  ]
+
+Type:
+
+```hcl
+map(object({
+    description = string
+    handler     = string
+    environment = map(string)
+    secrets     = map(string)
+  }))
+```
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### runtime
+
+Description: The python runtime, e.g. `python3.8`.
+
+Type: `string`
+
+Default: `"python3.8"`
+
+### pip\_path
+
+Description: The path to a local pip executable, used to package python dependencies.
+
+Type: `string`
+
+Default: `"pip3"`
+
+### timeout\_seconds
+
+Description: The amount of time which can pass before the function will timeout and fail execution.
+
+Type: `number`
+
+Default: `300`
+
+### lambda\_source\_folder
+
+Description: Local path to a folder containing the lambda source code.
+
+Type: `string`
+
+Default: `"resources/fn_log"`
+
+### upload\_to\_s3\_path
+
+Description: S3 Path to where the source code zip should be uploaded.
+Use in combination with: `upload_to_s3 = true`
+
+Type: `string`
+
+Default: `null`
+
+### s3\_trigger\_bucket
+
+Description: The name of an S3 bucket which will trigger this Lambda function.
+
+Type: `string`
+
+Default: `null`
+
+### s3\_triggers
+
+Description: A list of objects describing the S3 trigger action.
+
+Example:
+  s3\_triggers = [
+    {
+      function\_name = "fn\_log"
+      s3\_bucket     = "\*"
+      s3\_path       = "\*"
+    }
+  ]
+
+Type:
+
+```hcl
+list(object({
+    function_name = string
+    s3_bucket     = string
+    s3_path       = string
+  }))
+```
+
+Default: `null`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| build\_temp\_dir | Full path to the local folder used to build the python package. |
+The following outputs are exported:
+
+### build\_temp\_dir
+
+Description: Full path to the local folder used to build the python package.
+
+### function\_ids
+
+Description: A map of function names to the unique function ID (ARN).
+
+### lambda\_iam\_role
+
+Description: The IAM role used by the lambda function to access resources. Can be used to grant
+additional permissions to the role.
 
 ---------------------
 
@@ -38,11 +190,11 @@ S3-based triggers, to run the function automatically whenever a file is landed i
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](iam.tf)
-* [main.tf](main.tf)
-* [outputs.tf](outputs.tf)
-* [python-zip.tf](python-zip.tf)
-* [variables.tf](variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/outputs.tf)
+* [python-zip.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/python-zip.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/variables.tf)
 
 ---------------------
 

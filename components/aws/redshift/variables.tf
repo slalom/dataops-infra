@@ -24,6 +24,16 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
+variable "identifier" {
+  description = "Optional. The unique identifier for the redshift cluster."
+  type        = string
+  default     = null
+}
+variable "admin_username" {
+  description = "Optional (default=''). The initial admin username."
+  type        = string
+  default     = "rsadmin"
+}
 variable "admin_password" {
   description = "The initial admin password. Must be 8 characters long."
   type        = string
@@ -70,4 +80,15 @@ variable "s3_logging_path" {
 variable "skip_final_snapshot" {
   description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
   default     = false
+}
+
+variable "jdbc_cidr" {
+  description = "List of CIDR blocks which should be allowed to connect to the instance on the JDBC port."
+  type        = list(string)
+  default     = []
+}
+variable "whitelist_terraform_ip" {
+  description = "True to allow the terraform user to connect to the DB instance."
+  type        = bool
+  default     = true
 }

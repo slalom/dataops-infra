@@ -34,6 +34,10 @@ variable "admin_password" {
   type        = string
   default     = null
 }
+variable "database_name" {
+  description = "The name of the initial database to be created."
+  default     = "default_db"
+}
 variable "elastic_ip" {
   description = "Optional. An Elastic IP endpoint which will be used to for routing incoming traffic."
   type        = string
@@ -80,4 +84,15 @@ variable "storage_size_in_gb" {
 variable "skip_final_snapshot" {
   description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
   default     = false
+}
+
+variable "jdbc_cidr" {
+  description = "List of CIDR blocks which should be allowed to connect to the instance on the JDBC port."
+  type        = list(string)
+  default     = []
+}
+variable "whitelist_terraform_ip" {
+  description = "True to allow the terraform user to connect to the DB instance."
+  type        = bool
+  default     = true
 }

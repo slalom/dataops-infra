@@ -5,6 +5,15 @@
 */
 
 
+data "http" "icanhazip" {
+  count = var.whitelist_terraform_ip ? 1 : 0
+  url   = "http://ipv4.icanhazip.com"
+}
+
+data "aws_vpc" "vpc_lookup" {
+  id = var.environment.vpc_id
+}
+
 resource "random_id" "random_pass" {
   byte_length = 8
 }
@@ -15,12 +24,68 @@ resource "aws_redshift_subnet_group" "subnet_group" {
   tags       = var.resource_tags
 }
 
+resource "aws_security_group" "tf_admin_ip_whitelist" {
+  count       = var.whitelist_terraform_ip ? 1 : 0
+  name_prefix = "${var.name_prefix}redshift-tf-admin-whitelist"
+  description = "Allow JDBC traffic from Terraform Admin IP"
+  vpc_id      = var.environment.vpc_id
+  tags        = var.resource_tags
+
+  ingress {
+    protocol    = "tcp"
+    description = "Allow Redshift inbound traffic from Terraform Admin IP"
+    from_port   = var.jdbc_port
+    to_port     = var.jdbc_port
+    cidr_blocks = ["${chomp(data.http.icanhazip[0].body)}/32"]
+  }
+}
+
+resource "aws_security_group" "jdbc_cidr_whitelist" {
+  count       = length(var.jdbc_cidr) > 0 ? 1 : 0
+  name_prefix = "${var.name_prefix}redshift-jdbc-cidr-whitelist"
+  description = "Allow query traffic from specified JDBC CIDR"
+  vpc_id      = var.environment.vpc_id
+  tags        = var.resource_tags
+
+  ingress {
+    protocol    = "tcp"
+    description = "Allow Redshift inbound traffic from JDBC CIDR"
+    from_port   = var.jdbc_port
+    to_port     = var.jdbc_port
+    cidr_blocks = var.jdbc_cidr
+  }
+}
+
+resource "aws_security_group" "redshift_security_group" {
+  name_prefix = "${var.name_prefix}redshift-subnet-group"
+  description = "Allow JDBC traffic from VPC subnets"
+  vpc_id      = var.environment.vpc_id
+  tags        = var.resource_tags
+
+  egress {
+    protocol    = "tcp"
+    description = "Allow all outbound traffic"
+    from_port   = var.jdbc_port
+    to_port     = var.jdbc_port
+    # from_port   = "0"
+    # to_port     = "65535"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    protocol    = "tcp"
+    description = "Allow Redshift inbound traffic from VPC ${var.environment.vpc_id}"
+    from_port   = var.jdbc_port
+    to_port     = var.jdbc_port
+    cidr_blocks = [data.aws_vpc.vpc_lookup.cidr_block]
+  }
+}
+
 resource "aws_redshift_cluster" "redshift" {
-  cluster_identifier        = "${lower(var.name_prefix)}redshift"
+  cluster_identifier        = coalesce(var.identifier, "${lower(replace(var.name_prefix, "--", "-"))}redshift")
   cluster_subnet_group_name = aws_redshift_subnet_group.subnet_group.name
   database_name             = var.database_name
 
-  master_username = "rsadmin"
+  master_username = var.admin_username
   master_password = (
     var.admin_password == null
     ? "${lower(substr(random_id.random_pass.hex, 0, 4))}${upper(substr(random_id.random_pass.hex, 4, 4))}"
@@ -35,9 +100,17 @@ resource "aws_redshift_cluster" "redshift" {
   port                = var.jdbc_port
   skip_final_snapshot = var.skip_final_snapshot
 
+  vpc_security_group_ids = flatten([
+    [aws_security_group.redshift_security_group.id],
+    aws_security_group.tf_admin_ip_whitelist.*.id,
+    aws_security_group.jdbc_cidr_whitelist.*.id,
+  ])
+
   logging {
     enable        = var.s3_logging_bucket == null ? false : true
     bucket_name   = var.s3_logging_bucket
     s3_key_prefix = var.s3_logging_path
   }
+
+  tags = var.resource_tags
 }

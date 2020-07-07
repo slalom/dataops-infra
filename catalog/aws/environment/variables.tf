@@ -33,12 +33,25 @@ variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
   default     = false
 }
-variable "secrets_folder" {
-  description = "Path to the secrets folder (used when initializing the AWS provider.)"
+variable "aws_credentials_file" {
+  description = "Path to a valid AWS Credentials file. Used when initializing the AWS provider."
   type        = string
 }
 variable "aws_profile" {
   description = "The name of the AWS profile to use. Optional unless set at the main AWS provider level, in which case it is required."
   type        = string
+  default     = null
+}
+variable "vpc_cidr" {
+  description = "Optional. The CIDR block to use for the VPC network."
+  default     = "10.0.0.0/16"
+}
+variable "subnet_cidrs" {
+  description = <<EOF
+Optional. The CIDR blocks to use for the subnets.
+The list should have the 2 public subnet cidrs first, followed by the 2 private subnet cidrs.
+If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets.
+EOF
+  type        = list(string)
   default     = null
 }
