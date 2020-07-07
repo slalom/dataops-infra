@@ -105,3 +105,13 @@ variable "use_https" {
   description = "True to enable https traffic on the instance."
   default     = false
 }
+variable "use_private_subnets" {
+  description = <<EOF
+If True, EC2 will use a private subnets and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway. Note: a load balancer configuration may also be required in
+order for EC2 instances to receive incoming traffic.
+EOF
+  type        = bool
+  default     = false
+}

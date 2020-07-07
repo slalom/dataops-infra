@@ -39,6 +39,7 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
+  cluster_ports = merge(tableau_app_ports, tableau_admin_ports)
 }
 
 module "windows_tableau_servers" {
@@ -55,13 +56,12 @@ module "windows_tableau_servers" {
   ami_owner           = "amazon" # Canonical
   ami_name_filter     = "Windows_Server-2016-English-Full-Base-*"
 
-  admin_ports = merge(local.tableau_admin_ports, { "RDP" : 3389 })
-  admin_cidr  = local.admin_cidr
-  app_ports   = local.tableau_app_ports
-  app_cidr    = local.app_cidr
-  cluster_ports = {
-    "Tableau-Server-Cluster" : "8000-9000"
-  }
+  use_private_subnets = var.use_private_subnets
+  admin_ports         = merge(local.tableau_admin_ports, { "RDP" : 3389 })
+  admin_cidr          = local.admin_cidr
+  app_ports           = local.tableau_app_ports
+  app_cidr            = local.app_cidr
+  cluster_ports       = local.cluster_ports
 
   ssh_keypair_name         = var.ssh_keypair_name
   ssh_private_key_filepath = var.ssh_private_key_filepath
@@ -80,13 +80,12 @@ module "linux_tableau_servers" {
   ami_name_filter     = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
   file_resources      = local.lin_files
 
-  admin_ports = merge(local.tableau_admin_ports, { "SSH" : 22 })
-  admin_cidr  = local.admin_cidr
-  app_ports   = local.tableau_app_ports
-  app_cidr    = local.app_cidr
-  cluster_ports = {
-    "Tableau-Server-Cluster" : "8000-9000"
-  }
+  use_private_subnets = var.use_private_subnets
+  admin_ports         = merge(local.tableau_admin_ports, { "SSH" : 22 })
+  admin_cidr          = local.admin_cidr
+  app_ports           = local.tableau_app_ports
+  app_cidr            = local.app_cidr
+  cluster_ports       = local.cluster_ports
 
   ssh_keypair_name         = var.ssh_keypair_name
   ssh_private_key_filepath = var.ssh_private_key_filepath
