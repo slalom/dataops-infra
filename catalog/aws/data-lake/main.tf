@@ -4,7 +4,7 @@
 *
 * * Designed to be used in combination with the `aws/data-lake-users` module.
 * * To add SFTP protocol support, combine this module with the `aws/sftp` module.
-+
+*
 */
 
 resource "random_id" "suffix" { byte_length = 2 }

@@ -1,10 +1,10 @@
 /*
-+ Automates the management of the AWS Transfer Service, which
+* Automates the management of the AWS Transfer Service, which
 * provides an SFTP interface on top of existing S3 storage resources.
 *
 * * Designed to be used in combination with the `aws/data-lake` and `aws/sftp-users` modules.
 *
-+
+*
 */
 
 resource "aws_iam_role" "sftp_service_role" {
