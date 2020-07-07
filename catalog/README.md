@@ -8,11 +8,16 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 1. [AWS Catalog](#aws-catalog)
     - [AWS Airflow](#aws-airflow)
     - [AWS Data-Lake](#aws-data-lake)
+    - [AWS Data-Lake-Users](#aws-data-lake-users)
     - [AWS DBT](#aws-dbt)
+    - [AWS Dev-Box](#aws-dev-box)
     - [AWS Environment](#aws-environment)
+    - [AWS ML-Ops](#aws-ml-ops)
     - [AWS MySQL](#aws-mysql)
     - [AWS Postgres](#aws-postgres)
     - [AWS Redshift](#aws-redshift)
+    - [AWS SFTP](#aws-sftp)
+    - [AWS SFTP-Users](#aws-sftp-users)
     - [AWS Singer-Taps](#aws-singer-taps)
     - [AWS Tableau-Server](#aws-tableau-server)
 
@@ -23,100 +28,213 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 
 ## AWS Catalog
 
-### [AWS Airflow](../catalog/aws/airflow/README.md)
+### AWS Airflow
+
+#### Overview
 
 Airflow is an open source platform to programmatically author, schedule and monitor workflows. More information here: [airflow.apache.org](https://airflow.apache.org/)
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/airflow?ref=master`
-* See the [AWS Airflow Readme](../catalog/aws/airflow/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Airflow Readme](../catalog/aws/airflow/README.md)
 
 -------------------
 
-### [AWS Data-Lake](../catalog/aws/data-lake/README.md)
+### AWS Data-Lake
+
+#### Overview
 
 This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
 trigger automatically when new content is added.
 
+* Designed to be used in combination with the `aws/data-lake-users` module.
+* To add SFTP protocol support, combine this module with the `aws/sftp` module.
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/data-lake?ref=master`
-* See the [AWS Data-Lake Readme](../catalog/aws/data-lake/README.md) for input/output specs and additional info.
+
+#### Documentation
+
+- [AWS Data-Lake Readme](../catalog/aws/data-lake/README.md)
 
 -------------------
 
-### [AWS DBT](../catalog/aws/dbt/README.md)
+### AWS Data-Lake-Users
+
+#### Overview
+
+Automates the management of users and groups in an S3 data lake.
+
+* Designed to be used in combination with the `aws/data-lake` module.
+
+
+#### Documentation
+
+- [AWS Data-Lake-Users Readme](../catalog/aws/data-lake-users/README.md)
+
+-------------------
+
+### AWS DBT
+
+#### Overview
 
 DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating data transformations. More info at [www.getdbt.com](https://www.getdbt.com).
 
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/dbt?ref=master`
-* See the [AWS DBT Readme](../catalog/aws/dbt/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS DBT Readme](../catalog/aws/dbt/README.md)
 
 -------------------
 
-### [AWS Environment](../catalog/aws/environment/README.md)
+### AWS Dev-Box
+
+#### Overview
+
+The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
+or develop using the native cloud environment. Applicable use cases include:
+
+* Debugging network firewall and routing rules
+* Debugging components which can only be run from whitelisted IP ranges
+* Offloading heavy processing from the developer's local laptop
+* Mitigating network relability issues when working from WiFi or home networks
+
+
+#### Documentation
+
+- [AWS Dev-Box Readme](../catalog/aws/dev-box/README.md)
+
+-------------------
+
+### AWS Environment
+
+#### Overview
 
 The environment module sets up common infrastrcuture like VPCs and network subnets. The `envrionment` output
 from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
 
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/environment?ref=master`
-* See the [AWS Environment Readme](../catalog/aws/environment/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Environment Readme](../catalog/aws/environment/README.md)
 
 -------------------
 
-### [AWS MySQL](../catalog/aws/mysql/README.md)
+### AWS ML-Ops
+
+#### Overview
+
+This module automates MLOps tasks associated with training Machine Learning models.
+
+The module leverages Step Functions and Lambda functions as needed. The state machine
+executes hyperparameter tuning, training, and deployments as needed. Deployment options
+supported are Sagemaker endpoints and/or batch inference.
+
+#### Documentation
+
+- [AWS ML-Ops Readme](../catalog/aws/ml-ops/README.md)
+
+-------------------
+
+### AWS MySQL
+
+#### Overview
 
 Deploys a MySQL server running on RDS.
 
 * NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/mysql?ref=master`
-* See the [AWS MySQL Readme](../catalog/aws/mysql/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS MySQL Readme](../catalog/aws/mysql/README.md)
 
 -------------------
 
-### [AWS Postgres](../catalog/aws/postgres/README.md)
+### AWS Postgres
+
+#### Overview
 
 Deploys a Postgres server running on RDS.
 
 * NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/postgres?ref=master`
-* See the [AWS Postgres Readme](../catalog/aws/postgres/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Postgres Readme](../catalog/aws/postgres/README.md)
 
 -------------------
 
-### [AWS Redshift](../catalog/aws/redshift/README.md)
+### AWS Redshift
+
+#### Overview
 
 Redshift is an AWS database platform which applies MPP (Massively-Parallel-Processing) principles to big data workloads in the cloud.
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/redshift?ref=master`
-* See the [AWS Redshift Readme](../catalog/aws/redshift/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Redshift Readme](../catalog/aws/redshift/README.md)
 
 -------------------
 
-### [AWS Singer-Taps](../catalog/aws/singer-taps/README.md)
+### AWS SFTP
+
+#### Overview
+
+Automates the management of the AWS Transfer Service, which
+provides an SFTP interface on top of existing S3 storage resources.
+
+* Designed to be used in combination with the `aws/data-lake` and `aws/sftp-users` modules.
+
+
+
+#### Documentation
+
+- [AWS SFTP Readme](../catalog/aws/sftp/README.md)
+
+-------------------
+
+### AWS SFTP-Users
+
+#### Overview
+
+Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
+provides an SFTP interface on top of existing S3 storage resources.
+
+* Designed to be used in combination with the `aws/sftp` module.
+
+
+#### Documentation
+
+- [AWS SFTP-Users Readme](../catalog/aws/sftp-users/README.md)
+
+-------------------
+
+### AWS Singer-Taps
+
+#### Overview
 
 The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/singer-taps?ref=master`
-* See the [AWS Singer-Taps Readme](../catalog/aws/singer-taps/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Singer-Taps Readme](../catalog/aws/singer-taps/README.md)
 
 -------------------
 
-### [AWS Tableau-Server](../catalog/aws/tableau-server/README.md)
+### AWS Tableau-Server
+
+#### Overview
 
 This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
 The module supports both Linux and Windows versions of the Tableau Server Software.
 
 
-* Source: `git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/tableau-server?ref=master`
-* See the [AWS Tableau-Server Readme](../catalog/aws/tableau-server/README.md) for input/output specs and additional info.
+#### Documentation
+
+- [AWS Tableau-Server Readme](../catalog/aws/tableau-server/README.md)
 
 -------------------
 
@@ -132,7 +250,7 @@ _(Coming soon)_
 
 -------------------
 
-_**NOTE:** This documentation was [auto-generated](../docs/build.py) using
-`terraform-docs` and `s-infra` from `slalom.dataops`.
-Please do not attempt to manually update this file._
+_**NOTE:** This documentation was auto-generated using
+`terraform-docs`. Please do not attempt to manually update
+this file._
 

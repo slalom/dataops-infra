@@ -4,6 +4,7 @@ build
 !build/README.md
 
 #  Local .terraform directories
+.output
 .terraform
 
 **/secrets/**
@@ -27,4 +28,7 @@ tfplan
 *.tfvars
 
 # Other (Python)
+__pycache__
 .mypy_cache
+**.pyc
+.gitignore

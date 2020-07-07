@@ -4,7 +4,7 @@
 # }
 
 resource "aws_iam_role" "ecs_instance_role" {
-  name               = "${var.name_prefix}ECSInstanceRole"
+  name               = "${var.name_prefix}ECSInstanceRole-${random_id.suffix.dec}"
   tags               = var.resource_tags
   assume_role_policy = <<EOF
 {
@@ -23,7 +23,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "ecs_instance_role_policy" {
-  name   = "ecs_instance_role_policy"
+  name   = "ecs_instance_role_policy-${random_id.suffix.dec}"
   role   = aws_iam_role.ecs_instance_role.id
   policy = <<EOF
 {

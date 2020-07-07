@@ -3,7 +3,7 @@ name: Auto-Tag Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   release_new_tag:
@@ -11,16 +11,11 @@ jobs:
     steps:
       - name: "Checkout source code"
         uses: "actions/checkout@v1"
-      - name: Generate build number
-        id: buildnumber
-        uses: einaregilsson/build-number@v2
-        with:
-          token: ${{secrets.github_token}}
       - name: Read VERSION file
         id: getversion
         run: echo "::set-output name=version::$(cat VERSION)"
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: v${{ steps.getversion.outputs.version }}.${{ steps.buildnumber.outputs.build_number }}
+          automatic_release_tag: v${{ steps.getversion.outputs.version }}.${{ github.run_number }}
           prerelease: false

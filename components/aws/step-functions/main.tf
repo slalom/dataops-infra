@@ -16,7 +16,7 @@ resource "null_resource" "delay" {
     interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
   }
   triggers = {
-    "states_exec_role" = aws_iam_role.step_functions_ml_ops_role.arn
+    "states_exec_role" = aws_iam_role.step_functions_role.arn
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_sfn_state_machine" "state_machine" {
   tags = var.resource_tags
 
   definition = var.state_machine_definition
-  role_arn   = aws_iam_role.step_functions_ml_ops_role.arn
+  role_arn   = aws_iam_role.step_functions_role.arn
 
   depends_on = [null_resource.delay]
 }

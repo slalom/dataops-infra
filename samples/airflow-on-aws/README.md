@@ -6,17 +6,41 @@
 ## Overview
 
 
-## Inputs
+## Requirements
 
-No input.
+The following requirements are needed by this module:
+
+- aws (~> 2.10)
+
+## Providers
+
+The following providers are used by this module:
+
+- local
+
+## Required Inputs
+
+No required input.
+
+## Optional Inputs
+
+No optional input.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| airflow\_summary | n/a |
-| data\_lake\_summary | n/a |
-| env\_summary | n/a |
+The following outputs are exported:
+
+### data\_lake\_summary
+
+Description: n/a
+
+### airflow\_summary
+
+Description: n/a
+
+### env\_summary
+
+Description: n/a
 
 ---------------------
 
@@ -24,9 +48,9 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](00_environment.tf)
-* [01_data-lake.tf](01_data-lake.tf)
-* [02_airflow.tf](02_airflow.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/airflow-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/airflow-on-aws/01_data-lake.tf)
+* [02_airflow.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/airflow-on-aws/02_airflow.tf)
 
 ---------------------
 

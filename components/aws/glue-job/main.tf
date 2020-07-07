@@ -7,11 +7,18 @@ resource "aws_glue_job" "glue_job" {
   role_arn     = aws_iam_role.glue_job_role.arn
   tags         = var.resource_tags
   glue_version = "1.0"
-  max_capacity = 1
+  max_capacity = var.with_spark ? null : 1
+
+  worker_type       = var.with_spark ? "Standard" : null
+  number_of_workers = var.with_spark ? var.num_workers : null
 
   command {
-    script_location = "s3://${var.s3_script_bucket_name}/${var.script_path}"
-    name            = var.job_type
-    python_version  = 3
+    script_location = (
+      var.local_script_path == null ?
+      "s3://${var.s3_script_bucket_name}/${var.s3_script_path}" :
+      "s3://${aws_s3_bucket_object.py_script_upload[0].bucket}/${aws_s3_bucket_object.py_script_upload[0].key}"
+    )
+    name           = var.with_spark ? null : "pythonshell"
+    python_version = 3
   }
 }

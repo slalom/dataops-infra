@@ -2,10 +2,11 @@ module "ml-ops" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source = "../../catalog/aws/ml-ops"
-  #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
-  name_prefix   = local.name_prefix
-  environment   = module.env.environment
-  resource_tags = local.resource_tags
+  #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
+  name_prefix          = local.name_prefix
+  environment          = module.env.environment
+  resource_tags        = local.resource_tags
+  aws_credentials_file = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
@@ -83,19 +84,19 @@ module "ml-ops" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  # specifying built_in_model_image means that 'bring-your-own' model is not required and the ECR image not created 
+  # specifying built_in_model_image means that 'bring-your-own' model is not required and the ECR image not created
 
   built_in_model_image        = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
   byo_model_image_source_path = "source/containers/ml-ops-byo-xgboost"
   byo_model_image_name        = "byo-xgboost"
   byo_model_image_tag         = "latest"
 
-  glue_job_name = "data-transformation"
-  glue_job_type = "pythonshell"
+  glue_job_name       = "data-transformation"
+  glue_job_spark_flag = false
 
 
   OPTIONAL - IF USING BATCH TRANSFORMATION INFERENCE:
-  
+
   batch_transform_instance_type  = "ml.m4.xlarge"
   batch_transform_instance_count = 1
 

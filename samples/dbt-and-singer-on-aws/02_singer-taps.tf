@@ -18,7 +18,7 @@ module "singer_taps_on_aws" {
   taps = [
     {
       # For 'id', enter any plugin name or alias from the index below, excluding the `tap-` prefix:
-      # https://github.com/slalom-ggp/dataops-tools/blob/master/containers/singer/singer_index.yml
+      # https://github.com/slalom-ggp/dataops-tools/blob/main/containers/singer/singer_index.yml
       id = "pardot"
       settings = {
         start_date = "2020-02-28T00:00:00Z"
@@ -46,7 +46,7 @@ module "singer_taps_on_aws" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  container_image          = "slalomggp/singer:pardot-to-s3-csv--pre"
+  container_image          = "dataopstk/tapdance:pardot-to-s3-csv--pre"
   data_file_naming_scheme  = "{tap}/{table}/{version}/{file}"
   state_file_naming_scheme = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
 

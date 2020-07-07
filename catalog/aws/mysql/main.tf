@@ -14,6 +14,7 @@ module "mysql" {
   environment         = var.environment
   resource_tags       = var.resource_tags
   skip_final_snapshot = var.skip_final_snapshot
+  database_name       = var.database_name
   admin_username      = var.admin_username
   admin_password      = var.admin_password
   instance_class      = var.instance_class
@@ -22,4 +23,7 @@ module "mysql" {
   kms_key_id          = var.kms_key_id
   jdbc_port           = var.jdbc_port
   storage_size_in_gb  = var.storage_size_in_gb
+
+  jdbc_cidr              = var.jdbc_cidr
+  whitelist_terraform_ip = var.whitelist_terraform_ip
 }
