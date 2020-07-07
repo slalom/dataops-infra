@@ -170,30 +170,6 @@ Type: `string`
 
 Default: `null`
 
-### version\_string
-
-Description: Determines which version of Tableau will be installed during setup. For a list of
-available options, browse to the bublic S3 bucket: `tableau-quickstart`
-
-Example: `2020-1-0`.
-
-Type: `string`
-
-Default: `"2020-1-0"`
-
-### download\_source
-
-Description: Optional. Overrides the default file download path. You may optionally also use `{version_string}`
-as a placeholder for the version string input variable.
-
-Examples:
- - `https://tableau-quickstart.s3.amazonaws.com/tableau-server-{version_string}_amd64.deb`
- - `s3://tableau-quickstart/tableau-server-{version_string}_amd64.deb`
-
-Type: `string`
-
-Default: `null`
-
 ## Outputs
 
 The following outputs are exported:

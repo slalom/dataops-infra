@@ -25,6 +25,7 @@ SPECIAL_CASE_WORDS = [
     "MySQL",
     "ML",
     "MLOps",
+    "SFTP",
 ]
 
 

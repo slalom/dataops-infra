@@ -1,8 +1,8 @@
 # https://help.github.com/articles/dealing-with-line-endings/
 # All files should use Unix-style (LF) line endings:
-*       text=auto eol=lf
+*       text eol=lf
 # Exception for Windows Batch files:
-*.bat   text      eol=crlf
+*.bat   text eol=crlf
 
 # By default, GitHub PRs will collapse these auto-generated docs:
 catalog/**/README.md linguist-generated

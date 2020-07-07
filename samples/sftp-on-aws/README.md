@@ -1,7 +1,7 @@
 
-# Samples Tableau-On-AWS
+# Samples SFTP-On-AWS
 
-`/samples/tableau-on-aws`
+`/samples/sftp-on-aws`
 
 ## Overview
 
@@ -18,8 +18,6 @@ The following providers are used by this module:
 
 - local
 
-- null
-
 ## Required Inputs
 
 No required input.
@@ -32,11 +30,15 @@ No optional input.
 
 The following outputs are exported:
 
-### tableau\_server\_summary
+### data\_lake\_summary
 
 Description: n/a
 
 ### env\_summary
+
+Description: n/a
+
+### sftp\_server\_summary
 
 Description: n/a
 
@@ -46,9 +48,9 @@ Description: n/a
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/00_environment.tf)
-* [01_ssh_keypair.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/01_ssh_keypair.tf)
-* [02_tableau-server.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/02_tableau-server.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/sftp-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/sftp-on-aws/01_data-lake.tf)
+* [02_sftp-server.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/sftp-on-aws/02_sftp-server.tf)
 
 ---------------------
 

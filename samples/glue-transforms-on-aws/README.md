@@ -1,7 +1,7 @@
 
-# Samples Tableau-On-AWS
+# Samples Glue-Transforms-On-AWS
 
-`/samples/tableau-on-aws`
+`/samples/glue-transforms-on-aws`
 
 ## Overview
 
@@ -18,7 +18,7 @@ The following providers are used by this module:
 
 - local
 
-- null
+- aws (~> 2.10)
 
 ## Required Inputs
 
@@ -32,7 +32,7 @@ No optional input.
 
 The following outputs are exported:
 
-### tableau\_server\_summary
+### glue\_job\_summary
 
 Description: n/a
 
@@ -46,9 +46,9 @@ Description: n/a
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/00_environment.tf)
-* [01_ssh_keypair.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/01_ssh_keypair.tf)
-* [02_tableau-server.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/02_tableau-server.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/01_data-lake.tf)
+* [02_glue-transform-job.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/02_glue-transform-job.tf)
 
 ---------------------
 

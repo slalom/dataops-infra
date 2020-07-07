@@ -10,9 +10,7 @@ Airflow is an open source platform to programmatically author, schedule and moni
 
 ## Requirements
 
-The following requirements are needed by this module:
-
-- aws (>= 2.7.0)
+No requirements.
 
 ## Providers
 
