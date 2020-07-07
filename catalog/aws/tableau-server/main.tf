@@ -39,7 +39,7 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
-  cluster_ports = merge(tableau_app_ports, tableau_admin_ports)
+  cluster_ports = merge(local.tableau_app_ports, local.tableau_admin_ports)
 }
 
 module "windows_tableau_servers" {
