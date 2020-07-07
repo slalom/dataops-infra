@@ -8,6 +8,7 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 1. [AWS Catalog](#aws-catalog)
     - [AWS Airflow](#aws-airflow)
     - [AWS Data-Lake](#aws-data-lake)
+    - [AWS Data-Lake-Users](#aws-data-lake-users)
     - [AWS DBT](#aws-dbt)
     - [AWS Dev-Box](#aws-dev-box)
     - [AWS Environment](#aws-environment)
@@ -15,6 +16,8 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
     - [AWS MySQL](#aws-mysql)
     - [AWS Postgres](#aws-postgres)
     - [AWS Redshift](#aws-redshift)
+    - [AWS SFTP](#aws-sftp)
+    - [AWS SFTP-Users](#aws-sftp-users)
     - [AWS Singer-Taps](#aws-singer-taps)
     - [AWS Tableau-Server](#aws-tableau-server)
 
@@ -45,10 +48,28 @@ Airflow is an open source platform to programmatically author, schedule and moni
 This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
 trigger automatically when new content is added.
 
+* Designed to be used in combination with the `aws/data-lake-users` module.
+* To add SFTP protocol support, combine this module with the `aws/sftp` module.
+
 
 #### Documentation
 
 - [AWS Data-Lake Readme](../catalog/aws/data-lake/README.md)
+
+-------------------
+
+### AWS Data-Lake-Users
+
+#### Overview
+
+Automates the management of users and groups in an S3 data lake.
+
+* Designed to be used in combination with the `aws/data-lake` module.
+
+
+#### Documentation
+
+- [AWS Data-Lake-Users Readme](../catalog/aws/data-lake-users/README.md)
 
 -------------------
 
@@ -154,6 +175,39 @@ Redshift is an AWS database platform which applies MPP (Massively-Parallel-Proce
 #### Documentation
 
 - [AWS Redshift Readme](../catalog/aws/redshift/README.md)
+
+-------------------
+
+### AWS SFTP
+
+#### Overview
+
+Automates the management of the AWS Transfer Service, which
+provides an SFTP interface on top of existing S3 storage resources.
+
+* Designed to be used in combination with the `aws/data-lake` and `aws/sftp-users` modules.
+
+
+
+#### Documentation
+
+- [AWS SFTP Readme](../catalog/aws/sftp/README.md)
+
+-------------------
+
+### AWS SFTP-Users
+
+#### Overview
+
+Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
+provides an SFTP interface on top of existing S3 storage resources.
+
+* Designed to be used in combination with the `aws/sftp` module.
+
+
+#### Documentation
+
+- [AWS SFTP-Users Readme](../catalog/aws/sftp-users/README.md)
 
 -------------------
 

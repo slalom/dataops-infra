@@ -1,14 +1,15 @@
 
-# AWS Data-Lake-Users
+# AWS SFTP-Users
 
-`/catalog/aws/data-lake-users`
+`/catalog/aws/sftp-users`
 
 ## Overview
 
 
-Automates the management of users and groups in an S3 data lake.
+Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
+provides an SFTP interface on top of existing S3 storage resources.
 
-* Designed to be used in combination with the `aws/data-lake` module.
+* Designed to be used in combination with the `aws/sftp` module.
 
 ## Requirements
 
@@ -19,8 +20,6 @@ No requirements.
 The following providers are used by this module:
 
 - aws
-
-- local
 
 ## Required Inputs
 
@@ -53,20 +52,36 @@ Description: Standard `resource_tags` module input.
 
 Type: `map(string)`
 
-### data\_bucket
+### sftp\_server\_id
 
-Description: The name of the S3 bucket to which users will be granted access.
+Description: The ID of the AWS Transfer Server for SFTP connections.
 
 Type: `string`
+
+### secrets\_folder
+
+Description: A relative or absolute path of the folder in which to store key files.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### data\_bucket
+
+Description: The S3 bucket to connect to via SFTP.
+
+Type: `string`
+
+Default: `null`
 
 ### group\_permissions
 
 Description: Mapping of group names to list of objects containing the applicable permissions.
 
 Example:
-
-```
-  group_permissions = {
+  group\_permissions = {
     uploaders = [
       {
         path  = "data/uploads/"
@@ -74,14 +89,14 @@ Example:
         write = true
       }
     ]
-    global_readers = [
+    global\_readers = [
       {
         path  = "/"
         read  = true
         write = false
       }
     ]
-    global_writers = [
+    global\_writers = [
       {
         path  = "/"
         read  = true
@@ -89,7 +104,6 @@ Example:
       }
     ]
   }
-```
 
 Type:
 
@@ -101,44 +115,38 @@ map(list(object({
   })))
 ```
 
+Default: `{}`
+
 ### users
 
-Description: A set (unique list) of user IDs.
+Description: A set (or unique list) of user IDs.
 
 Type: `set(string)`
+
+Default:
+
+```json
+[
+  "ajsteers"
+]
+```
 
 ### user\_groups
 
 Description: A mapping of user IDs to group name.
-Example:
-
-```
-{
-  jake = ["global_readers"]
-  jane = ["global_readers", "uploader"]
-}
-```
 
 Type: `map(list(string))`
 
-### admin\_keybase\_id
+Default:
 
-Description: The default keybase.io user ID to use for PGP password encryption.
-
-If you do not yet have keybase ID, please install Keybase and then use Keybase to publish a new PGP key.
-
-To install Keybase:
- - Windows Users: choco install keybase
- - MacOSX Users:  brew cask install keybase
-
-To generate and publish a PGP key:
- > keybase pgp gen
-
-Type: `string`
-
-## Optional Inputs
-
-No optional input.
+```json
+{
+  "ajsteers": [
+    "global_reader",
+    "uploader"
+  ]
+}
+```
 
 ## Outputs
 
@@ -160,10 +168,10 @@ resources.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/variables.tf)
 
 ---------------------
 

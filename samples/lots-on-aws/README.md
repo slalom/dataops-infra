@@ -34,10 +34,6 @@ The following outputs are exported:
 
 Description: n/a
 
-### env\_summary
-
-Description: n/a
-
 ### airflow\_summary
 
 Description: n/a
@@ -47,6 +43,10 @@ Description: n/a
 Description: n/a
 
 ### summary
+
+Description: n/a
+
+### env\_summary
 
 Description: n/a
 
