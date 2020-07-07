@@ -27,6 +27,7 @@ variable "resource_tags" {
 variable "is_disabled" {
   description = "Switch for disabling ECR image and push."
   type        = bool
+  default     = false
 }
 
 variable "repository_name" {
@@ -34,6 +35,11 @@ variable "repository_name" {
   type        = string
 }
 
+variable "build_args" {
+  description = "Optional. Build arguments to use during `docker build`."
+  type        = map(string)
+  default     = {}
+}
 variable "source_image_path" {
   description = "Path to Docker image source."
   type        = string
@@ -43,4 +49,9 @@ variable "tag" {
   description = "Tag to use for deployed Docker image."
   type        = string
   default     = "latest"
+}
+
+variable "aws_credentials_file" {
+  description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
+  type        = string
 }

@@ -9,8 +9,8 @@ resource "aws_glue_job" "glue_job" {
   glue_version = "1.0"
   max_capacity = var.with_spark ? null : 1
 
-  worker_type       = "Standard"
-  number_of_workers = var.num_workers
+  worker_type       = var.with_spark ? "Standard" : null
+  number_of_workers = var.with_spark ? var.num_workers : null
 
   command {
     script_location = (

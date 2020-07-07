@@ -35,3 +35,11 @@ output "user_home" {
   description = "Path to the admin user's home directory."
   value       = local.user_home
 }
+output "public_route_table" {
+  description = "The ID of the route table for public subnets."
+  value       = module.vpc.public_route_table
+}
+output "private_route_table" {
+  description = "The ID of the route table for private subnets."
+  value       = module.vpc.private_route_table
+}
