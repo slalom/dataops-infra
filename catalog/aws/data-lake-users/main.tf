@@ -1,3 +1,11 @@
+/*
++ Automates the management of users and groups in an S3 data lake.
+*
+* * Designed to be used in combination with the `aws/data-lake` module.
+*
++
+*/
+
 data "aws_s3_bucket" "data_bucket" { bucket = var.data_bucket }
 
 locals {

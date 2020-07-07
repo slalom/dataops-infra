@@ -1,3 +1,12 @@
+/*
++ Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
+* provides an SFTP interface on top of existing S3 storage resources.
+*
+* * Designed to be used in combination with the `aws/sftp` module.
+*
++
+*/
+
 data "aws_s3_bucket" "data_bucket" { bucket = var.data_bucket }
 
 locals {

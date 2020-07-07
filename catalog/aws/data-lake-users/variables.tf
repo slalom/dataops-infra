@@ -24,12 +24,18 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "data_bucket" { type = string }
+variable "data_bucket" {
+  description = "The name of the S3 bucket to which users will be granted access."
+  type        = string
+}
+
 variable "group_permissions" {
   description = <<EOF
 Mapping of group names to list of objects containing the applicable permissions.
 
 Example:
+
+```
   group_permissions = {
     uploaders = [
       {
@@ -53,26 +59,35 @@ Example:
       }
     ]
   }
+```
 EOF
   type = map(list(object({
     path  = string
     read  = bool
     write = bool
   })))
-  default = {}
 }
+
 variable "users" {
-  description = "A set (or unique list) of user IDs."
+  description = "A set (unique list) of user IDs."
   type        = set(string)
-  default     = ["ajsteers"]
 }
+
 variable "user_groups" {
-  descrption = "A mapping of user IDs to group name."
-  type       = map(list(string))
-  default = {
-    ajsteers = ["global_reader", "uploader"]
-  }
+  description = <<EOF
+A mapping of user IDs to group name.
+Example:
+
+```
+{
+  jake = ["global_readers"]
+  jane = ["global_readers", "uploader"]
 }
+```
+EOF
+  type        = map(list(string))
+}
+
 variable "admin_keybase_id" {
   description = <<EOF
 The default keybase.io user ID to use for PGP password encryption.
@@ -86,4 +101,5 @@ To install Keybase:
 To generate and publish a PGP key:
  > keybase pgp gen
 EOF
+  type        = string
 }
