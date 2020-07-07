@@ -89,7 +89,7 @@ variable "ssh_private_key_filepath" {
   default     = null
 }
 
-variable "use_private_subnet" {
+variable "use_private_subnets" {
   description = <<EOF
 If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
 image, and for any outbound traffic. If False, tasks will use a public subnet and will
