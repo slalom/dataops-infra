@@ -1,4 +1,4 @@
-# Please fill in the following for enabling data capture
+""" This is a function for enabling data capture"""
 from urllib.parse import urlparse
 from sagemaker import get_execution_role
 from sagemaker.model_monitor.dataset_format import DatasetFormat
@@ -18,6 +18,7 @@ sm_client = boto3.client("sagemaker")
 sm_session = session.Session(boto3.Session())
 s3_client = boto3.Session().client('s3')
 endpoint_name = "${var.endpoint_name}"
+
 #####
 # IMPORTANT
 ##

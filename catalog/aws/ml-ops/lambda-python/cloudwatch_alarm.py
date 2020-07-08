@@ -1,4 +1,4 @@
-# This is to create an alarm when the model performance degrades
+""" This is to create an alarm when the model performance degrades"""
 
 import boto3
 
@@ -26,4 +26,4 @@ def lambda_handler(event, context):
         AlarmDescription='Alarm when the model is Overfitting',
         Unit='Percent'
     )
-    return None
+    return

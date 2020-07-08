@@ -1,4 +1,4 @@
-# This class implements a function to send evaluation metrics to CloudWatch using Boto3
+"""  This class implements a function to send evaluation metrics to CloudWatch using Boto3 """
 
 import boto3
 
