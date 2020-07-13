@@ -1,4 +1,9 @@
-""" This is a function for enabling data capture"""
+"""This is a function for enabling data capture.
+
+Checks these 4 things:
+ - feature (aka input schema)
+ - descriptive statistics about input features
+"""
 from urllib.parse import urlparse
 from sagemaker import get_execution_role
 from sagemaker.model_monitor.dataset_format import DatasetFormat
