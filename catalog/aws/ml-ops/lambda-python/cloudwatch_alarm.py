@@ -20,8 +20,7 @@ def lambda_handler(event, context):
         Threshold=90.0,
         ActionsEnabled=True,
         AlarmActions=[
-            'arn:aws:sns:us-east-1:<account-id>:Sagemaker-Notification-Emails',
-            # create another individual module to reference the arn
+            'arn:aws:sns:us-east-1::Sagemaker-Notification-Emails',
         ],
         AlarmDescription='Alarm when the model is Overfitting',
         Unit='Percent'

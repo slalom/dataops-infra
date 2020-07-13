@@ -185,18 +185,6 @@ module "step-functions" {
               {
                 "Name": "${var.tuning_metric}",
                 "Regex": "${var.tuning_metric}: ([0-9\\.]+)"
-              }, 
-              {
-                "Name": "train:auc",
-                "Regex": ".*\\[[0-9]+\\]#011train-auc:(\\S+).*"
-              }, 
-              {
-                "Name": "train:f1",
-                "Regex": ".*\\[[0-9]+\\]#011train-f1:(\\S+).*"
-              },
-              {
-                "Name": "train:error",
-                "Regex": ".*\\[[0-9]+\\]#011train-error:(\\S+).*"
               }
             ],
             "TrainingImage": "${var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag}",
