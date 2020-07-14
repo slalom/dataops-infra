@@ -1,0 +1,195 @@
+""" This is the file that implements a flask server to do inferences. It's the file that you will modify to
+implement the scoring for your own algorithm.
+"""
+from __future__ import print_function
+
+import os
+import json
+import logging
+import pickle
+from io import StringIO
+import sys
+import signal
+import subprocess
+import traceback
+
+import argparse
+import datetime
+import flask
+
+from tensorflow.keras import backend as K
+from tensorflow.keras.callbacks import (
+    ModelCheckpoint,
+    LearningRateScheduler,
+    TensorBoard,
+    EarlyStopping,
+    CSVLogger,
+)
+from sklearn.metrics import confusion_matrix, roc_curve, auc
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+import shap
+
+import dataset
+import train
+import s3_utils
+
+prefix = "/opt/ml/"
+model_path = os.path.join(prefix, "model")
+bucket_path = "s3://${aws_s3_bucket.extracts_store.id}/data/"
+
+""" A singleton for holding the model. This simply loads the model and holds it.
+ It has a predict function that does a prediction based on the model and the input data.
+"""
+# TO DO: change the input path for check_output, nb_test_samples, and test_data_generator
+subprocess.check_output(
+    [
+        "aws",
+        "s3",
+        "cp",
+        "s3://cornell-mammogram-images/data_generator_symmetry_images/validate",
+        "./data_generator_symmetry_images/validate/",
+        "--recursive",
+    ]
+)
+nb_test_samples = sum(
+    [len(files) for r, d, files in os.walk("./data_generator_symmetry_images/train")]
+)
+train_data_generator = dataset.read_dataset(
+    bucket_path + "train",
+    batch_size=batch_size,
+    train_mode=False,
+    dataset=False,
+    shuffle=False,
+    binary_classification=True,
+)
+test_data_generator = dataset.read_dataset(
+    bucket_path + "test",
+    batch_size=batch_size,
+    train_mode=False,
+    dataset=False,
+    shuffle=False,
+    binary_classification=True,
+)
+class_indices = dict()
+for k, v in test_data_generator.class_indices.items():
+    class_indices[v] = k
+
+
+class ScoringService(object):
+
+    model = None  # Where we keep the model when it's loaded
+
+    @classmethod
+    def get_model(cls):
+        """Get the model object for this instance, loading it if it's not already loaded."""
+        if cls.model == None:
+            with open(os.path.join(model_path, "xgboost-model.pkl"), "rb") as inp:
+                cls.model = pickle.load(inp)
+        return cls.model
+
+    @classmethod
+    def predict(cls, dropout, batch_size):
+        """For the input, do the predictions and return them.
+
+        Args:
+            dropout
+            batch_size
+
+        """
+        clf = cls.get_model()
+
+        predictions = clf.predict(
+            test_data_generator, verbose=1, steps=int(nb_test_samples / batch_size)
+        )
+        target_labels = np.array(test_data_generator.classes)
+        print(predictions)
+        print([int(i[0] > 0.6869423) for i in predictions])
+        print(target_labels)
+        print(
+            confusion_matrix(
+                target_labels[: len(predictions)],
+                [int(i[0] > 0.6869423) for i in predictions],
+            )
+        )
+        fpr, tpr, thresholds = roc_curve(
+            target_labels[: len(predictions)], [i[0] for i in predictions]
+        )
+        test_auc = auc(fpr, tpr)
+        print(auc)
+
+        pred_len = len(predictions)
+        pd.DataFrame(
+            {
+                "filenames": test_data_generator.filenames[:pred_len],
+                "label": [class_indices[i] for i in target_labels[:pred_len]],
+                "label_val": target_labels[:pred_len],
+                "predictions": [i[0] for i in predictions],
+            }
+        ).to_csv("train_predictions.csv")
+        pd.DataFrame({"fpr": fpr, "tpr": tpr, "thresholds": thresholds}).to_csv(
+            "roc.csv"
+        )
+
+        return predictions
+
+    @classmethod
+    def shap(cls, input):
+        """For the input, do the predictions and return them.
+
+        Args:
+            input (a pandas dataframe): The data on which to do the predictions. There will be
+                one prediction per row in the dataframe"""
+        clf = cls.get_model()
+        background = train_data_generator
+        # return shap values
+        explainer = shap.DeepExplainer(clf, background)
+
+        return explainer.shap_values(test_data_generator)
+
+
+# The flask app for serving predictions
+app = flask.Flask(__name__)
+
+
+@app.route("/ping", methods=["GET"])
+def ping():
+    """Determine if the container is working and healthy. In this sample container, we declare
+    it healthy if we can load the model successfully."""
+    health = (
+        ScoringService.get_model() is not None
+    )  # You can insert a health check here
+
+    status = 200 if health else 404
+    return flask.Response(response="\n", status=status, mimetype="application/json")
+
+
+@app.route("/invocations", methods=["POST"])
+def transformation():
+    """Do an inference on a single batch of data. In this sample server, we take data as CSV, convert
+    it to a pandas data frame for internal use and then convert the predictions back to CSV (which really
+    just means one prediction per line, since there's a single column.
+    """
+    train_data = None
+    test_data = None
+
+    # Do the prediction
+    predictions = ScoringService.predict(0.2, 24)
+
+    # Save viz data
+    shap_values = ScoringService.shap(test_data)
+
+    # rehspae the shap value array and test image array for visualization
+    shap_numpy = [np.swapaxes(np.swapaxes(s, 1, -1), 1, 2) for s in shap_values]
+    test_numpy = np.swapaxes(np.swapaxes(test_images.numpy(), 1, -1), 1, 2)
+
+    # Convert from numpy back to CSV
+    out = StringIO()
+    pd.DataFrame({"Prediction": predictions[:, 1]}, index=data.index).join(
+        shap_numpy
+    ).to_csv(out, header=True, index=True)
+    result = out.getvalue()
+
+    return flask.Response(response=result, status=200, mimetype="text/csv")
