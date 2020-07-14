@@ -39,6 +39,8 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
+  # Allow cluster to communicate with itself on all ports.
+  # At minimum, ports 8000:9000 are required.
   cluster_ports = merge(local.tableau_app_ports, local.tableau_admin_ports)
 }
 

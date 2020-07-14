@@ -123,8 +123,8 @@ resource "aws_security_group" "ecs_cluster_traffic" {
       description = egress.key
       self        = true
       protocol    = "tcp"
-      from_port   = split("-", egress.value)[0]
-      to_port     = reverse(split("-", egress.value))[0]
+      from_port   = split(":", egress.value)[0]
+      to_port     = reverse(split(":", egress.value))[0]
     }
   }
   dynamic "ingress" {
@@ -133,8 +133,8 @@ resource "aws_security_group" "ecs_cluster_traffic" {
       description = ingress.key
       self        = true
       protocol    = "tcp"
-      from_port   = split("-", ingress.value)[0]
-      to_port     = reverse(split("-", ingress.value))[0]
+      from_port   = split(":", ingress.value)[0]
+      to_port     = reverse(split(":", ingress.value))[0]
     }
   }
 }
