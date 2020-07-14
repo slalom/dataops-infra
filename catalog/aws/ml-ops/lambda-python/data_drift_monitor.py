@@ -1,27 +1,4 @@
-<<<<<<< HEAD
 """ This is a function for enabling data capture.
-=======
-"""This is a function for enabling data capture.
-
-Checks these 4 things:
- - feature (aka input schema)
- - descriptive statistics about input features
-"""
-from urllib.parse import urlparse
-from sagemaker import get_execution_role
-from sagemaker.model_monitor.dataset_format import DatasetFormat
-from sagemaker.model_monitor import DefaultModelMonitor
-import pandas as pd
-import boto3
-from time import gmtime, strftime
-from sagemaker.model_monitor import CronExpressionGenerator
-from sagemaker import session
-from sagemaker import RealTimePredictor
-from sagemaker.model_monitor import DataCaptureConfig
-from threading import Thread
-from time import sleep
-import time
->>>>>>> 921df2e0a9c8a02ffdd2256e312fa23c4c0ac17f
 
 Checks these 2 things of the input data: 
 
