@@ -9,7 +9,6 @@ module "ml-ops" {
   aws_credentials_file = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
-
   job_name = "employee-attrition"
 
   tuning_objective              = "Maximize"

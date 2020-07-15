@@ -22,13 +22,15 @@ from threading import Thread
 
 import boto3
 import pandas as pd
-from sagemaker.model_monitor import CronExpressionGenerator
 from sagemaker import session
 from sagemaker import RealTimePredictor
-from sagemaker.model_monitor import DataCaptureConfig
+from sagemaker.model_monitor import (
+    CronExpressionGenerator,
+    DefaultModelMonitor,
+    DataCaptureConfig,
+)
 from sagemaker import get_execution_role
 from sagemaker.model_monitor.dataset_format import DatasetFormat
-from sagemaker.model_monitor import DefaultModelMonitor
 
 
 sm_client = boto3.client("sagemaker")

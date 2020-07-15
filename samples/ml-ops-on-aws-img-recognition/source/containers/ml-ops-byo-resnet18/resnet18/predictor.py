@@ -43,7 +43,7 @@ bucket_path = "s3://${aws_s3_bucket.extracts_store.id}/data/"
 """ A singleton for holding the model. This simply loads the model and holds it.
  It has a predict function that does a prediction based on the model and the input data.
 """
-# TO DO: change the input path for check_output, nb_test_samples, and test_data_generator
+
 subprocess.check_output(
     [
         "aws",
@@ -167,16 +167,15 @@ def ping():
 
 
 @app.route("/invocations", methods=["POST"])
-def transformation():
-    """Do an inference on a single batch of data. In this sample server, we take data as CSV, convert
-    it to a pandas data frame for internal use and then convert the predictions back to CSV (which really
-    just means one prediction per line, since there's a single column.
-    """
+def pred():
+
     train_data = None
     test_data = None
+    dropout = None
+    batch_size = None
 
     # Do the prediction
-    predictions = ScoringService.predict(0.2, 24)
+    predictions = ScoringService.predict(dropout, batch_size)
 
     # Save viz data
     shap_values = ScoringService.shap(test_data)
@@ -187,9 +186,7 @@ def transformation():
 
     # Convert from numpy back to CSV
     out = StringIO()
-    pd.DataFrame({"Prediction": predictions[:, 1]}, index=data.index).join(
-        shap_numpy
-    ).to_csv(out, header=True, index=True)
+    pd.DataFrame(shap_numpy).to_csv(out, header=True, index=True)
     result = out.getvalue()
 
     return flask.Response(response=result, status=200, mimetype="text/csv")

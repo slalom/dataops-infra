@@ -24,7 +24,7 @@ import numpy as np
 print("Tensorflow version ", tf.__version__)
 logging.getLogger().setLevel(logging.INFO)
 
-bucket = "s3://${aws_s3_bucket.extracts_store.id}/data/
+bucket = "s3://${aws_s3_bucket.model_store.id}/"
 
 
 class CustomTensorBoardCallback(TensorBoard):
