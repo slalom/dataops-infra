@@ -6,6 +6,7 @@ variable "name_prefix" {
   description = "Standard `name_prefix` module input."
   type        = string
 }
+
 variable "environment" {
   description = "Standard `environment` module input."
   type = object({
@@ -15,6 +16,7 @@ variable "environment" {
     private_subnets = list(string)
   })
 }
+
 variable "resource_tags" {
   description = "Standard `resource_tags` module input."
   type        = map(string)

@@ -13,16 +13,22 @@ locals {
   admin_cidr  = var.admin_cidr
   app_cidr    = length(var.app_cidr) == 0 ? local.admin_cidr : var.app_cidr
   ssh_key_dir = pathexpand("~/.ssh")
-  win_files = flatten([
-    fileset(path.module, "resources/win/*"),
-    fileset(path.module, "resources/*"),
-    ["${var.registration_file}:registration.json"]
-  ])
-  lin_files = flatten([
-    fileset(path.module, "resources/lin/*"),
-    fileset(path.module, "resources/*"),
-    ["${var.registration_file}:registration.json"]
-  ])
+  win_files = [
+    for file in flatten([
+      fileset(abspath(path.module), "resources/win/*"),
+      fileset(abspath(path.module), "resources/*"),
+      ["${var.registration_file}::registration.json"]
+    ]) :
+    substr(file, 0, 4) == "http" ? file : "${abspath(path.module)}/${file}"
+  ]
+  lin_files = [
+    for file in flatten([
+      fileset(abspath(path.module), "resources/lin/*"),
+      fileset(abspath(path.module), "resources/*"),
+      ["${var.registration_file}::registration.json"]
+    ]) :
+    substr(file, 0, 4) == "http" ? file : "${abspath(path.module)}/${file}"
+  ]
   tableau_app_ports = {
     "HTTP/HTTPS" = "80"
     "SSL"        = "443"
@@ -33,43 +39,56 @@ locals {
     "Tableau License Verification Service" = "27000:27009"
     "Tableau dynamic process mapping"      = "8000:9000"
   }
-}
-
-resource "aws_key_pair" "mykey" {
-  count      = var.ssh_public_key_filepath == null ? 0 : 1
-  key_name   = "${local.name_prefix}ec2-keypair"
-  public_key = file(var.ssh_public_key_filepath)
+  # Allow cluster to communicate with itself on all ports.
+  # At minimum, ports 8000:9000 are required.
+  cluster_ports = merge(local.tableau_app_ports, local.tableau_admin_ports)
 }
 
 module "windows_tableau_servers" {
-  source                   = "../../../components/aws/ec2"
-  is_windows               = true
-  name_prefix              = "${local.name_prefix}win-"
-  environment              = var.environment
-  resource_tags            = var.resource_tags
-  num_instances            = var.num_windows_instances
-  instance_type            = var.ec2_instance_type
-  instance_storage_gb      = var.ec2_instance_storage_gb
-  ami_owner                = "amazon" # Canonical
-  ami_name_filter          = "Windows_Server-2016-English-Full-Base-*"
-  admin_ports              = merge(local.tableau_admin_ports, { "RDP" : 3389 })
-  app_ports                = local.tableau_app_ports
-  ssh_key_name             = var.ssh_public_key_filepath == null ? "" : aws_key_pair.mykey[0].key_name
-  ssh_private_key_filepath = var.ssh_private_key_filepath == null ? "" : var.ssh_private_key_filepath
+  source        = "../../../components/aws/ec2"
+  name_prefix   = "${local.name_prefix}win-"
+  environment   = var.environment
+  resource_tags = var.resource_tags
+
+  is_windows          = true
+  num_instances       = var.num_windows_instances
+  file_resources      = local.win_files
+  instance_type       = var.ec2_instance_type
+  instance_storage_gb = var.ec2_instance_storage_gb
+  ami_owner           = "amazon" # Canonical
+  ami_name_filter     = "Windows_Server-2016-English-Full-Base-*"
+
+  use_private_subnets = var.use_private_subnets
+  admin_ports         = merge(local.tableau_admin_ports, { "RDP" : 3389 })
+  admin_cidr          = local.admin_cidr
+  app_ports           = local.tableau_app_ports
+  app_cidr            = local.app_cidr
+  cluster_ports       = local.cluster_ports
+
+  ssh_keypair_name         = var.ssh_keypair_name
+  ssh_private_key_filepath = var.ssh_private_key_filepath
 }
 
 module "linux_tableau_servers" {
-  source                   = "../../../components/aws/ec2"
-  name_prefix              = "${local.name_prefix}lin-"
-  environment              = var.environment
-  resource_tags            = var.resource_tags
-  num_instances            = var.num_linux_instances
-  instance_type            = var.ec2_instance_type
-  instance_storage_gb      = var.ec2_instance_storage_gb
-  ami_owner                = "099720109477" # Canonical
-  ami_name_filter          = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
-  admin_ports              = merge(local.tableau_admin_ports, { "SSH" : 22 })
-  app_ports                = local.tableau_app_ports
-  ssh_key_name             = var.ssh_public_key_filepath == null ? "" : aws_key_pair.mykey[0].key_name
-  ssh_private_key_filepath = var.ssh_private_key_filepath == null ? "" : var.ssh_private_key_filepath
+  source        = "../../../components/aws/ec2"
+  name_prefix   = "${local.name_prefix}lin-"
+  environment   = var.environment
+  resource_tags = var.resource_tags
+
+  num_instances       = var.num_linux_instances
+  instance_type       = var.ec2_instance_type
+  instance_storage_gb = var.ec2_instance_storage_gb
+  ami_owner           = "099720109477" # Canonical
+  ami_name_filter     = "ubuntu/images/hvm-ssd/ubuntu-*-18.04-amd64-server-*"
+  file_resources      = local.lin_files
+
+  use_private_subnets = var.use_private_subnets
+  admin_ports         = merge(local.tableau_admin_ports, { "SSH" : 22 })
+  admin_cidr          = local.admin_cidr
+  app_ports           = local.tableau_app_ports
+  app_cidr            = local.app_cidr
+  cluster_ports       = local.cluster_ports
+
+  ssh_keypair_name         = var.ssh_keypair_name
+  ssh_private_key_filepath = var.ssh_private_key_filepath
 }

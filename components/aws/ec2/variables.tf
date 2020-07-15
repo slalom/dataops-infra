@@ -57,6 +57,10 @@ EOF
   type        = map
   default     = {}
 }
+variable "cluster_ports" {
+  description = "A map defining which ports should be openen for instances to talk with one another."
+  default     = {}
+}
 variable "ami_owner" {
   description = "The name or account number of the owner who publishes the AMI."
   default     = "amazon"
@@ -89,7 +93,7 @@ variable "num_instances" {
   description = "The number of EC2 instances to launch."
   default     = 1
 }
-variable "ssh_key_name" {
+variable "ssh_keypair_name" {
   description = "The name of a SSH key pair which has been uploaded to AWS. This is used to access Linux instances remotely."
   type        = string
 }
@@ -99,5 +103,15 @@ variable "ssh_private_key_filepath" {
 }
 variable "use_https" {
   description = "True to enable https traffic on the instance."
+  default     = false
+}
+variable "use_private_subnets" {
+  description = <<EOF
+If True, EC2 will use a private subnets and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway. Note: a load balancer configuration may also be required in
+order for EC2 instances to receive incoming traffic.
+EOF
+  type        = bool
   default     = false
 }

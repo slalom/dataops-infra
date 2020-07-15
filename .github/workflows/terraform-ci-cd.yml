@@ -67,6 +67,7 @@ jobs:
           - redshift-on-aws
           - s3-lambda-trigger
           - secrets-manager-on-aws
+          - sftp-on-aws
           - tableau-on-aws
     steps:
       - name: Clone git repo
