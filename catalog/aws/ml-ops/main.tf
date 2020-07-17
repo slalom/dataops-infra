@@ -65,7 +65,7 @@ locals {
     "End": true
   }
 EOF
-    # State machine input for batch transformation
+  # State machine input for batch transformation
   batch_transform = <<EOF
 "Batch Transform": {
     "Type": "Task",
