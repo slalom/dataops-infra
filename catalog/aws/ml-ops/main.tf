@@ -7,10 +7,9 @@
 */
 
 
-data "null_data_source" "endpoint_or_batch_transform" {
-  inputs = {
-    # State machine input for creating or updating an inference endpoint
-    endpoint = <<EOF
+locals {
+  # State machine input for creating or updating an inference endpoint
+  endpoint = <<EOF
 "Create Model Endpoint Config": {
     "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
     "Parameters": {
@@ -67,7 +66,7 @@ data "null_data_source" "endpoint_or_batch_transform" {
   }
 EOF
     # State machine input for batch transformation
-    batch_transform = <<EOF
+  batch_transform = <<EOF
 "Batch Transform": {
     "Type": "Task",
     "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
@@ -116,7 +115,6 @@ EOF
       "End": true
     }
 EOF
-  }
 }
 
 module "step-functions" {
