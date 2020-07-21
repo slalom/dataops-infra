@@ -1,6 +1,6 @@
 output "tableau_server_summmary" { value = module.tableau_server.summary }
 module "tableau_server" {
-  # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=master"
+  # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=main"
   source        = "../../catalog/aws/tableau-server"
   name_prefix   = local.name_prefix
   environment   = module.env.environment
@@ -14,8 +14,7 @@ module "tableau_server" {
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  ec2_instance_type = "p3.8xlarge"
-  ec2_instance_type = "m4.4xlarge"
+  ec2_instance_type = "m5.4xlarge"
   admin_cidr        = []
   app_cidr          = ["0.0.0.0/0"]
   */

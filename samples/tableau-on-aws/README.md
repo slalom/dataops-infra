@@ -8,20 +8,37 @@
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| aws | ~> 2.10 |
+The following requirements are needed by this module:
 
-## Inputs
+- aws (~> 2.10)
 
-No input.
+## Providers
+
+The following providers are used by this module:
+
+- local
+
+- null
+
+## Required Inputs
+
+No required input.
+
+## Optional Inputs
+
+No optional input.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| env\_summary | n/a |
-| summmary | n/a |
+The following outputs are exported:
+
+### tableau\_server\_summary
+
+Description: n/a
+
+### env\_summary
+
+Description: n/a
 
 ---------------------
 
@@ -29,9 +46,9 @@ No input.
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/tableau-on-aws/00_environment.tf)
-* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/tableau-on-aws/01_data-lake.tf)
-* [02_tableau-server.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//samples/tableau-on-aws/02_tableau-server.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/00_environment.tf)
+* [01_ssh_keypair.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/01_ssh_keypair.tf)
+* [02_tableau-server.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/02_tableau-server.tf)
 
 ---------------------
 

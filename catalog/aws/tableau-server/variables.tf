@@ -44,7 +44,7 @@ EOF
 }
 variable "ec2_instance_type" {
   description = "Optional. Overrides the Tableau Server instance type."
-  default     = "m4.4xlarge"
+  default     = "m5.4xlarge"
 }
 variable "ec2_instance_storage_gb" {
   description = "The amount of storage to provision on each instance, in GB."
@@ -78,8 +78,8 @@ variable "windows_https_domain" {
   description = "The https domain if the Windows instances should use HTTPS."
   default     = ""
 }
-variable "ssh_public_key_filepath" {
-  description = "Optional. Path to a valid public key for SSH connectivity."
+variable "ssh_keypair_name" {
+  description = "Optional. Name of SSH Keypair in AWS."
   type        = string
   default     = null
 }
@@ -87,4 +87,15 @@ variable "ssh_private_key_filepath" {
   description = "Optional. Path to a valid public key for SSH connectivity."
   type        = string
   default     = null
+}
+
+variable "use_private_subnets" {
+  description = <<EOF
+If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway. Note: a load balancer configuration will also be required in
+order to forward incoming traffic to the Tableau Server instances.
+EOF
+  type        = bool
+  default     = false
 }

@@ -120,7 +120,7 @@ EOF
 }
 
 module "step-functions" {
-  #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
+  #source       = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
   source        = "../../../components/aws/step-functions"
   name_prefix   = var.name_prefix
   environment   = var.environment

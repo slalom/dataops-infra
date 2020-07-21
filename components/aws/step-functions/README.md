@@ -14,26 +14,101 @@ for another step.
 
 No requirements.
 
-## Inputs
+## Providers
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| environment | Standard `environment` module input. | <pre>object({<br>    vpc_id          = string<br>    aws_region      = string<br>    public_subnets  = list(string)<br>    private_subnets = list(string)<br>  })</pre> | n/a | yes |
-| name\_prefix | Standard `name_prefix` module input. | `string` | n/a | yes |
-| resource\_tags | Standard `resource_tags` module input. | `map(string)` | n/a | yes |
-| state\_machine\_definition | The JSON definition of the state machine to be created. | `string` | n/a | yes |
-| ecs\_tasks | List of ECS tasks, to ensure state machine access permissions. | `list(string)` | `[]` | no |
-| lambda\_functions | Map of function names to ARNs. Used to ensure state machine access to functions. | `map(string)` | `{}` | no |
-| writeable\_buckets | Buckets which should be granted write access. | `list(string)` | `[]` | no |
+The following providers are used by this module:
+
+- random
+
+- null
+
+- aws
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### state\_machine\_definition
+
+Description: The JSON definition of the state machine to be created.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### writeable\_buckets
+
+Description: Buckets which should be granted write access.
+
+Type: `list(string)`
+
+Default: `[]`
+
+### lambda\_functions
+
+Description: Map of function names to ARNs. Used to ensure state machine access to functions.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### ecs\_tasks
+
+Description: List of ECS tasks, to ensure state machine access permissions.
+
+Type: `list(string)`
+
+Default: `[]`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| iam\_role\_arn | The IAM role used by the step function to access resources. Can be used to grant<br>additional permissions to the role. |
-| state\_machine\_arn | The State Machine arn. |
-| state\_machine\_name | The State Machine name. |
-| state\_machine\_url |  |
+The following outputs are exported:
+
+### state\_machine\_name
+
+Description: The State Machine name.
+
+### state\_machine\_arn
+
+Description: The State Machine arn.
+
+### iam\_role\_arn
+
+Description: The IAM role used by the step function to access resources. Can be used to grant
+additional permissions to the role.
+
+### state\_machine\_url
+
+Description:
 
 ---------------------
 
@@ -41,10 +116,10 @@ No requirements.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/outputs.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/master//components/aws/step-functions/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/variables.tf)
 
 ---------------------
 
