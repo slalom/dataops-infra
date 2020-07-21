@@ -7,20 +7,20 @@ client = boto3.client("cloudwatch")
 
 
 def lambda_handler(event, context):
-    namespace = "/aws/sagemaker/" + model_name
+
     client.put_metric_alarm(
-        AlarmName="Overfitting Alarm",
-        ComparisonOperator="LessThanOrEqualToThreshold",
-        EvaluationPeriods=10,
-        DatapointsToAlarm=10,
-        MetricName="Training Accuracy",
-        Namespace=namespace,
-        Period=30,
-        Statistic="Maximum",
-        Threshold=90.0,
-        ActionsEnabled=True,
-        AlarmActions=["arn:aws:sns:us-east-1::Sagemaker-Notification-Emails",],
-        AlarmDescription="Alarm when the model is Overfitting",
-        Unit="Percent",
+        AlarmName="${var.alarm_name}",
+        ComparisonOperator="${var.comparison_operator}",
+        EvaluationPeriods="${var.eval_period}",
+        DatapointsToAlarm="${var.datapoints_to_alarm}",
+        MetricName="${var.metric_name}",
+        Namespace=model_name,
+        Period="${var.period}",
+        Statistic="${var.statistic}",
+        Threshold="${var.threshold}",
+        ActionsEnabled="${var.actions_enable}",
+        AlarmActions=["arn:aws:sns:us-east-1::Sagemaker-Notification-Emails"],
+        AlarmDescription="${var.alarm_des}",
+        Unit="${var.unit_name}",
     )
     return

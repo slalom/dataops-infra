@@ -79,12 +79,12 @@ EOF
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/data/score/score.csv"
+            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/score/score.csv"
           }
         }
       },
       "TransformOutput": {
-        "S3OutputPath": "s3://${aws_s3_bucket.output_store.id}/batch-transform-output"
+        "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
       },
       "TransformResources": {
         "InstanceCount": ${var.batch_transform_instance_count},
@@ -99,7 +99,7 @@ EOF
   "Resource": "${module.lambda_functions.function_ids["RenameBatchOutput"]}",
   "Parameters": {
     "Payload": {
-      "BucketName": "${aws_s3_bucket.output_store.id}",
+      "BucketName": "${aws_s3_bucket.data_store.id}",
       "Path": "batch-transform-output"
     }
   },
@@ -120,7 +120,7 @@ EOF
 }
 
 module "step-functions" {
-  #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=master"
+  #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
   source        = "../../../components/aws/step-functions"
   name_prefix   = var.name_prefix
   environment   = var.environment
@@ -129,10 +129,8 @@ module "step-functions" {
   lambda_functions = module.lambda_functions.function_ids
   writeable_buckets = [
     var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id,
-    aws_s3_bucket.extracts_store.id,
-    aws_s3_bucket.model_store.id,
-    aws_s3_bucket.output_store.id,
-    aws_s3_bucket.monitor_output_store.id,
+    aws_s3_bucket.data_store.id,
+    aws_s3_bucket.model_store.id
   ]
 
   state_machine_definition = <<EOF
@@ -147,9 +145,9 @@ module "step-functions" {
         "Arguments": {
           "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl",
           "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
-          "--S3_DEST": "${aws_s3_bucket.extracts_store.id}",
-          "--TRAIN_KEY": "data/train/train.csv",
-          "--SCORE_KEY": "data/score/score.csv",
+          "--S3_DEST": "${aws_s3_bucket.data_store.id}",
+          "--TRAIN_KEY": "input_data/train/train.csv",
+          "--SCORE_KEY": "input_data/score/score.csv",
           "--INFERENCE_TYPE": "${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? "endpoint" : "batch"}"
         }
       },
@@ -208,7 +206,7 @@ module "step-functions" {
                 "S3DataSource": {
                   "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.extracts_store.id}/data/train/train.csv"
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/train/train.csv"
                 }
               },
               "ChannelName": "train",

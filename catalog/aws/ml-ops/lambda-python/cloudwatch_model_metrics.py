@@ -2,20 +2,20 @@
 
 import boto3
 
-model_name = "${var.job_name}"
+modelname = "${var.job_name}"
 client = boto3.client("cloudwatch")
 
 
 class CWEvalMetrics:
     # initialize the region and the model name with the class instantiation
-    def __init__(self, region="us-east-1", model_name=model_name):
+    def __init__(self, region="${var.environment.aws_region}", model_name=modelname):
         self.region = region
         self.model_name = model_name
 
     # A function to send the training evaluation metrics
     # the metric_type parameters will determine whether the data sent is for training or validation.
 
-    def CW_eval(self, model_name, is_training, **kwargs):
+    def CW_eval(self, is_training, **kwargs):
         # collecting the loss and accuracy values
         # loss = kwargs.get('Loss', 0)
         accuracy = kwargs.get("Accuracy")
@@ -35,23 +35,22 @@ class CWEvalMetrics:
         # learning_rate = str(hyperparameter.get('learning_rate'))
 
         response = client.put_metric_data(
-            Namespace="/aws/sagemaker/" + model_name,
             MetricData=[
                 {
-                    "MetricName": metric_type + " Accuracy",
-                    "Value": accuracy,
+                    "MetricName": f"{metric_type} Accuracy",
+                    "Value": f"{accuracy}",
                     "Unit": "Percent",
                     "StorageResolution": 1,
                 },
                 {
-                    "MetricName": metric_type + " f1",
-                    "Value": f1,
+                    "MetricName": f"{metric_type} f1",
+                    "Value": f"{f1}",
                     "Unit": "Percent",
                     "StorageResolution": 1,
                 },
                 {
-                    "MetricName": metric_type + " auc",
-                    "Value": auc,
+                    "MetricName": f"{metric_type} auc",
+                    "Value": f"{auc}",
                     "Unit": "Percent",
                     "StorageResolution": 1,
                 },
@@ -62,7 +61,7 @@ class CWEvalMetrics:
 
 def performance_watch():
     measure = CWEvalMetrics()
-    response = measure.CW_eval(model_name=model_name, is_training=True)
+    response = measure.CW_eval(model_name=modelname, is_training=True)
     return response
 
 

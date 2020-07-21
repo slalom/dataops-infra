@@ -38,33 +38,12 @@ import s3_utils
 
 prefix = "/opt/ml/"
 model_path = os.path.join(prefix, "model")
-bucket_path = "s3://${aws_s3_bucket.extracts_store.id}/data/"
+bucket_path = "s3://${aws_s3_bucket.data_store.id}/input_data/"
+hyperparams_path = prefix + "input/config/hyperparameters.json"
 
-""" A singleton for holding the model. This simply loads the model and holds it.
- It has a predict function that does a prediction based on the model and the input data.
-"""
-
-subprocess.check_output(
-    [
-        "aws",
-        "s3",
-        "cp",
-        "s3://cornell-mammogram-images/data_generator_symmetry_images/validate",
-        "./data_generator_symmetry_images/validate/",
-        "--recursive",
-    ]
-)
-nb_test_samples = sum(
-    [len(files) for r, d, files in os.walk("./data_generator_symmetry_images/train")]
-)
-train_data_generator = dataset.read_dataset(
-    bucket_path + "train",
-    batch_size=batch_size,
-    train_mode=False,
-    dataset=False,
-    shuffle=False,
-    binary_classification=True,
-)
+with open(hyperparams_path) as _in_file:
+    hyperparams_dict = json.load(_in_file)
+batch_size = float(hyperparams_dict["batch-size"])
 test_data_generator = dataset.read_dataset(
     bucket_path + "test",
     batch_size=batch_size,
@@ -84,41 +63,36 @@ class ScoringService(object):
 
     @classmethod
     def get_model(cls):
+
         """Get the model object for this instance, loading it if it's not already loaded."""
+
         if cls.model == None:
-            with open(os.path.join(model_path, "xgboost-model.pkl"), "rb") as inp:
+            with open(os.path.join(model_path, "resnet18-model.pkl"), "rb") as inp:
                 cls.model = pickle.load(inp)
         return cls.model
 
     @classmethod
-    def predict(cls, dropout, batch_size):
+    def predict(cls, input):
         """For the input, do the predictions and return them.
-
-        Args:
-            dropout
-            batch_size
-
         """
         clf = cls.get_model()
 
-        predictions = clf.predict(
-            test_data_generator, verbose=1, steps=int(nb_test_samples / batch_size)
-        )
+        predictions = clf.predict(test_data_generator)
         target_labels = np.array(test_data_generator.classes)
-        print(predictions)
-        print([int(i[0] > 0.6869423) for i in predictions])
-        print(target_labels)
-        print(
-            confusion_matrix(
-                target_labels[: len(predictions)],
-                [int(i[0] > 0.6869423) for i in predictions],
-            )
-        )
+        # print(predictions)
+        # print([int(i[0] > 0.6869423) for i in predictions])
+        # print(target_labels)
+        # print(
+        #    confusion_matrix(
+        #        target_labels[: len(predictions)],
+        #        [int(i[0] > 0.6869423) for i in predictions],
+        #    )
+        # )
         fpr, tpr, thresholds = roc_curve(
             target_labels[: len(predictions)], [i[0] for i in predictions]
         )
         test_auc = auc(fpr, tpr)
-        print(auc)
+        # print(auc)
 
         pred_len = len(predictions)
         pd.DataFrame(
@@ -128,7 +102,7 @@ class ScoringService(object):
                 "label_val": target_labels[:pred_len],
                 "predictions": [i[0] for i in predictions],
             }
-        ).to_csv("train_predictions.csv")
+        ).to_csv("test_predictions.csv")
         pd.DataFrame({"fpr": fpr, "tpr": tpr, "thresholds": thresholds}).to_csv(
             "roc.csv"
         )
@@ -143,11 +117,11 @@ class ScoringService(object):
             input (a pandas dataframe): The data on which to do the predictions. There will be
                 one prediction per row in the dataframe"""
         clf = cls.get_model()
-        background = train_data_generator
+        # background = train_data_generator
         # return shap values
-        explainer = shap.DeepExplainer(clf, background)
+        explainer = shap.DeepExplainer(clf, input)
 
-        return explainer.shap_values(test_data_generator)
+        return explainer.shap_values(input)
 
 
 # The flask app for serving predictions
@@ -182,7 +156,7 @@ def pred():
 
     # rehspae the shap value array and test image array for visualization
     shap_numpy = [np.swapaxes(np.swapaxes(s, 1, -1), 1, 2) for s in shap_values]
-    test_numpy = np.swapaxes(np.swapaxes(test_images.numpy(), 1, -1), 1, 2)
+    test_numpy = np.swapaxes(np.swapaxes(test_data.numpy(), 1, -1), 1, 2)
 
     # Convert from numpy back to CSV
     out = StringIO()

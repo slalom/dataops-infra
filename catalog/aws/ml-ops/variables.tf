@@ -278,3 +278,119 @@ variable "aws_credentials_file" {
   description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
   type        = string
 }
+
+# Cloudwatch alarm variables 
+
+variable "alarm_name" {
+  description = "Name of the cloudwatch alarm"
+  type        = string
+  default     = "Overfitting Alarm"
+}
+
+variable "comparison_operator" {
+  description = <<EOF
+  The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.
+  Possible values include GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold, 
+  LessThanLowerThreshold, and GreaterThanUpperThreshold.
+  EOF
+  type        = string
+  default     = "LessThanOrEqualToThreshold"
+}
+
+variable "eval_period" {
+ description = <<EOF
+  The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points 
+  be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
+  An alarm's total current evaluation period can be no longer than one day, so this number multiplied by Period cannot be more than 86,400 seconds.
+  EOF
+  type        = number
+  default     = 10 
+}
+
+variable "datapoints_to_alarm" {
+ description = <<EOF
+  The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M.
+  EOF
+  type        = number
+  default     = 10 
+}
+
+variable "metric_name" {
+  description = <<EOF
+  The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or a Metrics array.
+  If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , Statistic , 
+  or ExtendedStatistic parameters. Instead, you specify all this information in the Metrics array. Values include Training Accuray, Training Loss, 
+  Validation Accuracy, and Validation Loss. 
+  EOF
+  type        = string
+  default     = "Training Accuracy"
+}
+
+variable "period" {
+  description = "The granularity, in seconds, of the returned data points"
+  type        = number
+  default     = 30
+}
+
+variable "statistic" {
+  description = "The statistic to return. It can include any CloudWatch stats or extended stats"
+  type        = string
+  default     = "Maximum"
+}
+
+variable "threshold" {
+  description = "The baseline threshold value that cloudwatch will compare against"
+  type        = number
+  default     = 90.0
+}
+
+variable "actions_enable" {
+  description = "Indicates whether actions should be executed during any changes to the alarm state. "
+  type        = string
+  default     = "True"
+}
+
+variable "alarm_des" {
+  description = "The description for the alarm."
+  type        = string
+  default     = "Alarm when the model is Overfitting"
+}
+
+variable "unit_name" {
+  description = <<EOF
+  The unit of measure for the statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data. 
+  Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
+  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm. Usually metrics 
+  are published with only one unit, so the alarm will work as intended.
+  However, if the metric is published with multiple types of units and you don't specify a unit, the alarm's behavior is not defined and will behave un-predictably.
+  We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this metric. Doing so causes the alarm to be 
+  stuck in the INSUFFICIENT DATA state.
+
+  Possible values: 
+  Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabits, Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second, 
+  Gigabytes/Second, Terabytes/Second, Bits/Second, Kilobits/Second, Megabits/Second, Gigabits/Second, Terabits/Second, Count/Second, and None. 
+  EOF
+  type        = string
+  default     = "Percent"
+}
+
+# Data drift monitoring variables 
+
+variable "sample_percent" {
+  description = "The percentage used to sample the input data to perform a data drift detection"
+  type        = number
+  default     = 50
+}
+
+variable "max_timeout_in_sec" {
+  description = "Timeout in seconds. After this amount of time, Amazon SageMaker terminates the job regardless of its current status."
+  type        = number
+  default     = 3600
+}
+
+variable "frequency" {
+  description = "The frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily_every_x_hours (hour_interval, starting_hour)"
+  type        = string
+  default     = "daily"
+}
+

@@ -1,153 +1,90 @@
-import tensorflow as tf
 import os
-import subprocess
-import sys
-import logging
-import datetime
-import argparse
-import dataset
-import model_def
-import s3_utils
-import logging
 import json
+import pickle
+import sys
+import traceback
 
-from tensorflow.keras import backend as K
-from tensorflow.keras.callbacks import (
-    ModelCheckpoint,
-    LearningRateScheduler,
-    TensorBoard,
-    EarlyStopping,
-    CSVLogger,
-)
-import numpy as np
+from sagemaker.tensorflow import TensorFlow
 
-print("Tensorflow version ", tf.__version__)
-logging.getLogger().setLevel(logging.INFO)
+prefix = "/opt/ml/"
 
-bucket = "s3://${aws_s3_bucket.model_store.id}/"
+input_path = prefix + "input/data"
+hyperparams_path = prefix + "input/config/hyperparameters.json"
+output_path = os.path.join(prefix, "output")
+model_path = os.path.join(prefix, "model")
 
+hvd_instance_type = "ml.m5.4xlarge"
+hvd_processes_per_host = 1
+hvd_instance_count = 4
 
-class CustomTensorBoardCallback(TensorBoard):
-    def on_batch_end(self, batch, logs=None):
-        pass
+distributions = {
+    "mpi": {
+        "enabled": True,
+        "processes_per_host": hvd_processes_per_host,
+        "custom_mpi_options": "-verbose --NCCL_DEBUG=INFO -x OMPI_MCA_btl_vader_single_copy_mechanism=none",
+    }
+}
 
+remote_inputs = {
+    "train": input_path + "/train",
+    "validation": input_path + "/validate",
+    "eval": input_path + "/test",
+}
 
-def main(args):
-    curr_dt = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    batch_size = args.batch_size * strategy.num_replicas_in_sync
-    model_dir = bucket + args.model_name + curr_dt
+# The function to execute the training.
+def train():
+    print("Starting the training.")
+    try:
 
-    gpus = tf.config.experimental.list_physical_devices("GPU")
-    if gpus:
-        try:
-            # Currently, memory growth needs to be the same across GPUs
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
-            logical_gpus = tf.config.experimental.list_logical_devices("GPU")
-            print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-        except RuntimeError as e:
-            # Memory growth must be set before GPUs have been initialized
-            print(e)
+        # Read the hyperparameter config json file
+        with open(hyperparams_path) as _in_file:
+            hyperparams_dict = json.load(_in_file)
 
-    strategy = tf.distribute.MirroredStrategy()
+        # Usually max_delta_step is not needed, but it might help in logistic regression when class is extremely imbalanced.
+        params = {
+            # hyperparameters
+            "learning_rate": float(hyperparams_dict["learning_rate"]),
+            "epochs": int(hyperparams_dict["epochs"]),
+            "batch-size": float(hyperparams_dict["batch-size"]),
+            "activation": float(hyperparams_dict["activation"]),
+            "loss_fn": float(hyperparams_dict["loss_fn"]),
+        }
 
-    nb_train_samples = sum([len(files) for r, d, files in os.walk(args.train)])
-    nb_validation_samples = sum(
-        [len(files) for r, d, files in os.walk(args.validation)]
-    )
-    nb_test_samples = sum([len(files) for r, d, files in os.walk(args.eval)])
-    logging.info("Number of training samples={}".format(nb_train_samples))
-
-    train_data_generator = dataset.read_dataset(
-        args.train, batch_size=batch_size, train_mode=True
-    )
-    validation_data_generator = dataset.read_dataset(
-        args.validation, batch_size=batch_size, train_mode=False
-    )
-    test_data_generator = dataset.read_dataset(
-        args.eval, batch_size=batch_size, train_mode=False
-    )
-
-    tensorboard_cb = CustomTensorBoardCallback(
-        log_dir=model_dir + "/tensorboard/" + curr_dt
-    )
-    checkpoints_cb = ModelCheckpoint(
-        filepath=os.path.join(model_dir + "/training_checkpoints", "ckpt_{epoch}"),
-        save_weights_only=True,
-    )
-    callbacks = [tensorboard_cb, checkpoints_cb]
-
-    logging.info("Configuring model")
-    with strategy.scope():
-        model = model_def.transfer_learning_model(
-            dropout=args.dropout,
-            model_name=args.model_name,
-            learning_rate=args.learning_rate,
+        estimator_hvd = TensorFlow(
+            source_dir="source",
+            entry_point="train_horovod.py",
+            model_dir=model_path,
+            base_job_name="sagemaker-horovod",
+            hyperparameters=params,
+            framework_version="1.14",
+            py_version="py3",
+            train_instance_count=hvd_instance_count,
+            train_instance_type=hvd_instance_type,
+            distributions=distributions,
         )
 
-    logging.info("Starting training")
-    history = model.fit(
-        train_data_generator,
-        steps_per_epoch=nb_train_samples // batch_size,
-        epochs=args.epochs,
-        validation_data=validation_data_generator,
-        validation_steps=nb_validation_samples // batch_size,
-        callbacks=callbacks,
-        verbose=1,
-    )
+        # train model on whole dataset
+        estimator_hvd.fit(remote_inputs)
 
-    loss, acc, auc = tuple(
-        model.evaluate(
-            test_data_generator, steps=nb_test_samples // batch_size, verbose=1
-        )
-    )
+        # save the model
+        with open(os.path.join(model_path, "resnet18-model.pkl"), "wb") as out:
+            pickle.dump(estimator_hvd, out, protocol=0)
+            print("Training complete.")
 
-    print("Model {} with dropout {} had loss {} and acc {}", model_name, j, loss, acc)
-    export_path = tf.saved_model.save(
-        model, bucket + model_name + "/keras_export_" + curr_dt
-    )
-    print("Model exported to: ", export_path)
+    except Exception as e:
+        # Write out an error file. This will be returned as the failureReason in the
+        # DescribeTrainingJob result.
+        trc = traceback.format_exc()
+        with open(os.path.join(output_path, "failure"), "w") as s:
+            s.write("Exception during training: " + str(e) + "\n" + trc)
+        # Printing this causes the exception to be in the training job logs, as well.
+        print("Exception during training: " + str(e) + "\n" + trc, file=sys.stderr)
+        # A non-zero exit code causes the training job to be marked as Failed.
+        sys.exit(255)
 
 
 if __name__ == "__main__":
-    os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-    os.environ["S3_REQUEST_TIMEOUT_MSEC"] = "86400"
+    train()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--train", type=str, required=False, default=os.environ.get("SM_CHANNEL_TRAIN")
-    )
-    parser.add_argument(
-        "--validation",
-        type=str,
-        required=False,
-        default=os.environ.get("SM_CHANNEL_VALIDATION"),
-    )
-    parser.add_argument(
-        "--eval", type=str, required=False, default=os.environ.get("SM_CHANNEL_EVAL")
-    )
-    parser.add_argument(
-        "--data-config", type=json.loads, default=os.environ.get("SM_INPUT_DATA_CONFIG")
-    )
-    parser.add_argument(
-        "--fw-params", type=json.loads, default=os.environ.get("SM_FRAMEWORK_PARAMS")
-    )
-    parser.add_argument(
-        "--model_dir",
-        type=str,
-        required=True,
-        help="The directory where the model will be stored.",
-    )
-    parser.add_argument("--model_name", type=str, default="ResNet50")
-    parser.add_argument(
-        "--dropout", type=float, default=0.2, help="Weight decay for convolutions."
-    )
-    parser.add_argument(
-        "--learning_rate", type=float, default=0.001, help="Initial learning rate."
-    )
-    parser.add_argument("--epochs", type=int, default=6)
-    parser.add_argument("--batch-size", type=int, default=25)
-
-    args = parser.parse_args()
-
-    main(args)
+    # A zero exit code causes the job to be marked a Succeeded.
+    sys.exit(0)
