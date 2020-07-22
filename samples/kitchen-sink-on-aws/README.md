@@ -1,7 +1,7 @@
 
-# Samples Lots-On-AWS
+# Samples Kitchen-Sink-On-AWS
 
-`/samples/lots-on-aws`
+`/samples/kitchen-sink-on-aws`
 
 ## Overview
 
@@ -56,11 +56,11 @@ Description: n/a
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/lots-on-aws/00_environment.tf)
-* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/lots-on-aws/01_data-lake.tf)
-* [02_redshift.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/lots-on-aws/02_redshift.tf)
-* [03_airflow.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/lots-on-aws/03_airflow.tf)
-* [05_extract-to-redshift.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/lots-on-aws/05_extract-to-redshift.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/kitchen-sink-on-aws/00_environment.tf)
+* [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/kitchen-sink-on-aws/01_data-lake.tf)
+* [02_redshift.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/kitchen-sink-on-aws/02_redshift.tf)
+* [03_airflow.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/kitchen-sink-on-aws/03_airflow.tf)
+* [05_extract-to-redshift.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/kitchen-sink-on-aws/05_extract-to-redshift.tf)
 
 ---------------------
 
