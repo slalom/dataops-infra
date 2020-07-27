@@ -9,10 +9,12 @@ locals {
 }
 
 module "postgres" {
-  source              = "../../../components/aws/rds"
-  name_prefix         = local.name_prefix
-  environment         = var.environment
-  resource_tags       = var.resource_tags
+  source        = "../../../components/aws/rds"
+  name_prefix   = local.name_prefix
+  environment   = var.environment
+  resource_tags = var.resource_tags
+  identifier    = var.identifier
+
   skip_final_snapshot = var.skip_final_snapshot
   database_name       = var.database_name
   admin_username      = var.admin_username
