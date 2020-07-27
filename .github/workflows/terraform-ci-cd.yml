@@ -60,7 +60,7 @@ jobs:
         sample-id:
           - airflow-on-aws
           - dbt-and-singer-on-aws
-          - lots-on-aws
+          - kitchen-sink-on-aws
           - ml-ops-on-aws
           - mysql-on-aws
           - postgres-on-aws
