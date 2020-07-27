@@ -7,10 +7,9 @@
 */
 
 
-data "null_data_source" "endpoint_or_batch_transform" {
-  inputs = {
-    # State machine input for creating or updating an inference endpoint
-    endpoint = <<EOF
+locals {
+  # State machine input for creating or updating an inference endpoint
+  endpoint = <<EOF
 "Create Model Endpoint Config": {
     "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
     "Parameters": {
@@ -87,7 +86,7 @@ EOF
         "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
       },
       "TransformResources": {
-        "InstanceCount": "${var.batch_transform_instance_count}",
+        "InstanceCount": ${var.batch_transform_instance_count},
         "InstanceType": "${var.batch_transform_instance_type}"
       },
       "TransformJobName.$": "$.modelName"
@@ -281,14 +280,3 @@ module "step-functions" {
 EOF
 }
 
-module "rds" {
-  #source       = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
-  source        = "../../../components/aws/rds"
-  name_prefix   = var.name_prefix
-  environment   = var.environment
-  resource_tags = var.resource_tags
-
-  engine         = "postgres"
-  engine_version = "11"
-  database_name  = "ml_ops_img_reg_db"
-}
