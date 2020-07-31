@@ -261,17 +261,68 @@ module "step-functions" {
     "Monitor Input Data": {
       "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
       "Type": "Task",
-      "Next": "Monitor Model Performance"
+      "Next": "Check Data Drift Result Status"
     },
+    "Check Data Drift Result Status": {
+      "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
+      "Type": "Choise",
+      "Choices": [
+        {
+           "Not": {
+             "Variable":"$.latest_result_status",
+             "StringEquals": "Completed"
+           },
+           "Next": "Send a SNS Alert"
+        },
+        {
+          "Variable": "$.latest_result_status",
+          "StringEquals": "Completed"
+        }, 
+        "Next': "Monitor Model Performance"
+      ]
+    },
+    "Send a SNS Alert": {
+      "Resource": "${module.lambda_functions.function_ids["SNSAlert"]}",
+      "Type": "Task",
+      "Next": "Monitor Model Performance"
+    }
     "Monitor Model Performance": {
       "Resource": "${module.lambda_functions.function_ids["ModelPerformanceMonitor"]}",
       "Type": "Task",
-      "Next": "Cloud Watch Alarm"
+      "Next": "Model Monitor Rule"
+    },
+   "Model Monitor Rule": {
+      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
+      "Type": "Choise",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.MetricName",
+            "${var.comparison_operator}": ${var.threshold}
+          },
+          "Next": "Cloud Watch Alarm"
+        },
+        "Default": "${var.endpoint_or_batch_transform}"
+      ]
     },
     "Cloud Watch Alarm": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Task",
       "Next": "${var.endpoint_or_batch_transform}"
+    },
+    "Model Retrain Rule" :{
+      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
+      "Type": "Choise",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.MetricName",
+            "${var.comparison_operator}": ${var.threshold}
+          },
+          "Next": "Glue Data Transformation"
+        },
+        "Default": "${var.endpoint_or_batch_transform}"
+      ]
     },
     ${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? local.endpoint : local.batch_transform}
   }

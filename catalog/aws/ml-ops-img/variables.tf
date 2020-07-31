@@ -289,7 +289,7 @@ variable "aws_credentials_file" {
 variable "alarm_name" {
   description = "Name of the cloudwatch alarm"
   type        = string
-  default     = "Overfitting Alarm"
+  default     = "Model Performance Degradation and Retraining Alarm"
 }
 
 variable "comparison_operator" {
@@ -358,7 +358,7 @@ variable "actions_enable" {
 variable "alarm_des" {
   description = "The description for the alarm."
   type        = string
-  default     = "Alarm when the model is Overfitting"
+  default     = "Model performance degradation detected. Model retraining will be activated."
 }
 
 variable "unit_name" {

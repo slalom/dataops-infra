@@ -11,4 +11,18 @@ RUN pip install pillow
 # Defines model.py as script entrypoint
 #ENV SAGEMAKER_PROGRAM model.py
 
+#RUN mkdir -p /opt/ml/code
+#WORKDIR /opt/ml/code
+WORKDIR /source/resnet18
+COPY ./* /
 
+ENTRYPOINT [ "python3" ]
+# CMD [ "" ]
+
+# Example: entrypoint=["python3.8"], cmd=["module_def.py"] => "python3.8 module_def.py"
+# docker run myorg/myimage              => "python3.8 module_def.py"
+# docker run myorg/myimage predictor.py => "python3.8 predictor.py"
+# docker run --entrypoint bash myorg/myimage  => "bash module_def.py"
+
+# docker run --entrypoint bash mytestimage
+# docker run mytestimage predictor.py

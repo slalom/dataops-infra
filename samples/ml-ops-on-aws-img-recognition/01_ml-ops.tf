@@ -1,7 +1,7 @@
-module "ml-ops" {
+module "ml-ops-img" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-  source = "../../catalog/aws/ml-ops"
+  source = "../../catalog/aws/ml-ops-img"
   #source        = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
   name_prefix          = local.name_prefix
   environment          = module.env.environment
@@ -23,21 +23,6 @@ module "ml-ops" {
   training_job_instance_type  = "ml.m5.xlarge"
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
-
-  distributions = {'mpi': {
-                      'enabled': True,
-                      'processes_per_host': hvd_processes_per_host,
-                      'custom_mpi_options': '-verbose --NCCL_DEBUG=INFO -x OMPI_MCA_btl_vader_single_copy_mechanism=none'
-                          }
-                  }
-
-  model_dir = "s3://${aws_s3_bucket.model_store.id}/"
-
-  hyperparameters = {'epochs': 25, 'batch-size' : 24, 'model_name': 'ResNet18'}
-
-  inputs = "s3://${aws_s3_bucket.extracts_store.id}/data"
-  remote_inputs = {'train' : inputs+'/train', 'validation' : inputs+'/validate', 
-  'eval' : inputs+'/test'}
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
@@ -79,5 +64,7 @@ module "ml-ops" {
 }
 
 output "summary" {
-  value = module.ml-ops.summary
+  value = module.ml-ops-img.summary
 }
+
+

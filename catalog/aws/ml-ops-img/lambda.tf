@@ -34,6 +34,12 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    LoadDataPostgre = {
+      description = "Load prediction outputs csv file to PostgreSQL database."
+      handler     = "load_data_postgre.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
     DataDriftMonitor = {
       description = "Monitor data drift on input data."
       handler     = "data_drift_monitor.lambda_handler"
@@ -61,12 +67,6 @@ module "lambda_functions" {
     RunGlueCrawler = {
       description = "Runs Glue Crawler to create table of batch transformation output for Athena."
       handler     = "run_glue_crawler.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
-    SNSAlert = {
-      description = "Send an email alert to users when the data drift monitor function detects a violation."
-      handler     = "sns_alert.lambda_handler"
       environment = {}
       secrets     = {}
     }
@@ -119,6 +119,7 @@ resource "aws_iam_policy" "lambda_policy" {
                 "sagemaker:GetSearchSuggestions",
                 "sagemaker:Search",
                 "s3:*",
+                "rds-db:connect",
                 "glue:StartCrawler"
             ],
             "Resource": "*"

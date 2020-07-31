@@ -137,10 +137,6 @@ def lambda_handler(event, context):
     latest_execution.wait(logs=False)
 
     latest_job = latest_execution.describe()
-    if latest_job["ProcessingJobStatus"] != "Completed":
-        print(
-            "====STOP==== \n No completed executions to inspect further. Please wait till an execution completes or investigate previously reported failures."
-        )
 
     report_uri = latest_execution.output.destination
 
@@ -163,6 +159,9 @@ def lambda_handler(event, context):
     # get the latest violation stats
     latest_monitoring_statistics = my_default_monitor.latest_monitoring_statistics()
 
+    # get the status of the latest execution result
+    latest_result_status = latest_execution.describe()["ExitMessage"]
+
     # Delete the resources after running the inspection to avoid incurring additional charges
     my_default_monitor.delete_monitoring_schedule()
     time.sleep(60)  # actually wait for the deletion
@@ -170,12 +169,8 @@ def lambda_handler(event, context):
     predictor.delete_model()
 
     return {
-        print(
-            "Latest execution result: {}".format(
-                latest_execution.describe()["ExitMessage"]
-            )
-        ),
-        print("Report Uri: {}".format(report_uri)),
-        print(constraints_violations_df),
-        print(latest_monitoring_statistics),
+        latest_result_status,
+        report_uri,
+        constraints_violations_df,
+        latest_monitoring_statistics,
     }

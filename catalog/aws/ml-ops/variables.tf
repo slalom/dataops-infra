@@ -284,7 +284,7 @@ variable "aws_credentials_file" {
 variable "alarm_name" {
   description = "Name of the cloudwatch alarm"
   type        = string
-  default     = "Overfitting Alarm"
+  default     = "Model Performance Degradation and Retraining Alarm"
 }
 
 variable "comparison_operator" {
@@ -298,21 +298,21 @@ variable "comparison_operator" {
 }
 
 variable "eval_period" {
- description = <<EOF
+  description = <<EOF
   The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points 
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
   An alarm's total current evaluation period can be no longer than one day, so this number multiplied by Period cannot be more than 86,400 seconds.
   EOF
   type        = number
-  default     = 10 
+  default     = 10
 }
 
 variable "datapoints_to_alarm" {
- description = <<EOF
+  description = <<EOF
   The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M.
   EOF
   type        = number
-  default     = 10 
+  default     = 10
 }
 
 variable "metric_name" {
@@ -353,7 +353,7 @@ variable "actions_enable" {
 variable "alarm_des" {
   description = "The description for the alarm."
   type        = string
-  default     = "Alarm when the model is Overfitting"
+  default     = "Model is overfitting. Model retraining will be activated."
 }
 
 variable "unit_name" {

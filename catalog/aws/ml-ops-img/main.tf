@@ -306,12 +306,40 @@ module "step-functions" {
     "Monitor Model Performance": {
       "Resource": "${module.lambda_functions.function_ids["ModelPerformanceMonitor"]}",
       "Type": "Task",
-      "Next": "Cloud Watch Alarm"
+      "Next": "Model Monitor Rule"
+    },
+    "Model Monitor Rule": {
+      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
+      "Type": "Choise",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.MetricName",
+            "${var.comparison_operator}": ${var.threshold}
+          },
+          "Next": "Cloud Watch Alarm"
+        },
+        "Default": "${var.endpoint_or_batch_transform}"
+      ]
     },
     "Cloud Watch Alarm": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Task",
       "Next": "${var.endpoint_or_batch_transform}"
+    },
+    "Model Retrain Rule" :{
+      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
+      "Type": "Choise",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.MetricName",
+            "${var.comparison_operator}": ${var.threshold}
+          },
+          "Next": "Glue Data Transformation"
+        },
+        "Default": "${var.endpoint_or_batch_transform}"
+      ]
     },
     ${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? local.endpoint : local.batch_transform}
   }

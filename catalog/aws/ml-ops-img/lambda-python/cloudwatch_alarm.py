@@ -23,3 +23,4 @@ def lambda_handler(event, context):
         AlarmDescription="${var.alarm_des}",
         Unit="${var.unit_name}",
     )
+    return
