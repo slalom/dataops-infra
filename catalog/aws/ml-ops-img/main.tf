@@ -73,12 +73,13 @@ EOF
     "Parameters": {
       "ModelName.$": "$.modelName",
       "TransformInput": {
+        "ContentType": "application/x-recordio",
         "CompressionType": "None",
-        "ContentType": "text/csv",
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/score/score.csv"
+            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/score/"
+            "S3DataDistributionType": "FullyReplicated",
           }
         }
       },
@@ -136,7 +137,7 @@ module "postgres" {
   resource_tags = var.resource_tags
 
   postgres_version = "11"
-  database_name    = "ml_ops_img_reg_db"
+  database_name    = "${var.dbname}"
 
   admin_username = "pgadmin"
   admin_password = "1234asdf"
@@ -170,9 +171,9 @@ module "step-functions" {
           "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl",
           "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
           "--S3_DEST": "${aws_s3_bucket.data_store.id}",
-          "--TRAIN_KEY": "input_data/train",
-          "--VALIDATION_KEY": "input_data/validate",
-          "--SCORE_KEY": "input_data/score",
+          "--TRAIN_KEY": "${var.train_key}",
+          "--VALIDATION_KEY": "${var.validate_key}",
+          "--SCORE_KEY": "${var.test_key}",
           "--INFERENCE_TYPE": "${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? "endpoint" : "batch"}"
         }
       },
@@ -231,11 +232,11 @@ module "step-functions" {
               "DataSource": {
                 "S3DataSource": {
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/train/"
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/"+ "${var.train_key}"
                   "S3DataDistributionType": "FullyReplicated",
                 }
               }, 
-              "ContentType": "application/x-recordio",
+              "ContentType": "${var.content_type}",
               "CompressionType": "None"
             },
             {
@@ -243,10 +244,10 @@ module "step-functions" {
               "DataSource": {
                 "S3DataSource": {
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/validate/"
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}" + "${var.validate_key}"
                   "S3DataDistributionType": "FullyReplicated",
                 },
-                "ContentType": "application/x-recordio",
+                "ContentType": "${var.content_type}",
                 "CompressionType": "None"
             },        
             }
@@ -301,6 +302,52 @@ module "step-functions" {
     "Load Data from S3 to PostgreSQL": {
       "Resource": "${module.lambda_functions.function_ids["LoadDataPostgre"]}",
       "Type": "Task",
+      "Next": "Monitor Input Data"
+    }
+    "Monitor Input Data": {
+      "Resource": "${module.lambda_functions.function_ids["ProblemType"]}",
+      "Type": "Choise",
+      "Choices": [
+         {
+           "Not": {
+             "Variable":"$.response",
+             "StringEquals": "Classification"
+           },
+           "Next": "Monitor Model Performance"
+        },
+         {
+          "Variable": "$.response",
+            "StringEquals": "Classification"
+        }, 
+        "Next': "Check Data Drift Result Status"
+      ]
+    },
+    "Check Data Drift Result Status": {
+      "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
+      "Type": "Choise",
+      "Choices": [
+        {
+           "Not": {
+             "Variable":"$.latest_result_status",
+             "StringEquals": "Completed"
+           },
+           "Next": "Stop Model Training"
+        },
+        {
+          "Variable": "$.latest_result_status",
+          "StringEquals": "Completed"
+        }, 
+        "Next': "Monitor Model Performance"
+      ]
+    },
+    "Stop Model Training": {
+      "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
+      "Type": "Task",
+      "Next": "Send a SNS Alert"
+    }
+    "Send a SNS Alert": {
+      "Resource": "${module.lambda_functions.function_ids["SNSAlert"]}",
+      "Type": "Task",
       "Next": "Monitor Model Performance"
     }
     "Monitor Model Performance": {
@@ -325,22 +372,32 @@ module "step-functions" {
     "Cloud Watch Alarm": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Task",
-      "Next": "${var.endpoint_or_batch_transform}"
+      "Next": "Model Retrain Rule"
     },
     "Model Retrain Rule" :{
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Choise",
       "Choices": [
         {
-          "Not": {
+          "And": [{
             "Variable": "$.MetricName",
             "${var.comparison_operator}": ${var.threshold}
           },
+          {
+            "Variable": "$.response"
+            "StringEquals": "True"
+          }
+          ],
           "Next": "Glue Data Transformation"
         },
-        "Default": "${var.endpoint_or_batch_transform}"
+        "Default": "Stop Model Training"
       ]
     },
+    "Stop Model Training": {
+      "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
+      "Type": "Task",
+      "Next": "${var.endpoint_or_batch_transform"
+    }
     ${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? local.endpoint : local.batch_transform}
   }
 }

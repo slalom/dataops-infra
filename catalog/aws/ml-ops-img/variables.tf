@@ -56,9 +56,42 @@ variable "score_local_path" {
 
 # State Machine input variables
 
+variable "train_key" {
+  description = << EOF 
+  url path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem. 
+  For example, input_data/train, or input_data/train.csv
+  EOF
+  type        = string
+}
+
+variable "test_key" {
+  description = << EOF 
+  url path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem. 
+  For example, input_data/test, or input_data/test.csv
+  EOF
+  type        = string
+}
+
+variable "validate_key" {
+  description = << EOF 
+  url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem. 
+  For example, input_data/validate, or input_data/validate.csv
+  EOF
+  type        = string
+}
+
 variable "job_name" {
   description = "Name prefix given to SageMaker model and training/tuning jobs (18 characters or less)."
   type        = string
+}
+
+variable "content_type" {
+  description = <<EOF
+Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is 
+'application/x-recordio'
+EOF
+  type        = string
+  default     = "csv"
 }
 
 variable "endpoint_name" {
@@ -289,7 +322,7 @@ variable "aws_credentials_file" {
 variable "alarm_name" {
   description = "Name of the cloudwatch alarm"
   type        = string
-  default     = "Model Performance Degradation and Retraining Alarm"
+  default     = "Model is Overfitting and Retraining Alarm"
 }
 
 variable "comparison_operator" {
@@ -358,7 +391,7 @@ variable "actions_enable" {
 variable "alarm_des" {
   description = "The description for the alarm."
   type        = string
-  default     = "Model performance degradation detected. Model retraining will be activated."
+  default     = "Model is overfitting. Model retraining will be activated."
 }
 
 variable "unit_name" {
@@ -377,6 +410,12 @@ variable "unit_name" {
   EOF
   type        = string
   default     = "Percent"
+}
+
+variable "enable_retrain" {
+  description = "Whether or not to retrain the model if detected overfitting."
+  type        = string
+  default     = "False"
 }
 
 # Data drift monitoring variables 
@@ -399,3 +438,15 @@ variable "frequency" {
   default     = "daily"
 }
 
+variable "problem_type" {
+  description = "The type of machine learning problem, including Classification, Image Recognition, and Regression"
+  type        = string
+  default     = "Classification"
+}
+
+#PostgreSQL variables 
+variable "dbname" {
+  description = "The name for the database in PostgreSQL"
+  type        = string
+  default     = "model_outputs"
+}

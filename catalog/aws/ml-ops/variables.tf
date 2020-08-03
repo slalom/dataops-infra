@@ -284,7 +284,7 @@ variable "aws_credentials_file" {
 variable "alarm_name" {
   description = "Name of the cloudwatch alarm"
   type        = string
-  default     = "Model Performance Degradation and Retraining Alarm"
+  default     = "Model Overfitting and Retraining Alarm"
 }
 
 variable "comparison_operator" {

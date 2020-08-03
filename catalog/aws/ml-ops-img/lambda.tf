@@ -52,6 +52,12 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    ProblemType = {
+      description = "Determine the type of machine learning problem."
+      handler     = "determine_prob_type.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
     UniqueJobName = {
       description = "Creates a unique identifier for the hyperparameter tuning job."
       handler     = "unique_job_name.lambda_handler"
@@ -67,6 +73,12 @@ module "lambda_functions" {
     RunGlueCrawler = {
       description = "Runs Glue Crawler to create table of batch transformation output for Athena."
       handler     = "run_glue_crawler.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    StopTraining = {
+      description = "Stop the model training."
+      handler     = "stop_training.lambda_handler"
       environment = {}
       secrets     = {}
     }

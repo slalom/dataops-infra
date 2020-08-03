@@ -5,7 +5,7 @@ This function will load model prediction outputs from S3 bucket to PostgreSQL da
 import boto3
 import psycopg2
 
-dbname = "ml_ops_img_reg_db"
+dbname = "${var.dbname}"
 user = "pgadmin"
 host = "${module.postgres.endpoint}"
 password = "1234asdf"
@@ -17,7 +17,6 @@ connection_string = "dbname='{}' user='{}' host='{}' password='{}'".format(
 S3_url = "s3://${aws_s3_bucket.data_store.id}/input_data/score/"
 
 client = boto3.client("s3")
-name = "img_prediction"
 
 
 def pg_load(connection, table_name, file_path):
@@ -45,5 +44,5 @@ def pg_load(connection, table_name, file_path):
 
 def handler(event, context):
     # Load csv to Postgres
-    pg_load(connection_string, name, S3_url)
+    pg_load(connection_string, dbname, S3_url)
 
