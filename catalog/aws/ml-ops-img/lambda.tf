@@ -76,6 +76,12 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    SNSAlert = {
+      description = "Send an SNS email to users notifying data drift being detected."
+      handler     = "sns_alert.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
     StopTraining = {
       description = "Stop the model training."
       handler     = "stop_training.lambda_handler"

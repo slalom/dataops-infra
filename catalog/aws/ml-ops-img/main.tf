@@ -73,12 +73,12 @@ EOF
     "Parameters": {
       "ModelName.$": "$.modelName",
       "TransformInput": {
-        "ContentType": "application/x-recordio",
+        "ContentType": "${var.content_type}",
         "CompressionType": "None",
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/score/"
+            "S3Uri": "s3://${aws_s3_bucket.data_store.id}" + "${var.test_key}"
             "S3DataDistributionType": "FullyReplicated",
           }
         }
@@ -125,9 +125,9 @@ module "ecr_image" {
   resource_tags        = var.resource_tags
   aws_credentials_file = var.aws_credentials_file
 
-  repository_name   = "img-recog-sample-image"
-  source_image_path = "source/containers/ml-ops-byo-resnet18/resnet18"
-  tag               = "latest"
+  repository_name   = "${var.repo_name}"
+  source_image_path = "${var.src_img_path}"
+  tag               = "${var.ecr_tag_name}"
 }
 
 module "postgres" {
@@ -136,11 +136,11 @@ module "postgres" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  postgres_version = "11"
+  postgres_version = "${var.pg_version}"
   database_name    = "${var.dbname}"
 
-  admin_username = "pgadmin"
-  admin_password = "1234asdf"
+  admin_username = "${var.pg_name}"
+  admin_password = "${var.pg_passwd}"
 
 }
 
@@ -396,8 +396,8 @@ module "step-functions" {
     "Stop Model Training": {
       "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
       "Type": "Task",
-      "Next": "${var.endpoint_or_batch_transform"
-    }
+      "Next": "${var.endpoint_or_batch_transform}"
+    },
     ${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? local.endpoint : local.batch_transform}
   }
 }

@@ -57,27 +57,21 @@ variable "score_local_path" {
 # State Machine input variables
 
 variable "train_key" {
-  description = << EOF 
-  url path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem. 
-  For example, input_data/train, or input_data/train.csv
-  EOF
+  description = "url path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
+  default     = "input_data/train"
 }
 
 variable "test_key" {
-  description = << EOF 
-  url path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem. 
-  For example, input_data/test, or input_data/test.csv
-  EOF
+  description = "url path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem." 
   type        = string
+  default     = "input_data/test"
 }
 
 variable "validate_key" {
-  description = << EOF 
-  url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem. 
-  For example, input_data/validate, or input_data/validate.csv
-  EOF
+  description = "url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
+  default     = "input_data/validate"
 }
 
 variable "job_name" {
@@ -207,7 +201,7 @@ EOF
 variable "parameter_ranges" {
   description = <<EOF
 Tuning ranges for hyperparameters.
-Expects a map of one or both "ContinuousParameterRanges" and "CategoricalParameterRanges".
+Expects a map of one or all "ContinuousParameterRanges", "IntegerParameterRanges", and "CategoricalParameterRanges".
 Each item in the map should point to a list of object with the following keys:
  - Name        - name of the variable to be tuned
  - MinValue    - min value of the range
@@ -215,40 +209,6 @@ Each item in the map should point to a list of object with the following keys:
  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
  - Values      - a list of strings that apply to the categorical paramters
 EOF
-
-  default = {
-    ContinuousParameterRanges = [
-      {
-        Name        = "learning_rate",
-        MinValue    = 0.001,
-        MaxValue    = 0.2,
-        ScalingType = "Auto"
-      },
-      {
-        Name        = "epochs",
-        MinValue    = 5
-        MaxValue    = 40
-        ScalingType = "Auto"
-      },
-      {
-        Name        = "batch-size",
-        MinValue    = 5
-        MaxValue    = 40
-        ScalingType = "Auto"
-      },
-
-    ],
-    CategoricalParameterRanges = [
-      {
-        Name   = "activation",
-        Values = ["sigmoid", "softmax", "relu", "tanh"]
-      },
-      {
-        Name   = "loss_fn",
-        Values = ["categorical_crossentropy", "binary_crossentropy", "categorical_hinge", "hinge"]
-      }
-    ]
-  }
 }
 
 variable "built_in_model_image" {
@@ -295,6 +255,22 @@ variable "byo_model_image_source_path" {
 
 variable "byo_model_image_tag" {
   description = "Tag for bring your own model image."
+  type        = string
+  default     = "latest"
+}
+
+variable "repo_name" {
+  description = "Name for your model image repository."
+  type        = string
+}
+
+variable "src_img_path" {
+  description = "Path for source model image."
+  type        = string
+}
+
+variable "ecr_tag_name" {
+  description = "Tag name for the ecr image."
   type        = string
   default     = "latest"
 }
@@ -449,4 +425,22 @@ variable "dbname" {
   description = "The name for the database in PostgreSQL"
   type        = string
   default     = "model_outputs"
+}
+
+variable "pg_name" {
+  description = "Define admin user name for PostgreSQL."
+  type        = string
+  default     = "pgadmin"
+}
+
+variable "pg_passwd" {
+  description = "Define admin user password for PostgreSQL."
+  type        = string
+  default     = "1234asdf"
+}
+
+variable "pg_version" {
+  description = "Define the version of PostgreSQL."
+  type        = string
+  default     = "11"
 }
