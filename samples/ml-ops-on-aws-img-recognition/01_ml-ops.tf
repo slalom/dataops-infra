@@ -10,7 +10,12 @@ module "ml-ops-img" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  job_name = "breast-cancer-detection"
+  job_name              = "breast-cancer-detection"
+  problem_type          = "Image Recognition"
+  content_type          = "application/x-recordio"
+
+  repo_name             = "img-recog-sample-image"
+  src_img_path          = "source/containers/ml-ops-byo-resnet18/resnet18"
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
@@ -24,45 +29,40 @@ module "ml-ops-img" {
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
 
-  /* OPTIONAL - CHANGE PATHS BELOW:
+ parameter_ranges = {
+    ContinuousParameterRanges = [
+      {
+        Name        = "learning_rate",
+        MinValue    = 0.001,
+        MaxValue    = 0.2,
+        ScalingType = "Auto"
+      },
+      {
+        Name        = "epochs",
+        MinValue    = 5
+        MaxValue    = 40
+        ScalingType = "Auto"
+      },
+      {
+        Name        = "batch-size",
+        MinValue    = 5
+        MaxValue    = 40
+        ScalingType = "Auto"
+      },
 
-  # set score_local_path to 'null' if running endpoint inference
-
-  train_local_path  = "source/data/train.csv"
-  score_local_path  = "source/score/score.csv"
-
-  script_path = "source/scripts/transform.py"
-  whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
-
-
-  /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
-
-  # specifying built_in_model_image means that 'bring-your-own' model is not required and the ECR image not created
-
-  built_in_model_image        = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
-  byo_model_image_source_path = "source/containers/ml-ops-byo-xgboost"
-  byo_model_image_name        = "byo-xgboost"
-  byo_model_image_tag         = "latest"
-
-  glue_job_name       = "data-transformation"
-  glue_job_spark_flag = false
-
-
-  OPTIONAL - IF USING BATCH TRANSFORMATION INFERENCE:
-
-  batch_transform_instance_type  = "ml.m4.xlarge"
-  batch_transform_instance_count = 1
-
-
-  OPTIONAL - IF USING ENDPOINT INFERENCE:
-
-  endpoint_instance_Type  = "ml.m4.xlarge"
-  endpoint_instance_count = 1
-  endpoint_name           = "attrition-endpoint"
-
-  */
+    ],
+    CategoricalParameterRanges = [
+      {
+        Name   = "activation",
+        Values = ["sigmoid", "softmax", "relu", "tanh"]
+      },
+      {
+        Name   = "loss_fn",
+        Values = ["categorical_crossentropy", "binary_crossentropy", "categorical_hinge", "hinge"]
+      }
+    ]
+  }
 }
-
 output "summary" {
   value = module.ml-ops-img.summary
 }
