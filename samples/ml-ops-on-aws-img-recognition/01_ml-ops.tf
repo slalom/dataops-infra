@@ -15,7 +15,7 @@ module "ml-ops-img" {
   content_type          = "application/x-recordio"
 
   repo_name             = "img-recog-sample-image"
-  src_img_path          = "source/containers/ml-ops-byo-resnet18/resnet18"
+  src_img_path          = "source/containers/ml-ops-byo-resnet18/DockerScripts"
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
@@ -30,7 +30,7 @@ module "ml-ops-img" {
   training_job_storage_in_gb  = 30
 
   enable_pred_db = "True"
-  
+
   parameter_ranges = {
     ContinuousParameterRanges = [
       {
@@ -66,7 +66,7 @@ module "ml-ops-img" {
   }
 }
 output "summary" {
-  value = module.ml-ops-img.summary
+  value = module.ml-ops.summary
 }
 
 

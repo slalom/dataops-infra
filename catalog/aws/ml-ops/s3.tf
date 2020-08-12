@@ -66,23 +66,22 @@ resource "aws_s3_bucket" "model_store" {
 }
 
 resource "aws_s3_bucket_object" "train_data" {
-  bucket = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-  key    = "input_data/train/train.csv"
-  source = var.train_local_path
-
-  etag = filemd5(
-    var.train_local_path,
+  bucket       = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
+  key          = "input_data/train"
+  source       = var.train_local_path
+  content_type = "application/x-recordio"
+  for_each = fileset(
+    var.train_local_path, "input_data/train/*.png"
   )
 }
 
 resource "aws_s3_bucket_object" "score_data" {
-  count  = var.score_local_path != null ? 1 : 0
-  bucket = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
-  key    = "input_data/score/score.csv"
-  source = var.score_local_path
-
-  etag = filemd5(
-    var.score_local_path,
+  bucket       = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
+  key          = "input_data/score"
+  source       = var.score_local_path
+  content_type = "application/x-recordio"
+  for_each = fileset(
+    var.score_local_path, "input_data/score/*.png"
   )
 }
 

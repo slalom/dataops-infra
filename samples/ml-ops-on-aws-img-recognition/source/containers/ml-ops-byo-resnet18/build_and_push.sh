@@ -13,9 +13,9 @@ then
     exit 1
 fi
 
-chmod +x resnet18/train
-chmod +x resnet18/s3_utils
-chmod +x resnet18/serve
+chmod +x DockerScripts/train
+chmod +x DockerScripts/s3_utils
+chmod +x DockerScripts/serve
 
 # Get the account number associated with the current IAM credentials
 account=$(aws sts get-caller-identity --query Account --output text)

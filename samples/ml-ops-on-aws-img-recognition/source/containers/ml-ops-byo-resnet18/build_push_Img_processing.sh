@@ -13,15 +13,15 @@ then
     exit 1
 fi
 
-chmod +x script/background_removal
-chmod +x script/connectedlabels_functions
-chmod +x script/linepartitioning_functions
-chmod +x script/machinechmod +x script/mbkm_clusters
-chmod +x script/preprocessing_images_functions
-chmod +x script/result_analysis
-chmod +x script/s3_utils
-chmod +x script/sitk_registration_functions
-chmod +x script/text_removal_functions
+chmod +x LambdaScripts/background_removal
+chmod +x LambdaScripts/connectedlabels_functions
+chmod +x LambdaScripts/linepartitioning_functions
+chmod +x LambdaScripts/machinechmod +x script/mbkm_clusters
+chmod +x LambdaScripts/preprocessing_images_functions
+chmod +x LambdaScripts/result_analysis
+chmod +x LambdaScripts/s3_utils
+chmod +x LambdaScripts/sitk_registration_functions
+chmod +x LambdaScripts/text_removal_functions
 
 # Get the account number associated with the current IAM credentials
 account=$(aws sts get-caller-identity --query Account --output text)

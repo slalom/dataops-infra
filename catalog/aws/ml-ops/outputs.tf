@@ -2,12 +2,12 @@ data "null_data_source" "endpoint_or_batch_output" {
   inputs = {
     # State machine input for creating or updating an inference endpoint
     endpoint = <<EOF
-1) aws s3 cp ${var.train_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/train/train.csv
+1) aws s3 cp ${var.train_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/input_data/train
 EOF
     # State machine input for batch transformation
     batch_transform = <<EOF
-1) aws s3 cp ${var.score_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/score/score.csv
-    2) aws s3 cp ${var.train_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/data/train/train.csv
+1) aws s3 cp ${var.score_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/input_data/score
+    2) aws s3 cp ${var.train_local_path} s3://${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}/input_data/train
 EOF
   }
 }
@@ -25,11 +25,8 @@ S3 summary:
 
   Feature Store: ${length(aws_s3_bucket.feature_store) > 0 ? aws_s3_bucket.feature_store[0].id : ""}
   Source Repository: ${aws_s3_bucket.source_repository.id}
-  Extracts Store: ${aws_s3_bucket.extracts_store.id}
+  Data Store: ${aws_s3_bucket.data_store.id}
   Model Store: ${aws_s3_bucket.model_store.id}
-  Metadata Store: ${aws_s3_bucket.metadata_store.id}
-  Output Store: ${aws_s3_bucket.output_store.id}
-  Monitor Output Store: ${aws_s3_bucket.monitor_output_store.id}
 
 Commands:
 
