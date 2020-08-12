@@ -3,10 +3,10 @@
 ################################
 
 locals {
-  root                 = "../.."                       # Path to root of repo
-  yaml_config_path     = "../infra-config.yml"         # Required settings
-  secrets_folder       = "../.secrets"                 # Default secrets location
-  aws_credentials_file = "../.secrets/aws-credentials" # AWS Credentials
+  root                 = "../.."                          # Path to root of repo
+  yaml_config_path     = "../infra-config.yml"            # Required settings
+  secrets_folder       = "../../.secrets"                 # Default secrets location
+  aws_credentials_file = "../../.secrets/aws-credentials" # AWS Credentials
 }
 
 ############################################
