@@ -48,9 +48,9 @@ variable "identifier" {
   default     = "rds-postgres-db"
 }
 variable "instance_class" {
-  description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
+  description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
-  default     = "db.t2.micro"
+  default     = "db.t3.micro"
 }
 variable "jdbc_port" {
   description = "Optional. Overrides the default JDBC port for incoming SQL connections."

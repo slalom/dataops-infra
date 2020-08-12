@@ -34,6 +34,12 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+    LoadPredDataDB = {
+      description = "Load prediction outputs csv file to a selected database."
+      handler     = "load_predoutput_db.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
     DataDriftMonitor = {
       description = "Monitor data drift on input data."
       handler     = "data_drift_monitor.lambda_handler"
@@ -43,6 +49,12 @@ module "lambda_functions" {
     ModelPerformanceMonitor = {
       description = "Monitor model performance for any degradation issues."
       handler     = "model_performance_monitor.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ProblemType = {
+      description = "Determine the type of machine learning problem."
+      handler     = "determine_prob_type.lambda_handler"
       environment = {}
       secrets     = {}
     }
@@ -65,8 +77,14 @@ module "lambda_functions" {
       secrets     = {}
     }
     SNSAlert = {
-      description = "Send an email alert to users when the data drift monitor function detects a violation."
+      description = "Send an SNS email to users notifying data drift being detected."
       handler     = "sns_alert.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    StopTraining = {
+      description = "Stop the model training."
+      handler     = "stop_training.lambda_handler"
       environment = {}
       secrets     = {}
     }
@@ -119,6 +137,7 @@ resource "aws_iam_policy" "lambda_policy" {
                 "sagemaker:GetSearchSuggestions",
                 "sagemaker:Search",
                 "s3:*",
+                "rds-db:connect",
                 "glue:StartCrawler"
             ],
             "Resource": "*"

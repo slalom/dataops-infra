@@ -1,7 +1,5 @@
 """ This is a function for enabling data capture.
-
 Checks these 2 things of the input data: 
-
     - features (aka input schema)
     - descriptive statistics about input features 
 """

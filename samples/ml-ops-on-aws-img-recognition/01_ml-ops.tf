@@ -29,7 +29,9 @@ module "ml-ops-img" {
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
 
- parameter_ranges = {
+  enable_pred_db = "True"
+  
+  parameter_ranges = {
     ContinuousParameterRanges = [
       {
         Name        = "learning_rate",

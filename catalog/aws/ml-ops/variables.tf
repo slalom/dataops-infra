@@ -45,20 +45,47 @@ variable "whl_path" {
 variable "train_local_path" {
   description = "Local path for training data."
   type        = string
-  default     = "source/data/train.csv"
+  default     = "source/data/train/"
 }
 
 variable "score_local_path" {
   description = "Local path for scoring data. Set to null for endpoint inference"
   type        = string
-  default     = "source/data/score.csv"
+  default     = "source/data/score"
 }
 
 # State Machine input variables
 
+variable "train_key" {
+  description = "url path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  type        = string
+  default     = "input_data/train"
+}
+
+variable "test_key" {
+  description = "url path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem." 
+  type        = string
+  default     = "input_data/test"
+}
+
+variable "validate_key" {
+  description = "url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  type        = string
+  default     = "input_data/validate"
+}
+
 variable "job_name" {
   description = "Name prefix given to SageMaker model and training/tuning jobs (18 characters or less)."
   type        = string
+}
+
+variable "content_type" {
+  description = <<EOF
+Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is 
+'application/x-recordio'
+EOF
+  type        = string
+  default     = "csv"
 }
 
 variable "endpoint_name" {
@@ -168,68 +195,20 @@ E.g. `{ "kfold_splits" = "5" }`
 EOF
   type        = map
   default = {
-    kfold_splits = "5"
   }
 }
 
 variable "parameter_ranges" {
   description = <<EOF
 Tuning ranges for hyperparameters.
-Expects a map of one or both "ContinuousParameterRanges" and "IntegerParameterRanges".
+Expects a map of one or all "ContinuousParameterRanges", "IntegerParameterRanges", and "CategoricalParameterRanges".
 Each item in the map should point to a list of object with the following keys:
  - Name        - name of the variable to be tuned
  - MinValue    - min value of the range
  - MaxValue    - max value of the range
  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
+ - Values      - a list of strings that apply to the categorical paramters
 EOF
-  type = map(list(object({
-    Name        = string
-    MinValue    = string
-    MaxValue    = string
-    ScalingType = string
-  })))
-  default = {
-    ContinuousParameterRanges = [
-      {
-        Name        = "gamma",
-        MinValue    = "0",
-        MaxValue    = "10",
-        ScalingType = "Auto"
-      },
-      {
-        Name        = "min_child_weight",
-        MinValue    = "1",
-        MaxValue    = "20",
-        ScalingType = "Auto"
-      },
-      {
-        Name        = "subsample",
-        MinValue    = "0.1",
-        MaxValue    = "0.5",
-        ScalingType = "Auto"
-      },
-      {
-        Name        = "max_delta_step",
-        MinValue    = "0",
-        MaxValue    = "1",
-        ScalingType = "Auto"
-      },
-      {
-        Name        = "scale_pos_weight",
-        MinValue    = "1",
-        MaxValue    = "10",
-        ScalingType = "Auto"
-      }
-    ],
-    IntegerParameterRanges = [
-      {
-        Name        = "max_depth",
-        MinValue    = "1",
-        MaxValue    = "10",
-        ScalingType = "Auto"
-      }
-    ]
-  }
 }
 
 variable "built_in_model_image" {
@@ -241,22 +220,57 @@ EOF
   default     = null
 }
 
+# Model Def variables 
+variable "width" {
+  description = "The width of image file"
+  type        = number
+  default     = 800
+}
+
+variable "height" {
+  description = "The height of image file"
+  type        = number
+  default     = 1200
+}
+
+variable "channels" {
+  description = "The total number of channels of image file"
+  type        = number
+  default     = 3
+}
+
 # ECR input variables
 
 variable "byo_model_image_name" {
   description = "Image and repo name for bring your own model."
   type        = string
-  default     = "byo-xgboost"
+  default     = "byo-resnet18"
 }
 
 variable "byo_model_image_source_path" {
   description = "Local source path for bring your own model docker image."
   type        = string
-  default     = "source/containers/ml-ops-byo-xgboost"
+  default     = "source/containers/ml-ops-byo-resnet18"
 }
 
 variable "byo_model_image_tag" {
   description = "Tag for bring your own model image."
+  type        = string
+  default     = "latest"
+}
+
+variable "repo_name" {
+  description = "Name for your model image repository."
+  type        = string
+}
+
+variable "src_img_path" {
+  description = "Path for source model image."
+  type        = string
+}
+
+variable "ecr_tag_name" {
+  description = "Tag name for the ecr image."
   type        = string
   default     = "latest"
 }
@@ -284,7 +298,7 @@ variable "aws_credentials_file" {
 variable "alarm_name" {
   description = "Name of the cloudwatch alarm"
   type        = string
-  default     = "Model Overfitting and Retraining Alarm"
+  default     = "Model is Overfitting and Retraining Alarm"
 }
 
 variable "comparison_operator" {
@@ -374,6 +388,12 @@ variable "unit_name" {
   default     = "Percent"
 }
 
+variable "enable_retrain" {
+  description = "Whether or not to retrain the model if detected overfitting."
+  type        = string
+  default     = "False"
+}
+
 # Data drift monitoring variables 
 
 variable "sample_percent" {
@@ -394,3 +414,39 @@ variable "frequency" {
   default     = "daily"
 }
 
+variable "problem_type" {
+  description = "The type of machine learning problem, including Classification, Image Recognition, and Regression"
+  type        = string
+  default     = "Classification"
+}
+
+#Load pred outputs to selected database variables 
+variable "dbname" {
+  description = "The name for the database in PostgreSQL"
+  type        = string
+  default     = "model_outputs"
+}
+
+variable "db_admin_name" {
+  description = "Define admin user name for PostgreSQL."
+  type        = string
+  default     = "pgadmin"
+}
+
+variable "db_passwd" {
+  description = "Define admin user password for PostgreSQL."
+  type        = string
+  default     = "1234asdf"
+}
+
+variable "db_version" {
+  description = "Define the version of the selected database platform."
+  type        = string
+  default     = "11"
+}
+
+variable "enable_pred_db" {
+  description = "Enable loading prediction outputs from S3 to the selected database."
+  type        = string
+  default     = "False"
+}

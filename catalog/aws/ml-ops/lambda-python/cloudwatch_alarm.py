@@ -4,11 +4,14 @@ import boto3
 
 model_name = "${var.job_name}"
 client = boto3.client("cloudwatch")
+retraining = "${var.enable_retrain"
 
 
 def lambda_handler(event, context):
 
-    client.put_metric_alarm(
+    response = retraining
+
+    alarm = client.put_metric_alarm(
         AlarmName="${var.alarm_name}",
         ComparisonOperator="${var.comparison_operator}",
         EvaluationPeriods="${var.eval_period}",
@@ -23,3 +26,5 @@ def lambda_handler(event, context):
         AlarmDescription="${var.alarm_des}",
         Unit="${var.unit_name}",
     )
+
+    return {response, alarm}

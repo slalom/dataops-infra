@@ -73,12 +73,13 @@ EOF
     "Parameters": {
       "ModelName.$": "$.modelName",
       "TransformInput": {
+        "ContentType": "${var.content_type}",
         "CompressionType": "None",
-        "ContentType": "text/csv",
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/score/score.csv"
+            "S3Uri": "s3://${aws_s3_bucket.data_store.id}" + "${var.test_key}"
+            "S3DataDistributionType": "FullyReplicated",
           }
         }
       },
@@ -86,7 +87,7 @@ EOF
         "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
       },
       "TransformResources": {
-        "InstanceCount": ${var.batch_transform_instance_count},
+        "InstanceCount": "${var.batch_transform_instance_count}",
         "InstanceType": "${var.batch_transform_instance_type}"
       },
       "TransformJobName.$": "$.modelName"
@@ -117,8 +118,36 @@ EOF
 EOF
 }
 
+module "ecr_image" {
+  source               = "../../../components/aws/ecr-image"
+  name_prefix          = var.name_prefix
+  environment          = var.environment
+  resource_tags        = var.resource_tags
+  aws_credentials_file = var.aws_credentials_file
+
+  repository_name   = "${var.repo_name}"
+  source_image_path = "${var.src_img_path}"
+  tag               = "${var.ecr_tag_name}"
+}
+
+module "postgres" {
+  source        = "../../../catalog/aws/postgres"
+  name_prefix   = var.name_prefix
+  environment   = var.environment
+  resource_tags = var.resource_tags
+
+  postgres_version = "${var.pg_version}"
+  database_name    = "${var.dbname}"
+
+  admin_username = "${var.db_admin_name}"
+  admin_password = "${var.db_passwd}"
+
+  storage_size_in_gb = "${var.storage_size_in_gb}"
+  instance_class = "${var.instance_class}"
+}
+
 module "step-functions" {
-  #source       = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
+  #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
   source        = "../../../components/aws/step-functions"
   name_prefix   = var.name_prefix
   environment   = var.environment
@@ -144,8 +173,9 @@ module "step-functions" {
           "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl",
           "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
           "--S3_DEST": "${aws_s3_bucket.data_store.id}",
-          "--TRAIN_KEY": "input_data/train/train.csv",
-          "--SCORE_KEY": "input_data/score/score.csv",
+          "--TRAIN_KEY": "${var.train_key}",
+          "--VALIDATION_KEY": "${var.validate_key}",
+          "--SCORE_KEY": "${var.test_key}",
           "--INFERENCE_TYPE": "${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? "endpoint" : "batch"}"
         }
       },
@@ -200,15 +230,28 @@ module "step-functions" {
           "RoleArn": "${module.step-functions.iam_role_arn}",
           "InputDataConfig": [
             {
+              "ChannelName": "train",
               "DataSource": {
                 "S3DataSource": {
-                  "S3DataDistributionType": "FullyReplicated",
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/input_data/train/train.csv"
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/"+ "${var.train_key}"
+                  "S3DataDistributionType": "FullyReplicated",
                 }
-              },
-              "ChannelName": "train",
-              "ContentType": "csv"
+              }, 
+              "ContentType": "${var.content_type}",
+              "CompressionType": "None"
+            },
+            {
+              "ChannelName": "validation",
+              "DataSource": {
+                "S3DataSource": {
+                  "S3DataType": "S3Prefix",
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}" + "${var.validate_key}"
+                  "S3DataDistributionType": "FullyReplicated",
+                },
+                "ContentType": "${var.content_type}",
+                "CompressionType": "None"
+            },        
             }
           ],
           "StaticHyperParameters": ${jsonencode(var.static_hyperparameters)}
@@ -256,12 +299,30 @@ module "step-functions" {
       "ResultPath": "$.modelSaveResult",
       "Resource": "arn:aws:states:::sagemaker:createModel",
       "Type": "Task",
-      "Next": "Monitor Input Data"
+      "Next": "Load Pred Outputs from S3 to Database"
     },
-    "Monitor Input Data": {
-      "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
+    "Load Pred Outputs from S3 to Database": {
+      "Resource": "${module.lambda_functions.function_ids["LoadPredDataDB"]}",
       "Type": "Task",
-      "Next": "Check Data Drift Result Status"
+      "Next": "Monitor Input Data"
+    }
+    "Monitor Input Data": {
+      "Resource": "${module.lambda_functions.function_ids["ProblemType"]}",
+      "Type": "Choise",
+      "Choices": [
+         {
+           "Not": {
+             "Variable":"$.response",
+             "StringEquals": "Classification"
+           },
+           "Next": "Monitor Model Performance"
+        },
+         {
+          "Variable": "$.response",
+            "StringEquals": "Classification"
+        }, 
+        "Next': "Check Data Drift Result Status"
+      ]
     },
     "Check Data Drift Result Status": {
       "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
@@ -272,7 +333,7 @@ module "step-functions" {
              "Variable":"$.latest_result_status",
              "StringEquals": "Completed"
            },
-           "Next": "Send a SNS Alert"
+           "Next": "Stop Model Training"
         },
         {
           "Variable": "$.latest_result_status",
@@ -281,6 +342,11 @@ module "step-functions" {
         "Next': "Monitor Model Performance"
       ]
     },
+    "Stop Model Training": {
+      "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
+      "Type": "Task",
+      "Next": "Send a SNS Alert"
+    }
     "Send a SNS Alert": {
       "Resource": "${module.lambda_functions.function_ids["SNSAlert"]}",
       "Type": "Task",
@@ -291,7 +357,7 @@ module "step-functions" {
       "Type": "Task",
       "Next": "Model Monitor Rule"
     },
-   "Model Monitor Rule": {
+    "Model Monitor Rule": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Choise",
       "Choices": [
@@ -308,25 +374,36 @@ module "step-functions" {
     "Cloud Watch Alarm": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Task",
-      "Next": "${var.endpoint_or_batch_transform}"
+      "Next": "Model Retrain Rule"
     },
     "Model Retrain Rule" :{
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Choise",
       "Choices": [
         {
-          "Not": {
+          "And": [{
             "Variable": "$.MetricName",
             "${var.comparison_operator}": ${var.threshold}
           },
+          {
+            "Variable": "$.response"
+            "StringEquals": "True"
+          }
+          ],
           "Next": "Glue Data Transformation"
         },
-        "Default": "${var.endpoint_or_batch_transform}"
+        "Default": "Stop Model Training"
       ]
+    },
+    "Stop Model Training": {
+      "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
+      "Type": "Task",
+      "Next": "${var.endpoint_or_batch_transform}"
     },
     ${var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? local.endpoint : local.batch_transform}
   }
 }
 EOF
 }
+
 
