@@ -244,7 +244,7 @@ variable "channels" {
 variable "byo_model_image_name" {
   description = "Image and repo name for bring your own model."
   type        = string
-  default     = "byo-resnet18"
+  default     = "byo-custom"
 }
 
 variable "byo_model_image_source_path" {
