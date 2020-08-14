@@ -101,6 +101,11 @@ variable "tuning_objective" {
   description = "Hyperparameter tuning objective ('Minimize' or 'Maximize')."
   type        = string
   default     = "Maximize"
+
+  validation {
+    condition = substr(var.tuning_objective, 0, 1) == "M"
+    error_message = "The tuning_objective value must be a valid value of either \"Minimize\" or \"Maximize\", starting with capatalized \"M\"."
+  }
 }
 
 variable "tuning_metric" {
@@ -250,7 +255,7 @@ variable "byo_model_image_name" {
 variable "byo_model_image_source_path" {
   description = "Local source path for bring your own model docker image."
   type        = string
-  default     = "source/containers/ml-ops-byo-resnet18"
+  default     = "source/containers/ml-ops-byo-custom"
 }
 
 variable "byo_model_image_tag" {
@@ -316,14 +321,16 @@ variable "eval_period" {
   The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points 
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
   An alarm's total current evaluation period can be no longer than one day, so this number multiplied by Period cannot be more than 86,400 seconds.
+  This parameter works in combination with datapoints_to_evaluate for specifying how frequently the model performance will be monitored. 
   EOF
   type        = number
   default     = 10
 }
 
-variable "datapoints_to_alarm" {
+variable "datapoints_to_evaluate" {
   description = <<EOF
   The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M.
+  This parameter works in combination with evaluation_period for specifying how frequently the model performance will be monitored. 
   EOF
   type        = number
   default     = 10
@@ -340,7 +347,7 @@ variable "metric_name" {
   default     = "Training Accuracy"
 }
 
-variable "period" {
+variable "alarm_metric_evaluation_period" {
   description = "The granularity, in seconds, of the returned data points"
   type        = number
   default     = 30
