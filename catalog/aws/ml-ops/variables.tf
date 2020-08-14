@@ -57,19 +57,19 @@ variable "score_local_path" {
 # State Machine input variables
 
 variable "train_key" {
-  description = "url path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "URL path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
   default     = "input_data/train/train.csv"
 }
 
 variable "test_key" {
-  description = "url path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem." 
+  description = "URL path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem." 
   type        = string
   default     = "input_data/test/test.csv"
 }
 
 variable "validate_key" {
-  description = "url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "URL path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
   default     = "input_data/validate/validate.csv"
 }
@@ -249,7 +249,7 @@ variable "channels" {
 variable "byo_model_image_name" {
   description = "Image and repo name for bring your own model."
   type        = string
-  default     = "byo-resnet18"
+  default     = "byo-custom"
 }
 
 variable "byo_model_image_source_path" {
@@ -269,7 +269,7 @@ variable "repo_name" {
   type        = string
 }
 
-variable "src_img_path" {
+variable "source_image_path" {
   description = "Path for source model image."
   type        = string
 }
@@ -316,7 +316,7 @@ variable "comparison_operator" {
   default     = "LessThanOrEqualToThreshold"
 }
 
-variable "eval_period" {
+variable "evaluation_period" {
   description = <<EOF
   The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points 
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
