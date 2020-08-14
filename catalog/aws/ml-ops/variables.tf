@@ -69,7 +69,7 @@ variable "test_key" {
 }
 
 variable "validate_key" {
-  description = "url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "URL path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
   default     = "input_data/validate"
 }
