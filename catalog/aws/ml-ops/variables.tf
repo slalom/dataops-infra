@@ -311,7 +311,7 @@ variable "comparison_operator" {
   default     = "LessThanOrEqualToThreshold"
 }
 
-variable "eval_period" {
+variable "evaluation_period" {
   description = <<EOF
   The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points 
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
