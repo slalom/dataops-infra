@@ -264,7 +264,7 @@ variable "repo_name" {
   type        = string
 }
 
-variable "src_img_path" {
+variable "source_image_path" {
   description = "Path for source model image."
   type        = string
 }
