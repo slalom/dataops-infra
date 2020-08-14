@@ -45,13 +45,13 @@ variable "whl_path" {
 variable "train_local_path" {
   description = "Local path for training data."
   type        = string
-  default     = "source/data/train/"
+  default     = "source/data/train/train.csv"
 }
 
 variable "score_local_path" {
   description = "Local path for scoring data. Set to null for endpoint inference"
   type        = string
-  default     = "source/data/score"
+  default     = "source/data/score/score.csv"
 }
 
 # State Machine input variables
@@ -59,19 +59,19 @@ variable "score_local_path" {
 variable "train_key" {
   description = "url path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
-  default     = "input_data/train"
+  default     = "input_data/train/train.csv"
 }
 
 variable "test_key" {
   description = "url path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem." 
   type        = string
-  default     = "input_data/test"
+  default     = "input_data/test/test.csv"
 }
 
 variable "validate_key" {
   description = "url path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
-  default     = "input_data/validate"
+  default     = "input_data/validate/validate.csv"
 }
 
 variable "job_name" {
@@ -418,6 +418,12 @@ variable "problem_type" {
   description = "The type of machine learning problem, including Classification, Image Recognition, and Regression"
   type        = string
   default     = "Classification"
+}
+
+variable "data_mon_name" {
+  description = "The name for the scheduled data drift monitoring job"
+  type        = string
+  default     = "data-drift-monitor-schedule"
 }
 
 #Load pred outputs to selected database variables 

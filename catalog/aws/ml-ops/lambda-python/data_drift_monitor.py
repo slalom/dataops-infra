@@ -28,7 +28,7 @@ s3_client = boto3.Session().client("s3")
 role = "${module.step-functions.iam_role_arn}"
 
 # give a name to the data drift monitor job
-mon_schedule_name = "data-drift-monitor-schedule"
+mon_schedule_name = "${var.data_mon_name}"
 endpoint_name = "${var.endpoint_name}"
 frequency = "${var.frequency}"
 
@@ -38,7 +38,7 @@ s3_capture_upload_path = (
 )
 
 # define the url path for train data which is the baseline data
-baseline_data_uri = "s3://${aws_s3_bucket.data_store.id}/input_data/train"
+baseline_data_uri = "s3://${aws_s3_bucket.data_store.id}/" + "${var.train_key}"
 
 baseline_results_uri = (
     "s3://${aws_s3_bucket.data_store.id}/monitor_output/baseline-results"

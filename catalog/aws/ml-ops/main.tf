@@ -125,9 +125,9 @@ module "ecr_image" {
   resource_tags        = var.resource_tags
   aws_credentials_file = var.aws_credentials_file
 
-  repository_name   = "${var.repo_name}"
-  source_image_path = "${var.src_img_path}"
-  tag               = "${var.ecr_tag_name}"
+  repository_name   = var.repo_name
+  source_image_path = var.src_img_path
+  tag               = var.ecr_tag_name
 }
 
 module "postgres" {
@@ -136,14 +136,14 @@ module "postgres" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  postgres_version = "${var.pg_version}"
-  database_name    = "${var.dbname}"
+  postgres_version = var.pg_version
+  database_name    = var.dbname
 
-  admin_username = "${var.db_admin_name}"
-  admin_password = "${var.db_passwd}"
+  admin_username = var.db_admin_name
+  admin_password = var.db_passwd
 
-  storage_size_in_gb = "${var.storage_size_in_gb}"
-  instance_class = "${var.instance_class}"
+  storage_size_in_gb = var.storage_size_in_gb
+  instance_class = var.instance_class
 }
 
 module "step-functions" {

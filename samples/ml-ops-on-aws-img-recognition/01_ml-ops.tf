@@ -29,7 +29,23 @@ module "ml-ops-img" {
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
 
+  train_key = "input_data/train/"
+  test_key = "input_data/test/"
+  validate_key = "input_data/validate/"
+
   enable_pred_db = "True"
+
+  # OPTIONAL
+  # All following variables have default values. Change as needed. 
+
+  # Set the storage size of the selected database. Check for cost. 
+  # storage_size_in_gb = "10" 
+
+  # Set the instance type of the selected database. Check for cost. 
+  # instance_class = "db.t3.micro"
+  
+  # Set the name for data drift monitoring job 
+  # data_mon_name = "data-drift-monitor-schedule"
 
   parameter_ranges = {
     ContinuousParameterRanges = [

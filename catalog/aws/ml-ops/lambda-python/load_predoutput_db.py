@@ -18,7 +18,7 @@ connection_string = (
     f"dbname='{dbname}' user='{user}' host='{host}' password='{password}'"
 )
 
-S3_url = "s3://${aws_s3_bucket.data_store.id}/input_data/score/"
+S3_url = "s3://${aws_s3_bucket.data_store.id}/" + "${var.test_key}"
 
 client = boto3.client("s3")
 
