@@ -10,6 +10,12 @@ module "ml-ops" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
   job_name = "employee-attrition"
+  problem_type          = "Classification"
+  content_type          = "csv"
+
+  repo_name             = "employee-attrition"
+  src_img_path          = "source/containers/ml-ops-byo-xgboost"
+
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
@@ -22,6 +28,12 @@ module "ml-ops" {
   training_job_instance_type  = "ml.m4.xlarge"
   training_job_instance_count = 1
   training_job_storage_in_gb  = 30
+
+  train_key = "input_data/train/train.csv"
+  test_key = "input_data/test/score.csv"
+  #validate_key = "input_data/validate/"
+
+  enable_pred_db = "True"
 
   static_hyperparameters = {
     kfold_splits = "5"
