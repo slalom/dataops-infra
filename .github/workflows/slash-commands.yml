@@ -27,9 +27,11 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Install GitHub CLI
         run: |
-          URL=https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_arm64.deb
-          TEMP_DEB="$(mktemp)"
+          URL=https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_amd64.deb
+          TEMP_DIR="$(pwd)"
+          TEMP_DEB="$(pwd)/gh_0.11.1_linux_amd64.deb"
           wget -O "$TEMP_DEB" "$URL"
+          ls -la $TEMP_DIR
           sudo apt install "$TEMP_DEB"
           rm -f "$TEMP_DEB"
       - name: Clone git repo
