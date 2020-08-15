@@ -28,7 +28,7 @@ jobs:
       - name: Install GitHub CLI
         run: |
           wget https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_arm64.deb
-          apt-get install gh_0.11.1_linux_arm64.deb
+          sudo apt-get install gh_0.11.1_linux_arm64.deb
       - name: Clone git repo
         uses: actions/checkout@v2
         # with:
