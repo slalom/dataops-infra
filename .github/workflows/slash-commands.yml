@@ -30,7 +30,7 @@ jobs:
           URL=https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_arm64.deb
           TEMP_DEB="$(mktemp)"
           wget -O "$TEMP_DEB" "$URL"
-          sudo dpkg -i "$TEMP_DEB"
+          sudo apt install "$TEMP_DEB"
           rm -f "$TEMP_DEB"
       - name: Clone git repo
         uses: actions/checkout@v2
