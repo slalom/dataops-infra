@@ -11,15 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Check comments for /format
     steps:
-      - name: Clone git repo
-        uses: actions/checkout@v1
-      - name: Configure Git Agent
-        run: |
-          git config --global user.email "aj.steers@slalom.com"
-          git config --global user.name "AJ Steers (CI bot)"
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 0.13.0
       - name: Check for Command
         id: command
         uses: xt0rted/slash-command-action@v1
@@ -30,8 +21,17 @@ jobs:
           reaction-type: "eyes"
           allow-edits: "false"
           permission-level: admin
-      - name: Act on the command
+      - name: Echo command (debug)
         run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
+      - name: Clone git repo
+        uses: actions/checkout@v1
+      - name: Configure Git Agent
+        run: |
+          git config --global user.email "aj.steers@slalom.com"
+          git config --global user.name "AJ Steers (CI bot)"
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.0
       - run: terraform fmt -recursive
-      - run: git commit -m "git-ops tf autoformat"
+      - run: git commit -a -m "git-ops tf autoformat"
       - run: git push
