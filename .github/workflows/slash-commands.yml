@@ -41,7 +41,7 @@ jobs:
       - name: Checkout Pull Request
         run: |
           echo "Checking out from PR URL: ${{ github.event.issue.pull_request.url }}"
-          gh checkout ${{ github.event.issue.pull_request.url }}
+          gh pr checkout ${{ github.event.issue.pull_request.url }}
       # - name: get upstream branch
       #   id: upstreambranch
       #   run: |
