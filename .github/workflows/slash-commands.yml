@@ -9,17 +9,23 @@ on:
 jobs:
   check_comments:
     runs-on: ubuntu-latest
-    name: Check comments for /test
+    name: Check comments for /format
     steps:
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.0
       - name: Check for Command
         id: command
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: test
+          command: format
           reaction: "true"
           reaction-type: "eyes"
           allow-edits: "false"
           permission-level: admin
       - name: Act on the command
         run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
+      - run: terraform fmt -recursive
+      - run: git commit -m "git-ops tf autoformat"
+      - run: git push
