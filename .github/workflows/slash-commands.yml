@@ -24,7 +24,7 @@ jobs:
       - name: Echo command (debug)
         run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
       - name: Clone git repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Configure Git Agent
         run: |
           git config --global user.email "aj.steers@slalom.com"
