@@ -8,12 +8,9 @@ module "singer_taps_on_aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  local_metadata_path     = "./sample-taps" # For most projects, this will be: "../../data/taps"
-  data_lake_type          = "S3"
-  data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
-  data_lake_storage_path  = "s3://${module.data_lake_on_aws.s3_data_bucket}/data/raw"
-  scheduled_timezone      = "PST"
-  scheduled_sync_times    = ["0600"]
+  local_metadata_path  = "./sample-taps" # For most projects, this will be: "../../data/taps"
+  scheduled_timezone   = "PST"
+  scheduled_sync_times = ["0600"]
 
   taps = [
     {
@@ -30,6 +27,12 @@ module "singer_taps_on_aws" {
       }
     }
   ]
+
+  # Please specify `data_lake_*` variables or `target` but not both.
+
+  data_lake_type          = "S3"
+  data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
+  data_lake_storage_path  = "s3://${module.data_lake_on_aws.s3_data_bucket}/data/raw"
 
   # Target is not needed when data_lake_storage_path is provided:
   # target = {

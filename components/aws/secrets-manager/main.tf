@@ -22,7 +22,7 @@ locals {
     if replace(secret_name, ":secretsmanager:", "") != secret_name
   }
   new_yaml_secrets_map = {
-    # raw secrets which have not yet been stored in AWS secrets manager
+    # raw secrets from JSON or YAML which have not yet been stored in AWS secrets manager
     for secret_name, location in var.secrets_map :
     # split the filename from the key name using the ':' delimeter and return the
     # secret value the file
@@ -34,14 +34,20 @@ locals {
     ), ".json", ""), ".yml", ""), ".yaml", "") != lower(location)
   }
   new_aws_creds_secrets_map = {
-    # raw secrets which have not yet been stored in AWS secrets manager
+    # raw secrets from aws-credentials file which have not yet been stored in AWS secrets manager
     for secret_name, location in var.secrets_map :
     # split the filename from the key name using the ':' delimeter and return the
     # secret value the file
     secret_name => regex("${split(":", location)[1]}\\s*?=\\s?(.*)\\b", file(split(":", location)[0]))[0]
-    if replace(replace(lower(
-      location
-    ), ":aws_access_key_id", ""), ":aws_secret_access_key", "") != lower(location)
+    if (
+      replace(location, "credentials:", "") != lower(location)
+      && replace(replace(replace(lower(
+          location
+        ), ".json", ""), ".yml", ""), ".yaml", "") == lower(location)
+      && replace(replace(lower(
+        location
+      ), ":aws_access_key_id", ""), ":aws_secret_access_key", "") != lower(location)
+    )
   }
   new_secrets_map = merge(local.new_yaml_secrets_map, local.new_aws_creds_secrets_map)
   merged_secrets_map = merge(

@@ -1,11 +1,9 @@
 locals {
   cloudwatch_query_text      = <<EOF
-filter @message like /(Beginning|Completed) running/
-| filter @message not like /running discovery/
-| filter @message not like /\s--discover\s/
-| parse @message "catalog/${var.taps[0].id}-*-catalog.json" as tablename
+filter @message like /sync of table/
+| parse @message "sync of table '*' from '${var.taps[0].id}'" as tablename
 | parse @message " (* elapsed)" as elapsed
-| fields @timestamp, @message
+| fields @message
 | sort tablename desc, @timestamp desc
 EOF
   cloudwatch_errors_query    = <<EOF
@@ -16,6 +14,7 @@ filter @message like /level=CRITICAL/
 EOF
   cloudwatch_clean_log_query = <<EOF
 filter @message not like /INFO\sUsed/
+| filter @message not like /\sMaking\srequest\sto\s(GET|POST)\sendpoint/
 | filter @message not like /INFO\sMaking\sGET\srequest/
 | filter @message not like /INFO\sMETRIC/
 | fields @timestamp, @message
