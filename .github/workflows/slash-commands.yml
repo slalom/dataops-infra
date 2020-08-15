@@ -25,22 +25,27 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: get pullrequest url
+      - name: Install GitHub CLI
         run: |
-          echo ${{ github.event.issue.pull_request.url }}
-      - name: get upstream branch
-        id: upstreambranch
-        run: |
-          echo "::set-output name=branchname::$(curl -v -H "Accept: application/vnd.github.sailor-v-preview+json" -u ${{ secrets.PAT }} ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
-      - name: echo upstream branch
-        run: |
-          echo ${{ steps.upstreambranch.outputs.branchname }}
-      - name: Echo command (debug)
-        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}', running against branch '${{ github.event.pull_request.head.sha }}'"
+          curl sudo apt install https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_arm64.deb
+          sudo apt install ./gh_*_linux_amd64.deb
       - name: Clone git repo
         uses: actions/checkout@v2
-        with:
-          ref: ${{ steps.upstreambranch.outputs.branchname }}
+        # with:
+        #   ref: ${{ steps.upstreambranch.outputs.branchname }}
+      - name: Checkout Pull Request
+        run: |
+          echo "Checking out from PR URL: ${{ github.event.issue.pull_request.url }}"
+          gh checkout ${{ github.event.issue.pull_request.url }}
+      # - name: get upstream branch
+      #   id: upstreambranch
+      #   run: |
+      #     echo "::set-output name=branchname::$(curl -v -H "Accept: application/vnd.github.sailor-v-preview+json" -u ${{ secrets.PAT }} ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
+      # - name: echo upstream branch
+      #   run: |
+      #     echo ${{ steps.upstreambranch.outputs.branchname }}
+      - name: Echo command (debug)
+        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}', running against branch '${{ github.event.pull_request.head.sha }}'"
       - name: Configure Git Agent
         run: |
           git config --global user.email "aj.steers@slalom.com"
