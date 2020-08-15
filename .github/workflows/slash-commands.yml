@@ -27,7 +27,7 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: Install GitHub CLI
         run: |
-          curl https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_arm64.deb
+          curl -L https://github.com/cli/cli/releases/download/v0.11.1/gh_0.11.1_linux_arm64.deb
           sudo apt install ./gh_*_linux_amd64.deb
       - name: Clone git repo
         uses: actions/checkout@v2
