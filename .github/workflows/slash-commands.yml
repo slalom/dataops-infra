@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
+      - name: Configure Git Agent
+        run: |
+          git config --global user.email "aj.steers@slalom.com"
+          git config --global user.name "AJ Steers (CI bot)"
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.0
