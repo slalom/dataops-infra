@@ -7,3 +7,6 @@
 # By default, GitHub PRs will collapse these auto-generated docs:
 catalog/**/README.md linguist-generated
 components/**/README.md linguist-generated
+
+# Graphics
+*.png      binary
