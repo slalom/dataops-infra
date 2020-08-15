@@ -4,7 +4,9 @@
 # Optional A: Automatically create and upload a new SSH keypair (recommended)
 
 module "admin_ssh_key_pair" {
-  source                = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
+  # TODO: Pending PR on cloudposse upstream repo: https://github.com/cloudposse/terraform-aws-key-pair/pull/49
+  # source              = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
+  source                = "git::https://github.com/aaronsteers/terraform-aws-key-pair.git?ref=main"
   namespace             = lower(local.name_prefix)
   ssh_public_key_path   = abspath(local.secrets_folder)
   tags                  = local.resource_tags
