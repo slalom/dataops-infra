@@ -196,7 +196,7 @@ def update_module_docs(
                 )
             module_path = tf_dir.replace(".", "").replace("//", "/").replace("\\", "/")
             _, markdown_output = runnow.run(
-                f"terraform-docs markdown document --no-sort {tf_dir}",
+                f"terraform-docs markdown document --sort=false {tf_dir}",
                 # " --no-requirements"
                 echo=False,
             )
