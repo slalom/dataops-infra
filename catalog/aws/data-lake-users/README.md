@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 Automates the management of users and groups in an S3 data lake.
 
 * Designed to be used in combination with the `aws/data-lake` module.

@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
 provides an SFTP interface on top of existing S3 storage resources.
 

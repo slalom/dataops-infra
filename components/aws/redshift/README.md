@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 This is the underlying technical component which supports the Redshift catalog module.
 
 NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account

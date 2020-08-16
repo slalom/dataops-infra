@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 Airflow is an open source platform to programmatically author, schedule and monitor workflows. More information here: [airflow.apache.org](https://airflow.apache.org/)
 
 ## Requirements

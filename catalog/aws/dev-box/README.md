@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
 or develop using the native cloud environment. Applicable use cases include:
 

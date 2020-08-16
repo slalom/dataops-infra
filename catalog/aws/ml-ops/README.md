@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 This module automates MLOps tasks associated with training Machine Learning models.
 
 The module leverages Step Functions and Lambda functions as needed. The state machine
