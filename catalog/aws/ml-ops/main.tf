@@ -143,7 +143,7 @@ module "postgres" {
   admin_password = var.db_passwd
 
   storage_size_in_gb = var.storage_size_in_gb
-  instance_class     = var.instance_class
+  instance_class = var.instance_class
 }
 
 module "step-functions" {

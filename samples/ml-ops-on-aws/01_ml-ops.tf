@@ -9,12 +9,12 @@ module "ml-ops" {
   aws_credentials_file = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
-  job_name     = "employee-attrition"
-  problem_type = "Classification"
-  content_type = "csv"
+  job_name = "employee-attrition"
+  problem_type          = "Classification"
+  content_type          = "csv"
 
-  repo_name    = "employee-attrition"
-  src_img_path = "source/containers/ml-ops-byo-xgboost"
+  repo_name             = "employee-attrition"
+  src_img_path          = "source/containers/ml-ops-byo-xgboost"
 
 
   tuning_objective              = "Maximize"
@@ -30,7 +30,7 @@ module "ml-ops" {
   training_job_storage_in_gb  = 30
 
   train_key = "input_data/train/train.csv"
-  test_key  = "input_data/test/score.csv"
+  test_key = "input_data/test/score.csv"
   #validate_key = "input_data/validate/"
 
   enable_pred_db = "True"
