@@ -9,13 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Execute "/format" slash command
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/format')
+    env:
+      slash_command: format
     steps:
       - name: Check for Slash Command
         id: command
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: format
+          command: ${slash_command}
           reaction: "true"
           reaction-type: "eyes"
           allow-edits: "false"
@@ -42,3 +44,22 @@ jobs:
       - run: terraform fmt -recursive
       - run: git commit -a -m "GitOps Bot (Autoformat)"
       - run: git push
+      - name: Post success reaction
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: ${slash_command}
+          reaction: "true"
+          reaction-type: "+1"
+          allow-edits: "false"
+          permission-level: admin
+      - name: Post failure reaction
+        if: ${{ failure() }}
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: ${slash_command}
+          reaction: "true"
+          reaction-type: "confused"
+          allow-edits: "false"
+          permission-level: admin
