@@ -12,6 +12,10 @@ filter @message not like /INFO\sUsed/
 | fields @timestamp, @message
 | sort @timestamp desc
 EOF
+  dashboard_urls = [
+    for dashboard in aws_cloudwatch_dashboard.main :
+    "https://console.aws.amazon.com/cloudwatch/home?region=${var.environment.aws_region}#dashboards:name=${dashboard.dashboard_name}"
+  ]
 }
 
 resource "aws_cloudwatch_dashboard" "main" {
