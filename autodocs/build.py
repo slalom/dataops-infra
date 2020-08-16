@@ -33,7 +33,8 @@ def main():
     """Rebuild docs."""
     build_catalog_index()
     build_component_index()
-    update_module_docs("..")
+    update_module_docs("../catalog")
+    update_module_docs("../components")
 
 
 def build_catalog_index():
