@@ -7,7 +7,7 @@ on:
 jobs:
   check_comments:
     runs-on: ubuntu-latest
-    name: Run auto-format on slash command "/format"
+    name: Execute "/format" slash command
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/format')
     steps:
       - name: Check for Slash Command
