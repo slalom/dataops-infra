@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:
@@ -46,9 +47,9 @@ Description: n/a
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/00_environment.tf)
 * [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/01_data-lake.tf)
 * [02_glue-transform-job.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/02_glue-transform-job.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/glue-transforms-on-aws/00_environment.tf)
 
 ---------------------
 

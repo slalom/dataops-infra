@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:
@@ -46,9 +47,9 @@ Description: n/a
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/00_environment.tf)
-* [01_ssh_keypair.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/01_ssh_keypair.tf)
 * [02_tableau-server.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/02_tableau-server.tf)
+* [01_ssh_keypair.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/01_ssh_keypair.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/tableau-on-aws/00_environment.tf)
 
 ---------------------
 

@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:
@@ -30,15 +31,15 @@ No optional input.
 
 The following outputs are exported:
 
-### singer\_summary
-
-Description: n/a
-
 ### data\_lake\_summary
 
 Description: n/a
 
 ### env\_summary
+
+Description: n/a
+
+### singer\_summary
 
 Description: n/a
 
@@ -52,10 +53,10 @@ Description: BOILERPLATE OUTPUT (NO NEED TO CHANGE):
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/dbt-and-singer-on-aws/00_environment.tf)
+* [03_data-build-tool.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/dbt-and-singer-on-aws/03_data-build-tool.tf)
 * [01_data-lake.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/dbt-and-singer-on-aws/01_data-lake.tf)
 * [02_singer-taps.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/dbt-and-singer-on-aws/02_singer-taps.tf)
-* [03_data-build-tool.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/dbt-and-singer-on-aws/03_data-build-tool.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/dbt-and-singer-on-aws/00_environment.tf)
 
 ---------------------
 

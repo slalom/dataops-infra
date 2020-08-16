@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Automates the management of users and groups in an S3 data lake.
 
 * Designed to be used in combination with the `aws/data-lake` module.
@@ -18,9 +19,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - local
+
+- aws
 
 ## Required Inputs
 
@@ -160,10 +161,10 @@ resources.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake-users/iam.tf)
 
 ---------------------
 

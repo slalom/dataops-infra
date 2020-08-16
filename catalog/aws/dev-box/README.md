@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
 or develop using the native cloud environment. Applicable use cases include:
 
@@ -151,8 +152,8 @@ Description: Summary of resources created by this module.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/dev-box/variables.tf)
 
 ---------------------

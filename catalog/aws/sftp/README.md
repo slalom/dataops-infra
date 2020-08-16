@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Automates the management of the AWS Transfer Service, which
 provides an SFTP interface on top of existing S3 storage resources.
 
@@ -86,8 +87,8 @@ Description: Connection information for the SFTP server.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp/variables.tf)
 
 ---------------------

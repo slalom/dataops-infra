@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:
@@ -30,11 +31,11 @@ No optional input.
 
 The following outputs are exported:
 
-### env\_summary
+### summary
 
 Description: n/a
 
-### summary
+### env\_summary
 
 Description: n/a
 
@@ -44,8 +45,8 @@ Description: n/a
 
 _Source code for this module is available using the links below._
 
-* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/postgres-on-aws/00_environment.tf)
 * [01_rds_postgres.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/postgres-on-aws/01_rds_postgres.tf)
+* [00_environment.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//samples/postgres-on-aws/00_environment.tf)
 
 ---------------------
 
