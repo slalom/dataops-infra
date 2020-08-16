@@ -8,7 +8,7 @@ locals {
 }
 
 module "airflow_ecs_cluster" {
-  source           = "../../../components/aws/ecs-cluster"
+  source        = "../../../components/aws/ecs-cluster"
   name_prefix   = var.name_prefix
   environment   = var.environment
   resource_tags = var.resource_tags
