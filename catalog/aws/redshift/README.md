@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Redshift is an AWS database platform which applies MPP (Massively-Parallel-Processing) principles to big data workloads in the cloud.
 
 ## Requirements

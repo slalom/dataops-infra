@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Automates the management of the AWS Transfer Service, which
 provides an SFTP interface on top of existing S3 storage resources.
 

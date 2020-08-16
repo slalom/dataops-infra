@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
 trigger automatically when new content is added.
 

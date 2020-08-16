@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Deploys an RDS-backed database. RDS currently supports the following database engines:
 * Aurora
 * MySQL

@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:

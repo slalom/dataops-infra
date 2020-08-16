@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:
@@ -30,11 +31,11 @@ No optional input.
 
 The following outputs are exported:
 
-### env\_summary
+### summary
 
 Description: n/a
 
-### summary
+### env\_summary
 
 Description: n/a
 

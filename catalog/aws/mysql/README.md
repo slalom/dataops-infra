@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Deploys a MySQL server running on RDS.
 
 * NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account

@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 The environment module sets up common infrastrcuture like VPCs and network subnets. The `envrionment` output
 from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
 

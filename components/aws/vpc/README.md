@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 The VPC module creates a number of network services which support other key AWS functions.
 
 Included automatically when creating this module:

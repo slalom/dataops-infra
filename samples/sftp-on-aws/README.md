@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ## Requirements
 
 The following requirements are needed by this module:
@@ -34,11 +35,11 @@ The following outputs are exported:
 
 Description: n/a
 
-### env\_summary
+### sftp\_server\_summary
 
 Description: n/a
 
-### sftp\_server\_summary
+### env\_summary
 
 Description: n/a
 

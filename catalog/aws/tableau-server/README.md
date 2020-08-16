@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
 The module supports both Linux and Windows versions of the Tableau Server Software.
 
@@ -169,6 +170,17 @@ Description: Optional. Path to a valid public key for SSH connectivity.
 Type: `string`
 
 Default: `null`
+
+### use\_private\_subnets
+
+Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway. Note: a load balancer configuration will also be required in
+order to forward incoming traffic to the Tableau Server instances.
+
+Type: `bool`
+
+Default: `false`
 
 ## Outputs
 
