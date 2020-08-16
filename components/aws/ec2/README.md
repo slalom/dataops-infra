@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
 credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
@@ -265,8 +264,8 @@ Description: A map of instance IDs to command-line strings which can be used to 
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/outputs.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/outputs.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/variables.tf)
 
 ---------------------

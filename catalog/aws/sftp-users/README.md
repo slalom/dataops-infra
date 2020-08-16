@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
 provides an SFTP interface on top of existing S3 storage resources.
 
@@ -169,10 +168,10 @@ resources.
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/outputs.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/main.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/variables.tf)
 * [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/variables.tf)
 
 ---------------------
 

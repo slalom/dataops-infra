@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 Deploys an RDS-backed database. RDS currently supports the following database engines:
 * Aurora
 * MySQL
@@ -186,8 +185,8 @@ Description: Summary of resources created by this module.
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/outputs.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/outputs.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/variables.tf)
 
 ---------------------

@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
 trigger automatically when new content is added.
 
@@ -131,8 +130,8 @@ Description: The S3 bucket used for log file storage.
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake/outputs.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake/outputs.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/data-lake/variables.tf)
 
 ---------------------

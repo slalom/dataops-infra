@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 ECR (Elastic Compute Repository) is the private-hosted AWS
 equivalent of DockerHub. ECR allows you to securely publish
 docker images which should not be accessible to external users.
@@ -186,8 +185,8 @@ For more info: [https://docs.aws.amazon.com/powershell/latest/userguide/pstools-
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/outputs.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/outputs.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecr-image/variables.tf)
 
 ---------------------

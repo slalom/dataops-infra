@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
 Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
 packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
@@ -191,11 +190,11 @@ additional permissions to the role.
 
 _Source code for this module is available using the links below._
 
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/outputs.tf)
 * [python-zip.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/python-zip.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/variables.tf)
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/iam.tf)
 
 ---------------------
 

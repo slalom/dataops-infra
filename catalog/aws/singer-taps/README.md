@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
 
 ## Requirements
@@ -262,11 +261,11 @@ Description: Summary of resources created by this module.
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/outputs.tf)
 * [cloudwatch.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/cloudwatch.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/main.tf)
-* [step-functions.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/step-functions.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/outputs.tf)
 * [s3-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-upload.tf)
+* [step-functions.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/step-functions.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/variables.tf)
 
 ---------------------
