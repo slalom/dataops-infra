@@ -21,7 +21,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           command: ${{ env.SLASH_COMMAND }}
       - name: Echo command (debug)
-        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'
+        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
       - name: Clone git repo
         uses: actions/checkout@v2
       - name: Checkout Pull Request
@@ -75,7 +75,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           command: ${{ env.SLASH_COMMAND }}
       - name: Echo command (debug)
-        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'
+        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
       - name: Clone git repo
         uses: actions/checkout@v2
       - name: Checkout Pull Request
