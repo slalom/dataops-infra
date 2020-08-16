@@ -21,9 +21,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- random
-
 - null
+
+- random
 
 - aws
 

@@ -21,9 +21,9 @@ The following providers are used by this module:
 
 - random
 
-- aws
-
 - null
+
+- aws
 
 ## Required Inputs
 
