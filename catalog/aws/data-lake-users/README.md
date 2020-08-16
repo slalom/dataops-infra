@@ -18,9 +18,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- local
-
 - aws
+
+- local
 
 ## Required Inputs
 
