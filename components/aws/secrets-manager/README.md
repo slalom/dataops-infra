@@ -140,8 +140,8 @@ Description: A map of secrets names to each secret's unique ID within AWS Secret
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/outputs.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/outputs.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/variables.tf)
 
 ---------------------
