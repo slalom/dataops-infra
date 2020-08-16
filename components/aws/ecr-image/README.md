@@ -10,7 +10,119 @@ nav_exclude: false
 ## Overview
 
 
-Error: unknown flag: --sort## Prereqs:
+ECR (Elastic Compute Repository) is the private-hosted AWS
+equivalent of DockerHub. ECR allows you to securely publish
+docker images which should not be accessible to external users.
+
+## Requirements
+
+No requirements.
+
+## Providers
+
+The following providers are used by this module:
+
+- aws
+
+- null
+
+## Required Inputs
+
+The following input variables are required:
+
+### name\_prefix
+
+Description: Standard `name_prefix` module input.
+
+Type: `string`
+
+### environment
+
+Description: Standard `environment` module input.
+
+Type:
+
+```hcl
+object({
+    vpc_id          = string
+    aws_region      = string
+    public_subnets  = list(string)
+    private_subnets = list(string)
+  })
+```
+
+### resource\_tags
+
+Description: Standard `resource_tags` module input.
+
+Type: `map(string)`
+
+### repository\_name
+
+Description: Name of Docker repository.
+
+Type: `string`
+
+### source\_image\_path
+
+Description: Path to Docker image source.
+
+Type: `string`
+
+### aws\_credentials\_file
+
+Description: Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image.
+
+Type: `string`
+
+## Optional Inputs
+
+The following input variables are optional (have default values):
+
+### is\_disabled
+
+Description: Switch for disabling ECR image and push.
+
+Type: `bool`
+
+Default: `false`
+
+### build\_args
+
+Description: Optional. Build arguments to use during `docker build`.
+
+Type: `map(string)`
+
+Default: `{}`
+
+### tag
+
+Description: Tag to use for deployed Docker image.
+
+Type: `string`
+
+Default: `"latest"`
+
+## Outputs
+
+The following outputs are exported:
+
+### ecr\_repo\_arn
+
+Description: The unique ID (ARN) of the ECR repo.
+
+### ecr\_repo\_root
+
+Description: The path to the ECR repo, excluding image name.
+
+### ecr\_image\_url
+
+Description: The full path to the ECR image, including image name.
+
+### ecr\_image\_url\_and\_tag
+
+Description: The full path to the ECR image, including image name and tag.
+## Prereqs:
 
 _To use this module, you will need the following components:_
 
