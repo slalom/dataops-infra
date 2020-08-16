@@ -1,13 +1,4 @@
 locals {
-  cloudwatch_query_text      = <<EOF
-filter @message like /(Beginning|Completed) running/
-| filter @message not like /running discovery/
-| filter @message not like /\s--discover\s/
-| parse @message "catalog/${var.taps[0].id}-*-catalog.json" as tablename
-| parse @message " (* elapsed)" as elapsed
-| fields @timestamp, @message
-| sort tablename desc, @timestamp desc
-EOF
   cloudwatch_errors_query    = <<EOF
 filter @message like /level=CRITICAL/
 | fields @timestamp, @message
@@ -21,20 +12,11 @@ filter @message not like /INFO\sUsed/
 | fields @timestamp, @message
 | sort @timestamp desc
 EOF
-  dashboard_markdown         = <<EOF
-## Data Pipeline (${var.taps[0].id}-to-${local.target.id})
-
-Additional Actions:
-
- - [View Running ECS Tasks](https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks)
- - [View ECS CloudWatch Logs](${module.ecs_tap_sync_task.ecs_logging_url})
- - [Open Step Function Console](${module.step_function.state_machine_url})
-
-EOF
 }
 
 resource "aws_cloudwatch_dashboard" "main" {
-  dashboard_name = "${var.taps[0].id}-to-${local.target.id}-v${var.pipeline_version_number}-dashboard--${var.name_prefix}-Tap"
+  count          = length(var.taps)
+  dashboard_name = "${var.taps[count.index].id}-to-${local.target.id}-v${var.pipeline_version_number}-dashboard--${var.name_prefix}-Tap"
   dashboard_body = <<EOF
 {
   "periodOverride": "auto",
@@ -47,7 +29,17 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 4,
       "properties": {
         "markdown": "${
-  replace(replace(replace(local.dashboard_markdown, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
+  replace(replace(replace(<<EOF
+## Data Pipeline (${var.taps[count.index].id}-to-${local.target.id})
+
+Additional Actions:
+
+ - [View Running ECS Tasks](https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks)
+ - [View ECS CloudWatch Logs](${module.ecs_tap_sync_task[count.index].ecs_logging_url})
+ - [Open Step Function Console](${module.step_function[count.index].state_machine_url})
+
+EOF
+  , "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
   }"
       }
     },
@@ -122,8 +114,17 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 12,
       "properties": {
         "title": "Table-Level Summary",
-        "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
-  replace(replace(replace(local.cloudwatch_query_text, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
+        "query": "SOURCE '${module.ecs_tap_sync_task[count.index].cloudwatch_log_group_name}' | ${
+  replace(replace(replace(<<EOF
+filter @message like /(Beginning|Completed) running/
+| filter @message not like /running discovery/
+| filter @message not like /\s--discover\s/
+| parse @message "catalog/${var.taps[count.index].id}-*-catalog.json" as tablename
+| parse @message " (* elapsed)" as elapsed
+| fields @timestamp, @message
+| sort tablename desc, @timestamp desc
+EOF
+  , "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
   }",
         "region": "${var.environment.aws_region}",
         "stacked": "false",
@@ -138,7 +139,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 3,
       "properties": {
         "title": "Fatal Errors",
-        "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
+        "query": "SOURCE '${module.ecs_tap_sync_task[count.index].cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_errors_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
   }",
         "region": "${var.environment.aws_region}",
@@ -154,7 +155,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "height": 12,
       "properties": {
         "title": "Detailed Logs",
-        "query": "SOURCE '${module.ecs_tap_sync_task.cloudwatch_log_group_name}' | ${
+        "query": "SOURCE '${module.ecs_tap_sync_task[count.index].cloudwatch_log_group_name}' | ${
   replace(replace(replace(local.cloudwatch_clean_log_query, "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
 }",
         "region": "${var.environment.aws_region}",

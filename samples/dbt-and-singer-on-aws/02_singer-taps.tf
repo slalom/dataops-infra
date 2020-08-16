@@ -13,13 +13,13 @@ module "singer_taps_on_aws" {
   data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
   data_lake_storage_path  = "s3://${module.data_lake_on_aws.s3_data_bucket}/data/raw"
   scheduled_timezone      = "PST"
-  scheduled_sync_times    = ["0600"]
 
   taps = [
     {
       # For 'id', enter any plugin name or alias from the index below, excluding the `tap-` prefix:
       # https://github.com/slalom-ggp/dataops-tools/blob/main/containers/singer/singer_index.yml
       id = "pardot"
+      schedule = ["0600"]
       settings = {
         start_date = "2020-02-28T00:00:00Z"
       }

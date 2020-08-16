@@ -2,7 +2,11 @@ locals {
   source_files = toset([
     for f in fileset(var.local_metadata_path, "*") :
     f
-    if replace(f, var.taps[0].id, "") != f
+    if length([
+      for tap_id in var.taps.*.id :
+      tap_id
+      if replace(f, tap_id, "") != f
+    ]) > 0
   ])
   source_files_hash = join(",", [
     for filepath in local.source_files :
@@ -13,8 +17,8 @@ locals {
 
 resource "aws_s3_bucket_object" "s3_source_uploads" {
   for_each = local.source_files
-  # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
   # Parse the S3 path into 'bucket' and 'key' values:
+  # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
   bucket = split("/", split("//", var.data_lake_metadata_path)[1])[0]
   key = join("/",
     [

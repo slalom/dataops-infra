@@ -28,13 +28,16 @@ variable "resource_tags" {
 
 variable "taps" {
   description = <<EOF
-A list of objects with the keys `id` (the name of the tap without the 'tap-' prefix),
-`settings` (a map of tap settings to their desired values), and `secrets` (same as
-`settings` but mapping setting names to the location of the secret and not the secret
-values themselves)
+A list of objects with the following keys:
+
+- `id`       - The name of the tap without the 'tap-' prefix.
+- `schedule` - A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm.
+- `settings` - A map of tap settings to their values.
+- `secrets`  - A map of secret names to the location (file:key) of the secrets (not the secret values themselves)
 EOF
   type = list(object({
     id       = string
+    schedule = list(string)
     settings = map(string)
     secrets  = map(string)
   }))
@@ -93,39 +96,14 @@ EOF
   default     = null
 }
 
-# File Naming Schemes
+# Orchestration
 
-variable "data_file_naming_scheme" {
-  description = <<EOF
-The naming pattern to use when landing new files in the data lake. Allowed variables are:
-`{tap}`, `{table}`, `{version}`, and `{file}`"
-EOF
-  type        = string
-  default     = "{tap}/{table}/v{version}/{file}"
-}
-variable "state_file_naming_scheme" {
-  description = <<EOF
-The naming pattern to use when writing or updating state files. State files keep track of
-data recency and are necessary for incremental loading. Allowed variables are:
-`{tap}`, `{table}`, `{version}`, and `{file}`"
-EOF
-  type        = string
-  default     = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
-}
-
-# Scheduling and Orchestration
-
-variable "scheduled_sync_times" {
-  description = "A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm"
-  type        = list(string)
-  default     = []
-}
 variable "scheduled_timezone" {
   description = <<EOF
 The timezone used in scheduling.
 Currently the following codes are supported: PST, PDT, EST, UTC
 EOF
-  default     = "PT"
+  default     = "PST"
 }
 variable "timeout_hours" {
   description = "Optional. The number of hours before the sync task is canceled and retried."
@@ -157,11 +135,40 @@ EOF
   default     = false
 }
 
+# File Naming Schemes
+
+variable "data_file_naming_scheme" {
+  description = <<EOF
+The naming pattern to use when landing new files in the data lake. Allowed variables are:
+`{tap}`, `{table}`, `{version}`, and `{file}`"
+EOF
+  type        = string
+  default     = "{tap}/{table}/v{version}/{file}"
+}
+variable "state_file_naming_scheme" {
+  description = <<EOF
+The naming pattern to use when writing or updating state files. State files keep track of
+data recency and are necessary for incremental loading. Allowed variables are:
+`{tap}`, `{table}`, `{version}`, and `{file}`"
+EOF
+  type        = string
+  default     = "{tap}/{table}/state/{tap}-{table}-v{version}-state.json"
+}
+
 # Advanced Settings (Optional)
 
-variable "container_image" {
-  description = "Optional. Override the docker image with a custom-managed image."
+variable "container_image_override" {
+  description = "Optional. Override the docker images with a custom-managed image."
+  type        = string
   default     = null
+}
+variable "container_image_suffix" {
+  description = <<EOF
+Optional. Appends a suffix to the default container images.
+(e.g. '--pre' for prerelease containers)
+EOF
+  type        = string
+  default     = ""
 }
 variable "container_command" {
   description = "Optional. Override the docker image's command."
@@ -174,5 +181,6 @@ variable "container_args" {
 }
 variable "container_entrypoint" {
   description = "Optional. Override the docker image's entrypoint."
+  type        = string
   default     = null
 }

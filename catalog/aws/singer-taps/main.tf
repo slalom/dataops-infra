@@ -1,5 +1,5 @@
 /*
-* The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+* The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
 *
 */
 
@@ -13,29 +13,27 @@ locals {
     contains(["CST"], var.scheduled_timezone) ? -6 :
     contains(["EST"], var.scheduled_timezone) ? -5 :
     contains(["UTC", "GMT"], var.scheduled_timezone) ? 0 :
-    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
+    1 / 0 # ERROR: currently supported timezone code are: UTC, MST, GMT, CST, EST, PST and PDT
   )
   name_prefix = "${var.name_prefix}Tap-"
   sync_commands = [
     for tap in var.taps :
     "tapdance sync ${tap.id} ${local.target.id} ${join(" ", var.container_args)}"
   ]
-  container_command = (
-    length(local.sync_commands) == 1 ?
-    "${local.sync_commands[0]}" :
-    chomp(coalesce(var.container_command,
-      <<EOF
-/bin/bash -c "${join(" && ", local.sync_commands)}"
-EOF
-    ))
-  )
+  container_images = [
+    for tap in var.taps :
+    coalesce(
+      var.container_image_override,
+      "dataopstk/tapdance:${tap.id}-to-${local.target.id}${var.container_image_suffix}"
+    )
+  ]
   target = (
     (var.data_lake_type == "S3") || (var.target == null) ?
     {
       id = "s3-csv"
       settings = {
-        # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
         # Parse the S3 path into 'bucket' and 'key' values:
+        # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
         s3_bucket = split("/", split("//", var.data_lake_storage_path)[1])[0]
         s3_key_prefix = join("/",
           [
@@ -56,9 +54,6 @@ EOF
     } :
     var.target
   )
-  container_image = coalesce(
-    var.container_image, "dataopstk/tapdance:${var.taps[0].id}-to-${local.target.id}"
-  )
 }
 
 module "ecs_cluster" {
@@ -69,15 +64,14 @@ module "ecs_cluster" {
 }
 
 module "ecs_tap_sync_task" {
-  # TODO: use for_each to run jobs in parallel when the feature launches
-  # for_each            = var.taps
+  count               = length(var.taps)
   source              = "../../../components/aws/ecs-task"
   name_prefix         = "${local.name_prefix}sync-"
   environment         = var.environment
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
-  container_image     = local.container_image
-  container_command   = local.container_command
+  container_image     = local.container_images[count.index]
+  container_command   = local.sync_commands[count.index]
   container_ram_gb    = var.container_ram_gb
   container_num_cores = var.container_num_cores
   use_private_subnet  = var.use_private_subnet
@@ -89,8 +83,8 @@ module "ecs_tap_sync_task" {
       PIPELINE_VERSION_NUMBER = var.pipeline_version_number
     },
     {
-      for k, v in var.taps[0].settings :
-      "TAP_${upper(replace(var.taps[0].id, "-", "_"))}_${k}" => v
+      for k, v in var.taps[count.index].settings :
+      "TAP_${upper(replace(var.taps[count.index].id, "-", "_"))}_${k}" => v
     },
     {
       for k, v in local.target.settings :
@@ -99,8 +93,8 @@ module "ecs_tap_sync_task" {
   )
   environment_secrets = merge(
     {
-      for k, v in var.taps[0].secrets :
-      "TAP_${upper(replace(var.taps[0].id, "-", "_"))}_${k}" => v
+      for k, v in var.taps[count.index].secrets :
+      "TAP_${upper(replace(var.taps[count.index].id, "-", "_"))}_${k}" => v
     },
     {
       for k, v in local.target.secrets :
@@ -109,7 +103,7 @@ module "ecs_tap_sync_task" {
   )
   schedules = [
     # Convert 4-digit time of day into cron. Cron tester: https://crontab.guru/
-    for cron_expr in var.scheduled_sync_times :
+    for cron_expr in var.taps[count.index].schedule :
     "cron(${
       tonumber(substr(cron_expr, 2, 2))
       } ${
