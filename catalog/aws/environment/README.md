@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 The environment module sets up common infrastrcuture like VPCs and network subnets. The `envrionment` output
 from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
 
@@ -140,8 +141,8 @@ Description: The ID of the route table for private subnets.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/environment/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/environment/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/environment/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/environment/variables.tf)
 
 ---------------------

@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 Glue is AWS's fully managed extract, transform, and load (ETL) service.
 A Glue crawler is used to access a data store and create table definitions.
 This can be used in conjuction with Amazon Athena to query flat files in S3 buckets using SQL.
@@ -93,10 +94,10 @@ Description: The name of the Glue crawler.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/iam.tf)
 
 ---------------------
 

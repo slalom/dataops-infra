@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 This is the underlying technical component which supports the Redshift catalog module.
 
 NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
@@ -189,8 +190,8 @@ Description: Summary of resources created by this module.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/redshift/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/redshift/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/redshift/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/redshift/variables.tf)
 
 ---------------------

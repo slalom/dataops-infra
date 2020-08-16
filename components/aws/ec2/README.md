@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
 credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
@@ -195,6 +196,17 @@ Type: `bool`
 
 Default: `false`
 
+### use\_private\_subnets
+
+Description: If True, EC2 will use a private subnets and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway. Note: a load balancer configuration may also be required in
+order for EC2 instances to receive incoming traffic.
+
+Type: `bool`
+
+Default: `false`
+
 ## Outputs
 
 The following outputs are exported:
@@ -253,8 +265,8 @@ Description: A map of instance IDs to command-line strings which can be used to 
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/variables.tf)
 
 ---------------------

@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
 features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
 to manage or pay for when tasks are not running.
@@ -288,11 +289,11 @@ Description: A list of subnets used for task execution.
 
 _Source code for this module is available using the links below._
 
-* [alb.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/alb.tf)
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/outputs.tf)
+* [alb.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/alb.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/iam.tf)
 
 ---------------------
 

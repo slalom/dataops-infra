@@ -6,6 +6,7 @@
 ## Overview
 
 
+Flag --no-sort has been deprecated, use '--sort=false' instead
 This module takes as input a set of maps from variable names to secrets locations (in YAML or
 JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing
 to the IDs of new AWS Secrets manager locations. Those IDs (aka ARNs) can then safely be handed
@@ -140,8 +141,8 @@ Description: A map of secrets names to each secret's unique ID within AWS Secret
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/secrets-manager/variables.tf)
 
 ---------------------
