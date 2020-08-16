@@ -39,6 +39,8 @@ jobs:
         # with:
         #   ref: ${{ steps.upstreambranch.outputs.branchname }}
       - name: Checkout Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_URL="${{ github.event.issue.pull_request.url }}"
           echo "Checking out from PR (${PR_URL##*/}) URL: $PR_URL"
