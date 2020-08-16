@@ -1,0 +1,49 @@
+name: Slash Command CI
+
+on:
+  issue_comment:
+  pull_request_review_comment:
+    types:
+      - created
+
+jobs:
+  check_comments:
+    runs-on: ubuntu-latest
+    name: Check comments for /format
+    steps:
+      # - name: Dump GitHub context
+      #   env:
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}
+      #   run: echo "$GITHUB_CONTEXT"
+      - name: Check for Command
+        id: command
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: format
+          reaction: "true"
+          reaction-type: "eyes"
+          allow-edits: "false"
+          permission-level: admin
+      - name: Echo command (debug)
+        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}', running against branch '${{ github.event.pull_request.head.sha }}'"
+      - name: Clone git repo
+        uses: actions/checkout@v2
+      - name: Checkout Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL="${{ github.event.issue.pull_request.url }}"
+          PR_NUM=${PR_URL##*/}
+          echo "Checking out from PR #$PR_NUM based on URL: $PR_URL"
+          hub pr checkout $PR_NUM
+      - name: Configure Git Agent
+        run: |
+          git config --global user.email "aj.steers@slalom.com"
+          git config --global user.name "AJ Steers (CI bot)"
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.0
+      - run: terraform fmt -recursive
+      - run: git commit -a -m "GitOps Bot (Autoformat)"
+      - run: git push
