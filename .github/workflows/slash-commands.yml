@@ -10,14 +10,14 @@ jobs:
     name: Execute "/format" slash command
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/format')
     env:
-      slash_command: format
+      SLASH_COMMAND: format
     steps:
       - name: Check for Slash Command
         id: command
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: ${slash_command}
+          command: ${{ env.SLASH_COMMAND }}
           reaction: "true"
           reaction-type: "eyes"
           allow-edits: "false"
@@ -48,7 +48,7 @@ jobs:
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: ${slash_command}
+          command: ${{ env.SLASH_COMMAND }}
           reaction: "true"
           reaction-type: "+1"
           allow-edits: "false"
@@ -58,7 +58,7 @@ jobs:
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: ${slash_command}
+          command: ${{ env.SLASH_COMMAND }}
           reaction: "true"
           reaction-type: "confused"
           allow-edits: "false"
