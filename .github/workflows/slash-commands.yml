@@ -106,6 +106,7 @@ jobs:
           pip install logless runnow uio
       - name: Rebuild docs
         run: |
+          export PATH=$PATH:$(go env GOPATH)/bin
           cd autodocs
           python build.py
       - name: Commit and Push
