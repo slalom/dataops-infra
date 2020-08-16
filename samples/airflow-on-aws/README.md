@@ -31,15 +31,15 @@ No optional input.
 
 The following outputs are exported:
 
-### env\_summary
-
-Description: n/a
-
 ### data\_lake\_summary
 
 Description: n/a
 
 ### airflow\_summary
+
+Description: n/a
+
+### env\_summary
 
 Description: n/a
 

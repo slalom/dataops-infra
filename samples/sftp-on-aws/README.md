@@ -35,11 +35,11 @@ The following outputs are exported:
 
 Description: n/a
 
-### env\_summary
+### sftp\_server\_summary
 
 Description: n/a
 
-### sftp\_server\_summary
+### env\_summary
 
 Description: n/a
 

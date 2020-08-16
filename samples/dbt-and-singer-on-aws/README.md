@@ -31,15 +31,15 @@ No optional input.
 
 The following outputs are exported:
 
+### singer\_summary
+
+Description: n/a
+
 ### data\_lake\_summary
 
 Description: n/a
 
 ### env\_summary
-
-Description: n/a
-
-### singer\_summary
 
 Description: n/a
 

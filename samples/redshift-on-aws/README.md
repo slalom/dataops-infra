@@ -31,11 +31,11 @@ No optional input.
 
 The following outputs are exported:
 
-### summary
+### env\_summary
 
 Description: n/a
 
-### env\_summary
+### summary
 
 Description: n/a
 
