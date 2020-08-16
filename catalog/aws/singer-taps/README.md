@@ -6,7 +6,7 @@
 ## Overview
 
 
-The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
 
 ## Requirements
 
@@ -49,6 +49,26 @@ Description: Standard `resource_tags` module input.
 
 Type: `map(string)`
 
+### taps
+
+Description: A list of objects with the following keys:
+
+- `id`       - The name of the tap without the 'tap-' prefix.
+- `schedule` - A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm.
+- `settings` - A map of tap settings to their values.
+- `secrets`  - A map of secret names to the location (file:key) of the secrets (not the secret values themselves)
+
+Type:
+
+```hcl
+list(object({
+    id       = string
+    schedule = list(string)
+    settings = map(string)
+    secrets  = map(string)
+  }))
+```
+
 ### local\_metadata\_path
 
 Description: The local folder which countains tap definitions files: `{tap-name}.rules.txt` and `{tap-name}.plan.yml`
@@ -62,26 +82,37 @@ Currently only S3 paths (s3://...) are supported.
 
 Type: `string`
 
-### taps
+## Optional Inputs
 
-Description: A list of objects with the keys `id` (the name of the tap without the 'tap-' prefix),
-`settings` (a map of tap settings to their desired values), and `secrets` (same as
-`settings` but mapping setting names to the location of the secret and not the secret
-values themselves)
+The following input variables are optional (have default values):
+
+### target
+
+Description: The definition of which target to load data into.
+Note: You must specify `target` or `data_lake_storage_path` but not both.
 
 Type:
 
 ```hcl
-list(object({
+object({
     id       = string
     settings = map(string)
     secrets  = map(string)
-  }))
+  })
 ```
 
-## Optional Inputs
+Default: `null`
 
-The following input variables are optional (have default values):
+### pipeline\_version\_number
+
+Description: Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
+isolation. Note if you want to avoid overlap between versions, be sure to (1) cancel the
+previous version and (2) specify a `start_date` on the new version which is not duplicative
+of the previously covered time period.
+
+Type: `string`
+
+Default: `"1"`
 
 ### data\_lake\_type
 
@@ -102,6 +133,57 @@ Type: `string`
 
 Default: `null`
 
+### scheduled\_timezone
+
+Description: The timezone used in scheduling.
+Currently the following codes are supported: PST, PDT, EST, UTC
+
+Type: `string`
+
+Default: `"PST"`
+
+### timeout\_hours
+
+Description: Optional. The number of hours before the sync task is canceled and retried.
+
+Type: `number`
+
+Default: `48`
+
+### num\_retries
+
+Description: Optional. The number of retries to attempt if the task fails.
+
+Type: `number`
+
+Default: `0`
+
+### container\_num\_cores
+
+Description: Optional. Specify the number of cores to use in the container.
+
+Type: `number`
+
+Default: `0.5`
+
+### container\_ram\_gb
+
+Description: Optional. Specify the amount of RAM to be available to the container.
+
+Type: `number`
+
+Default: `1`
+
+### use\_private\_subnet
+
+Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway.
+
+Type: `bool`
+
+Default: `false`
+
 ### data\_file\_naming\_scheme
 
 Description: The naming pattern to use when landing new files in the data lake. Allowed variables are:
@@ -121,55 +203,22 @@ Type: `string`
 
 Default: `"{tap}/{table}/state/{tap}-{table}-v{version}-state.json"`
 
-### target
+### container\_image\_override
 
-Description: The definition of which target to load data into.
-Note: You must specify `target` or `data_lake_storage_path` but not both.
-
-Type:
-
-```hcl
-object({
-    id       = string
-    settings = map(string)
-    secrets  = map(string)
-  })
-```
-
-Default: `null`
-
-### scheduled\_sync\_times
-
-Description: A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm
-
-Type: `list(string)`
-
-Default: `[]`
-
-### scheduled\_timezone
-
-Description: The timezone used in scheduling.
-Currently the following codes are supported: PST, PDT, EST, UTC
+Description: Optional. Override the docker images with a custom-managed image.
 
 Type: `string`
 
-Default: `"PT"`
-
-### container\_image
-
-Description: Optional. Override the docker image with a custom-managed image.
-
-Type: `any`
-
 Default: `null`
 
-### container\_entrypoint
+### container\_image\_suffix
 
-Description: Optional. Override the docker image's entrypoint.
+Description: Optional. Appends a suffix to the default container images.
+(e.g. '--pre' for prerelease containers)
 
-Type: `any`
+Type: `string`
 
-Default: `null`
+Default: `""`
 
 ### container\_command
 
@@ -178,49 +227,6 @@ Description: Optional. Override the docker image's command.
 Type: `any`
 
 Default: `null`
-
-### container\_num\_cores
-
-Description: Optional. Specify the number of cores to use in the container.
-
-Type: `number`
-
-Default: `0.5`
-
-### container\_ram\_gb
-
-Description: Optional. Specify the amount of RAM to be available to the container.
-
-Type: `number`
-
-Default: `1`
-
-### num\_retries
-
-Description: Optional. The number of retries to attempt if the task fails.
-
-Type: `number`
-
-Default: `0`
-
-### timeout\_hours
-
-Description: Optional. The number of hours before the sync task is canceled and retried.
-
-Type: `number`
-
-Default: `48`
-
-### pipeline\_version\_number
-
-Description: Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
-isolation. Note if you want to avoid overlap between versions, be sure to (1) cancel the
-previous version and (2) specify a `start_date` on the new version which is not duplicative
-of the previously covered time period.
-
-Type: `string`
-
-Default: `"1"`
 
 ### container\_args
 
@@ -237,15 +243,13 @@ Default:
 ]
 ```
 
-### use\_private\_subnet
+### container\_entrypoint
 
-Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
-image, and for any outbound traffic. If False, tasks will use a public subnet and will
-not require a NAT gateway.
+Description: Optional. Override the docker image's entrypoint.
 
-Type: `bool`
+Type: `string`
 
-Default: `false`
+Default: `null`
 
 ## Outputs
 

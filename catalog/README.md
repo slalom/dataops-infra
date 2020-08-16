@@ -215,7 +215,7 @@ provides an SFTP interface on top of existing S3 storage resources.
 
 #### Overview
 
-The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
 
 
 #### Documentation
