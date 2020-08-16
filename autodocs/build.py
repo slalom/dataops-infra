@@ -257,7 +257,7 @@ def get_tf_metadata(tf_dir: str, recursive: bool = False, save_to_dir: bool = Tr
                     f"{tf_dir}/.terraform/terraform-docs.json", json_text
                 )
     if recursive:
-        for folder in uio.list_files(tf_dir):
+        for folder in sorted(uio.list_files(tf_dir)):
             folder = folder.replace("\\", "/")
             if os.path.isdir(folder):
                 result.update(get_tf_metadata(folder, recursive=recursive))
