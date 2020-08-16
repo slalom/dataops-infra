@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
 to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
 for another step.

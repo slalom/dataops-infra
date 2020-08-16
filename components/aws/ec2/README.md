@@ -6,7 +6,6 @@
 ## Overview
 
 
-Flag --no-sort has been deprecated, use '--sort=false' instead
 EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
 credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
@@ -18,9 +17,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
+
+- aws
 
 ## Required Inputs
 
