@@ -61,10 +61,10 @@ jobs:
 
   update_docs_command:
     runs-on: ubuntu-latest
-    name: Execute "/update-docs" slash command
+    name: Execute "/docs" slash command
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/update-docs')
     env:
-      SLASH_COMMAND: update-docs
+      SLASH_COMMAND: docs
     steps:
       - name: Parse Slash Command
         id: command
