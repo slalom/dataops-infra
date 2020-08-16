@@ -1,4 +1,9 @@
-
+---
+title: Infrastructure Components
+has_children: true
+nav_order: 2
+nav_exclude: false
+---
 # DataOps Infrastructure Components
 
 These components define the technical building blocks which enable advanced, ready-to-deploy data solutions in the [Infrastructure Catalog](../catalog/README.md).

@@ -2,14 +2,18 @@
 
 Instructions to test the GitHub Pages website generation.
 
-1. Installation
-   1. Install Ruby: `choco install ruby`
-   2. Install `jekyll` Gem: `gem install jekyll -v 3.9.0` (or whatever version is listed [here](https://pages.github.com/versions/))
-   3. Install `github-pages` Gem: `gem install github-pages`
-   4. Run `bundle update` to refresh and update package versions.
-   5. Run `bundle exec jekyll serve --incremental` to test the site locally.
-      - Most types of content changes will be hot-refreshed, automatically updated
-        when they are changed.
+## Installation
+
+1. Install Ruby: `choco install ruby`
+2. Install `jekyll` Gem: `gem install jekyll -v 3.9.0` (or whatever version is listed [here](https://pages.github.com/versions/))
+3. Install `github-pages` Gem: `gem install github-pages`
+
+## Testing
+
+1. Run `bundle update` to refresh and update package versions.
+2. Run `bundle exec jekyll serve --incremental --watch` to test the site locally.
+   - Most types of content changes will be hot-refreshed, automatically updated
+     when they are changed.
 
 ## List of Important Config Files
 

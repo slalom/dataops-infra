@@ -1,4 +1,10 @@
-# Infrastructure Catalog for Slalom DataOps
+---
+layout: default
+title: Introduction
+nav_order: 1
+has_children: false
+---
+# Slalom DataOps Infrastructure Catalog
 
 ## Catalog Documentation
 

@@ -1,4 +1,9 @@
-
+---
+title: Infrastructure Catalog
+has_children: true
+nav_order: 2
+nav_exclude: false
+---
 # DataOps Infrastructure Catalog
 
 The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](../components/README.md).

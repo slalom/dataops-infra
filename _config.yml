@@ -29,18 +29,64 @@ baseurl: "" # the subpath of your site, e.g. /blog
 # Build settings
 markdown: kramdown
 remote_theme: pmarsceill/just-the-docs
+aux_links:
+  "Infrastructure Catalog on GitHub":
+    - "//github.com/slalom-ggp/dataops-infra"
+readme_index:
+  enabled: true
+  remove_originals: true
+  with_frontmatter: true
+
+collections:
+  my_collection:
+    output: true
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      has_children: false
+      layout: default
+      has_toc: false
+      # nav_exclude: true
+  - scope:
+      path: catalog
+    values:
+      # grandparent: Infrastructure Catalog
+      # parent: { module_type }
+      # title: { module_title }
+      has_children: false
+      has_toc: false
+      nav_order: 1
+      nav_exclude: false
+  - scope:
+      path: catalog/aws
+    values:
+      parent: Infrastructure Catalog
+      # title: { module_title }
+      has_children: false
+      has_toc: false
+      nav_order: 1
+
 plugins:
   - jekyll-readme-index
   - jekyll-seo-tag
   # - jekyll-feed
+
 # Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - catalog/aws/*/.secrets
+  - catalog/*/*/USAGE.md
+  - catalog/*/*/NOTES.md
+  - components/*/*/USAGE.md
+  - components/*/*/NOTES.md
+  - autodocs
+  - samples
+  - docs
