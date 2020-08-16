@@ -2,20 +2,15 @@ name: Slash Command CI
 
 on:
   issue_comment:
-  pull_request_review_comment:
-    types:
-      - created
+    types: [created]
 
 jobs:
   check_comments:
     runs-on: ubuntu-latest
-    name: Check comments for /format
+    name: Execute "/format" slash command
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/format')
     steps:
-      # - name: Dump GitHub context
-      #   env:
-      #     GITHUB_CONTEXT: ${{ toJson(github) }}
-      #   run: echo "$GITHUB_CONTEXT"
-      - name: Check for Command
+      - name: Check for Slash Command
         id: command
         uses: xt0rted/slash-command-action@v1
         with:
