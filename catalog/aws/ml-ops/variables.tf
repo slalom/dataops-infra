@@ -63,7 +63,7 @@ variable "train_key" {
 }
 
 variable "test_key" {
-  description = "URL path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem." 
+  description = "URL path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
   type        = string
   default     = "input_data/test/test.csv"
 }
@@ -103,7 +103,7 @@ variable "tuning_objective" {
   default     = "Maximize"
 
   validation {
-    condition = substr(var.tuning_objective, 0, 1) == "M"
+    condition     = substr(var.tuning_objective, 0, 1) == "M"
     error_message = "The tuning_objective value must be a valid value of either \"Minimize\" or \"Maximize\", starting with capatalized \"M\"."
   }
 }
