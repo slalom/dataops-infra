@@ -16,12 +16,12 @@ jobs:
         id: command
         uses: xt0rted/slash-command-action@v1
         with:
+          permission-level: admin
+          reaction-type: eyes
+          reaction: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           command: ${{ env.SLASH_COMMAND }}
-          reaction: "true"
-          reaction-type: "eyes"
-          allow-edits: "false"
-          permission-level: admin
+          allow-edits: false
       - name: Echo command (debug)
         run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}', running against branch '${{ github.event.pull_request.head.sha }}'"
       - name: Clone git repo
@@ -47,19 +47,19 @@ jobs:
       - name: Post success reaction
         uses: xt0rted/slash-command-action@v1
         with:
+          permission-level: admin
+          reaction-type: rocket
+          reaction: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           command: ${{ env.SLASH_COMMAND }}
-          reaction: "true"
-          reaction-type: "+1"
-          allow-edits: "false"
-          permission-level: admin
+          allow-edits: false
       - name: Post failure reaction
         if: ${{ failure() }}
         uses: xt0rted/slash-command-action@v1
         with:
+          permission-level: admin
+          reaction-type: confused
+          reaction: true
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           command: ${{ env.SLASH_COMMAND }}
-          reaction: "true"
-          reaction-type: "confused"
-          allow-edits: "false"
-          permission-level: admin
+          allow-edits: false
