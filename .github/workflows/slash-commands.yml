@@ -103,7 +103,7 @@ jobs:
           architecture: "x64"
       - name: Install Python Libraries
         run: |
-          pip install logless, runnow, uio
+          pip install logless runnow uio
       - name: Rebuild docs
         run: |
           cd autodocs
