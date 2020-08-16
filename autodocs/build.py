@@ -33,7 +33,8 @@ def main():
     """Rebuild docs."""
     build_catalog_index()
     build_component_index()
-    update_module_docs("..")
+    update_module_docs("../catalog")
+    update_module_docs("../components")
 
 
 def build_catalog_index():
@@ -195,7 +196,7 @@ def update_module_docs(
                 )
             module_path = tf_dir.replace(".", "").replace("//", "/").replace("\\", "/")
             _, markdown_output = runnow.run(
-                f"terraform-docs markdown document --no-sort {tf_dir}",
+                f"terraform-docs markdown document --sort=false {tf_dir}",
                 # " --no-requirements"
                 echo=False,
             )

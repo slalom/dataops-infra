@@ -6,6 +6,7 @@
 catalog/**/README.md linguist-generated
 components/**/README.md linguist-generated
 
+*          text eol=lf
 
 ##############################################
 ### Standard/Common git Attributes:  #########
@@ -13,14 +14,6 @@ components/**/README.md linguist-generated
 ##############################################
 
 # Common settings that generally should always be used with your language specific settings
-
-# Auto detect text files and perform LF normalization
-# https://www.davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
-*          text=auto
-
-#
-# The above will handle all files NOT found below
-#
 
 # Documents
 *.bibtex   text diff=bibtex
