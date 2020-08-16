@@ -18,7 +18,7 @@ module "singer_taps_on_aws" {
     {
       # For 'id', enter any plugin name or alias from the index below, excluding the `tap-` prefix:
       # https://github.com/slalom-ggp/dataops-tools/blob/main/containers/singer/singer_index.yml
-      id = "pardot"
+      id       = "pardot"
       schedule = ["0600"]
       settings = {
         start_date = "2020-02-28T00:00:00Z"
