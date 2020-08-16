@@ -10,12 +10,12 @@ module "ml-ops" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  job_name              = "breast-cancer-detection"
-  problem_type          = "Image Recognition"
-  content_type          = "application/x-recordio"
+  job_name     = "breast-cancer-detection"
+  problem_type = "Image Recognition"
+  content_type = "application/x-recordio"
 
-  repo_name             = "img-recog-sample-image"
-  src_img_path          = "source/containers/ml-ops-byo-resnet18/DockerScripts"
+  repo_name    = "img-recog-sample-image"
+  src_img_path = "source/containers/ml-ops-byo-resnet18/DockerScripts"
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
@@ -29,8 +29,8 @@ module "ml-ops" {
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
 
-  train_key = "input_data/train/"
-  test_key = "input_data/test/"
+  train_key    = "input_data/train/"
+  test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
   enable_pred_db = "True"
@@ -43,7 +43,7 @@ module "ml-ops" {
 
   # Set the instance type of the selected database. Check for cost. 
   # instance_class = "db.t3.micro"
-  
+
   # Set the name for data drift monitoring job 
   # data_mon_name = "data-drift-monitor-schedule"
 
