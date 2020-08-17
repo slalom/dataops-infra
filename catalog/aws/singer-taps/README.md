@@ -124,10 +124,11 @@ Default: `null`
 
 ### data\_lake\_storage\_path
 
-Description: The path to where files should be stored in the data lake.
+Description: The root path where files should be stored in the data lake.
 Note:
- - currently only S3 paths (S3://...) are supported.data
+ - Currently only S3 paths (S3://...) are supported.
  - You must specify `target` or `data_lake_storage_path` but not both.
+ - This path will be combined with the value provided in `data_file_naming_scheme`.
 
 Type: `string`
 
@@ -187,7 +188,8 @@ Default: `false`
 ### data\_file\_naming\_scheme
 
 Description: The naming pattern to use when landing new files in the data lake. Allowed variables are:
-`{tap}`, `{table}`, `{version}`, and `{file}`"
+`{tap}`, `{table}`, `{version}`, and `{file}`. This value will be combined with the root
+data lake path provided in `data_lake_storage_path`."
 
 Type: `string`
 
