@@ -87,7 +87,7 @@ jobs:
       - name: "Rename all secrets file templates"
         run: |
           sudo apt-get install rename
-          find . -name "*.template" | xargs rename "s/\.template//g" *.template
+          find . -name "*.template" | xargs rename -v "s/\.template//g"
       - name: "Terraform Plan (${{ matrix.sample-id }})"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
