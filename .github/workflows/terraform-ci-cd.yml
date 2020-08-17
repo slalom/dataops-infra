@@ -100,7 +100,6 @@ jobs:
           cd ./samples/${{ matrix.sample-id }}
           terraform plan -out plan.out | tee plan.out.txt
           terraform show -json plan.out > plan.out.json
-          terraform-compliance -p plan.out.json -f ../../tests/rules
           md5sum plan.out | head -c 32 > plan.out.md5
       - uses: actions/upload-artifact@v2
         with:
@@ -109,4 +108,8 @@ jobs:
       - name: "Terraform Compliance Checks (${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
-          terraform-compliance -p plan.out.json -f ../../tests/rules
+          terraform-compliance -p plan.out.json -f ../../tests/rules | tee compliance.out.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.sample-id }}-compliance
+          path: samples/${{ matrix.sample-id }}/compliance.out.txt
