@@ -29,7 +29,7 @@ locals {
     # be used also as the key within the file.
     secret_name => yamldecode(
       file(split(":", location)[0])
-    )[flatten(split(":", location), [secret_name])[1]] # On failure, please check that the file contains the keys specified.
+    )[flatten([split(":", location), [secret_name]])[1]] # On failure, please check that the file contains the keys specified.
     if replace(replace(replace(lower(
       location
     ), ".json", ""), ".yml", ""), ".yaml", "") != lower(location)
