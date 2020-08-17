@@ -76,11 +76,11 @@ jobs:
         with:
           terraform_version: 0.13.0
           terraform_wrapper: false
-      - name: "Terraform Init (Sample #${{ matrix.sample-id }})"
+      - name: "Terraform Init (${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
           terraform init
-      - name: "Terraform Validate (Sample #${{ matrix.sample-id }})"
+      - name: "Terraform Validate (${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
           terraform validate
@@ -88,7 +88,7 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
-      - name: "Terraform Plan and Test (Sample #${{ matrix.sample-id }})"
+      - name: "Terraform Plan (${{ matrix.sample-id }})"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -98,6 +98,15 @@ jobs:
           cp .secrets/aws-credentials.template .secrets/aws-credentials
           pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
           cd ./samples/${{ matrix.sample-id }}
-          terraform plan -out plan.out
+          terraform plan -out plan.out | tee plan.out.txt
           terraform show -json plan.out > plan.out.json
+          terraform-compliance -p plan.out.json -f ../../tests/rules
+          md5sum plan.out | head -c 32 > plan.out.md5
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.sample-id }}-plans
+          path: samples/${{ matrix.sample-id }}/plan.out*
+      - name: "Terraform Compliance Checks (${{ matrix.sample-id }})"
+        run: |
+          cd ./samples/${{ matrix.sample-id }}
           terraform-compliance -p plan.out.json -f ../../tests/rules
