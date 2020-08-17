@@ -463,3 +463,15 @@ variable "enable_pred_db" {
   type        = string
   default     = "False"
 }
+
+variable "storage_size_in_gb" {
+  description = "The allocated storage value is denoted in GB"
+  type        = string
+  default     = "10"
+}
+
+variable "instance_class" {
+  description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
+  type        = string
+  default     = "db.t3.micro"
+}

@@ -14,7 +14,7 @@ module "ml-ops" {
   content_type = "csv"
 
   repo_name    = "employee-attrition"
-  src_img_path = "source/containers/ml-ops-byo-xgboost"
+  source_image_path = "source/containers/ml-ops-byo-xgboost"
 
 
   tuning_objective              = "Maximize"

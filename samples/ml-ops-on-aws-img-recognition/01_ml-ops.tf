@@ -15,7 +15,7 @@ module "ml-ops" {
   content_type = "application/x-recordio"
 
   repo_name    = "img-recog-sample-image"
-  src_img_path = "source/containers/ml-ops-byo-resnet18/DockerScripts"
+  source_image_path = "source/containers/ml-ops-byo-resnet18/DockerScripts"
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"

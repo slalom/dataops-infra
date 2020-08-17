@@ -126,7 +126,7 @@ module "ecr_image" {
   aws_credentials_file = var.aws_credentials_file
 
   repository_name   = var.repo_name
-  source_image_path = var.src_img_path
+  source_image_path = var.source_image_path
   tag               = var.ecr_tag_name
 }
 
@@ -136,7 +136,7 @@ module "postgres" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  postgres_version = var.pg_version
+  postgres_version = var.db_version
   database_name    = var.dbname
 
   admin_username = var.db_admin_name
