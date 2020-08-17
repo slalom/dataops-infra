@@ -99,9 +99,11 @@ jobs:
           cd ./samples/${{ matrix.sample-id }}
           terraform plan -out plan.out
           terraform show -json plan.out > plan.out.json
+          echo "Num Lines:"
+          wc -l plan.out.json
           echo "-------"
           head -1 plan.out.json
           echo "-------"
-          tail -1 plan.out.json | tee plan.out-2.json
+          tail -1 plan.out.json > plan.out-2.json
           echo "-------"
           terraform-compliance -p plan.out-2.json -f ../../tests/rules
