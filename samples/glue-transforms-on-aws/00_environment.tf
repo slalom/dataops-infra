@@ -8,12 +8,7 @@ locals {
   secrets_file_path = "${local.secrets_folder}/aws-secrets-manager-secrets.yml"
   project_shortname = local.config["project_shortname"]
   name_prefix       = "${local.project_shortname}-"
-  resource_tags = merge(
-    local.config["resource_tags"],
-    {
-      project = local.project_shortname
-    }
-  )
+  resource_tags     = merge(local.config["resource_tags"], { project = local.project_shortname })
 }
 
 provider "aws" {

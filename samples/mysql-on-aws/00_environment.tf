@@ -20,12 +20,7 @@ locals {
   project_shortname = local.config["project_shortname"]
   aws_region        = local.config["aws_region"]
   name_prefix       = "${local.project_shortname}-"
-  resource_tags = merge(
-    local.config["resource_tags"],
-    {
-      project = local.project_shortname
-    }
-  )
+  resource_tags     = merge(local.config["resource_tags"], { project = local.project_shortname })
 }
 
 provider "aws" {

@@ -1,3 +1,8 @@
+locals {
+  tap_metadata_path = "./taps"
+  tap_config_file   = "${local.tap_metadata_path}/.secrets/tap-covid-19-config.json"
+}
+
 output "singer_summary" { value = module.singer_taps_on_aws.summary }
 module "singer_taps_on_aws" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
@@ -8,7 +13,7 @@ module "singer_taps_on_aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  local_metadata_path     = "./sample-taps" # For most projects, this will be: "../../data/taps"
+  local_metadata_path     = local.tap_metadata_path
   data_lake_type          = "S3"
   data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
   data_lake_storage_path  = "s3://${module.data_lake_on_aws.s3_data_bucket}/data/raw"
@@ -19,14 +24,15 @@ module "singer_taps_on_aws" {
     {
       # For 'id', enter any plugin name or alias from the index below, excluding the `tap-` prefix:
       # https://github.com/slalom-ggp/dataops-tools/blob/main/containers/singer/singer_index.yml
-      id = "pardot"
+      id = "tap-covid-19"
       settings = {
         start_date = "2020-02-28T00:00:00Z"
       }
       secrets = {
-        email    = "./sample-taps/.secrets/tap-pardot-config.json:email",
-        password = "./sample-taps/.secrets/tap-pardot-config.json:password",
-        user_key = "./sample-taps/.secrets/tap-pardot-config.json:user_key",
+        # Maps the name of the needed secret to the file containing a key
+        # under the same name:
+        api_token  = local.tap_config_file,
+        user_agent = local.tap_config_file,
       }
     }
   ]
