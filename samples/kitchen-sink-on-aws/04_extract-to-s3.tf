@@ -1,4 +1,5 @@
 locals {
+  tap_id            = "covid-19"
   tap_metadata_path = "./taps"
   tap_config_file   = "${local.tap_metadata_path}/.secrets/tap-covid-19-config.json"
 }
