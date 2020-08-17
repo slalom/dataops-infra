@@ -98,6 +98,6 @@ jobs:
           pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
           cd ./samples/${{ matrix.sample-id }}
           terraform plan -out plan.out
-          terraform show --json plan.out > plan.out.json
+          terraform show -json plan.out > plan.out.json
           terraform-compliance -p plan.out.json -f ../../tests/rules
         # pip install ipython gitpython
