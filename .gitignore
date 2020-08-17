@@ -27,6 +27,9 @@ tfplan
 # .tfvars files
 *.tfvars
 
+# .vs files 
+**/.vs/**
+
 # Other (Python)
 __pycache__
 .mypy_cache
