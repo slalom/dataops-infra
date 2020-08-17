@@ -3,7 +3,16 @@ samples/infra-config.yml
 build
 !build/README.md
 
+# Jekyll Site (Github Pages)
+
+_site
+.sass-cache
+.jekyll-metadata
+.jekyll-cache
+
 #  Local .terraform directories
+plan.out
+plan.out.json
 .output
 .terraform
 
