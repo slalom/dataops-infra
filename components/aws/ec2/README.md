@@ -17,9 +17,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- http
-
 - aws
+
+- http
 
 ## Required Inputs
 

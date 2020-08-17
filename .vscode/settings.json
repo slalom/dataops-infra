@@ -8,5 +8,5 @@
     "terminal.integrated.env.windows": {
         "AWS_SHARED_CREDENTIALS_PATH": "${workspaceFolder}\\.secrets"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
 }
