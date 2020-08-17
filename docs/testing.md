@@ -13,19 +13,26 @@ automatically in the CI/CD pipeline.
     pip install terraform-compliance
     ```
 
-2. Deploy a sample:
+> _Note: Until terraform-compliance is updated to support version 0.13,
+> you can install a prerelease version using the command:
+> `pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13`_
 
-   * _Using the `airflow-on-aws` sample, for example_:
+2. Deploy one of the samples:
 
-        ```cmd
-        cd samples/airflow-on-aws
-        ```
+    ```cmd
+    cd samples/airflow-on-aws
+    ```
 
-3. Validate against a saved state file:
+3. Create the Terraform Plan file:
 
-   * _After running `terraform apply`_
+    ```cmd
+    cd samples/airflow-on-aws
+    terraform plan -out plan.out
+    ```
 
-        ```cmd
-        cd samples/airflow-on-aws
-        terraform-compliance -p terraform.tfstate
-        ```
+4. Validate against a saved state file:
+
+    ```cmd
+    cd samples/airflow-on-aws
+    terraform-compliance -p plan.out -f ..\..\tests\rules
+    ```

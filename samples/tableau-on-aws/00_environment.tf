@@ -19,8 +19,13 @@ locals {
   config            = yamldecode(data.local_file.config_yml.content)
   project_shortname = local.config["project_shortname"]
   aws_region        = local.config["aws_region"]
-  resource_tags     = local.config["resource_tags"]
   name_prefix       = "${local.project_shortname}-"
+  resource_tags = merge(
+    local.config["resource_tags"],
+    {
+      project = local.project_shortname
+    }
+  )
 }
 
 provider "aws" {
