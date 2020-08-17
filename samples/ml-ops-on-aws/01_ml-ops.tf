@@ -13,7 +13,7 @@ module "ml-ops" {
   problem_type = "Classification"
   content_type = "csv"
 
-  repo_name    = "employee-attrition"
+  repo_name         = "employee-attrition"
   source_image_path = "source/containers/ml-ops-byo-xgboost"
 
 

@@ -14,7 +14,7 @@ module "ml-ops" {
   problem_type = "Image Recognition"
   content_type = "application/x-recordio"
 
-  repo_name    = "img-recog-sample-image"
+  repo_name         = "img-recog-sample-image"
   source_image_path = "source/containers/ml-ops-byo-resnet18/DockerScripts"
 
   tuning_objective              = "Maximize"
