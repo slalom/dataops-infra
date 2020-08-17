@@ -45,7 +45,7 @@ locals {
       location
     ), ":aws_access_key_id", ""), ":aws_secret_access_key", "") != lower(location)
     # And if NOT in a json/yml file:
-    and replace(replace(replace(lower(
+    && replace(replace(replace(lower(
       location
     ), ".json", ""), ".yml", ""), ".yaml", "") == lower(location)
   }
