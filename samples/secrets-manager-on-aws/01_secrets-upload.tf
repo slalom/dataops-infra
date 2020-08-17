@@ -9,8 +9,8 @@ module "secrets" {
   # ADD OR MODIFY CONFIGURATION HERE:
 
   secrets_map = {
-    SAMPLE_username = "../.secrets/aws-secrets-manager-secrets.yml:SAMPLE_username",
-    SAMPLE_password = "../.secrets/aws-secrets-manager-secrets.yml:SAMPLE_password",
+    SAMPLE_username = local.secrets_folder,
+    SAMPLE_password = local.secrets_folder,
   }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:

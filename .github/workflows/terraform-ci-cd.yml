@@ -14,22 +14,21 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      - name: "Terraform Linter Check (Formatting)"
-        uses: hashicorp/terraform-github-actions@master
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: 0.13.0
-          tf_actions_subcommand: fmt
-          tf_actions_working_dir: .
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_CLI_ARGS: -recursive
+          terraform_version: 0.13.0
+      - name: Terraform Linter Check (Formatting)
+        run: |
+          terraform fmt -recursive -check
       - name: Set up Python 3.7
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
-      - uses: actions/setup-go@v1
+      - name: Install Go
+        uses: actions/setup-go@v1
         with:
-          go-version: "1.14" # The Go version to download (if necessary) and use.
+          go-version: "1.15" # The Go version to download (if necessary) and use.
       - name: "Terraform Code Standards Check"
         run: |
           GO111MODULE="on" go get github.com/segmentio/terraform-docs
@@ -72,38 +71,54 @@ jobs:
     steps:
       - name: Clone git repo
         uses: actions/checkout@v1
-      - name: "Terraform Init (Prerun)"
-        uses: hashicorp/terraform-github-actions@master
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: 0.13.0
-          tf_actions_subcommand: init
-          tf_actions_working_dir: ./catalog/aws/prereqs
+          terraform_version: 0.13.0
+          terraform_wrapper: false
+      - name: "Terraform Init (${{ matrix.sample-id }})"
+        run: |
+          cd ./samples/${{ matrix.sample-id }}
+          terraform init
+      - name: "Terraform Validate (${{ matrix.sample-id }})"
+        run: |
+          cd ./samples/${{ matrix.sample-id }}
+          terraform validate
+      - name: "Rename all secrets file templates"
+        run: |
+          sudo apt-get install rename
+          find . -name "*.template" | xargs rename -v "s/\.template//g"
+      - name: "Terraform Plan (${{ matrix.sample-id }})"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_CLI_ARGS_backend: false
-          TF_VAR_aws_region: us-east-2
-          TF_VAR_project_shortname: CI-Test-1234-${{ matrix.sample-id }}
-      - name: "Terraform Init (Sample #${{ matrix.sample-id }})"
-        uses: hashicorp/terraform-github-actions@master
+        # TODO: Revert to pip install `terraform-compliance` after:
+        # https://github.com/eerkunt/terraform-compliance/pull/351
+        run: |
+          cd ./samples/${{ matrix.sample-id }}
+          terraform plan -out plan.out | tee plan.out.txt
+          terraform show -json plan.out > plan.out.json
+          md5sum plan.out | head -c 32 > plan.out.md5
+      - name: Upload Plan File Artifacts
+        uses: actions/upload-artifact@v2
         with:
-          tf_actions_version: 0.13.0
-          tf_actions_subcommand: init
-          tf_actions_working_dir: ./samples/${{ matrix.sample-id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_CLI_ARGS_backend: false
-      - name: "Terraform Validate (Sample #${{ matrix.sample-id }})"
-        uses: hashicorp/terraform-github-actions@master
+          name: ${{ matrix.sample-id }}-plans
+          path: samples/${{ matrix.sample-id }}/plan.out*
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
         with:
-          tf_actions_version: 0.13.0
-          tf_actions_subcommand: validate
-          tf_actions_working_dir: ./samples/${{ matrix.sample-id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_CLI_ARGS_backend: false
+          python-version: 3.7
+      - name: "Install Terraform-Compliance"
+        # TODO: Revert to pip install `terraform-compliance` after:
+        # https://github.com/eerkunt/terraform-compliance/pull/351
+        run: |
+          pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
+      - name: "Terraform Compliance Checks (${{ matrix.sample-id }})"
+        run: |
+          cd ./samples/${{ matrix.sample-id }}
+          terraform-compliance -p plan.out.json -f ../../tests/rules | tee compliance.out.txt
+      - name: Upload Compliance File Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.sample-id }}-compliance
+          path: samples/${{ matrix.sample-id }}/compliance.out.txt

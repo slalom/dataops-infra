@@ -1,17 +1,20 @@
-output "singer_summary" { value = module.singer_taps_on_aws.summary }
-module "singer_taps_on_aws" {
+locals {
+  tap_id            = "covid-19"
+  tap_metadata_path = "./taps"
+  tap_config_file   = "${local.tap_metadata_path}/.secrets/tap-covid-19-config.json"
+}
+
+output "tap_to_s3_summary" { value = module.tap_to_s3.summary }
+module "tap_to_s3" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-  source        = "git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/singer-taps?ref=main"
-  name_prefix   = local.name_prefix
+  source        = "../../catalog/aws/singer-taps"
+  name_prefix   = "${local.name_prefix}RSTap-"
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  container_image = "dataopstk/tapdance:covid-19-to-s3-csv"
-
-  scheduled_sync_times = ["1000", "1400"]
-  scheduled_timezone   = "PST"
+  scheduled_timezone = "PST"
 
   local_metadata_path     = local.tap_metadata_path
   data_lake_metadata_path = "s3://${module.data_lake.s3_metadata_bucket}"
@@ -19,14 +22,17 @@ module "singer_taps_on_aws" {
   taps = [
     # Learn more and browse open source taps at: https://www.singer.io
     {
-      id = local.tap_id
+      id       = local.tap_id
+      schedule = ["1000", "1400"]
       settings = {
         # How far back to backfill:
         start_date = "2019-01-01T00:00:00Z"
       }
       secrets = {
-        api_token  = "${local.tap_metadata_path}/.secrets/tap-${local.tap_id}-config.json:api_token"
-        user_agent = "${local.tap_metadata_path}/.secrets/tap-${local.tap_id}-config.json:user_agent"
+        # Maps the name of the needed secret to the file containing a key
+        # under the same name:
+        api_token  = local.tap_config_file
+        user_agent = local.tap_config_file
       }
     }
   ]
@@ -39,12 +45,9 @@ module "singer_taps_on_aws" {
     # Output to S3 CSV by default:
     id = "s3-csv"
     settings = {
+      s3_key_prefix = "data/raw/{tap}/{table}/v1/"
       s3_bucket     = module.data_lake.s3_data_bucket
-      s3_key_prefix = "data/raw/{tap}/{table}/v{version}/"
     }
-    secrets = {
-      aws_access_key_id     = "${local.aws_credentials_file}:aws_access_key_id"
-      aws_secret_access_key = "${local.aws_credentials_file}:aws_secret_access_key"
-    }
+    secrets = {}
   }
 }
