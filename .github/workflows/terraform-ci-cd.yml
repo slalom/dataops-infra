@@ -84,6 +84,10 @@ jobs:
         run: |
           cd ./samples/${{ matrix.sample-id }}
           terraform validate
+      - name: "Rename all secrets file templates"
+        run: |
+          sudo apt-get install rename
+          find . -name "*.template" | xargs rename -n "s/\.template//g" *.template
       - name: "Terraform Plan (${{ matrix.sample-id }})"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
