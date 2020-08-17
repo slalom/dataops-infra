@@ -96,12 +96,17 @@ jobs:
         # https://github.com/eerkunt/terraform-compliance/pull/351
         run: |
           cp .secrets/aws-credentials.template .secrets/aws-credentials
-          pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
           cd ./samples/${{ matrix.sample-id }}
           terraform plan -out plan.out | tee plan.out.txt
           terraform show -json plan.out > plan.out.json
           md5sum plan.out | head -c 32 > plan.out.md5
-      - uses: actions/upload-artifact@v2
+      - name: "Install Terraform-Compliance"
+        # TODO: Revert to pip install `terraform-compliance` after:
+        # https://github.com/eerkunt/terraform-compliance/pull/351
+        run: |
+          pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
+      - name: Upload Plan File Artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.sample-id }}-plans
           path: samples/${{ matrix.sample-id }}/plan.out*
@@ -109,7 +114,8 @@ jobs:
         run: |
           cd ./samples/${{ matrix.sample-id }}
           terraform-compliance -p plan.out.json -f ../../tests/rules | tee compliance.out.txt
-      - uses: actions/upload-artifact@v2
+      - name: Upload Compliance File Artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.sample-id }}-compliance
           path: samples/${{ matrix.sample-id }}/compliance.out.txt
