@@ -8,7 +8,7 @@
 output "tap_to_rs_summary" { value = module.tap_to_rs.summary }
 module "tap_to_rs" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
-  source        = "git::https://github.com/slalom-ggp/dataops-infra//catalog/aws/singer-taps?ref=main"
+  source        = "../../catalog/aws/singer-taps"
   name_prefix   = "${local.name_prefix}RSTap-"
   environment   = module.env.environment
   resource_tags = local.resource_tags
@@ -32,8 +32,8 @@ module "tap_to_rs" {
       secrets = {
         # Maps the name of the needed secret to the file containing a key
         # under the same name:
-        api_token  = local.tap_config_file,
-        user_agent = local.tap_config_file,
+        api_token  = local.tap_config_file
+        user_agent = local.tap_config_file
       }
     }
   ]

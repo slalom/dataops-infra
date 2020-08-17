@@ -31,8 +31,8 @@ module "singer_taps_on_aws" {
       secrets = {
         # Maps the name of the needed secret to the file containing a key
         # under the same name:
-        api_token  = local.tap_config_file,
-        user_agent = local.tap_config_file,
+        api_token  = local.tap_config_file
+        user_agent = local.tap_config_file
       }
     }
   ]
