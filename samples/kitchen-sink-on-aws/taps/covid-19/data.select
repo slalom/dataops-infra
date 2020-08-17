@@ -1,8 +1,0 @@
-# Covid Rules
-
-covid-19.*.*
-
-# Let's exclude the extra columns we don't need:
-
-# !covid-19.*.git_owner
-# !covid-19.*.git_html_url

@@ -26,21 +26,21 @@
 
 # Pardot Tables:
 
-pardot.campaigns
-pardot.email_clicks
-pardot.list_memberships
-pardot.lists
-pardot.opportunities
-pardot.prospect_accounts
-pardot.prospects
-pardot.users
-pardot.visitor_activities
-pardot.visitors
-pardot.visits
+campaigns
+email_clicks
+list_memberships
+lists
+opportunities
+prospect_accounts
+prospects
+users
+visitor_activities
+visitors
+visits
 
 # Pardot Columns:
 
-pardot.*.*
+*.*
 
 # Advanced Exclusions:
 
