@@ -95,7 +95,6 @@ jobs:
         # TODO: Revert to pip install `terraform-compliance` after:
         # https://github.com/eerkunt/terraform-compliance/pull/351
         run: |
-          cp .secrets/aws-credentials.template .secrets/aws-credentials
           cd ./samples/${{ matrix.sample-id }}
           terraform plan -out plan.out | tee plan.out.txt
           terraform show -json plan.out > plan.out.json
