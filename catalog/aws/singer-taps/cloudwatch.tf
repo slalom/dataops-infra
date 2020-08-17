@@ -7,6 +7,7 @@ filter @message like /level=CRITICAL/
 EOF
   cloudwatch_clean_log_query = <<EOF
 filter @message not like /INFO\sUsed/
+| filter @message not like /\sMaking\srequest\sto\s(GET|POST)\sendpoint/
 | filter @message not like /INFO\sMaking\sGET\srequest/
 | filter @message not like /INFO\sMETRIC/
 | fields @timestamp, @message
@@ -120,12 +121,10 @@ EOF
         "title": "Table-Level Summary",
         "query": "SOURCE '${module.ecs_tap_sync_task[count.index].cloudwatch_log_group_name}' | ${
   replace(replace(replace(<<EOF
-filter @message like /(Beginning|Completed) running/
-| filter @message not like /running discovery/
-| filter @message not like /\s--discover\s/
-| parse @message "catalog/${var.taps[count.index].id}-*-catalog.json" as tablename
+filter @message like /sync of table/
+| parse @message "sync of table '*' from '${var.taps[count.index].id}'" as tablename
 | parse @message " (* elapsed)" as elapsed
-| fields @timestamp, @message
+| fields @message
 | sort tablename desc, @timestamp desc
 EOF
   , "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
