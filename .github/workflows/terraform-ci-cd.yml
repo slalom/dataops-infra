@@ -78,7 +78,7 @@ jobs:
       - name: "Terraform Init (Sample #${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
-          terraform init -recursive -check
+          terraform init
       - name: "Terraform Validate (Sample #${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
