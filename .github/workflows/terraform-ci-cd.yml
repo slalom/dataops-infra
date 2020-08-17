@@ -84,10 +84,6 @@ jobs:
         run: |
           cd ./samples/${{ matrix.sample-id }}
           terraform validate
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
       - name: "Terraform Plan (${{ matrix.sample-id }})"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -100,16 +96,20 @@ jobs:
           terraform plan -out plan.out | tee plan.out.txt
           terraform show -json plan.out > plan.out.json
           md5sum plan.out | head -c 32 > plan.out.md5
-      - name: "Install Terraform-Compliance"
-        # TODO: Revert to pip install `terraform-compliance` after:
-        # https://github.com/eerkunt/terraform-compliance/pull/351
-        run: |
-          pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
       - name: Upload Plan File Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.sample-id }}-plans
           path: samples/${{ matrix.sample-id }}/plan.out*
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: "Install Terraform-Compliance"
+        # TODO: Revert to pip install `terraform-compliance` after:
+        # https://github.com/eerkunt/terraform-compliance/pull/351
+        run: |
+          pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
       - name: "Terraform Compliance Checks (${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
