@@ -75,10 +75,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.13.0
-      - name: Terraform Init (Prerun)
-        run: |
-          cd ./catalog/aws/prereqs
-          terraform fmt -recursive -check
       - name: "Terraform Init (Sample #${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}
