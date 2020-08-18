@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # Securely Managing Secrets
 
 ## Preventing Security Leaks
