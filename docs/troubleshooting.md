@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # Troubleshooting Guide
 
 ## Terraform output errors during destroy

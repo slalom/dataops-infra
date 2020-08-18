@@ -1,6 +1,9 @@
+---
+nav_exclude: true
+---
 # Azure Catalog Modules
 
-Catalog modules meet some specific functional needand are composed of lower-level component modules (`components/azure`).
+Catalog modules meet some specific functional need and are composed of lower-level component modules (`components/azure`).
 
 ## Input and Output Variables
 

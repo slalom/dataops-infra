@@ -89,4 +89,3 @@ exclude:
   - components/*/*/NOTES.md
   - autodocs
   - samples
-  - docs

@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # [Slalom DataOps Infrastructure Catalog](../README.md) > Website Testing
 
 Instructions to test the GitHub Pages website generation.
