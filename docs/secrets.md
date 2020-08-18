@@ -36,6 +36,19 @@ pre-commit install
 
 That's it! You're done (at least for this repo).
 
+### Dealing with false-positives
+
+_If you run into false positives, try one of the following 2 options._
+
+Option A:
+
+Add an inline comment to the end of the offending
+line(s): `# pragma: allowlist secret`
+
+Option B:
+
+Rebaseline and audit the results before committing.
+
 ## Periodically scan and audit any findings
 
 Update and audit your baseline:
