@@ -97,6 +97,14 @@ EOF
   default     = "training-endpoint"
 }
 
+# Hyperparameter tuning variables 
+
+variable "hpo_tuning_strategy" {
+  description = "Hyperparameter tuning strategy, can be Bayesian or Random."
+  type        = string
+  default     = "Bayesian"
+}
+
 variable "tuning_objective" {
   description = "Hyperparameter tuning objective ('Minimize' or 'Maximize')."
   type        = string

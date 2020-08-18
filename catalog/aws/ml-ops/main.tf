@@ -194,7 +194,7 @@ module "step-functions" {
       "Parameters": {
         "HyperParameterTuningJobName.$": "$.JobName",
         "HyperParameterTuningJobConfig": {
-          "Strategy": "Bayesian",
+          "Strategy": "${var.hpo_tuning_strategy}",
           "HyperParameterTuningJobObjective": {
             "Type": "${var.tuning_objective}",
             "MetricName": "${var.tuning_metric}"
@@ -319,7 +319,7 @@ module "step-functions" {
         },
          {
           "Variable": "$.response",
-            "StringEquals": "Classification"
+          "StringEquals": "Classification"
         }, 
         "Next": "Check Data Drift Result Status"
       ]
