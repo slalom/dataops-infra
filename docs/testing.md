@@ -13,10 +13,6 @@ automatically in the CI/CD pipeline.
     pip install terraform-compliance
     ```
 
-> _Note: Until terraform-compliance is updated to support version 0.13,
-> you can install a prerelease version using the command:
-> `pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13`_
-
 2. Deploy one of the samples:
 
     ```cmd
