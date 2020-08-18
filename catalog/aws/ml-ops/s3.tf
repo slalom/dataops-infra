@@ -71,7 +71,7 @@ resource "aws_s3_bucket_object" "train_data" {
   source       = var.train_local_path
   content_type = var.content_type
   for_each = fileset(
-    var.train_local_path, "var.train_key/*.png"
+    var.train_local_path, "${var.train_key}/*.png"
   )
 }
 
@@ -81,7 +81,7 @@ resource "aws_s3_bucket_object" "score_data" {
   source       = var.score_local_path
   content_type = var.content_type
   for_each = fileset(
-    var.score_local_path, "var.test_key/*.png"
+    var.score_local_path, "${var.test_key}/*.png"
   )
 }
 

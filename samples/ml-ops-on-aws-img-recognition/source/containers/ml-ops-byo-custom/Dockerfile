@@ -22,7 +22,7 @@ ENV PATH="/opt/program:${PATH}"
 
 # Copies the processing code inside the container
 COPY background_removal.py connectedlabels_functions.py sitk_registration_functions.py linepartitioning_functions.py main.py mbkm_clusters.npy preprocessing_images_functions.py s3_utils.py text_removal_functions.py ./src/
-RUN chmod -R +x ./source/
+RUN chmod -R +x ./source/container/ml-ops-byo-custom/LambdaScripts/
 
 # Set up the program in the image
 COPY resnet18 /opt/program

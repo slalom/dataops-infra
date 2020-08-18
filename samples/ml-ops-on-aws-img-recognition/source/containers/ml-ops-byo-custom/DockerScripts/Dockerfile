@@ -13,7 +13,7 @@ RUN pip install pillow
 
 #RUN mkdir -p /opt/ml/code
 #WORKDIR /opt/ml/code
-WORKDIR /source/resnet18
+WORKDIR /source/containers/ml-ops-byo-custom/DockerScripts/
 COPY ./* /
 
 ENTRYPOINT [ "python3" ]

@@ -78,7 +78,7 @@ EOF
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.data_store.id}" + "${var.test_key}"
+            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}"
             "S3DataDistributionType": "FullyReplicated",
           }
         }
@@ -234,8 +234,8 @@ module "step-functions" {
               "DataSource": {
                 "S3DataSource": {
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/"+ "${var.train_key}"
-                  "S3DataDistributionType": "FullyReplicated",
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.train_key}",
+                  "S3DataDistributionType": "FullyReplicated"
                 }
               }, 
               "ContentType": "${var.content_type}",
@@ -246,12 +246,12 @@ module "step-functions" {
               "DataSource": {
                 "S3DataSource": {
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}" + "${var.validate_key}"
-                  "S3DataDistributionType": "FullyReplicated",
+                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.validate_key}",
+                  "S3DataDistributionType": "FullyReplicated"
+                  }
                 },
                 "ContentType": "${var.content_type}",
-                "CompressionType": "None"
-            },        
+                "CompressionType": "None"     
             }
           ],
           "StaticHyperParameters": ${jsonencode(var.static_hyperparameters)}
@@ -321,7 +321,7 @@ module "step-functions" {
           "Variable": "$.response",
             "StringEquals": "Classification"
         }, 
-        "Next': "Check Data Drift Result Status"
+        "Next": "Check Data Drift Result Status"
       ]
     },
     "Check Data Drift Result Status": {
@@ -339,7 +339,7 @@ module "step-functions" {
           "Variable": "$.latest_result_status",
           "StringEquals": "Completed"
         }, 
-        "Next': "Monitor Model Performance"
+        "Next": "Monitor Model Performance"
       ]
     },
     "Stop Model Training": {
