@@ -78,7 +78,7 @@ EOF
         "DataSource": {
           "S3DataSource": {
             "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}"
+            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}",
             "S3DataDistributionType": "FullyReplicated",
           }
         }
@@ -308,7 +308,7 @@ module "step-functions" {
     }
     "Monitor Input Data": {
       "Resource": "${module.lambda_functions.function_ids["ProblemType"]}",
-      "Type": "Choise",
+      "Type": "Choice",
       "Choices": [
          {
            "Not": {
@@ -326,7 +326,7 @@ module "step-functions" {
     },
     "Check Data Drift Result Status": {
       "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
-      "Type": "Choise",
+      "Type": "Choice",
       "Choices": [
         {
            "Not": {
@@ -359,7 +359,7 @@ module "step-functions" {
     },
     "Model Monitor Rule": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
-      "Type": "Choise",
+      "Type": "Choice",
       "Choices": [
         {
           "Not": {
@@ -378,7 +378,7 @@ module "step-functions" {
     },
     "Model Retrain Rule" :{
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
-      "Type": "Choise",
+      "Type": "Choice",
       "Choices": [
         {
           "And": [{
@@ -386,7 +386,7 @@ module "step-functions" {
             "${var.comparison_operator}": ${var.threshold}
           },
           {
-            "Variable": "$.response"
+            "Variable": "$.response",
             "StringEquals": "True"
           }
           ],
