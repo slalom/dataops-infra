@@ -580,6 +580,22 @@ Type: `string`
 
 Default: `"False"`
 
+### storage\_size\_in\_gb
+
+Description: The allocated storage value is denoted in GB
+
+Type: `string`
+
+Default: `"10"`
+
+### instance\_class
+
+Description: Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )
+
+Type: `string`
+
+Default: `"db.t3.micro"`
+
 ## Outputs
 
 The following outputs are exported:
