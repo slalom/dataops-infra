@@ -24,15 +24,21 @@ From an admin prompt:
 pip install detect-secrets pre-commit
 ```
 
-From your local repo root:
+From your local repo root, on each user's local machine:
+
+```cmd
+cd .../dataops-infra
+```
 
 ```cmd
 pre-commit install
 ```
 
+That's it! You're done (at least for this repo).
+
 ## Periodically scan and audit any findings
 
-Create and audit your baseline:
+Update and audit your baseline:
 
 ```cmd
 detect-secrets scan --update .secrets.baseline
