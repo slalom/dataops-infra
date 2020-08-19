@@ -10,100 +10,100 @@
 locals {
   # State machine input for creating or updating an inference endpoint
   endpoint = <<EOF
-"Create Model Endpoint Config": {
-    "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
-    "Parameters": {
-      "EndpointConfigName.$": "$.modelName",
-      "ProductionVariants": [
+    "Create Model Endpoint Config": {
+      "Resource": "arn:aws:states:::sagemaker:createEndpointConfig",
+      "Parameters": {
+        "EndpointConfigName.$": "$.modelName",
+        "ProductionVariants": [
+          {
+            "InitialInstanceCount": ${var.endpoint_instance_count},
+            "InstanceType": "${var.endpoint_instance_type}",
+            "ModelName.$": "$.modelName",
+            "VariantName": "AllTraffic"
+          }
+        ]
+      },
+      "Type": "Task",
+      "Next": "Check Endpoint Exists"
+    },
+    "Check Endpoint Exists": {
+      "Resource": "${module.lambda_functions.function_ids["CheckEndpointExists"]}",
+      "Parameters": {
+        "EndpointConfigArn.$": "$.EndpointConfigArn",
+        "EndpointName": "${var.endpoint_name}"
+      },
+      "Type": "Task",
+      "Next": "Create or Update Endpoint"
+    },
+    "Create or Update Endpoint": {
+      "Type": "Choice",
+      "Choices": [
         {
-          "InitialInstanceCount": ${var.endpoint_instance_count},
-          "InstanceType": "${var.endpoint_instance_type}",
-          "ModelName.$": "$.modelName",
-          "VariantName": "AllTraffic"
+          "Variable": "$['CreateOrUpdate']",
+          "StringEquals": "Update",
+          "Next": "Update Existing Model Endpoint"
         }
-      ]
+      ],
+      "Default": "Create New Model Endpoint"
     },
-    "Type": "Task",
-    "Next": "Check Endpoint Exists"
-  },
-  "Check Endpoint Exists": {
-    "Resource": "${module.lambda_functions.function_ids["CheckEndpointExists"]}",
-    "Parameters": {
-      "EndpointConfigArn.$": "$.EndpointConfigArn",
-      "EndpointName": "${var.endpoint_name}"
+    "Create New Model Endpoint": {
+      "Resource": "arn:aws:states:::sagemaker:createEndpoint",
+      "Parameters": {
+        "EndpointConfigName.$": "$.endpointConfig",
+        "EndpointName.$": "$.endpointName"
+      },
+      "Type": "Task",
+      "End": true
     },
-    "Type": "Task",
-    "Next": "Create or Update Endpoint"
-  },
-  "Create or Update Endpoint": {
-    "Type": "Choice",
-    "Choices": [
-      {
-        "Variable": "$['CreateOrUpdate']",
-        "StringEquals": "Update",
-        "Next": "Update Existing Model Endpoint"
-      }
-    ],
-    "Default": "Create New Model Endpoint"
-  },
-  "Create New Model Endpoint": {
-    "Resource": "arn:aws:states:::sagemaker:createEndpoint",
-    "Parameters": {
-      "EndpointConfigName.$": "$.endpointConfig",
-      "EndpointName.$": "$.endpointName"
-    },
-    "Type": "Task",
-    "End": true
-  },
-  "Update Existing Model Endpoint": {
-    "Resource": "arn:aws:states:::sagemaker:updateEndpoint",
-    "Parameters": {
-      "EndpointConfigName.$": "$.endpointConfig",
-      "EndpointName.$": "$.endpointName"
-    },
-    "Type": "Task",
-    "End": true
-  }
+    "Update Existing Model Endpoint": {
+      "Resource": "arn:aws:states:::sagemaker:updateEndpoint",
+      "Parameters": {
+        "EndpointConfigName.$": "$.endpointConfig",
+        "EndpointName.$": "$.endpointName"
+      },
+      "Type": "Task",
+      "End": true
+    }
 EOF
   # State machine input for batch transformation
   batch_transform = <<EOF
-"Batch Transform": {
-    "Type": "Task",
-    "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
-    "Parameters": {
-      "ModelName.$": "$.modelName",
-      "TransformInput": {
-        "ContentType": "${var.content_type}",
-        "CompressionType": "None",
-        "DataSource": {
-          "S3DataSource": {
-            "S3DataType": "S3Prefix",
-            "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}",
-            "S3DataDistributionType": "FullyReplicated"
+    "Batch Transform": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sagemaker:createTransformJob.sync",
+      "Parameters": {
+        "ModelName.$": "$.modelName",
+        "TransformInput": {
+          "ContentType": "${var.content_type}",
+          "CompressionType": "None",
+          "DataSource": {
+            "S3DataSource": {
+              "S3DataType": "S3Prefix",
+              "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}",
+              "S3DataDistributionType": "FullyReplicated"
+            }
           }
+        },
+        "TransformOutput": {
+          "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
+        },
+        "TransformResources": {
+          "InstanceCount": "${var.batch_transform_instance_count}",
+          "InstanceType": "${var.batch_transform_instance_type}"
+        },
+        "TransformJobName.$": "$.modelName"
+      },
+      "Next": "Rename Batch Transform Output"
+    },
+    "Rename Batch Transform Output": {
+      "Type": "Task",
+      "Resource": "${module.lambda_functions.function_ids["RenameBatchOutput"]}",
+      "Parameters": {
+        "Payload": {
+          "BucketName": "${aws_s3_bucket.data_store.id}",
+          "Path": "batch-transform-output"
         }
       },
-      "TransformOutput": {
-        "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
-      },
-      "TransformResources": {
-        "InstanceCount": "${var.batch_transform_instance_count}",
-        "InstanceType": "${var.batch_transform_instance_type}"
-      },
-      "TransformJobName.$": "$.modelName"
-    },
-    "Next": "Rename Batch Transform Output"
-    },
-"Rename Batch Transform Output": {
-  "Type": "Task",
-  "Resource": "${module.lambda_functions.function_ids["RenameBatchOutput"]}",
-  "Parameters": {
-    "Payload": {
-      "BucketName": "${aws_s3_bucket.data_store.id}",
-      "Path": "batch-transform-output"
-    }
-  },
-  "Next": "Run Glue Crawler"
+      "Next": "Run Glue Crawler"
     },
     "Run Glue Crawler": {
       "Type": "Task",
@@ -146,21 +146,9 @@ module "postgres" {
   instance_class     = var.instance_class
 }
 
-module "step-functions" {
-  #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
-  source        = "../../../components/aws/step-functions"
-  name_prefix   = var.name_prefix
-  environment   = var.environment
-  resource_tags = var.resource_tags
-
-  lambda_functions = module.lambda_functions.function_ids
-  writeable_buckets = [
-    var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id,
-    aws_s3_bucket.data_store.id,
-    aws_s3_bucket.model_store.id
-  ]
-
-  state_machine_definition = <<EOF
+resource "local_file" "step_function_def" {
+  filename = "${path.root}/.terraform/tmp/step-function-def.json"
+  content  = <<EOF
 {
  "StartAt": "Glue Data Transformation",
   "States": {
@@ -237,7 +225,7 @@ module "step-functions" {
                   "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.train_key}",
                   "S3DataDistributionType": "FullyReplicated"
                 }
-              }, 
+              },
               "ContentType": "${var.content_type}",
               "CompressionType": "None"
             },
@@ -248,10 +236,10 @@ module "step-functions" {
                   "S3DataType": "S3Prefix",
                   "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.validate_key}",
                   "S3DataDistributionType": "FullyReplicated"
-                  }
-                },
-                "ContentType": "${var.content_type}",
-                "CompressionType": "None"     
+                }
+              },
+              "ContentType": "${var.content_type}",
+              "CompressionType": "None"
             }
           ],
           "StaticHyperParameters": ${jsonencode(var.static_hyperparameters)}
@@ -310,14 +298,14 @@ module "step-functions" {
       "Resource": "${module.lambda_functions.function_ids["ProblemType"]}",
       "Type": "Choice",
       "Choices": [
-         {
-           "Not": {
-             "Variable":"$.response",
-             "StringEquals": "Classification"
-           },
-           "Next": "Monitor Model Performance"
+        {
+          "Not": {
+            "Variable":"$.response",
+            "StringEquals": "Classification"
+          },
+          "Next": "Monitor Model Performance"
         },
-         {
+        {
           "Variable": "$.response",
           "StringEquals": "Classification",
           "Next": "Check Data Drift Result Status"
@@ -382,14 +370,14 @@ module "step-functions" {
       "Choices": [
         {
           "And": [
-          {
-            "Variable": "$.MetricName",
-            "${var.comparison_operator}": ${var.threshold}
-          },
-          {
-            "Variable": "$.response",
-            "StringEquals": "True"
-          }
+            {
+              "Variable": "$.MetricName",
+              "${var.comparison_operator}": ${var.threshold}
+            },
+            {
+              "Variable": "$.response",
+              "StringEquals": "True"
+            }
           ],
           "Next": "Glue Data Transformation"
         }
@@ -407,4 +395,19 @@ module "step-functions" {
 EOF
 }
 
+module "step-functions" {
+  #source                  = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/data-lake?ref=main"
+  source        = "../../../components/aws/step-functions"
+  name_prefix   = var.name_prefix
+  environment   = var.environment
+  resource_tags = var.resource_tags
 
+  lambda_functions = module.lambda_functions.function_ids
+  writeable_buckets = [
+    var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id,
+    aws_s3_bucket.data_store.id,
+    aws_s3_bucket.model_store.id
+  ]
+
+  state_machine_definition = local_file.step_function_def.content
+}
