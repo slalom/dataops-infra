@@ -79,7 +79,7 @@ EOF
           "S3DataSource": {
             "S3DataType": "S3Prefix",
             "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}",
-            "S3DataDistributionType": "FullyReplicated",
+            "S3DataDistributionType": "FullyReplicated"
           }
         }
       },
@@ -319,9 +319,9 @@ module "step-functions" {
         },
          {
           "Variable": "$.response",
-          "StringEquals": "Classification"
-        }, 
-        "Next": "Check Data Drift Result Status"
+          "StringEquals": "Classification",
+          "Next": "Check Data Drift Result Status"
+        }
       ]
     },
     "Check Data Drift Result Status": {
@@ -337,9 +337,9 @@ module "step-functions" {
         },
         {
           "Variable": "$.latest_result_status",
-          "StringEquals": "Completed"
-        }, 
-        "Next": "Monitor Model Performance"
+          "StringEquals": "Completed",
+          "Next": "Monitor Model Performance"
+        }
       ]
     },
     "Stop Model Training": {
@@ -367,9 +367,9 @@ module "step-functions" {
             "${var.comparison_operator}": ${var.threshold}
           },
           "Next": "Cloud Watch Alarm"
-        },
-        "Default": "${var.endpoint_or_batch_transform}"
-      ]
+        }
+      ],
+      "Default": "${var.endpoint_or_batch_transform}"
     },
     "Cloud Watch Alarm": {
       "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
@@ -381,7 +381,8 @@ module "step-functions" {
       "Type": "Choice",
       "Choices": [
         {
-          "And": [{
+          "And": [
+          {
             "Variable": "$.MetricName",
             "${var.comparison_operator}": ${var.threshold}
           },
@@ -391,9 +392,9 @@ module "step-functions" {
           }
           ],
           "Next": "Glue Data Transformation"
-        },
-        "Default": "Stop Model Training"
-      ]
+        }
+      ],
+      "Default": "Stop Model Training"
     },
     "Stop Model Training": {
       "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
