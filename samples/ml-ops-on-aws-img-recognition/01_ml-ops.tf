@@ -51,20 +51,20 @@ module "ml-ops" {
     ContinuousParameterRanges = [
       {
         Name        = "learning_rate",
-        MinValue    = 0.001,
-        MaxValue    = 0.2,
+        MinValue    = "0.001",
+        MaxValue    = "0.2",
         ScalingType = "Auto"
       },
       {
         Name        = "epochs",
-        MinValue    = 5
-        MaxValue    = 40
+        MinValue    = "5",
+        MaxValue    = "40",
         ScalingType = "Auto"
       },
       {
         Name        = "batch-size",
-        MinValue    = 5
-        MaxValue    = 40
+        MinValue    = "5",
+        MaxValue    = "40",
         ScalingType = "Auto"
       },
 
@@ -84,5 +84,6 @@ module "ml-ops" {
 output "summary" {
   value = module.ml-ops.summary
 }
+
 
 

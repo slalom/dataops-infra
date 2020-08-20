@@ -78,8 +78,7 @@ EOF
           "DataSource": {
             "S3DataSource": {
               "S3DataType": "S3Prefix",
-              "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}",
-              "S3DataDistributionType": "FullyReplicated"
+              "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}"
             }
           }
         },
@@ -87,7 +86,7 @@ EOF
           "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
         },
         "TransformResources": {
-          "InstanceCount": "${var.batch_transform_instance_count}",
+          "InstanceCount": ${var.batch_transform_instance_count},
           "InstanceType": "${var.batch_transform_instance_type}"
         },
         "TransformJobName.$": "$.modelName"
@@ -293,27 +292,25 @@ resource "local_file" "step_function_def" {
       "Resource": "${module.lambda_functions.function_ids["LoadPredDataDB"]}",
       "Type": "Task",
       "Next": "Monitor Input Data"
-    }
+    },
     "Monitor Input Data": {
-      "Resource": "${module.lambda_functions.function_ids["ProblemType"]}",
       "Type": "Choice",
       "Choices": [
         {
           "Not": {
-            "Variable":"$.response",
+            "Variable":"$['ClassificationorImageRegnition']",
             "StringEquals": "Classification"
           },
           "Next": "Monitor Model Performance"
         },
         {
-          "Variable": "$.response",
+          "Variable": "$['ClassificationorImageRegnition']",
           "StringEquals": "Classification",
           "Next": "Check Data Drift Result Status"
         }
       ]
     },
     "Check Data Drift Result Status": {
-      "Resource": "${module.lambda_functions.function_ids["DataDriftMonitor"]}",
       "Type": "Choice",
       "Choices": [
         {
@@ -334,19 +331,18 @@ resource "local_file" "step_function_def" {
       "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
       "Type": "Task",
       "Next": "Send a SNS Alert"
-    }
+    },
     "Send a SNS Alert": {
       "Resource": "${module.lambda_functions.function_ids["SNSAlert"]}",
       "Type": "Task",
       "Next": "Monitor Model Performance"
-    }
+    },
     "Monitor Model Performance": {
       "Resource": "${module.lambda_functions.function_ids["ModelPerformanceMonitor"]}",
       "Type": "Task",
       "Next": "Model Monitor Rule"
     },
     "Model Monitor Rule": {
-      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Choice",
       "Choices": [
         {
@@ -365,7 +361,6 @@ resource "local_file" "step_function_def" {
       "Next": "Model Retrain Rule"
     },
     "Model Retrain Rule" :{
-      "Resource": "${module.lambda_functions.function_ids["CloudWatchAlarm"]}",
       "Type": "Choice",
       "Choices": [
         {
@@ -382,9 +377,9 @@ resource "local_file" "step_function_def" {
           "Next": "Glue Data Transformation"
         }
       ],
-      "Default": "Stop Model Training"
+      "Default": "Stop Model Training Final"
     },
-    "Stop Model Training": {
+    "Stop Model Training Final": {
       "Resource": "${module.lambda_functions.function_ids["StopTraining"]}",
       "Type": "Task",
       "Next": "${var.endpoint_or_batch_transform}"

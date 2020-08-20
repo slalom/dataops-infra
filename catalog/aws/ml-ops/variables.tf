@@ -222,7 +222,6 @@ Each item in the map should point to a list of object with the following keys:
  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
  - Values      - a list of strings that apply to the categorical paramters
 EOF
-  type = map
 }
 
 variable "built_in_model_image" {
@@ -318,11 +317,19 @@ variable "alarm_name" {
 variable "comparison_operator" {
   description = <<EOF
   The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.
-  Possible values include GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold,
-  LessThanLowerThreshold, and GreaterThanUpperThreshold.
+  Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals, 
+  StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan, 
+  NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals, 
+  TimestampGreaterThan, StringGreaterThanEqualsPath, TimestampGreaterThanEqualsPath, 
+  TimestampLessThanEquals, NumericLessThanEqualsPath, TimestampEquals, BooleanEqualsPath, 
+  IsTimestamp, StringLessThanEquals, NumericLessThanEquals, StringLessThanPath, 
+  TimestampGreaterThanPath, StringGreaterThan, StringGreaterThanPath, IsString, StringEqualsPath, 
+  TimestampEqualsPath, TimestampLessThan, StringGreaterThanEquals, NumericGreaterThanPath, 
+  NumericGreaterThanEquals, NumericEqualsPath, TimestampLessThanPath, 
+  IsNull, IsPresent, TimestampGreaterThanEquals, NumericGreaterThanEqualsPath
   EOF
   type        = string
-  default     = "LessThanOrEqualToThreshold"
+  default     = "NumericLessThan"
 }
 
 variable "evaluation_period" {
