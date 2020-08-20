@@ -81,7 +81,7 @@ variable "job_name" {
 
 variable "content_type" {
   description = <<EOF
-Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is 
+Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is
 'application/x-recordio'
 EOF
   type        = string
@@ -97,7 +97,7 @@ EOF
   default     = "training-endpoint"
 }
 
-# Hyperparameter tuning variables 
+# Hyperparameter tuning variables
 
 variable "hpo_tuning_strategy" {
   description = "Hyperparameter tuning strategy, can be Bayesian or Random."
@@ -222,6 +222,7 @@ Each item in the map should point to a list of object with the following keys:
  - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
  - Values      - a list of strings that apply to the categorical paramters
 EOF
+  type = map
 }
 
 variable "built_in_model_image" {
@@ -233,7 +234,7 @@ EOF
   default     = null
 }
 
-# Model Def variables 
+# Model Def variables
 variable "width" {
   description = "The width of image file"
   type        = number
@@ -306,7 +307,7 @@ variable "aws_credentials_file" {
   type        = string
 }
 
-# Cloudwatch alarm variables 
+# Cloudwatch alarm variables
 
 variable "alarm_name" {
   description = "Name of the cloudwatch alarm"
@@ -317,7 +318,7 @@ variable "alarm_name" {
 variable "comparison_operator" {
   description = <<EOF
   The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.
-  Possible values include GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold, 
+  Possible values include GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold,
   LessThanLowerThreshold, and GreaterThanUpperThreshold.
   EOF
   type        = string
@@ -326,10 +327,10 @@ variable "comparison_operator" {
 
 variable "evaluation_period" {
   description = <<EOF
-  The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points 
+  The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
   An alarm's total current evaluation period can be no longer than one day, so this number multiplied by Period cannot be more than 86,400 seconds.
-  This parameter works in combination with datapoints_to_evaluate for specifying how frequently the model performance will be monitored. 
+  This parameter works in combination with datapoints_to_evaluate for specifying how frequently the model performance will be monitored.
   EOF
   type        = number
   default     = 10
@@ -338,7 +339,7 @@ variable "evaluation_period" {
 variable "datapoints_to_evaluate" {
   description = <<EOF
   The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M.
-  This parameter works in combination with evaluation_period for specifying how frequently the model performance will be monitored. 
+  This parameter works in combination with evaluation_period for specifying how frequently the model performance will be monitored.
   EOF
   type        = number
   default     = 10
@@ -347,9 +348,9 @@ variable "datapoints_to_evaluate" {
 variable "metric_name" {
   description = <<EOF
   The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or a Metrics array.
-  If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , Statistic , 
-  or ExtendedStatistic parameters. Instead, you specify all this information in the Metrics array. Values include Training Accuray, Training Loss, 
-  Validation Accuracy, and Validation Loss. 
+  If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , Statistic ,
+  or ExtendedStatistic parameters. Instead, you specify all this information in the Metrics array. Values include Training Accuray, Training Loss,
+  Validation Accuracy, and Validation Loss.
   EOF
   type        = string
   default     = "Training Accuracy"
@@ -387,17 +388,17 @@ variable "alarm_des" {
 
 variable "unit_name" {
   description = <<EOF
-  The unit of measure for the statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data. 
+  The unit of measure for the statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data.
   Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
-  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm. Usually metrics 
+  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm. Usually metrics
   are published with only one unit, so the alarm will work as intended.
   However, if the metric is published with multiple types of units and you don't specify a unit, the alarm's behavior is not defined and will behave un-predictably.
-  We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this metric. Doing so causes the alarm to be 
+  We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this metric. Doing so causes the alarm to be
   stuck in the INSUFFICIENT DATA state.
 
-  Possible values: 
-  Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabits, Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second, 
-  Gigabytes/Second, Terabytes/Second, Bits/Second, Kilobits/Second, Megabits/Second, Gigabits/Second, Terabits/Second, Count/Second, and None. 
+  Possible values:
+  Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabits, Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second,
+  Gigabytes/Second, Terabytes/Second, Bits/Second, Kilobits/Second, Megabits/Second, Gigabits/Second, Terabits/Second, Count/Second, and None.
   EOF
   type        = string
   default     = "Percent"
@@ -409,7 +410,7 @@ variable "enable_retrain" {
   default     = "False"
 }
 
-# Data drift monitoring variables 
+# Data drift monitoring variables
 
 variable "sample_percent" {
   description = "The percentage used to sample the input data to perform a data drift detection"
@@ -441,7 +442,7 @@ variable "data_mon_name" {
   default     = "data-drift-monitor-schedule"
 }
 
-#Load pred outputs to selected database variables 
+#Load pred outputs to selected database variables
 variable "dbname" {
   description = "The name for the database in PostgreSQL"
   type        = string
