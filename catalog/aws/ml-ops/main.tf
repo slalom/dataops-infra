@@ -312,12 +312,12 @@ module "step-functions" {
       "Choices": [
          {
            "Not": {
-             "Variable":"$.response",
-             "StringEquals": "Classification"
+            "Variable":"$.response",
+            "StringEquals": "Classification"
            },
            "Next": "Monitor Model Performance"
         },
-         {
+        {
           "Variable": "$.response",
           "StringEquals": "Classification",
           "Next": "Check Data Drift Result Status"
