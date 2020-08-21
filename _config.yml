@@ -18,9 +18,8 @@ url: https://infra.dataops.tk
 # logo: /docs/resources/slalom-logo.png
 
 description: >-
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  The Slalom Infrastructure Catalog is a set of reusable DataOps frameworks and components,
+  which can be instantly deployed to any environment.
 baseurl: "" # the subpath of your site, e.g. /blog
 # twitter_username: jekyllrb
 # github_username: jekyll
