@@ -50,7 +50,7 @@ repos:
         exclude: .*/tests/.*
 ```
 
-That's it! You're done (at least for this repo).
+_That's it! You're done (at least for this repo)._
 
 ### Dealing with false-positives
 
