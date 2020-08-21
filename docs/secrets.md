@@ -37,6 +37,19 @@ cd .../dataops-infra
 pre-commit install
 ```
 
+Check for a file called `.pre-commit-config.yaml` at the root of the repo. If it doesn't
+exist, go ahead and create it with the following contents:
+
+```yml
+repos:
+  - repo: https://github.com/yelp/detect-secrets
+    rev: v0.14.2
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: .*/tests/.*
+```
+
 That's it! You're done (at least for this repo).
 
 ### Dealing with false-positives
