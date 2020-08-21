@@ -47,7 +47,7 @@ Please do not attempt to manually update this file._
 CATALOG_TEMPLATE = """---
 title: Infrastructure {index_type}
 has_children: true
-nav_order: 2
+nav_order: 3
 nav_exclude: false
 ---
 # DataOps Infrastructure {index_type}
