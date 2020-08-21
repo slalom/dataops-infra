@@ -34,6 +34,7 @@ module "ml-ops" {
   validate_key = "input_data/validate/"
 
   enable_pred_db = "True"
+  skip_final_snapshot_rs = "true"
 
   # OPTIONAL
   # All following variables have default values. Change as needed. 

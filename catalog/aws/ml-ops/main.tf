@@ -129,20 +129,17 @@ module "ecr_image" {
   tag               = var.ecr_tag_name
 }
 
-module "postgres" {
-  source        = "../../../catalog/aws/postgres"
+module "redshift" {
+  source        = "../../../catalog/aws/redshift"
   name_prefix   = var.name_prefix
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  postgres_version = var.db_version
-  database_name    = var.dbname
-
+  node_type     = var.rs_nodetype
+  skip_final_snapshot = var.skip_final_snapshot_rs
+  
   admin_username = var.db_admin_name
   admin_password = var.db_passwd
-
-  storage_size_in_gb = var.storage_size_in_gb
-  instance_class     = var.instance_class
 }
 
 resource "local_file" "step_function_def" {

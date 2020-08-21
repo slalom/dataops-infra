@@ -465,7 +465,7 @@ variable "db_admin_name" {
 variable "db_passwd" {
   description = "Define admin user password for PostgreSQL."
   type        = string
-  default     = "1234asdf"
+  default     = "Db1234asdf"
 }
 
 variable "db_version" {
@@ -490,4 +490,23 @@ variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t3.micro"
+}
+
+# RedShift variables 
+
+variable "rs_nodetype" {
+  description = "Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr, ~$180/mo (https://aws.amazon.com/redshift/pricing/)"
+  type        = string
+  default     = "dc2.large"
+}
+
+variable "num_rs_nodes" {
+  description = "Optional (default=1). The number of Redshift nodes to use."
+  type        = number
+  default     = 1
+}
+
+variable "skip_final_snapshot_rs" {
+  description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
+  default     = false
 }
