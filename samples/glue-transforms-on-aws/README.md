@@ -9,7 +9,7 @@ modules:
 
 * [catalog/aws/environment](../../catalog/aws/environment/README.md)
 * [catalog/aws/data-lake](../../catalog/aws/data-lake/README.md)
-* [catalog/aws/glue-job](../../catalog/aws/glue-job/README.md)
+* [components/aws/glue-job](../../components/aws/glue-job/README.md)
 
 ## QuickStart Guide
 

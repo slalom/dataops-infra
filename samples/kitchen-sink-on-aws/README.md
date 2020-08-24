@@ -14,7 +14,7 @@ modules:
 * [catalog/aws/airflow](../../catalog/aws/airflow/README.md)
 * [catalog/aws/singer-taps](../../catalog/aws/singer-taps/README.md)
 * [catalog/aws/tableau-server](../../catalog/aws/tableau-server/README.md)
-* [catalog/aws/glue-job](../../catalog/aws/glue-job/README.md)
+* [components/aws/glue-job](../../components/aws/glue-job/README.md)
 
 ## QuickStart Guide
 
