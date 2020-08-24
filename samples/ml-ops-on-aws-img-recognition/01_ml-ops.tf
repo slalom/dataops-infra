@@ -33,7 +33,7 @@ module "ml-ops" {
   test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
-  enable_pred_db = "True"
+  enable_pred_db         = "True"
   skip_final_snapshot_rs = "true"
 
   # OPTIONAL

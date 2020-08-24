@@ -135,9 +135,9 @@ module "redshift" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  node_type     = var.rs_nodetype
+  node_type           = var.rs_nodetype
   skip_final_snapshot = var.skip_final_snapshot_rs
-  
+
   admin_username = var.db_admin_name
   admin_password = var.db_passwd
 }
