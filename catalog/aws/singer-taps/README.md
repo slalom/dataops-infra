@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Singer-Taps
+nav_exclude: false
+---
 # AWS Singer-Taps
 
-`/catalog/aws/singer-taps`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/singer-taps?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/singer-taps)
 
 ## Overview
 

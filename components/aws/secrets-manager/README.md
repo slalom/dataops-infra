@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS Secrets-Manager
+nav_exclude: false
+---
 # AWS Secrets-Manager
 
-`/components/aws/secrets-manager`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/secrets-manager?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/secrets-manager)
 
 ## Overview
 

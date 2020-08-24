@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS ECR
+nav_exclude: false
+---
 # AWS ECR
 
-`/components/aws/ecr`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecr?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecr)
 
 ## Overview
 

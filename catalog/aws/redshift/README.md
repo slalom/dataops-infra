@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Redshift
+nav_exclude: false
+---
 # AWS Redshift
 
-`/catalog/aws/redshift`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/redshift?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/redshift)
 
 ## Overview
 

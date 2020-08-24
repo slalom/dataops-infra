@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS SFTP
+nav_exclude: false
+---
 # AWS SFTP
 
-`/catalog/aws/sftp`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/sftp?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/sftp)
 
 ## Overview
 
