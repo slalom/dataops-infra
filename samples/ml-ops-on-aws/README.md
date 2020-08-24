@@ -2,6 +2,16 @@
 
 _This sample deploys an automated and serverless MLOps pipeline._
 
+## About this sample
+
+This sample is an open source project between the collaboration of Slalom and the American 
+Cancer Society. The goal of this project is to laverage ML to accelerate image analysis to 
+predict breast cancer. 
+
+## More about this sample project
+
+[Slalom Project Smile](https://www.slalom.com/case-studies/american-cancer-society-breast-cancer-machine-learning)
+
 ## Supporting Catalog Modules
 
 Please refer to the following documentation for more information on this sample's included
@@ -12,7 +22,7 @@ modules:
 
 To download dataset used in this sample, please visit: 
 
-* https://wiki.cancerimagingarchive.net/display/Public/CBIS-DDSM
+* [Cancer Imaging Archive](https://wiki.cancerimagingarchive.net/display/Public/CBIS-DDSM)
 
 ## QuickStart Guide
 
