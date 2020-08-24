@@ -30,6 +30,17 @@ The following providers are used by this module:
 
 - aws
 
+## RedShift or PostgreSQL
+
+Now we support RedShift as the backend database for collecting end users/business feedback. Users can also use AWS PostgreSQL as the backend database. 
+
+PostgreSQL is ideal for storing transactional data and serving as the database for collecting feedback. It is a cheaper option than RedShift. When using RedShift, since RedShift doesn’t handle transactional data, users may need to schedule vacuum to clean up the database in RedShift so ensure the size doesn’t keep growing. 
+
+- When connecting to AWS PostgreSQL in Power Apps, users need to install Npgsql version 4.0.10 or earlier at GAC level in order for the connection to work. Npgsql 4.0.10 can be downloaded here: [download Npgsql 4.0.10](https://github.com/npgsql/npgsql/releases/tag/v4.0.10)
+
+- When connecting to AWS RedShift in Power Apps, users need to ensure that the cluster vpc is publicly accessible: [managing clusters vpc](https://docs.aws.amazon.com/redshift/latest/mgmt/managing-clusters-vpc.html)
+
+
 ## Required Inputs
 
 The following input variables are required:
