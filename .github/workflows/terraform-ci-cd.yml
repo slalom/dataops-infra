@@ -92,8 +92,6 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        # TODO: Revert to pip install `terraform-compliance` after:
-        # https://github.com/eerkunt/terraform-compliance/pull/351
         run: |
           cd ./samples/${{ matrix.sample-id }}
           terraform plan -out plan.out | tee plan.out.txt
@@ -109,10 +107,8 @@ jobs:
         with:
           python-version: 3.7
       - name: "Install Terraform-Compliance"
-        # TODO: Revert to pip install `terraform-compliance` after:
-        # https://github.com/eerkunt/terraform-compliance/pull/351
         run: |
-          pip install git+https://github.com/Kudbettin/terraform-compliance@terraform0.13
+          pip install terraform-compliance
       - name: "Terraform Compliance Checks (${{ matrix.sample-id }})"
         run: |
           cd ./samples/${{ matrix.sample-id }}

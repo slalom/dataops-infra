@@ -21,13 +21,13 @@ other files in these folders will be automatically excluded from git.
 
 ## Install 'pre-commit' git hooks for automatic security leak prevention
 
-From an admin prompt:
+**Step 1: Install `detect-secrets` and `pre-commit` from an admin prompt:**
 
 ```cmd
 pip install detect-secrets pre-commit
 ```
 
-From your local repo root, on each user's local machine:
+**Step 2: Setup your local repo with the required `pre-commit` hooks:**
 
 ```cmd
 cd .../dataops-infra
@@ -37,8 +37,9 @@ cd .../dataops-infra
 pre-commit install
 ```
 
-Check for a file called `.pre-commit-config.yaml` at the root of the repo. If it doesn't
-exist, go ahead and create it with the following contents:
+**Step 3: Check for a file called `.pre-commit-config.yaml` at the root of the repo:**
+
+If the file doesn't yet exist, create the file with the following contents:
 
 ```yml
 repos:
@@ -50,7 +51,7 @@ repos:
         exclude: .*/tests/.*
 ```
 
-_That's it! You're done (at least for this repo)._
+_That's it! You're done (at least for this repo). Repeat steps 2 and 3 for any additional git repositories which you want to protect._
 
 ### Dealing with false-positives
 
