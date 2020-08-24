@@ -9,10 +9,10 @@ nav_order: 2
 
 _These guides are intended to get you up and running as quickly as possible._
 
-- [Contributors and Testers](./contributors.md) - Quickly get up and running
-  with the Infrastructure Catalog samples.
-- [New Projects](./new_projects.md) - Begin a fresh project that references the
-  Infrastructure Catalog.
-- [Existing Terraform Projects](./existing_projects.md) - Extend your
-  existing Terraform infrastructure using the Slalom Infrastructure Catalog.
-  (Intended for experienced Terraform users.)
+1. [Running the Samples](./samples.md) - Clone the repo and get up and running
+   with the sample projects.
+2. [New Projects](./new_projects.md) - Begin a new fresh project that references
+   Infrastructure Catalog modules.
+3. [Existing Terraform Projects](./existing_projects.md) - Extend your
+   existing Terraform infrastructure using the Slalom Infrastructure Catalog.
+   (Intended for experienced Terraform users.)
