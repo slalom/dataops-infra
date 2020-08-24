@@ -1,9 +1,13 @@
 """Templates"""
 
-DOCS_HEADER = """
+DOCS_HEADER = """---
+parent: Infrastructure {module_type}
+title: {module_title}
+nav_exclude: false
+---
 # {module_title}
 
-`{module_path}`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main{module_path}?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main{module_path})
 
 ## Overview
 
@@ -40,7 +44,12 @@ Please do not attempt to manually update this file._
 """
 
 
-CATALOG_TEMPLATE = """
+CATALOG_TEMPLATE = """---
+title: Infrastructure {index_type}
+has_children: true
+nav_order: 3
+nav_exclude: false
+---
 # DataOps Infrastructure {index_type}
 
 {overview}

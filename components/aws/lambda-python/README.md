@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS Lambda-Python
+nav_exclude: false
+---
 # AWS Lambda-Python
 
-`/components/aws/lambda-python`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/lambda-python?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/lambda-python)
 
 ## Overview
 

@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Environment
+nav_exclude: false
+---
 # AWS Environment
 
-`/catalog/aws/environment`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/environment?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/environment)
 
 ## Overview
 

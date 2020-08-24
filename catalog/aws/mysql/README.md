@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS MySQL
+nav_exclude: false
+---
 # AWS MySQL
 
-`/catalog/aws/mysql`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/mysql?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/mysql)
 
 ## Overview
 
