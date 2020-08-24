@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Postgres
+nav_exclude: false
+---
 # AWS Postgres
 
-`/catalog/aws/postgres`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/postgres?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/postgres)
 
 ## Overview
 

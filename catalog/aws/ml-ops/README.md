@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS ML-Ops
+nav_exclude: false
+---
 # AWS ML-Ops
 
-`/catalog/aws/ml-ops`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/ml-ops?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/ml-ops)
 
 ## Overview
 
