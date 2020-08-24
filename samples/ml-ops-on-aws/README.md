@@ -1,4 +1,4 @@
-# Sample: `MLOps on AWS`
+# Sample: `ML Ops on AWS image recognition`
 
 _This sample deploys an automated and serverless MLOps pipeline._
 
@@ -9,6 +9,10 @@ modules:
 
 * [catalog/aws/environment](../../catalog/aws/environment/README.md)
 * [catalog/aws/ml-ops](../../catalog/aws/ml-ops/README.md)
+
+To download dataset used in this sample, please visit: 
+
+* https://wiki.cancerimagingarchive.net/display/Public/CBIS-DDSM
 
 ## QuickStart Guide
 
