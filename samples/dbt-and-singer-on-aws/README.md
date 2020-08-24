@@ -10,7 +10,7 @@ modules:
 * [catalog/aws/environment](../../catalog/aws/environment/README.md)
 * [catalog/aws/data-lake](../../catalog/aws/data-lake/README.md)
 * [catalog/aws/singer-taps](../../catalog/aws/singer-taps/README.md)
-* [catalog/aws/data-build-tool](../../catalog/aws/data-build-tool/README.md)
+* [catalog/aws/dbt](../../catalog/aws/dbt/README.md)
 
 ## QuickStart Guide
 
