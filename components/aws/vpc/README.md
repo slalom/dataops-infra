@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS VPC
+nav_exclude: false
+---
 # AWS VPC
 
-`/components/aws/vpc`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/vpc?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/vpc)
 
 ## Overview
 

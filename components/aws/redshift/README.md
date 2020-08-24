@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS Redshift
+nav_exclude: false
+---
 # AWS Redshift
 
-`/components/aws/redshift`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/redshift?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/redshift)
 
 ## Overview
 

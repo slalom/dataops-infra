@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS ECS-Cluster
+nav_exclude: false
+---
 # AWS ECS-Cluster
 
-`/components/aws/ecs-cluster`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecs-cluster?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecs-cluster)
 
 ## Overview
 

@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Data-Lake-Users
+nav_exclude: false
+---
 # AWS Data-Lake-Users
 
-`/catalog/aws/data-lake-users`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/data-lake-users?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/data-lake-users)
 
 ## Overview
 

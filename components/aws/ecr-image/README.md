@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS ECR-Image
+nav_exclude: false
+---
 # AWS ECR-Image
 
-`/components/aws/ecr-image`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecr-image?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecr-image)
 
 ## Overview
 
