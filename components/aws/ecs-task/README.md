@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS ECS-Task
+nav_exclude: false
+---
 # AWS ECS-Task
 
-`/components/aws/ecs-task`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecs-task?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecs-task)
 
 ## Overview
 

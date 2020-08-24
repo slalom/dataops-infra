@@ -1,3 +1,6 @@
+---
+nav_exclude: true
+---
 # [Slalom Infrastructure Catalog](../README.md) > Testing
 
 ## Terraform  Validation Testing and Linting

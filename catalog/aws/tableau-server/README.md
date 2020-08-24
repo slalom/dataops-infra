@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Tableau-Server
+nav_exclude: false
+---
 # AWS Tableau-Server
 
-`/catalog/aws/tableau-server`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/tableau-server?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/tableau-server)
 
 ## Overview
 

@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Dev-Box
+nav_exclude: false
+---
 # AWS Dev-Box
 
-`/catalog/aws/dev-box`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/dev-box?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/dev-box)
 
 ## Overview
 

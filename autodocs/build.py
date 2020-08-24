@@ -189,20 +189,30 @@ def update_module_docs(
                 os.path.basename(tf_dir), special_case_words=special_case_words
             )
             parent_dir_name = os.path.basename(Path(tf_dir).parent)
-            if parent_dir_name != ".":
-                module_title = _proper(
-                    f"{parent_dir_name} {module_title}",
-                    special_case_words=special_case_words,
-                )
+            # parent_title = _proper(
+            #     parent_dir_name, special_case_words=special_case_words,
+            # )
+            module_title = _proper(
+                f"{parent_dir_name} {module_title}",
+                special_case_words=special_case_words,
+            )
             module_path = tf_dir.replace(".", "").replace("//", "/").replace("\\", "/")
             _, markdown_output = runnow.run(
                 f"terraform-docs markdown document --sort=false {tf_dir}",
                 # " --no-requirements"
                 echo=False,
             )
+            if "components" in module_path.lower():
+                module_type = "Components"
+            elif "catalog" in module_path.lower():
+                module_type = "Catalog"
+            else:
+                module_type = "Other"
             if header:
                 markdown_text += DOCS_HEADER.format(
-                    module_title=module_title, module_path=module_path
+                    module_title=module_title,
+                    module_path=module_path,
+                    module_type=module_type,
                 )
             markdown_text += markdown_output
             for extra_file in extra_docs:
