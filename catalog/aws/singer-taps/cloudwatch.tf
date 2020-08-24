@@ -39,9 +39,9 @@ resource "aws_cloudwatch_dashboard" "main" {
 
 Additional Actions:
 
- - [View Running ECS Tasks](https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks)
- - [View ECS CloudWatch Logs](${module.ecs_tap_sync_task[count.index].ecs_logging_url})
- - [Open Step Function Console](${module.step_function[count.index].state_machine_url})
+ - [Start New Execution (Step Function Console)](${module.step_function[count.index].state_machine_url})
+ - [View Running Tasks (ECS)](https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks)
+ - [View Detailed Logs (Cloudwatch)](${module.ecs_tap_sync_task[count.index].ecs_logging_url})
 
 EOF
   , "\\", "\\\\"), "\n", "\\n"), "\"", "\\\"")
