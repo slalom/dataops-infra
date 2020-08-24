@@ -14,8 +14,9 @@ output "instance_ids" {
   description = "The list of instance ID created."
   value       = aws_instance.ec2_instances[*].id
 }
-# TODO: Detect EC2 Pricing
-# output "instance_hr_list_price" { value = local.price_per_instance_hr }
+
+output "instance_hr_list_price" { value = local.price_per_instance_hr }
+
 output "public_ip" {
   description = "The public IP address (if applicable, and if `num_instances` == 1)"
   value       = length(aws_instance.ec2_instances) == 0 ? "n/a" : aws_instance.ec2_instances[0].public_ip
