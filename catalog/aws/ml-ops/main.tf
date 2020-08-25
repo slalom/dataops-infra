@@ -135,7 +135,7 @@ module "postgres" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  postgres_version = var.db_version
+  postgres_version = "11"
   database_name    = var.dbname
 
   admin_username = var.db_admin_name

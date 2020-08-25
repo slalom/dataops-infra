@@ -24,11 +24,7 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "feature_store_override" {
-  description = "Optionally, you can override the default feature store bucket with a bucket that already exists."
-  type        = string
-  default     = null
-}
+# Local paths:
 
 variable "script_path" {
   description = "Local path for Glue Python script."
@@ -54,7 +50,13 @@ variable "score_local_path" {
   default     = "source/data/score/score.csv"
 }
 
-# State Machine input variables
+# S3 Storage Buckets and Paths
+
+variable "feature_store_override" {
+  description = "Optionally, you can override the default feature store bucket with a bucket that already exists."
+  type        = string
+  default     = null
+}
 
 variable "train_key" {
   description = "URL path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
@@ -74,12 +76,9 @@ variable "validate_key" {
   default     = "input_data/validate/validate.csv"
 }
 
-variable "job_name" {
-  description = "Name prefix given to SageMaker model and training/tuning jobs (18 characters or less)."
-  type        = string
-}
+# Input data config:
 
-variable "content_type" {
+variable "content_type" { # TODO: input_data_content_type, or similar
   description = <<EOF
 Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is
 'application/x-recordio'
@@ -87,6 +86,15 @@ EOF
   type        = string
   default     = "csv"
 }
+
+# State Machine input variables
+
+variable "job_name" {
+  description = "Name prefix given to SageMaker model and training/tuning jobs (18 characters or less)."
+  type        = string
+}
+
+# Endpoint and Batch Config # TODO: move lower
 
 variable "endpoint_name" {
   description = <<EOF
@@ -97,12 +105,65 @@ EOF
   default     = "training-endpoint"
 }
 
+variable "endpoint_or_batch_transform" {
+  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data."
+  type        = string
+  default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
+}
+
+variable "endpoint_instance_count" {
+  description = "Number of initial endpoint instances."
+  type        = number
+  default     = 1
+}
+
+variable "endpoint_instance_type" {
+  description = "Instance type for inference endpoint."
+  type        = string
+  default     = "ml.m4.xlarge"
+}
+
+variable "batch_transform_instance_count" {
+  description = "Number of batch transformation instances."
+  type        = number
+  default     = 1
+}
+
+variable "batch_transform_instance_type" {
+  description = "Instance type for batch inference."
+  type        = string
+  default     = "ml.m4.xlarge"
+}
+
 # Hyperparameter tuning variables
 
-variable "hpo_tuning_strategy" {
+variable "static_hyperparameters" {
+  description = <<EOF
+Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.
+E.g. `{ "kfold_splits" = "5" }`
+EOF
+  type        = map
+  default = {
+  }
+}
+
+variable "hpo_tuning_strategy" { # TODO: `tuning_strategy`
   description = "Hyperparameter tuning strategy, can be Bayesian or Random."
   type        = string
   default     = "Bayesian"
+}
+
+variable "parameter_ranges" {
+  description = <<EOF
+Tuning ranges for hyperparameters.
+Expects a map of one or all "ContinuousParameterRanges", "IntegerParameterRanges", and "CategoricalParameterRanges".
+Each item in the map should point to a list of object with the following keys:
+ - Name        - name of the variable to be tuned
+ - MinValue    - min value of the range
+ - MaxValue    - max value of the range
+ - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
+ - Values      - a list of strings that apply to the categorical paramters
+EOF
 }
 
 variable "tuning_objective" {
@@ -121,6 +182,8 @@ variable "tuning_metric" {
   type        = string
   default     = "accuracy"
 }
+
+# Inference threshold config # TODO: Reorder
 
 variable "inference_comparison_operator" {
   description = <<EOF
@@ -141,34 +204,16 @@ EOF
   default     = 0.7
 }
 
-variable "endpoint_or_batch_transform" {
-  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data."
+# Training config
+
+variable "built_in_model_image" {
+  description = <<EOF
+One of the ECR image URIs from Amazon-stock SageMaker image definitions.
+If specified, 'bring-your-own' model support is not required and the ECR image will not
+be created.
+EOF
   type        = string
-  default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
-}
-
-variable "batch_transform_instance_count" {
-  description = "Number of batch transformation instances."
-  type        = number
-  default     = 1
-}
-
-variable "batch_transform_instance_type" {
-  description = "Instance type for batch inference."
-  type        = string
-  default     = "ml.m4.xlarge"
-}
-
-variable "endpoint_instance_count" {
-  description = "Number of initial endpoint instances."
-  type        = number
-  default     = 1
-}
-
-variable "endpoint_instance_type" {
-  description = "Instance type for inference endpoint."
-  type        = string
-  default     = "ml.m4.xlarge"
+  default     = null
 }
 
 variable "max_number_training_jobs" {
@@ -182,6 +227,8 @@ variable "max_parallel_training_jobs" {
   type        = number
   default     = 1
 }
+
+# Training resource allocation
 
 variable "training_job_instance_count" {
   description = "Number of instances for training jobs."
@@ -201,39 +248,23 @@ variable "training_job_storage_in_gb" {
   default     = 30
 }
 
-variable "static_hyperparameters" {
+
+# Image Recognition - Model definition variables
+
+variable "custom_arguments_map" { # TODO: naming?
   description = <<EOF
-Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.
-E.g. `{ "kfold_splits" = "5" }`
-EOF
-  type        = map
-  default = {
+  A custom set of arguments which will be passed to the transform.py python file.
+  {
+    width: 800,
+    height: 1200,
+    channels: 3
   }
-}
-
-variable "parameter_ranges" {
-  description = <<EOF
-Tuning ranges for hyperparameters.
-Expects a map of one or all "ContinuousParameterRanges", "IntegerParameterRanges", and "CategoricalParameterRanges".
-Each item in the map should point to a list of object with the following keys:
- - Name        - name of the variable to be tuned
- - MinValue    - min value of the range
- - MaxValue    - max value of the range
- - ScalingType - 'Auto', 'Linear', 'Logarithmic', or 'ReverseLogarithmic'
- - Values      - a list of strings that apply to the categorical paramters
 EOF
+
 }
 
-variable "built_in_model_image" {
-  description = <<EOF
-Tuning ranges for hyperparameters.
-Specifying this means that 'bring-your-own' model is not required and the ECR image not created.
-EOF
-  type        = string
-  default     = null
-}
+# TODO: Refactor under `custom_arguments_map`:
 
-# Model Def variables
 variable "width" {
   description = "The width of image file"
   type        = number
@@ -252,7 +283,7 @@ variable "channels" {
   default     = 3
 }
 
-# ECR input variables
+# ECR input variables (BYO)
 
 variable "byo_model_image_name" {
   description = "Image and repo name for bring your own model."
@@ -272,23 +303,28 @@ variable "byo_model_image_tag" {
   default     = "latest"
 }
 
-variable "repo_name" {
-  description = "Name for your model image repository."
+variable "repo_name" { # TODO: byo_model_repo_name
+  description = "Name for your BYO model image repository."
   type        = string
 }
 
-variable "source_image_path" {
-  description = "Path for source model image."
+variable "source_image_path" { # TODO: byo_model_source_image_path
+  description = "Path for source BYO model image."
   type        = string
 }
 
-variable "ecr_tag_name" {
-  description = "Tag name for the ecr image."
+variable "ecr_tag_name" { # TODO: byo_model_ecr_tag_name
+  description = "Tag name for the BYO ecr image."
   type        = string
   default     = "latest"
 }
 
-# Glue variables
+variable "aws_credentials_file" {
+  description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
+  type        = string
+}
+
+# Glue transform config
 
 variable "glue_job_name" {
   description = "Name of the Glue data transformation job name."
@@ -301,10 +337,6 @@ variable "glue_job_spark_flag" {
   type        = string
   default     = false
 }
-variable "aws_credentials_file" {
-  description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
-  type        = string
-}
 
 # Cloudwatch alarm variables
 
@@ -314,25 +346,25 @@ variable "alarm_name" {
   default     = "Model is Overfitting and Retraining Alarm"
 }
 
-variable "comparison_operator" {
+variable "comparison_operator" { # TODO: alarm_comparison_operator
   description = <<EOF
   The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.
-  Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals, 
-  StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan, 
-  NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals, 
-  TimestampGreaterThan, StringGreaterThanEqualsPath, TimestampGreaterThanEqualsPath, 
-  TimestampLessThanEquals, NumericLessThanEqualsPath, TimestampEquals, BooleanEqualsPath, 
-  IsTimestamp, StringLessThanEquals, NumericLessThanEquals, StringLessThanPath, 
-  TimestampGreaterThanPath, StringGreaterThan, StringGreaterThanPath, IsString, StringEqualsPath, 
-  TimestampEqualsPath, TimestampLessThan, StringGreaterThanEquals, NumericGreaterThanPath, 
-  NumericGreaterThanEquals, NumericEqualsPath, TimestampLessThanPath, 
+  Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals,
+  StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan,
+  NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals,
+  TimestampGreaterThan, StringGreaterThanEqualsPath, TimestampGreaterThanEqualsPath,
+  TimestampLessThanEquals, NumericLessThanEqualsPath, TimestampEquals, BooleanEqualsPath,
+  IsTimestamp, StringLessThanEquals, NumericLessThanEquals, StringLessThanPath,
+  TimestampGreaterThanPath, StringGreaterThan, StringGreaterThanPath, IsString, StringEqualsPath,
+  TimestampEqualsPath, TimestampLessThan, StringGreaterThanEquals, NumericGreaterThanPath,
+  NumericGreaterThanEquals, NumericEqualsPath, TimestampLessThanPath,
   IsNull, IsPresent, TimestampGreaterThanEquals, NumericGreaterThanEqualsPath
   EOF
   type        = string
   default     = "NumericLessThan"
 }
 
-variable "evaluation_period" {
+variable "evaluation_period" { # TODO: alarm_evaluation_period
   description = <<EOF
   The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
@@ -343,7 +375,7 @@ variable "evaluation_period" {
   default     = 10
 }
 
-variable "datapoints_to_evaluate" {
+variable "datapoints_to_evaluate" { # TODO: alarm_datapoints_to_evaluate
   description = <<EOF
   The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M.
   This parameter works in combination with evaluation_period for specifying how frequently the model performance will be monitored.
@@ -352,7 +384,7 @@ variable "datapoints_to_evaluate" {
   default     = 10
 }
 
-variable "metric_name" {
+variable "metric_name" { # TODO: alarm_metric_name
   description = <<EOF
   The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or a Metrics array.
   If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , Statistic ,
@@ -369,31 +401,13 @@ variable "alarm_metric_evaluation_period" {
   default     = 30
 }
 
-variable "statistic" {
+variable "statistic" { # TODO: alarm_statistic
   description = "The statistic to return. It can include any CloudWatch stats or extended stats"
   type        = string
   default     = "Maximum"
 }
 
-variable "threshold" {
-  description = "The baseline threshold value that cloudwatch will compare against"
-  type        = number
-  default     = 90.0
-}
-
-variable "actions_enable" {
-  description = "Indicates whether actions should be executed during any changes to the alarm state. "
-  type        = string
-  default     = "True"
-}
-
-variable "alarm_des" {
-  description = "The description for the alarm."
-  type        = string
-  default     = "Model is overfitting. Model retraining will be activated."
-}
-
-variable "unit_name" {
+variable "unit_name" { # TODO: alarm_statistic_unit_name
   description = <<EOF
   The unit of measure for the statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data.
   Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
@@ -411,102 +425,96 @@ variable "unit_name" {
   default     = "Percent"
 }
 
-variable "enable_retrain" {
-  description = "Whether or not to retrain the model if detected overfitting."
+variable "threshold" { # TODO: alarm_threshold
+  description = "The baseline threshold value that cloudwatch will compare against"
+  type        = number
+  default     = 90.0
+}
+
+variable "actions_enable" { # TODO: alarm_actions_enabled
+  description = "Indicates whether actions should be executed during any changes to the alarm state. "
+  type        = bool
+  default     = true
+}
+
+variable "alarm_des" { # TODO: alarm_description
+  description = "The description for the alarm."
   type        = string
-  default     = "False"
+  default     = "Model is overfitting. Model retraining will be activated."
+}
+
+variable "enable_retrain" { # TODO: retrain_on_alarm
+  description = "Whether or not to retrain the model if detected overfitting."
+  type        = bool
+  default     = false
 }
 
 # Data drift monitoring variables
 
-variable "sample_percent" {
-  description = "The percentage used to sample the input data to perform a data drift detection"
-  type        = number
-  default     = 50
-}
-
-variable "max_timeout_in_sec" {
-  description = "Timeout in seconds. After this amount of time, Amazon SageMaker terminates the job regardless of its current status."
-  type        = number
-  default     = 3600
-}
-
-variable "frequency" {
-  description = "The frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily_every_x_hours (hour_interval, starting_hour)"
-  type        = string
-  default     = "daily"
-}
-
-variable "problem_type" {
-  description = "The type of machine learning problem, including Classification, Image Recognition, and Regression"
-  type        = string
-  default     = "Classification"
-}
-
-variable "data_mon_name" {
+variable "data_mon_name" { # TODO: data_drift_monitor_name
   description = "The name for the scheduled data drift monitoring job"
   type        = string
   default     = "data-drift-monitor-schedule"
 }
 
-#Load pred outputs to selected database variables
-variable "dbname" {
-  description = "The name for the database in PostgreSQL"
+variable "frequency" { # TODO: data_drift_monitoring_frequency
+  description = "The frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily_every_x_hours (hour_interval, starting_hour)"
   type        = string
-  default     = "model_outputs"
+  default     = "daily"
 }
 
-variable "db_admin_name" {
-  description = "Define admin user name for PostgreSQL."
+variable "problem_type" { # TODO: data_drift_ml_problem_type
+  description = "The type of machine learning problem, including Classification, Image Recognition, and Regression"
   type        = string
-  default     = "pgadmin"
+  default     = "Classification"
 }
 
-variable "db_passwd" {
-  description = "Define admin user password for PostgreSQL."
-  type        = string
-  default     = "Db1234asdf"
+variable "sample_percent" { # TODO: data_drift_sampling_percent
+  description = "The percentage used to sample the input data to perform a data drift detection"
+  type        = number
+  default     = 50
 }
 
-variable "db_version" {
-  description = "Define the version of the selected database platform."
-  type        = string
-  default     = "11"
+variable "max_timeout_in_sec" { # TODO: data_drift_job_timeout_in_sec
+  description = "Timeout in seconds. After this amount of time, Amazon SageMaker terminates the job regardless of its current status."
+  type        = number
+  default     = 3600
 }
 
-variable "enable_pred_db" {
+# Load pred outputs to selected database variables
+
+variable "enable_pred_db" { # TODO: enable_predictive_db
   description = "Enable loading prediction outputs from S3 to the selected database."
   type        = string
   default     = "False"
 }
 
-variable "storage_size_in_gb" {
+variable "dbname" { # TODO: predictive_db_name
+  description = "The name for the database in PostgreSQL"
+  type        = string
+  default     = "model_outputs"
+}
+
+variable "db_admin_name" { # TODO: predictive_db_admin_user
+  description = "Define admin user name for PostgreSQL."
+  type        = string
+  default     = "pgadmin"
+}
+
+variable "db_passwd" { # TODO: predictive_db_admin_password
+  description = "Define admin user password for PostgreSQL."
+  type        = string
+  default     = "Db1234asdf"
+}
+
+variable "storage_size_in_gb" { # TODO: predictive_db_storage_size_in_gb
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "10"
 }
 
-variable "instance_class" {
+variable "instance_class" { # TODO: predictive_db_instance_class
   description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t3.micro"
-}
-
-# RedShift variables 
-
-variable "rs_nodetype" {
-  description = "Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr, ~$180/mo (https://aws.amazon.com/redshift/pricing/)"
-  type        = string
-  default     = "dc2.large"
-}
-
-variable "num_rs_nodes" {
-  description = "Optional (default=1). The number of Redshift nodes to use."
-  type        = number
-  default     = 1
-}
-
-variable "skip_final_snapshot_rs" {
-  description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
-  default     = false
 }

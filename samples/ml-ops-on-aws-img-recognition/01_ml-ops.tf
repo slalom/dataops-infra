@@ -33,19 +33,18 @@ module "ml-ops" {
   test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
-  enable_pred_db         = "True"
-  skip_final_snapshot_rs = "true"
+  enable_pred_db = "True"
 
   # OPTIONAL
-  # All following variables have default values. Change as needed. 
+  # All following variables have default values. Change as needed.
 
-  # Set the storage size of the selected database. Check for cost. 
-  # storage_size_in_gb = "10" 
+  # Set the storage size of the selected database. Check for cost.
+  # storage_size_in_gb = "10"
 
-  # Set the instance type of the selected database. Check for cost. 
+  # Set the instance type of the selected database. Check for cost.
   # instance_class = "db.t3.micro"
 
-  # Set the name for data drift monitoring job 
+  # Set the name for data drift monitoring job
   # data_mon_name = "data-drift-monitor-schedule"
 
   parameter_ranges = {
