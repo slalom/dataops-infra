@@ -81,7 +81,7 @@ def transformation():
     data = None
 
     # Convert from CSV to pandas
-    if flask.request.content_type == "text/csv":
+    if flask.request.input_data_content_type == "text/csv":
         data = flask.request.data.decode("utf-8")
         s = StringIO(data)
         data = pd.read_csv(s, index_col=0)

@@ -213,17 +213,17 @@ Default: `"accuracy"`
 ### inference\_comparison\_operator
 
 Description: Comparison operator for deploying the trained SageMaker model.
-Used in combination with `inference_metric_threshold`.
+Used in combination with `inference_metric_alarm_threshold`.
 Examples: 'NumericGreaterThan', 'NumericLessThan', etc.
 
 Type: `string`
 
 Default: `"NumericGreaterThan"`
 
-### inference\_metric\_threshold
+### inference\_metric\_alarm_threshold
 
-Description: Threshold for deploying the trained SageMaker model.
-Used in combination with `inference_comparison_operator`.
+Description: alarm_threshold for deploying the trained SageMaker model.
+Used in combination with `inference_alarm_comparison_operator`.
 
 Type: `number`
 
@@ -409,7 +409,7 @@ Default: `"Model is Overfitting and Retraining Alarm"`
 
 ### comparison\_operator
 
-Description:   The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.
+Description:   The arithmetic operation to use when comparing the specified alarm_statistic and alarm_threshold. The specified alarm_statistic value is used as the first operand.
   Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals,
   StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan,
   NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals,
@@ -427,7 +427,7 @@ Default: `"NumericLessThan"`
 
 ### evaluation\_period
 
-Description:   The number of periods over which data is compared to the specified threshold. If you are setting an alarm that requires that a number of consecutive data points
+Description:   The number of periods over which data is compared to the specified alarm_threshold. If you are setting an alarm that requires that a number of consecutive data points
   be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
   An alarm's total current evaluation period can be no longer than one day, so this number multiplied by Period cannot be more than 86,400 seconds.
   This parameter works in combination with datapoints\_to\_evaluate for specifying how frequently the model performance will be monitored.
@@ -448,8 +448,8 @@ Default: `10`
 ### metric\_name
 
 Description:   The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or a Metrics array.
-  If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , Statistic ,
-  or ExtendedStatistic parameters. Instead, you specify all this information in the Metrics array. Values include Training Accuray, Training Loss,
+  If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , alarm_statistic ,
+  or Extendedalarm_statistic parameters. Instead, you specify all this information in the Metrics array. Values include Training Accuray, Training Loss,
   Validation Accuracy, and Validation Loss.
 
 Type: `string`
@@ -464,17 +464,17 @@ Type: `number`
 
 Default: `30`
 
-### statistic
+### alarm_statistic
 
-Description: The statistic to return. It can include any CloudWatch stats or extended stats
+Description: The alarm_statistic to return. It can include any CloudWatch stats or extended stats
 
 Type: `string`
 
 Default: `"Maximum"`
 
-### threshold
+### alarm_threshold
 
-Description: The baseline threshold value that cloudwatch will compare against
+Description: The baseline alarm_threshold value that cloudwatch will compare against
 
 Type: `number`
 
@@ -498,7 +498,7 @@ Default: `"Model is overfitting. Model retraining will be activated."`
 
 ### unit\_name
 
-Description:   The unit of measure for the statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data.
+Description:   The unit of measure for the alarm_statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data.
   Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
   If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm. Usually metrics
   are published with only one unit, so the alarm will work as intended.
@@ -538,9 +538,9 @@ Type: `number`
 
 Default: `3600`
 
-### frequency
+### data_drift_monitoring_frequency
 
-Description: The frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily\_every\_x\_hours (hour\_interval, starting\_hour)
+Description: The data_drift_monitoring_frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily\_every\_x\_hours (hour\_interval, starting\_hour)
 
 Type: `string`
 
@@ -562,7 +562,7 @@ Type: `string`
 
 Default: `"data-drift-monitor-schedule"`
 
-### dbname
+### predictive_db_name
 
 Description: The name for the database in PostgreSQL
 

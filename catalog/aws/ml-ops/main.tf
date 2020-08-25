@@ -73,7 +73,7 @@ EOF
       "Parameters": {
         "ModelName.$": "$.modelName",
         "TransformInput": {
-          "ContentType": "${var.content_type}",
+          "ContentType": "${var.input_data_content_type}",
           "CompressionType": "None",
           "DataSource": {
             "S3DataSource": {
@@ -124,9 +124,9 @@ module "ecr_image" {
   resource_tags        = var.resource_tags
   aws_credentials_file = var.aws_credentials_file
 
-  repository_name   = var.repo_name
-  source_image_path = var.source_image_path
-  tag               = var.ecr_tag_name
+  repository_name   = var.byo_model_repo_name
+  byo_model_source_image_path = var.byo_model_source_image_path
+  tag               = var.byo_model_ecr_tag_name
 }
 
 module "postgres" {
@@ -136,13 +136,13 @@ module "postgres" {
   resource_tags = var.resource_tags
 
   postgres_version = "11"
-  database_name    = var.dbname
+  database_name    = var.predictive_db_name
 
-  admin_username = var.db_admin_name
-  admin_password = var.db_passwd
+  admin_username = var.predictive_db_admin_user
+  admin_password = var.predictive_db_admin_password
 
-  storage_size_in_gb = var.storage_size_in_gb
-  instance_class     = var.instance_class
+  predictive_db_storage_size_in_gb = var.predictive_db_storage_size_in_gb
+  predictive_db_instance_class     = var.predictive_db_instance_class
 }
 
 resource "local_file" "step_function_def" {
@@ -181,7 +181,7 @@ resource "local_file" "step_function_def" {
       "Parameters": {
         "HyperParameterTuningJobName.$": "$.JobName",
         "HyperParameterTuningJobConfig": {
-          "Strategy": "${var.hpo_tuning_strategy}",
+          "Strategy": "${var.tuning_strategy}",
           "HyperParameterTuningJobObjective": {
             "Type": "${var.tuning_objective}",
             "MetricName": "${var.tuning_metric}"
@@ -225,7 +225,7 @@ resource "local_file" "step_function_def" {
                   "S3DataDistributionType": "FullyReplicated"
                 }
               },
-              "ContentType": "${var.content_type}",
+              "ContentType": "${var.input_data_content_type}",
               "CompressionType": "None"
             },
             {
@@ -237,7 +237,7 @@ resource "local_file" "step_function_def" {
                   "S3DataDistributionType": "FullyReplicated"
                 }
               },
-              "ContentType": "${var.content_type}",
+              "ContentType": "${var.input_data_content_type}",
               "CompressionType": "None"
             }
           ],
@@ -263,14 +263,14 @@ resource "local_file" "step_function_def" {
       "Choices": [
         {
           "Variable": "$['trainingMetrics'][0]['Value']",
-          "${var.inference_comparison_operator}": ${var.inference_metric_threshold},
+          "${var.inference_alarm_comparison_operator}": ${var.inference_metric_alarm_threshold},
           "Next": "Save Best Model"
         }
       ],
       "Default": "Model Accuracy Too Low"
     },
     "Model Accuracy Too Low": {
-      "Comment": "Validation accuracy lower than threshold",
+      "Comment": "Validation accuracy lower than alarm_threshold",
       "Type": "Fail"
     },
     "Save Best Model": {
@@ -348,7 +348,7 @@ resource "local_file" "step_function_def" {
         {
           "Not": {
             "Variable": "$.MetricName",
-            "${var.comparison_operator}": ${var.threshold}
+            "${var.alarm_comparison_operator}": ${var.alarm_threshold}
           },
           "Next": "Cloud Watch Alarm"
         }
@@ -367,7 +367,7 @@ resource "local_file" "step_function_def" {
           "And": [
             {
               "Variable": "$.MetricName",
-              "${var.comparison_operator}": ${var.threshold}
+              "${var.alarm_comparison_operator}": ${var.alarm_threshold}
             },
             {
               "Variable": "$.response",

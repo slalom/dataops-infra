@@ -11,16 +11,16 @@ module "ml-ops" {
   # ADD OR MODIFY CONFIGURATION HERE:
 
   job_name     = "breast-cancer-detection"
-  problem_type = "Image Recognition"
-  content_type = "application/x-recordio"
+  data_drift_ml_problem_type = "Image Recognition"
+  input_data_content_type = "application/x-recordio"
 
-  repo_name         = "img-recog-sample-image"
-  source_image_path = "source/containers/ml-ops-byo-custom/DockerScripts"
+  byo_model_repo_name         = "img-recog-sample-image"
+  byo_model_source_image_path = "source/containers/ml-ops-byo-custom/DockerScripts"
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
-  inference_comparison_operator = "NumericGreaterThan"
-  inference_metric_threshold    = 0.7
+  inference_alarm_comparison_operator = "NumericGreaterThan"
+  inference_metric_alarm_threshold    = 0.7
   endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
 
   max_number_training_jobs    = 3
@@ -33,19 +33,19 @@ module "ml-ops" {
   test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
-  enable_pred_db = "True"
+  enable_predictive_db = true
 
   # OPTIONAL
   # All following variables have default values. Change as needed.
 
   # Set the storage size of the selected database. Check for cost.
-  # storage_size_in_gb = "10"
+  # predictive_db_storage_size_in_gb = "10"
 
   # Set the instance type of the selected database. Check for cost.
-  # instance_class = "db.t3.micro"
+  # predictive_db_instance_class = "db.t3.micro"
 
   # Set the name for data drift monitoring job
-  # data_mon_name = "data-drift-monitor-schedule"
+  # data_drift_monitor_name = "data-drift-monitor-schedule"
 
   parameter_ranges = {
     ContinuousParameterRanges = [

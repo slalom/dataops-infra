@@ -57,7 +57,7 @@ module "ecr_image" {
 
   repository_name   = "devbox"
   tag               = "latest"
-  source_image_path = "${path.module}/resources"
+  byo_model_source_image_path = "${path.module}/resources"
   build_args = {
     source_image = var.source_image
   }

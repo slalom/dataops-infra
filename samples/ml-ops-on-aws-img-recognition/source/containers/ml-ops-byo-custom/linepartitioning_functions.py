@@ -9,7 +9,7 @@ import numpy as np
 
 
 from skimage import data, measure
-from skimage.filters import threshold_otsu, rank, gaussian
+from skimage.filters import alarm_threshold_otsu, rank, gaussian
 import skimage.io as skio
 import skimage as ski
 from skimage import filters
@@ -64,7 +64,7 @@ def generate_inflectionpoints(binarymask):
     # else:
     #     indexinflection_bottomup_y=0
     #     indexinflection_bottomup_x=0
-        #plt.scatter(indexinflection_bottomup_x, indexinflection_bottomup_y, s=200, c='red', marker='o')
+    # plt.scatter(indexinflection_bottomup_x, indexinflection_bottomup_y, s=200, c='red', marker='o')
 
     return indexinflection_topdown_x, indexinflection_topdown_y
 
@@ -75,11 +75,11 @@ def leaveout_underlineportion(cropped_image, intercept, slope):
 
     linecropped_image = []
     for row in np.arange(1, cropped_image.shape[0]):
-        collimit = (row-intercept)/slope
+        collimit = (row - intercept) / slope
 
         if collimit > 0:
             leaveout_portion = np.zeros(int(round(collimit)))
-            kept_portion = cropped_image[row, int(round(collimit)):]
+            kept_portion = cropped_image[row, int(round(collimit)) :]
             imageline = np.concatenate([leaveout_portion, kept_portion])
             linecropped_image.append(imageline)
         else:
@@ -95,7 +95,9 @@ def find_topinflectionpoint(blobs_labels):
     return maxtoprowpoint
 
 
-def generate_linefit(maxtoprowpoint, indexinflection_topdown_x, indexinflection_topdown_y):
+def generate_linefit(
+    maxtoprowpoint, indexinflection_topdown_x, indexinflection_topdown_y
+):
     # given points of interest generate and return the line coefficients
     x = [maxtoprowpoint, indexinflection_topdown_x]
     y = [0, indexinflection_topdown_y]
@@ -107,8 +109,15 @@ def generate_linefit(maxtoprowpoint, indexinflection_topdown_x, indexinflection_
     return intercept, slope
 
 
-def plot_muscleremoval_inflectionpoints(outputimage_filesavelocation, savefilename, indexinflection_topdown_x, indexinflection_topdown_y,
-                                        maxtoprowpoint, blobs_labels, cropped_image):
+def plot_muscleremoval_inflectionpoints(
+    outputimage_filesavelocation,
+    savefilename,
+    indexinflection_topdown_x,
+    indexinflection_topdown_y,
+    maxtoprowpoint,
+    blobs_labels,
+    cropped_image,
+):
     # these are plots to study the inflection points and line drawing
     fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(16, 16))
     ax = axes.ravel()
@@ -116,39 +125,41 @@ def plot_muscleremoval_inflectionpoints(outputimage_filesavelocation, savefilena
     ax[1] = plt.subplot(1, 3, 2)
     ax[2] = plt.subplot(1, 3, 3)
 
-    ax[0].imshow(blobs_labels, cmap='nipy_spectral')
-    ax[0].scatter(maxtoprowpoint, 0, s=200, c='red', marker='o')
-    #ax[0].scatter(0, maxbottomrowpoint, s=200, c='red', marker='o')
-    ax[0].scatter(indexinflection_topdown_x,
-                  indexinflection_topdown_y, s=200, c='red', marker='o')
-    #ax[0].scatter(indexinflection_bottomup_x, indexinflection_bottomup_y, s=200, c='red', marker='o')
-    ax[0].set_title('inflection points')
-    ax[0].axis('off')
+    ax[0].imshow(blobs_labels, cmap="nipy_spectral")
+    ax[0].scatter(maxtoprowpoint, 0, s=200, c="red", marker="o")
+    # ax[0].scatter(0, maxbottomrowpoint, s=200, c='red', marker='o')
+    ax[0].scatter(
+        indexinflection_topdown_x, indexinflection_topdown_y, s=200, c="red", marker="o"
+    )
+    # ax[0].scatter(indexinflection_bottomup_x, indexinflection_bottomup_y, s=200, c='red', marker='o')
+    ax[0].set_title("inflection points")
+    ax[0].axis("off")
 
     # linefitting
     intercept, slope = generate_linefit(
-        maxtoprowpoint, indexinflection_topdown_x, indexinflection_topdown_y)
+        maxtoprowpoint, indexinflection_topdown_x, indexinflection_topdown_y
+    )
 
     line_x = np.linspace(0, maxtoprowpoint, 10)
-    line_y = slope*line_x+intercept
+    line_y = slope * line_x + intercept
 
-    ax[1].plot(line_x, line_y, linewidth=2, color='r')
-    ax[1].imshow(cropped_image, cmap='nipy_spectral')
-    ax[1].scatter(maxtoprowpoint, 0, s=200, c='red', marker='o')
-    #ax[1].scatter(0, maxbottomrowpoint, s=200, c='red', marker='o')
-    ax[1].scatter(indexinflection_topdown_x,
-                  indexinflection_topdown_y, s=200, c='red', marker='o')
-    #ax[2].scatter(indexinflection_bottomup_x, indexinflection_bottomup_y, s=200, c='red', marker='o')
-    ax[1].set_title('line drawn with inflection points')
-    ax[1].axis('off')
+    ax[1].plot(line_x, line_y, linewidth=2, color="r")
+    ax[1].imshow(cropped_image, cmap="nipy_spectral")
+    ax[1].scatter(maxtoprowpoint, 0, s=200, c="red", marker="o")
+    # ax[1].scatter(0, maxbottomrowpoint, s=200, c='red', marker='o')
+    ax[1].scatter(
+        indexinflection_topdown_x, indexinflection_topdown_y, s=200, c="red", marker="o"
+    )
+    # ax[2].scatter(indexinflection_bottomup_x, indexinflection_bottomup_y, s=200, c='red', marker='o')
+    ax[1].set_title("line drawn with inflection points")
+    ax[1].axis("off")
 
-    linecroppedimage = leaveout_underlineportion(
-        cropped_image, intercept, slope)
-    ax[2].imshow(linecroppedimage, cmap='nipy_spectral')
-    ax[2].set_title('removed under the inflection point lines')
-    ax[2].axis('off')
+    linecroppedimage = leaveout_underlineportion(cropped_image, intercept, slope)
+    ax[2].imshow(linecroppedimage, cmap="nipy_spectral")
+    ax[2].set_title("removed under the inflection point lines")
+    ax[2].axis("off")
 
-    fig.savefig(outputimage_filesavelocation+savefilename+'.png')
+    fig.savefig(outputimage_filesavelocation + savefilename + ".png")
     plt.close()
 
 
@@ -167,17 +178,27 @@ def check_breasttissue_linemethod(binarymask, image):
 
     maxtoprowpoint = find_topinflectionpoint(binarymask)
     indexinflection_topdown_x, indexinflection_topdown_y = generate_inflectionpoints(
-        binarymask)
+        binarymask
+    )
     intercept, slope = generate_linefit(
-        maxtoprowpoint, indexinflection_topdown_x, indexinflection_topdown_y)
+        maxtoprowpoint, indexinflection_topdown_x, indexinflection_topdown_y
+    )
 
-    beyondinflectionpoint = binarymask[indexinflection_topdown_y:,
-                                       indexinflection_topdown_x:]
-    percent_outside = beyondinflectionpoint.sum()/binarymask.sum()
+    beyondinflectionpoint = binarymask[
+        indexinflection_topdown_y:, indexinflection_topdown_x:
+    ]
+    percent_outside = beyondinflectionpoint.sum() / binarymask.sum()
 
     if slope != 0:  # sometimes it has a lot of issues
         linecroppedimage = leaveout_underlineportion(image, intercept, slope)
     else:
         linecroppedimage = np.zeros((image.shape[0], image.shape[1]))
 
-    return percent_outside,  linecroppedimage, indexinflection_topdown_x, indexinflection_topdown_y, maxtoprowpoint
+    return (
+        percent_outside,
+        linecroppedimage,
+        indexinflection_topdown_x,
+        indexinflection_topdown_y,
+        maxtoprowpoint,
+    )
+

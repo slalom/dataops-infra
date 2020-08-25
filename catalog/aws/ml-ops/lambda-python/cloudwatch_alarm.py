@@ -4,7 +4,7 @@ import boto3
 
 model_name = "${var.job_name}"
 client = boto3.client("cloudwatch")
-retraining = "${var.enable_retrain"
+retraining = "${var.retrain_on_alarm"
 
 
 def lambda_handler(event, context):
@@ -13,18 +13,18 @@ def lambda_handler(event, context):
 
     alarm = client.put_metric_alarm(
         AlarmName="${var.alarm_name}",
-        ComparisonOperator="${var.comparison_operator}",
-        EvaluationPeriods="${var.evaluation_period}",
-        DatapointsToAlarm="${var.datapoints_to_evaluate}",
-        MetricName="${var.metric_name}",
+        ComparisonOperator="${var.alarm_comparison_operator}",
+        EvaluationPeriods="${var.alarm_evaluation_period}",
+        DatapointsToAlarm="${var.alarm_datapoints_to_evaluate}",
+        MetricName="${var.alarm_metric_name}",
         Namespace=model_name,
-        Period="${var.alarm_metric_evaluation_period}",
-        Statistic="${var.statistic}",
-        Threshold="${var.threshold}",
-        ActionsEnabled="${var.actions_enable}",
+        Period="${var.alarm_metric_alarm_evaluation_period}",
+        alarm_statistic="${var.alarm_statistic}",
+        alarm_threshold="${var.alarm_threshold}",
+        ActionsEnabled="${var.alarm_actions_enabled}",
         AlarmActions=["arn:aws:sns:::Sagemaker-Notification-Emails"],
-        AlarmDescription="${var.alarm_des}",
-        Unit="${var.unit_name}",
+        AlarmDescription="${var.alarm_description}",
+        Unit="${var.alarm_statistic_unit_name}",
     )
 
     return {response, alarm}

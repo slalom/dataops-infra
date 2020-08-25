@@ -6,17 +6,15 @@ import boto3
 import psycopg2
 
 # first need to enable the prediction outputs loading process
-enable_pred_db = "${var.enable_pred_db}"
+enable_predictive_db = "${var.enable_predictive_db}"
 
 # user defined database related variables
-dbname = "${var.dbname}"
-user = "${var.db_admin_name}"
+predictive_db_name = "${var.predictive_db_name}"
+user = "${var.predictive_db_admin_user}"
 host = "${module.postgres.endpoint}"
-password = "${var.db_passwd}"
+password = "${var.predictive_db_admin_password}"
 
-connection_string = (
-    f"dbname='{dbname}' user='{user}' host='{host}' password='{password}'"
-)
+connection_string = f"predictive_db_name='{predictive_db_name}' user='{user}' host='{host}' password='{password}'"
 
 S3_url = "s3://${aws_s3_bucket.data_store.id}/" + "${var.test_key}"
 
@@ -25,7 +23,7 @@ client = boto3.client("s3")
 
 def pg_load(connection, table_name, file_path):
 
-    if enable_pred_db == "True":
+    if enable_predictive_db == "True":
         try:
             conn = psycopg2.connect(connection)
             print("Connecting to Database")
@@ -50,5 +48,5 @@ def pg_load(connection, table_name, file_path):
 
 def handler(event, context):
     # Load csv to Postgres
-    pg_load(connection_string, dbname, S3_url)
+    pg_load(connection_string, predictive_db_name, S3_url)
 

@@ -1,7 +1,7 @@
 """ This is a function for enabling data capture.
 Checks these 2 things of the input data: 
     - features (aka input schema)
-    - descriptive statistics about input features 
+    - descriptive alarm_statistics about input features 
 """
 
 from urllib.parse import urlparse
@@ -28,9 +28,9 @@ s3_client = boto3.Session().client("s3")
 role = "${module.step-functions.iam_role_arn}"
 
 # give a name to the data drift monitor job
-mon_schedule_name = "${var.data_mon_name}"
+mon_schedule_name = "${var.data_drift_monitor_name}"
 endpoint_name = "${var.endpoint_name}"
-frequency = "${var.frequency}"
+data_drift_monitoring_frequency = "${var.data_drift_monitoring_frequency}"
 
 # define a url path for the captured data output
 s3_capture_upload_path = (
@@ -49,31 +49,33 @@ s3_report_path = (
 )
 
 # you can also choose hourly, or daily_every_x_hours(hour_interval, starting_hour=0)
-def monitor_frequency(interval=frequency, hour_interval=None, starting_hour=None):
+def monitor_data_drift_monitoring_frequency(
+    interval=data_drift_monitoring_frequency, hour_interval=None, starting_hour=None
+):
 
-    # this allows users to define the frequency of data drift monitoring
+    # this allows users to define the data_drift_monitoring_frequency of data drift monitoring
 
     if interval == "daily":
-        monitoring_frequency = CronExpressionGenerator.daily()
+        monitoring_data_drift_monitoring_frequency = CronExpressionGenerator.daily()
     if interval == "hourly":
-        monitoring_frequency = CronExpressionGenerator.hourly()
+        monitoring_data_drift_monitoring_frequency = CronExpressionGenerator.hourly()
     if interval == "others":
-        monitoring_frequency = CronExpressionGenerator.daily_every_x_hours(
+        monitoring_data_drift_monitoring_frequency = CronExpressionGenerator.daily_every_x_hours(
             hour_interval, starting_hour
         )
-    return monitoring_frequency
+    return monitoring_data_drift_monitoring_frequency
 
 
 # Change parameters as you would like - adjust sampling percentage,
 # chose to capture request or response or both.
 data_capture_config = DataCaptureConfig(
     enable_capture=True,
-    sampling_percentage="${var.sample_percent}",
+    sampling_percentage="${var.data_drift_sampling_percent}",
     destination_s3_uri=s3_capture_upload_path,
     kms_key_id=None,
     capture_options=["REQUEST", "RESPONSE"],
-    csv_content_types=["text/csv"],
-    json_content_types=["application/json"],
+    csv_input_data_content_types=["text/csv"],
+    json_input_data_content_types=["application/json"],
 )
 
 # Now it is time to apply the new configuration and wait for it to be applied
@@ -86,7 +88,7 @@ my_default_monitor = DefaultModelMonitor(
     instance_count="${var.training_job_instance_count}",
     instance_type="${var.training_job_instance_type}",
     volume_size_in_gb="${var.training_job_instance_type}",
-    max_runtime_in_seconds="${var.max_timeout_in_sec}",
+    max_runtime_in_seconds="${var.data_drift_job_timeout_in_sec}",
 )
 
 # now ask Sagemaker to suggest baseline stats
@@ -101,15 +103,15 @@ my_default_monitor.create_monitoring_schedule(
     monitor_schedule_name=mon_schedule_name,
     endpoint_input=predictor.endpoint,
     output_s3_uri=s3_report_path,
-    statistics=my_default_monitor.baseline_statistics(),
+    alarm_statistics=my_default_monitor.baseline_alarm_statistics(),
     constraints=my_default_monitor.suggested_constraints(),
-    schedule_cron_expression=monitor_frequency,
+    schedule_cron_expression=monitor_data_drift_monitoring_frequency,
     enable_cloudwatch_metrics=True,
 )
 
 baseline_job = my_default_monitor.latest_baselining_job
 schema_df = pd.io.json.json_normalize(
-    baseline_job.baseline_statistics().body_dict["features"]
+    baseline_job.baseline_alarm_statistics().body_dict["features"]
 )
 constraints_df = pd.io.json.json_normalize(
     baseline_job.suggested_constraints().body_dict["features"]
@@ -155,7 +157,9 @@ def lambda_handler(event, context):
         latest_monitoring_violations.body_dict["violations"]
     )
     # get the latest violation stats
-    latest_monitoring_statistics = my_default_monitor.latest_monitoring_statistics()
+    latest_monitoring_alarm_statistics = (
+        my_default_monitor.latest_monitoring_alarm_statistics()
+    )
 
     # get the status of the latest execution result
     latest_result_status = latest_execution.describe()["ExitMessage"]
@@ -170,5 +174,5 @@ def lambda_handler(event, context):
         latest_result_status,
         report_uri,
         constraints_violations_df,
-        latest_monitoring_statistics,
+        latest_monitoring_alarm_statistics,
     }

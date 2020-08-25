@@ -40,7 +40,7 @@ variable "build_args" {
   type        = map(string)
   default     = {}
 }
-variable "source_image_path" {
+variable "byo_model_source_image_path" {
   description = "Path to Docker image source."
   type        = string
 }

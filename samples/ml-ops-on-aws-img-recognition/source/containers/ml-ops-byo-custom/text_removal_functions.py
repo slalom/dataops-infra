@@ -11,10 +11,10 @@ def normalize_image_values(pixelmax, image):
     # returns a normalized image to reference the pixel max and formats it in uint8
     # usually 255 (max) is white and 0 is black
     # skimage needs uint8
-    image = image.astype('float64')
+    image = image.astype("float64")
 
-    image *= pixelmax/image.max()
-    imageuint8 = image.astype('uint8')
+    image *= pixelmax / image.max()
+    imageuint8 = image.astype("uint8")
 
     return imageuint8
 
@@ -22,16 +22,18 @@ def normalize_image_values(pixelmax, image):
 def crop_topline_bottomline(crop_percentage_top, crop_percentage_bottom, imageuint8):
     # crop_percentage is a float like .03
     # avoid the white band on top
-    cropped_image_top = imageuint8[int(
-        imageuint8.shape[0]*crop_percentage_top):, :]
-    fullycropped_image = cropped_image_top[:int(
-        cropped_image_top.shape[0]*crop_percentage_bottom), :]  # crops the bottom
+    cropped_image_top = imageuint8[int(imageuint8.shape[0] * crop_percentage_top) :, :]
+    fullycropped_image = cropped_image_top[
+        : int(cropped_image_top.shape[0] * crop_percentage_bottom), :
+    ]  # crops the bottom
 
     return fullycropped_image
+
+
 ###################################################################
 
 
-def preprocess_image(image, bot_pct=.95, top_pct=.03):
+def preprocess_image(image, bot_pct=0.95, top_pct=0.03):
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     image = normalize_image_values(255, image)
@@ -47,21 +49,21 @@ def build_index_image(img):
     return index_img
 
 
-def find_valid_bboxes(img, n_contours=10, area_threshold=1000.0, plot=False):
+def find_valid_bboxes(img, n_contours=10, area_alarm_threshold=1000.0, plot=False):
     # using cv2, find the bounding boxes of the text characters present in the images
     binary_img = binarize_image(img)
     index_img = build_index_image(img)
 
     # find image contours
     contours, _ = cv2.findContours(
-        binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+        binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )[-2:]
 
     # calculate bbox info for each contours
     bbox_data = [(c, cv2.minAreaRect(c)) for c in contours]
 
-    # filter based on area threshold
-    bbox_data = [b for b in bbox_data if calc_bbox_area(
-        b[1]) >= area_threshold]
+    # filter based on area alarm_threshold
+    bbox_data = [b for b in bbox_data if calc_bbox_area(b[1]) >= area_alarm_threshold]
 
     # sort by bbox area
     bbox_data.sort(key=lambda bbox_tup: calc_bbox_area(bbox_tup[1]))
@@ -82,19 +84,24 @@ def find_valid_bboxes(img, n_contours=10, area_threshold=1000.0, plot=False):
         axes[1].imshow(img)
     for vertices in bbox_coords:
         p = path.Path(vertices)
-        polygon_mask = np.logical_or(polygon_mask, p.contains_points(
-            index_img).reshape(img.shape[0], img.shape[1], order='F').astype(np.uint8))
+        polygon_mask = np.logical_or(
+            polygon_mask,
+            p.contains_points(index_img)
+            .reshape(img.shape[0], img.shape[1], order="F")
+            .astype(np.uint8),
+        )
 
         if plot:
             # draw red rectangle around region
-            rect = patches.Polygon(vertices, fill=False, edgecolor='white')
+            rect = patches.Polygon(vertices, fill=False, edgecolor="white")
             axes[0].add_patch(rect)
             axes[0].set_xticks([])
             axes[0].set_yticks([])
 
             # fill in region with bg color
-            fill = patches.Polygon(vertices, fill=True,
-                                   facecolor='black', edgecolor='black')
+            fill = patches.Polygon(
+                vertices, fill=True, facecolor="black", edgecolor="black"
+            )
             axes[1].add_patch(fill)
             axes[1].set_xticks([])
             axes[1].set_yticks([])
@@ -121,7 +128,7 @@ def overwrite_pixels(img, polygon_mask, bg=0):
 def calc_bbox_area(bbox_info):
 
     w, h = bbox_info[1]
-    return w*h
+    return w * h
 
 
 def get_bbox_coordinates(bbox_rect):
@@ -152,11 +159,12 @@ def main():
     new_img = overwrite_pixels(img, mask)
 
     if write_output:
-        prefix = '/'.join(img_path.split('/')[:-1])+'/'
-        newfilename = prefix + \
-            img_path.split('/')[-1].split('.')[0]+'_example_output.png'
+        prefix = "/".join(img_path.split("/")[:-1]) + "/"
+        newfilename = (
+            prefix + img_path.split("/")[-1].split(".")[0] + "_example_output.png"
+        )
         cv2.imwrite(newfilename, new_img)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

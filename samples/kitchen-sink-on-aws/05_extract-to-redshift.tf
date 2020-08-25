@@ -48,7 +48,7 @@ module "tap_to_rs" {
       s3_key_prefix         = "data/raw/{tap}/{table}/v1/"
       s3_bucket             = module.data_lake.s3_data_bucket
       port                  = split(":", module.redshift.endpoint)[1]
-      dbname                = "redshift_db"
+      predictive_db_name                = "redshift_db"
       default_target_schema = "public"
 
       host     = split(":", module.redshift.endpoint)[0]

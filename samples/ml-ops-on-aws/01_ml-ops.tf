@@ -10,17 +10,17 @@ module "ml-ops" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
   job_name     = "employee-attrition"
-  problem_type = "Classification"
-  content_type = "csv"
+  data_drift_ml_problem_type = "Classification"
+  input_data_content_type = "csv"
 
-  repo_name         = "employee-attrition"
-  source_image_path = "source/containers/ml-ops-byo-xgboost"
+  byo_model_repo_name         = "employee-attrition"
+  byo_model_source_image_path = "source/containers/ml-ops-byo-xgboost"
 
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
-  inference_comparison_operator = "NumericGreaterThan"
-  inference_metric_threshold    = 0.7
+  inference_alarm_comparison_operator = "NumericGreaterThan"
+  inference_metric_alarm_threshold    = 0.7
   endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
 
   max_number_training_jobs    = 3
@@ -33,7 +33,7 @@ module "ml-ops" {
   test_key  = "input_data/test/score.csv"
   #validate_key = "input_data/validate/"
 
-  enable_pred_db = "True"
+  enable_predictive_db = "True"
 
   static_hyperparameters = {
     kfold_splits = "5"
