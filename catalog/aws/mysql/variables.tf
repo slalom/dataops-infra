@@ -41,7 +41,7 @@ variable "identifier" {
   description = "The database name which will be used within connection strings and URLs."
   default     = "rds-db"
 }
-variable "predictive_db_instance_class" {
+variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t2.micro"
@@ -60,7 +60,7 @@ variable "mysql_version" {
   default     = "5.7.26"
 }
 
-variable "predictive_db_storage_size_in_gb" {
+variable "storage_size_in_gb" {
   description = "The allocated storage value is denoted in GB."
   type        = string
   default     = "20"
