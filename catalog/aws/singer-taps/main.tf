@@ -27,33 +27,15 @@ locals {
       "dataopstk/tapdance:${tap.id}-to-${local.target.id}${var.container_image_suffix}"
     )
   ]
-  target = (
-    (var.data_lake_type == "S3") || (var.target == null) ?
-    {
-      id = "s3-csv"
-      settings = {
-        # Parse the S3 path into 'bucket' and 'key' values:
-        # https://gist.github.com/aaronsteers/19eb4d6cba926327f8b25089cb79259b
-        s3_bucket = split("/", split("//", var.data_lake_storage_path)[1])[0]
-        s3_key_prefix = join("/",
-          [
-            join("/", slice(
-              split("/", split("//", var.data_lake_storage_path)[1]),
-              1,
-              length(split("/", split("//", var.data_lake_storage_path)[1]))
-            )),
-            replace(var.data_file_naming_scheme, "{file}", "")
-          ]
-        )
-      }
-      secrets = {
-        # AWS creds secrets will be parsed from local env variables, provided by ECS Task Role
-        # aws_access_key_id     = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_access_key_id"
-        # aws_secret_access_key = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_secret_access_key"
-      }
-    } :
-    var.target
-  )
+  default_target_def = {
+    id = "s3-csv"
+    settings = {
+      s3_bucket     = local.data_lake_storage_bucket
+      s3_key_prefix = local.data_lake_storage_key_prefix
+    }
+    secrets = {}
+  }
+  target = var.data_lake_type != "S3" || var.target != null ? var.target : local.default_target_def
 }
 
 module "ecs_cluster" {
