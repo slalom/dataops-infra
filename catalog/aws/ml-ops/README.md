@@ -26,20 +26,11 @@ The following providers are used by this module:
 
 - null
 
+- local
+
 - random
 
 - aws
-
-## RedShift or PostgreSQL
-
-Now we support RedShift as the backend database for collecting end users/business feedback. Users can also use AWS PostgreSQL as the backend database. 
-
-PostgreSQL is ideal for storing transactional data and serving as the database for collecting feedback. It is a cheaper option than RedShift. When using RedShift, since RedShift doesn’t handle transactional data, users may need to schedule vacuum to clean up the database in RedShift so ensure the size doesn’t keep growing. 
-
-- When connecting to AWS PostgreSQL in Power Apps, users need to install Npgsql version 4.0.10 or earlier at GAC level in order for the connection to work. Npgsql 4.0.10 can be downloaded here: [download Npgsql 4.0.10](https://github.com/npgsql/npgsql/releases/tag/v4.0.10)
-
-- When connecting to AWS RedShift in Power Apps, users need to ensure that the cluster vpc is publicly accessible: [managing clusters vpc](https://docs.aws.amazon.com/redshift/latest/mgmt/managing-clusters-vpc.html)
-
 
 ## Required Inputs
 
@@ -194,6 +185,14 @@ it does not already exist.
 Type: `string`
 
 Default: `"training-endpoint"`
+
+### hpo\_tuning\_strategy
+
+Description: Hyperparameter tuning strategy, can be Bayesian or Random.
+
+Type: `string`
+
+Default: `"Bayesian"`
 
 ### tuning\_objective
 
@@ -411,12 +410,20 @@ Default: `"Model is Overfitting and Retraining Alarm"`
 ### comparison\_operator
 
 Description:   The arithmetic operation to use when comparing the specified statistic and threshold. The specified statistic value is used as the first operand.
-  Possible values include GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold, LessThanLowerOrGreaterThanUpperThreshold,
-  LessThanLowerThreshold, and GreaterThanUpperThreshold.
+  Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals,
+  StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan,
+  NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals,
+  TimestampGreaterThan, StringGreaterThanEqualsPath, TimestampGreaterThanEqualsPath,
+  TimestampLessThanEquals, NumericLessThanEqualsPath, TimestampEquals, BooleanEqualsPath,
+  IsTimestamp, StringLessThanEquals, NumericLessThanEquals, StringLessThanPath,
+  TimestampGreaterThanPath, StringGreaterThan, StringGreaterThanPath, IsString, StringEqualsPath,
+  TimestampEqualsPath, TimestampLessThan, StringGreaterThanEquals, NumericGreaterThanPath,
+  NumericGreaterThanEquals, NumericEqualsPath, TimestampLessThanPath,
+  IsNull, IsPresent, TimestampGreaterThanEquals, NumericGreaterThanEqualsPath
 
 Type: `string`
 
-Default: `"LessThanOrEqualToThreshold"`
+Default: `"NumericLessThan"`
 
 ### evaluation\_period
 
@@ -577,7 +584,7 @@ Description: Define admin user password for PostgreSQL.
 
 Type: `string`
 
-Default: `"1234asdf"`
+Default: `"Db1234asdf"`
 
 ### db\_version
 
@@ -610,6 +617,30 @@ Description: Enter the desired node type. The default and cheapest option is 'db
 Type: `string`
 
 Default: `"db.t3.micro"`
+
+### rs\_nodetype
+
+Description: Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr, ~$180/mo (https://aws.amazon.com/redshift/pricing/)
+
+Type: `string`
+
+Default: `"dc2.large"`
+
+### num\_rs\_nodes
+
+Description: Optional (default=1). The number of Redshift nodes to use.
+
+Type: `number`
+
+Default: `1`
+
+### skip\_final\_snapshot\_rs
+
+Description: If true, will allow terraform to destroy the RDS cluster without performing a final backup.
+
+Type: `bool`
+
+Default: `false`
 
 ## Outputs
 
