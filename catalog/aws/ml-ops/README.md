@@ -222,7 +222,7 @@ Default: `"NumericGreaterThan"`
 
 ### inference\_metric\_threshold
 
-Description: alarm_threshold for deploying the trained SageMaker model.
+Description: threshold for deploying the trained SageMaker model.
 Used in combination with `inference_comparison_operator`.
 
 Type: `number`
@@ -409,7 +409,7 @@ Default: `"Model is Overfitting and Retraining Alarm"`
 
 ### comparison\_operator
 
-Description:   The arithmetic operation to use when comparing the specified alarm_statistic and alarm_threshold. The specified alarm_statistic value is used as the first operand.
+Description:   The arithmetic operation to use when comparing the specified statistic and threshold. The specified alarm_statistic value is used as the first operand.
   Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals,
   StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan,
   NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals,

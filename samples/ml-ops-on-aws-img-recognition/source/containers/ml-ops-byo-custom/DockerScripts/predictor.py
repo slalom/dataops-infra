@@ -88,7 +88,7 @@ class ScoringService(object):
         #        [int(i[0] > 0.6869423) for i in predictions],
         #    )
         # )
-        fpr, tpr, alarm_thresholds = roc_curve(
+        fpr, tpr, thresholds = roc_curve(
             target_labels[: len(predictions)], [i[0] for i in predictions]
         )
         test_auc = auc(fpr, tpr)
@@ -103,9 +103,9 @@ class ScoringService(object):
                 "predictions": [i[0] for i in predictions],
             }
         ).to_csv("test_predictions.csv")
-        pd.DataFrame(
-            {"fpr": fpr, "tpr": tpr, "alarm_thresholds": alarm_thresholds}
-        ).to_csv("roc.csv")
+        pd.DataFrame({"fpr": fpr, "tpr": tpr, "thresholds": thresholds}).to_csv(
+            "roc.csv"
+        )
 
         return predictions
 

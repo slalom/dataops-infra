@@ -93,7 +93,7 @@ def transfer_learning_model(
     model_final.compile(
         optimizer=opt,
         loss=loss_fn,
-        metrics=["accuracy", tf.keras.metrics.AUC(num_alarm_thresholds=50)],
+        metrics=["accuracy", tf.keras.metrics.AUC(num_thresholds=50)],
     )
 
     if checkpoints:

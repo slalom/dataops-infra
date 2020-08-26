@@ -9,7 +9,7 @@ import numpy as np
 
 
 from skimage import data, measure
-from skimage.filters import alarm_threshold_otsu, rank, gaussian
+from skimage.filters import threshold_otsu, rank, gaussian
 import skimage.io as skio
 import skimage as ski
 from skimage import filters

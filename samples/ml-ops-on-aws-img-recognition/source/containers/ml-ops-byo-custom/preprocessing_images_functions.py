@@ -6,7 +6,7 @@ import numpy as np
 
 
 from skimage import data, measure
-from skimage.filters import alarm_threshold_otsu, rank, gaussian
+from skimage.filters import threshold_otsu, rank, gaussian
 import skimage.io as skio
 import skimage as ski
 from skimage import filters
@@ -96,7 +96,7 @@ def find_subimage(widthlimit, lengthlimit, filteredchoice):
     return subimage
 
 
-def alarm_threshold_filter_pectoral(fullycropped_image, widthlimit, lengthlimit):
+def threshold_filter_pectoral(fullycropped_image, widthlimit, lengthlimit):
     # limit the portion of the image that otsu is exposed to detect the separation
     # widthlimit and lengthlimit are ints that are the denominator of a fraction
     # the width and length are tuned to capture a subsection of the image where the pectoral muscle is mostly concentrated
@@ -112,7 +112,7 @@ def alarm_threshold_filter_pectoral(fullycropped_image, widthlimit, lengthlimit)
 
     subimage = find_subimage(widthlimit, lengthlimit, filteredchoice)
 
-    thresh = ski.filters.alarm_threshold_otsu(subimage)
+    thresh = ski.filters.threshold_otsu(subimage)
     binary = filteredchoice >= thresh
 
     return binary, thresh, filteredchoice, subimage
@@ -178,8 +178,8 @@ otsu_cropheight = 3
 
 def pectoral_on_left(image, otsu_cropwidth=2, otsu_cropheight=3):
     # returns true if there is likely a pectoral muscle on the upper left corner
-    # these values were tuned based on sampling images and checking the otsu cropped section where we analyze the alarm_thresholding baseline
-    binary, thresh, filteredchoice, subimage = alarm_threshold_filter_pectoral(
+    # these values were tuned based on sampling images and checking the otsu cropped section where we analyze the thresholding baseline
+    binary, thresh, filteredchoice, subimage = threshold_filter_pectoral(
         image, otsu_cropwidth, otsu_cropheight
     )
     pixelsum = subimage.sum()

@@ -116,16 +116,16 @@ def resample(image, final_transform):
     )
 
 
-def crop_artifacts(img_arr, intensity_alarm_threshold=128.0):
+def crop_artifacts(img_arr, intensity_threshold=128.0):
 
     # create artifact mask
-    mask = np.where(img_arr > intensity_alarm_threshold, 1.0, 0.0)
+    mask = np.where(img_arr > intensity_threshold, 1.0, 0.0)
 
     img_arr_copy = img_arr[:, :]
 
     ### row/horizontal artifact removal ###
     artifact_remains = True
-    relative_alarm_threshold = intensity_alarm_threshold
+    relative_threshold = intensity_threshold
     while artifact_remains:
         # Step 1: Find first non-background column (starting from leftmost columns)
         colsums = np.sum(mask, 0)  # "horizontal" sum
@@ -136,12 +136,12 @@ def crop_artifacts(img_arr, intensity_alarm_threshold=128.0):
         # Step 2: Find location of relatively intense pixels in the list
         vals, counts = np.unique(first_nonzero_vector, return_counts=True)
         freq = sorted(list(zip(vals, counts)))
-        intense_vals = [val[0] for val in freq if val[0] > intensity_alarm_threshold]
+        intense_vals = [val[0] for val in freq if val[0] > intensity_threshold]
         # check if intense values exist, if not, all artifacts should be removed.
         if len(intense_vals) == 0:
             artifact_remains = False
             break
-        relative_alarm_threshold = intense_vals[0]
+        relative_threshold = intense_vals[0]
         min_crop_idx = np.min(
             np.nonzero(np.where(first_nonzero_vector >= intense_vals[0], 1, 0))
         )
@@ -159,7 +159,7 @@ def crop_artifacts(img_arr, intensity_alarm_threshold=128.0):
         print("Inverse orientation required.")
         img_arr_copy = img_arr[:, :]
         artifact_remains = True
-        relative_alarm_threshold = intensity_alarm_threshold
+        relative_threshold = intensity_threshold
         while artifact_remains:
             # Step 1: Find first intense-pixel row (starting from topmost row)
             rowsums = np.sum(mask, 1)
@@ -170,15 +170,13 @@ def crop_artifacts(img_arr, intensity_alarm_threshold=128.0):
             vals, counts = np.unique(first_nonzero_row, return_counts=True)
             freq = sorted(list(zip(vals, counts)))
             # print(freq[-10:])
-            intense_vals = [
-                val[0] for val in freq if val[0] > intensity_alarm_threshold
-            ]
+            intense_vals = [val[0] for val in freq if val[0] > intensity_threshold]
             # print(intense_vals)
             # check if intense values exist, if not, all artifacts should be removed.
             if len(intense_vals) == 0:
                 artifact_remains = False
                 break
-            relative_alarm_threshold = intense_vals[0]
+            relative_threshold = intense_vals[0]
             min_x_idx = np.min(
                 np.nonzero(np.where(first_nonzero_row >= intense_vals[0], 1, 0))
             )
@@ -192,7 +190,7 @@ def crop_artifacts(img_arr, intensity_alarm_threshold=128.0):
             ]
 
     #     #  clean up errant pixels
-    #     img_arr_copy = np.where(img_arr_copy.astype(int) > relative_alarm_threshold, 0.0, img_arr)
+    #     img_arr_copy = np.where(img_arr_copy.astype(int) > relative_threshold, 0.0, img_arr)
 
     return img_arr_copy
 

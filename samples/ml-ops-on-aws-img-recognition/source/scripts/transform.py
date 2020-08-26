@@ -204,7 +204,7 @@ def main(complementary_breast=False):
         "k": 7,
         "batch_size": 100,
         "init_centroids": "k-means++",
-        "alarm_threshold": 20.0,
+        "threshold": 20.0,
         "color_bounds": [(75, 255)],
         "plot": False,
     }

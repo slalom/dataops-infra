@@ -29,12 +29,12 @@ def generate_connectedlabels_variables(
     image, otsu_cropwidth, otsu_cropheight, blob_sigmasetting
 ):
     # takes an image and processes it to return the original image with 0 filled in where the region should be excluded
-    # also returns the alarm_thresholded binary image for inflection point processing
+    # also returns the thresholded binary image for inflection point processing
 
     # normalizedimage=normalize_image_values(255, image)
     # cropped_image=crop_topline_bottomline(topcrop_percentage, bottomcrop_percentage, normalizedimage)
 
-    binary, thresh, filteredchoice, subimage = alarm_threshold_filter_pectoral(
+    binary, thresh, filteredchoice, subimage = threshold_filter_pectoral(
         image, otsu_cropwidth, otsu_cropheight
     )
 
@@ -79,7 +79,7 @@ def plot_connectedlabels_partition(
     ax[1].axvline(thresh, color="r")
 
     ax[2].imshow(binary, cmap=plt.cm.gray)
-    ax[2].set_title("alarm_thresholded")
+    ax[2].set_title("thresholded")
     ax[2].axis("off")
 
     ax[3].imshow(blobs_labels, cmap="nipy_spectral")

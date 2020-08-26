@@ -11,6 +11,6 @@ def lambda_handle(event, context):
 
     sns.publish(
         TopicArn="arn:aws:sns:${var.environment.aws_region}:Data drift detected",
-        Subject="Negative Review Received",
+        Subject="Data Drift Detected",
         Message=f"The latest data drift monitor status is {event['latest_result_status']}, model training is stopped. Please provide update datasets and restart the process. For more details, please follow this link to the latest report {event['report_uri']}",
     )

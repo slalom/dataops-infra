@@ -18,8 +18,8 @@ resource "aws_lb_target_group" "alb_target_group" {
   target_type = "ip"
   vpc_id      = var.environment.vpc_id
   health_check {
-    healthy_alarm_threshold   = 2
-    unhealthy_alarm_threshold = 10
+    healthy_threshold   = 2
+    unhealthy_threshold = 10
     timeout             = 10
     path                = "/admin/"
     interval            = 30

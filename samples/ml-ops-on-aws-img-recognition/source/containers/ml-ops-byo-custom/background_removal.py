@@ -150,7 +150,7 @@ if __name__ == "__main__":
         "k": 6,
         "batch_size": 100,
         "init_centroids": "k-means++",
-        "alarm_threshold": 20.0,
+        "threshold": 20.0,
         "color_bounds": [(75, 255)],
         "plot": False,
     }
@@ -168,6 +168,6 @@ if __name__ == "__main__":
         params=params,
         cluster_to_remove=2,
         second_round_cluster=0,
-        mbkm_centroids=np.load("./LambdaScripts/mbkm_clusters.npy"),
+        mbkm_centroids=np.load("./notebook/mbkm_clusters.npy"),
         plot=True,
     )

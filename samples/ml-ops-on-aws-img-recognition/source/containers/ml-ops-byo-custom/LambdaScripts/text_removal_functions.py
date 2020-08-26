@@ -49,7 +49,7 @@ def build_index_image(img):
     return index_img
 
 
-def find_valid_bboxes(img, n_contours=10, area_alarm_threshold=1000.0, plot=False):
+def find_valid_bboxes(img, n_contours=10, area_threshold=1000.0, plot=False):
     # using cv2, find the bounding boxes of the text characters present in the images
     binary_img = binarize_image(img)
     index_img = build_index_image(img)
@@ -62,8 +62,8 @@ def find_valid_bboxes(img, n_contours=10, area_alarm_threshold=1000.0, plot=Fals
     # calculate bbox info for each contours
     bbox_data = [(c, cv2.minAreaRect(c)) for c in contours]
 
-    # filter based on area alarm_threshold
-    bbox_data = [b for b in bbox_data if calc_bbox_area(b[1]) >= area_alarm_threshold]
+    # filter based on area threshold
+    bbox_data = [b for b in bbox_data if calc_bbox_area(b[1]) >= area_threshold]
 
     # sort by bbox area
     bbox_data.sort(key=lambda bbox_tup: calc_bbox_area(bbox_tup[1]))

@@ -183,7 +183,7 @@ variable "tuning_metric" {
   default     = "accuracy"
 }
 
-# Inference alarm_threshold config # TODO: Reorder
+# Inference threshold config # TODO: Reorder
 
 variable "inference_comparison_operator" {
   description = <<EOF
@@ -197,7 +197,7 @@ EOF
 
 variable "inference_metric_threshold" {
   description = <<EOF
-alarm_threshold for deploying the trained SageMaker model.
+threshold for deploying the trained SageMaker model.
 Used in combination with `inference_comparison_operator`.
 EOF
   type        = number
@@ -256,12 +256,6 @@ variable "byo_model_image_name" {
   default     = "byo-custom"
 }
 
-variable "byo_model_image_source_path" {
-  description = "Local source path for bring your own model docker image."
-  type        = string
-  default     = "source/containers/ml-ops-byo-custom"
-}
-
 variable "byo_model_image_tag" {
   description = "Tag for bring your own model image."
   type        = string
@@ -274,8 +268,9 @@ variable "byo_model_repo_name" {
 }
 
 variable "byo_model_source_image_path" { 
-  description = "Path for source BYO model image."
+  description = "Local source path for bring your own model docker image."
   type        = string
+  default     = "source/containers/ml-ops-byo-custom"
 }
 
 variable "byo_model_ecr_tag_name" { 

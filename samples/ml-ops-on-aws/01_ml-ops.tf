@@ -33,7 +33,7 @@ module "ml-ops" {
   test_key  = "input_data/test/score.csv"
   #validate_key = "input_data/validate/"
 
-  enable_predictive_db = "True"
+  enable_predictive_db = true
 
   static_hyperparameters = {
     kfold_splits = "5"
@@ -98,7 +98,7 @@ module "ml-ops" {
   # specifying built_in_model_image means that 'bring-your-own' model is not required and the ECR image not created
 
   built_in_model_image        = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
-  byo_model_image_source_path = "source/containers/ml-ops-byo-xgboost"
+  byo_model_source_image_path = "source/containers/ml-ops-byo-xgboost"
   byo_model_image_name        = "byo-xgboost"
   byo_model_image_tag         = "latest"
 

@@ -6,7 +6,7 @@ import pandas as pd
 
 
 # for taking CSVs of the case description and prediction
-# this is after there is analysis on alarm_thresholds and that the column predicted val in the predictions csv exists
+# this is after there is analysis on thresholds and that the column predicted val in the predictions csv exists
 # the filenames largely depend on referencing what is available in s3 bucket
 
 

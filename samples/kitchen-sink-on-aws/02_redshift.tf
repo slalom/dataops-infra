@@ -25,8 +25,8 @@ module "redshift" {
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
   mysql_version       = "5.7.26"
-  predictive_db_instance_class      = "db.t2.micro"
-  predictive_db_storage_size_in_gb  = 20
+  instance_class      = "db.t2.micro"
+  storage_size_in_gb  = 20
 
   */
 

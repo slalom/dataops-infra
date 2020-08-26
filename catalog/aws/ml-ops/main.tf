@@ -125,7 +125,7 @@ module "ecr_image" {
   aws_credentials_file = var.aws_credentials_file
 
   repository_name   = var.byo_model_repo_name
-  byo_model_source_image_path = var.byo_model_source_image_path
+  source_image_path = var.byo_model_source_image_path
   tag               = var.byo_model_ecr_tag_name
 }
 
@@ -270,7 +270,7 @@ resource "local_file" "step_function_def" {
       "Default": "Model Accuracy Too Low"
     },
     "Model Accuracy Too Low": {
-      "Comment": "Validation accuracy lower than alarm_threshold",
+      "Comment": "Validation accuracy lower than threshold",
       "Type": "Fail"
     },
     "Save Best Model": {
