@@ -81,6 +81,7 @@ module "ml-ops" {
       }
     ]
   }
+  glue_transform_script = "source/scripts/transform.py"
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
@@ -89,7 +90,6 @@ module "ml-ops" {
   train_local_path  = "source/data/train.csv"
   score_local_path  = "source/score/score.csv"
 
-  script_path = "source/scripts/transform.py"
   whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
 

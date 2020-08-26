@@ -33,6 +33,7 @@ module "ml-ops" {
   test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
+  glue_transform_script = "${path.module}/source/scripts/transform.py"
   enable_predictive_db = true
 
   # OPTIONAL

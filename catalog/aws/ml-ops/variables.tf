@@ -26,13 +26,15 @@ variable "resource_tags" {
 
 # Local paths:
 
-variable "script_path" {
-  description = "Local path for Glue Python script."
+variable "glue_transform_script" { // glue_transform_script
+  description = <<EOF
+Local path for Glue Python script.
+For example: "./source/scripts/transform.py"
+EOF
   type        = string
-  default     = "source/scripts/transform.py"
 }
 
-variable "whl_path" {
+variable "whl_path" { #TODO: glue_dependency_package
   description = "Local path for Glue Python .whl file."
   type        = string
   default     = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl"
@@ -52,8 +54,8 @@ variable "score_local_path" {
 
 # S3 Storage Buckets and Paths
 
-variable "feature_store_override" {
-  description = "Optionally, you can override the default feature store bucket with a bucket that already exists."
+variable "ml_bucket_override" {
+  description = "Optionally, you can override the default ML bucket with a bucket that already exists."
   type        = string
   default     = null
 }

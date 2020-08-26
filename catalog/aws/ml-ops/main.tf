@@ -158,7 +158,7 @@ resource "local_file" "step_function_def" {
         "JobName": "${module.glue_job.glue_job_name}",
         "Arguments": {
           "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl",
-          "--S3_SOURCE": "${var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id}",
+          "--S3_SOURCE": "${var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id}",
           "--S3_DEST": "${aws_s3_bucket.data_store.id}",
           "--TRAIN_KEY": "${var.train_key}",
           "--VALIDATION_KEY": "${var.validate_key}",
@@ -399,9 +399,7 @@ module "step-functions" {
 
   lambda_functions = module.lambda_functions.function_ids
   writeable_buckets = [
-    var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id,
-    aws_s3_bucket.data_store.id,
-    aws_s3_bucket.model_store.id
+    var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
   ]
 
   state_machine_definition = local_file.step_function_def.content
