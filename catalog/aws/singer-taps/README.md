@@ -10,7 +10,7 @@ nav_exclude: false
 ## Overview
 
 
-The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
 
 ## Requirements
 
@@ -53,6 +53,26 @@ Description: Standard `resource_tags` module input.
 
 Type: `map(string)`
 
+### taps
+
+Description: A list of objects with the following keys:
+
+- `id`       - The name of the tap without the 'tap-' prefix.
+- `schedule` - A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm.
+- `settings` - A map of tap settings to their values.
+- `secrets`  - A map of secret names to the location (file:key) of the secrets (not the secret values themselves)
+
+Type:
+
+```hcl
+list(object({
+    id       = string
+    schedule = list(string)
+    settings = map(string)
+    secrets  = map(string)
+  }))
+```
+
 ### local\_metadata\_path
 
 Description: The local folder which countains tap definitions files: `{tap-name}.rules.txt` and `{tap-name}.plan.yml`
@@ -66,64 +86,9 @@ Currently only S3 paths (s3://...) are supported.
 
 Type: `string`
 
-### taps
-
-Description: A list of objects with the keys `id` (the name of the tap without the 'tap-' prefix),
-`settings` (a map of tap settings to their desired values), and `secrets` (same as
-`settings` but mapping setting names to the location of the secret and not the secret
-values themselves)
-
-Type:
-
-```hcl
-list(object({
-    id       = string
-    settings = map(string)
-    secrets  = map(string)
-  }))
-```
-
 ## Optional Inputs
 
 The following input variables are optional (have default values):
-
-### data\_lake\_type
-
-Description: Specify `S3` if loading to an S3 data lake, otherwise leave blank.
-
-Type: `any`
-
-Default: `null`
-
-### data\_lake\_storage\_path
-
-Description: The path to where files should be stored in the data lake.
-Note:
- - currently only S3 paths (S3://...) are supported.data
- - You must specify `target` or `data_lake_storage_path` but not both.
-
-Type: `string`
-
-Default: `null`
-
-### data\_file\_naming\_scheme
-
-Description: The naming pattern to use when landing new files in the data lake. Allowed variables are:
-`{tap}`, `{table}`, `{version}`, and `{file}`"
-
-Type: `string`
-
-Default: `"{tap}/{table}/v{version}/{file}"`
-
-### state\_file\_naming\_scheme
-
-Description: The naming pattern to use when writing or updating state files. State files keep track of
-data recency and are necessary for incremental loading. Allowed variables are:
-`{tap}`, `{table}`, `{version}`, and `{file}`"
-
-Type: `string`
-
-Default: `"{tap}/{table}/state/{tap}-{table}-v{version}-state.json"`
 
 ### target
 
@@ -142,13 +107,36 @@ object({
 
 Default: `null`
 
-### scheduled\_sync\_times
+### pipeline\_version\_number
 
-Description: A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm
+Description: Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
+isolation. Note if you want to avoid overlap between versions, be sure to (1) cancel the
+previous version and (2) specify a `start_date` on the new version which is not duplicative
+of the previously covered time period.
 
-Type: `list(string)`
+Type: `string`
 
-Default: `[]`
+Default: `"1"`
+
+### data\_lake\_type
+
+Description: Specify `S3` if loading to an S3 data lake, otherwise leave blank.
+
+Type: `any`
+
+Default: `null`
+
+### data\_lake\_storage\_path
+
+Description: The root path where files should be stored in the data lake.
+Note:
+ - Currently only S3 paths (S3://...) are supported.
+ - You must specify `target` or `data_lake_storage_path` but not both.
+ - This path will be combined with the value provided in `data_file_naming_scheme`.
+
+Type: `string`
+
+Default: `null`
 
 ### scheduled\_timezone
 
@@ -157,31 +145,23 @@ Currently the following codes are supported: PST, PDT, EST, UTC
 
 Type: `string`
 
-Default: `"PT"`
+Default: `"PST"`
 
-### container\_image
+### timeout\_hours
 
-Description: Optional. Override the docker image with a custom-managed image.
+Description: Optional. The number of hours before the sync task is canceled and retried.
 
-Type: `any`
+Type: `number`
 
-Default: `null`
+Default: `48`
 
-### container\_entrypoint
+### num\_retries
 
-Description: Optional. Override the docker image's entrypoint.
+Description: Optional. The number of retries to attempt if the task fails.
 
-Type: `any`
+Type: `number`
 
-Default: `null`
-
-### container\_command
-
-Description: Optional. Override the docker image's command.
-
-Type: `any`
-
-Default: `null`
+Default: `0`
 
 ### container\_num\_cores
 
@@ -199,32 +179,60 @@ Type: `number`
 
 Default: `1`
 
-### num\_retries
+### use\_private\_subnet
 
-Description: Optional. The number of retries to attempt if the task fails.
+Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
+image, and for any outbound traffic. If False, tasks will use a public subnet and will
+not require a NAT gateway.
 
-Type: `number`
+Type: `bool`
 
-Default: `0`
+Default: `false`
 
-### timeout\_hours
+### data\_file\_naming\_scheme
 
-Description: Optional. The number of hours before the sync task is canceled and retried.
-
-Type: `number`
-
-Default: `48`
-
-### pipeline\_version\_number
-
-Description: Optional. (Default="1") Specify a pipeline version number when there are breaking changes which require
-isolation. Note if you want to avoid overlap between versions, be sure to (1) cancel the
-previous version and (2) specify a `start_date` on the new version which is not duplicative
-of the previously covered time period.
+Description: The naming pattern to use when landing new files in the data lake. Allowed variables are:
+`{tap}`, `{table}`, `{version}`, and `{file}`. This value will be combined with the root
+data lake path provided in `data_lake_storage_path`."
 
 Type: `string`
 
-Default: `"1"`
+Default: `"{tap}/{table}/v{version}/{file}"`
+
+### state\_file\_naming\_scheme
+
+Description: The naming pattern to use when writing or updating state files. State files keep track of
+data recency and are necessary for incremental loading. Allowed variables are:
+`{tap}`, `{table}`, `{version}`, and `{file}`"
+
+Type: `string`
+
+Default: `"{tap}/{table}/state/{tap}-{table}-v{version}-state.json"`
+
+### container\_image\_override
+
+Description: Optional. Override the docker images with a custom-managed image.
+
+Type: `string`
+
+Default: `null`
+
+### container\_image\_suffix
+
+Description: Optional. Appends a suffix to the default container images.
+(e.g. '--pre' for prerelease containers)
+
+Type: `string`
+
+Default: `""`
+
+### container\_command
+
+Description: Optional. Override the docker image's command.
+
+Type: `any`
+
+Default: `null`
 
 ### container\_args
 
@@ -241,15 +249,13 @@ Default:
 ]
 ```
 
-### use\_private\_subnet
+### container\_entrypoint
 
-Description: If True, tasks will use a private subnet and will require a NAT gateway to pull the docker
-image, and for any outbound traffic. If False, tasks will use a public subnet and will
-not require a NAT gateway.
+Description: Optional. Override the docker image's entrypoint.
 
-Type: `bool`
+Type: `string`
 
-Default: `false`
+Default: `null`
 
 ## Outputs
 
@@ -268,6 +274,7 @@ _Source code for this module is available using the links below._
 * [cloudwatch.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/cloudwatch.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/outputs.tf)
+* [s3-path-parsing.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-path-parsing.tf)
 * [s3-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-upload.tf)
 * [step-functions.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/step-functions.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/variables.tf)

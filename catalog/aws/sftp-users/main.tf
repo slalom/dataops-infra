@@ -33,10 +33,8 @@ resource "aws_transfer_ssh_key" "new_user_ssh_keys" {
 }
 
 module "ssh_key_pair" {
-  for_each = var.users
-  # TODO: Pending PR on cloudposse upstream repo: https://github.com/cloudposse/terraform-aws-key-pair/pull/49
-  # source              = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
-  source                = "git::https://github.com/aaronsteers/terraform-aws-key-pair.git?ref=main"
+  for_each              = var.users
+  source                = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
   namespace             = var.name_prefix
   stage                 = "stfp"
   name                  = each.value

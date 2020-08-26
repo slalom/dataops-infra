@@ -79,14 +79,6 @@ Type: `string`
 
 The following input variables are optional (have default values):
 
-### is\_disabled
-
-Description: Switch for disabling ECR image and push.
-
-Type: `bool`
-
-Default: `false`
-
 ### build\_args
 
 Description: Optional. Build arguments to use during `docker build`.

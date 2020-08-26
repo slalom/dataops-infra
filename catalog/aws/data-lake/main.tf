@@ -66,6 +66,7 @@ resource "aws_s3_bucket" "s3_logging_bucket" {
 }
 
 module "triggered_lambda" {
+  count         = length(var.s3_triggers) > 0 ? 1 : 0
   source        = "../../../components/aws/lambda-python"
   name_prefix   = var.name_prefix
   resource_tags = var.resource_tags

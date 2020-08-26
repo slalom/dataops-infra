@@ -3,5 +3,5 @@ repos:
     rev: v0.14.2
     hooks:
       - id: detect-secrets
-        args: ["--baseline", ".secrets.baseline"]
+        args: ["--baseline", ".secrets.baseline", "--exclude-lines", "asdf1234"]
         exclude: .*/tests/.*
