@@ -40,7 +40,7 @@ resource "aws_s3_bucket" "ml_bucket" {
 }
 
 resource "aws_s3_bucket_object" "train_data" {
-  bucket       = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.ml_bucket[0].id
+  bucket       = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
   key          = var.train_key
   source       = var.train_local_path
   content_type = var.input_data_content_type
@@ -50,7 +50,7 @@ resource "aws_s3_bucket_object" "train_data" {
 }
 
 resource "aws_s3_bucket_object" "score_data" {
-  bucket       = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.ml_bucket[0].id
+  bucket       = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
   key          = var.test_key
   source       = var.score_local_path
   content_type = var.input_data_content_type
@@ -72,9 +72,9 @@ resource "aws_s3_bucket_object" "glue_script" {
 resource "aws_s3_bucket_object" "glue_python_lib" {
   bucket = aws_s3_bucket.source_repository.id
   key    = "glue/python/pandasmodule-0.1-py3-none-any.whl"
-  source = var.whl_path
+  source = var.glue_dependency_package
 
   etag = filemd5(
-    var.whl_path,
+    var.glue_dependency_package,
   )
 }

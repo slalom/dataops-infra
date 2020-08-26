@@ -78,12 +78,12 @@ EOF
           "DataSource": {
             "S3DataSource": {
               "S3DataType": "S3Prefix",
-              "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.test_key}"
+              "S3Uri": "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.test_key}"
             }
           }
         },
         "TransformOutput": {
-          "S3OutputPath": "s3://${aws_s3_bucket.data_store.id}/batch-transform-output"
+          "S3OutputPath": "s3://${aws_s3_bucket.ml_bucket[0].id}/batch-transform-output"
         },
         "TransformResources": {
           "InstanceCount": ${var.batch_transform_instance_count},
@@ -98,7 +98,7 @@ EOF
       "Resource": "${module.lambda_functions.function_ids["RenameBatchOutput"]}",
       "Parameters": {
         "Payload": {
-          "BucketName": "${aws_s3_bucket.data_store.id}",
+          "BucketName": "${aws_s3_bucket.ml_bucket[0].id}",
           "Path": "batch-transform-output"
         }
       },
@@ -159,7 +159,7 @@ resource "local_file" "step_function_def" {
         "Arguments": {
           "--extra-py-files": "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl",
           "--S3_SOURCE": "${var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id}",
-          "--S3_DEST": "${aws_s3_bucket.data_store.id}",
+          "--S3_DEST": "${aws_s3_bucket.ml_bucket[0].id}",
           "--TRAIN_KEY": "${var.train_key}",
           "--VALIDATION_KEY": "${var.validate_key}",
           "--SCORE_KEY": "${var.test_key}",
@@ -204,7 +204,7 @@ resource "local_file" "step_function_def" {
             "TrainingInputMode": "File"
           },
           "OutputDataConfig": {
-            "S3OutputPath": "s3://${aws_s3_bucket.model_store.id}/models"
+            "S3OutputPath": "s3://${aws_s3_bucket.ml_bucket[0].id}/models"
           },
           "StoppingCondition": {
             "MaxRuntimeInSeconds": 86400
@@ -221,7 +221,7 @@ resource "local_file" "step_function_def" {
               "DataSource": {
                 "S3DataSource": {
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.train_key}",
+                  "S3Uri": "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.train_key}",
                   "S3DataDistributionType": "FullyReplicated"
                 }
               },
@@ -233,7 +233,7 @@ resource "local_file" "step_function_def" {
               "DataSource": {
                 "S3DataSource": {
                   "S3DataType": "S3Prefix",
-                  "S3Uri": "s3://${aws_s3_bucket.data_store.id}/${var.validate_key}",
+                  "S3Uri": "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.validate_key}",
                   "S3DataDistributionType": "FullyReplicated"
                 }
               },

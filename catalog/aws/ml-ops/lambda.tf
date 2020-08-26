@@ -13,7 +13,7 @@ module "lambda_functions" {
     QueryTrainingStatus = {
       description = "Queries the SageMaker training job and return the results."
       handler     = "query_training_status.lambda_handler"
-      environment = { "metadata_store_name" = "${aws_s3_bucket.data_store.id}" }
+      environment = { "metadata_store_name" = "${aws_s3_bucket.ml_bucket[0].id}" }
       secrets     = {}
     }
     ExtractModelPath = {
@@ -113,7 +113,7 @@ module "triggered_lambda" {
   s3_triggers = [
     {
       function_name = "ExecuteStateMachine"
-      s3_bucket     = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
+      s3_bucket     = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
       s3_path       = "data/train/*"
     }
   ]

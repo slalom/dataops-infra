@@ -34,7 +34,7 @@ EOF
   type        = string
 }
 
-variable "whl_path" { #TODO: glue_dependency_package
+variable "glue_dependency_package" { 
   description = "Local path for Glue Python .whl file."
   type        = string
   default     = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl"

@@ -18,7 +18,7 @@ connection_string = (
     f"dbname='{predictive_db_name}' user='{user}' host='{host}' password='{password}'"
 )
 
-S3_url = "s3://${aws_s3_bucket.data_store.id}/" + "${var.test_key}"
+S3_url = "s3://${aws_s3_bucket.ml_bucket[0].id}/" + "${var.test_key}"
 
 client = boto3.client("s3")
 

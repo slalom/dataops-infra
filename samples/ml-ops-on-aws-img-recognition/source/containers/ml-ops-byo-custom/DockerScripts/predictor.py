@@ -38,7 +38,7 @@ import s3_utils
 
 prefix = "/opt/ml/"
 model_path = os.path.join(prefix, "model")
-bucket_path = "s3://${aws_s3_bucket.data_store.id}/input_data/"
+bucket_path = "s3://${aws_s3_bucket.ml_bucket.id}/input_data/"
 hyperparams_path = prefix + "input/config/hyperparameters.json"
 
 with open(hyperparams_path) as _in_file:

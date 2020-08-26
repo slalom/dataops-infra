@@ -34,18 +34,18 @@ frequency = "${var.data_drift_monitoring_frequency}"
 
 # define a url path for the captured data output
 s3_capture_upload_path = (
-    "s3://${aws_s3_bucket.data_store.id}/monitor_output/endpoint-data-capture"
+    "s3://${aws_s3_bucket.ml_bucket[0].id}/monitor_output/endpoint-data-capture"
 )
 
 # define the url path for train data which is the baseline data
-baseline_data_uri = "s3://${aws_s3_bucket.data_store.id}/" + "${var.train_key}"
+baseline_data_uri = "s3://${aws_s3_bucket.ml_bucket[0].id}/" + "${var.train_key}"
 
 baseline_results_uri = (
-    "s3://${aws_s3_bucket.data_store.id}/monitor_output/baseline-results"
+    "s3://${aws_s3_bucket.ml_bucket[0].id}/monitor_output/baseline-results"
 )
 # define an url for the data drift monitor report
 s3_report_path = (
-    "s3://${aws_s3_bucket.data_store.id}/monitor_output/data-drift-monitor-results"
+    "s3://${aws_s3_bucket.ml_bucket[0].id}/monitor_output/data-drift-monitor-results"
 )
 
 # you can also choose hourly, or daily_every_x_hours(hour_interval, starting_hour=0)

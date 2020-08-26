@@ -24,7 +24,7 @@ print("Tensorflow version ", tf.__version__)
 logging.getLogger().setLevel(logging.INFO)
 
 prefix = "/opt/ml/"
-bucket = "s3://${aws_s3_bucket.model_store.id}/"
+bucket = "s3://${aws_s3_bucket.ml_bucket.id}/"
 hyperparams_path = prefix + "input/config/hyperparameters.json"
 
 

@@ -90,7 +90,7 @@ module "ml-ops" {
   train_local_path  = "source/data/train.csv"
   score_local_path  = "source/score/score.csv"
 
-  whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
+  glue_dependency_package    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
