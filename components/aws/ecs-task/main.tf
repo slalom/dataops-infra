@@ -176,7 +176,7 @@ resource "aws_cloudwatch_event_target" "daily_run_task" {
   ecs_target {
     task_definition_arn = aws_ecs_task_definition.ecs_task.arn
     task_count          = 1
-    launch_type         = var.ecs_launch_type
+    launch_type         = local.launch_type
     group               = "${var.name_prefix}ScheduledTasks"
     network_configuration {
       subnets          = local.subnets

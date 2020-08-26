@@ -24,12 +24,6 @@ variable "resource_tags" {
 ### Custom variables for this module ###
 ########################################
 
-variable "is_disabled" {
-  description = "Switch for disabling ECR image and push."
-  type        = bool
-  default     = false
-}
-
 variable "repository_name" {
   description = "Name of Docker repository."
   type        = string

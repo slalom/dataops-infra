@@ -15,18 +15,6 @@ nav_exclude: false
 """
 
 
-# TODO: inject into footer:
-# ## Import Template
-
-# Copy-paste the below to get started with this module in your own project:
-
-# ```hcl
-# module "{clean_name}" {
-#     source = "git::{git_repo}/{module_path}?ref=main"
-
-#     // ...
-# }
-# ```
 DOCS_FOOTER = """
 ---------------------
 

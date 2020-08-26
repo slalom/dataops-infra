@@ -18,14 +18,12 @@ locals {
 }
 
 resource "aws_ecr_repository" "ecr_repo" {
-  count = var.is_disabled ? 0 : 1
-  name  = replace(lower("${var.name_prefix}${var.repository_name}"), "_", "-")
-  tags  = var.resource_tags
+  name = replace(lower("${var.name_prefix}${var.repository_name}"), "_", "-")
+  tags = var.resource_tags
   # lifecycle { prevent_destroy = true }
 }
 
 resource "null_resource" "push" {
-  count = var.is_disabled ? 0 : 1
   triggers = {
     source_files_hash = local.source_image_hash
     build_args_str    = local.build_args_str
@@ -33,13 +31,13 @@ resource "null_resource" "push" {
 
   provisioner "local-exec" {
     command     = <<EOT
-docker build ${local.build_args_str} -t ${aws_ecr_repository.ecr_repo[0].name} ${var.source_image_path};
+docker build ${local.build_args_str} -t ${aws_ecr_repository.ecr_repo.name} ${var.source_image_path};
 ${local.is_windows ? "$env:" : "export "}AWS_SHARED_CREDENTIALS_FILE="${abspath(var.aws_credentials_file)}";
-docker tag ${aws_ecr_repository.ecr_repo[0].name}:${var.tag} ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
-docker push ${aws_ecr_repository.ecr_repo[0].repository_url}:${var.tag};
+docker tag ${aws_ecr_repository.ecr_repo.name}:${var.tag} ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
+docker push ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
 EOT
     interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
 
-    # ${local.is_windows ? "Import-Module AWSPowerShell.NetCore; $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url})" : "aws ecr get-login-password --region ${var.environment.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo[0].repository_url}"};
+    # ${local.is_windows ? "Import-Module AWSPowerShell.NetCore; $((Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo.repository_url})" : "aws ecr get-login-password --region ${var.environment.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repo.repository_url}"};
   }
 }

@@ -1,19 +1,20 @@
 
 module "step_function" {
+  count         = length(var.taps)
   source        = "../../../components/aws/step-functions"
-  name_prefix   = var.name_prefix
+  name_prefix   = "${var.name_prefix}${count.index}-${var.taps[count.index].id}-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
   writeable_buckets = []
   lambda_functions  = {}
   ecs_tasks = [
-    module.ecs_tap_sync_task.ecs_task_name
+    module.ecs_tap_sync_task[count.index].ecs_task_name
   ]
   state_machine_definition = <<EOF
 {
   "Version": "1.0",
-  "Comment": "Run Sync (ECS Fargate: ${local.container_image})",
+  "Comment": "Run Sync (ECS Fargate: ${local.container_images[count.index]})",
   "TimeoutSeconds": ${var.timeout_hours * (60 * 60)},
   "StartAt": "RunTask",
   "States": {
@@ -23,11 +24,11 @@ module "step_function" {
       "Parameters": {
         "LaunchType": "FARGATE",
         "Cluster": "${module.ecs_cluster.ecs_cluster_name}",
-        "TaskDefinition": "${module.ecs_tap_sync_task.ecs_task_name}",
+        "TaskDefinition": "${module.ecs_tap_sync_task[count.index].ecs_task_name}",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
-            "SecurityGroups": ["${module.ecs_tap_sync_task.ecs_security_group}"],
-            "Subnets": ["${module.ecs_tap_sync_task.subnets[0]}"],
+            "SecurityGroups": ["${module.ecs_tap_sync_task[count.index].ecs_security_group}"],
+            "Subnets": ["${module.ecs_tap_sync_task[count.index].subnets[0]}"],
             "AssignPublicIp": "${var.use_private_subnet ? "DISABLED" : "ENABLED"}"
           }
         },

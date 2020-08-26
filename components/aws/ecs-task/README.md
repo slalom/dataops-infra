@@ -153,14 +153,6 @@ Type: `string`
 
 Default: `"8"`
 
-### ecs\_launch\_type
-
-Description: 'FARGATE' or 'Standard'
-
-Type: `string`
-
-Default: `"FARGATE"`
-
 ### environment\_secrets
 
 Description: Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:

@@ -8,19 +8,6 @@
 data "aws_availability_zones" "az_list" {}
 data "aws_region" "current" {}
 data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
-# TODO: Detect EC2 Pricing
-# data "http" "ec2_base_pricing_js" {
-#   url = "http://a0.awsstatic.com/pricing/1/ec2/linux-od.min.js"
-#   request_headers = {
-#     "Accept" = "application/javascript"
-#   }
-# }
-# resource "null_resource" "ec2_base_pricing_js" {
-#   provisioner "local-exec" {
-#     command = "curl http://aws.amazon.com/ec2/pricing/"
-#     # curl http://aws.amazon.com/ec2/pricing/ 2>/dev/null | grep 'model:' | sed -e "s/.*'\(.*\)'.*/http:\\1/"
-#   }
-# }
 
 
 locals {
@@ -34,11 +21,6 @@ locals {
 ${var.environment.aws_region}\\\"\\X*${replace(var.instance_type, ".", "\\.")}\\X*prices\\X*USD:\\\"(\\X*)\\\"
 EOF
   )
-  # TODO: Detect EC2 Pricing
-  # price_per_instance_hr    = (
-  #   length(regexall(local.pricing_regex, data.http.ec2_base_pricing_js)) == 0 ? "n/a" :
-  #   regex(local.pricing_regex, data.http.ec2_base_pricing_js)[0]
-  # )
   chocolatey_install_win = <<EOF
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
 EOF
