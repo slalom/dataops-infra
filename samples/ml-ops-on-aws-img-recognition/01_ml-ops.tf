@@ -10,9 +10,9 @@ module "ml-ops" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  job_name     = "breast-cancer-detection"
+  job_name                   = "breast-cancer-detection"
   data_drift_ml_problem_type = "Image Recognition"
-  input_data_content_type = "application/x-recordio"
+  input_data_content_type    = "application/x-recordio"
 
   byo_model_repo_name         = "img-recog-sample-image"
   byo_model_source_image_path = "source/containers/ml-ops-byo-custom/DockerScripts"
@@ -34,7 +34,7 @@ module "ml-ops" {
   validate_key = "input_data/validate/"
 
   glue_transform_script = "${path.module}/source/scripts/transform.py"
-  enable_predictive_db = true
+  enable_predictive_db  = true
 
   # OPTIONAL
   # All following variables have default values. Change as needed.
