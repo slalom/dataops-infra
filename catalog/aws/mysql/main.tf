@@ -19,12 +19,12 @@ module "mysql" {
   database_name       = var.database_name
   admin_username      = var.admin_username
   admin_password      = var.admin_password
-  predictive_db_instance_class      = var.predictive_db_instance_class
+  instance_class      = var.instance_class
   engine              = "mysql"
   engine_version      = var.mysql_version
   kms_key_id          = var.kms_key_id
   jdbc_port           = var.jdbc_port
-  predictive_db_storage_size_in_gb  = var.predictive_db_storage_size_in_gb
+  storage_size_in_gb  = var.storage_size_in_gb
 
   jdbc_cidr              = var.jdbc_cidr
   whitelist_terraform_ip = var.whitelist_terraform_ip
