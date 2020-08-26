@@ -274,6 +274,7 @@ _Source code for this module is available using the links below._
 * [cloudwatch.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/cloudwatch.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/outputs.tf)
+* [s3-path-parsing.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-path-parsing.tf)
 * [s3-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-upload.tf)
 * [step-functions.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/step-functions.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/variables.tf)
