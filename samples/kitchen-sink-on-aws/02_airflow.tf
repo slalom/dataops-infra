@@ -19,7 +19,7 @@ module "airflow" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  admin_password    = "asdfAS12"
+  admin_password    = "asdf1234" # pragma: allowlist secret
   aws_region        = local.aws_region
 
   */
