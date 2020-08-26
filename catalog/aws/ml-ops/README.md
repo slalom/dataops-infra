@@ -28,9 +28,9 @@ The following providers are used by this module:
 
 - random
 
-- local
-
 - aws
+
+- local
 
 ## Required Inputs
 
@@ -62,6 +62,13 @@ object({
 Description: Standard `resource_tags` module input.
 
 Type: `map(string)`
+
+### glue\_transform\_script
+
+Description: Local path for Glue Python script.
+For example: "./source/scripts/transform.py"
+
+Type: `string`
 
 ### job\_name
 
@@ -98,15 +105,7 @@ Type: `string`
 
 The following input variables are optional (have default values):
 
-### script\_path
-
-Description: Local path for Glue Python script.
-
-Type: `string`
-
-Default: `"source/scripts/transform.py"`
-
-### whl\_path
+### glue\_dependency\_package
 
 Description: Local path for Glue Python .whl file.
 
@@ -130,9 +129,9 @@ Type: `string`
 
 Default: `"source/data/score/score.csv"`
 
-### feature\_store\_override
+### ml\_bucket\_override
 
-Description: Optionally, you can override the default feature store bucket with a bucket that already exists.
+Description: Optionally, you can override the default ML bucket with a bucket that already exists.
 
 Type: `string`
 
