@@ -9,9 +9,9 @@ module "ml-ops" {
   aws_credentials_file = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
-  job_name     = "employee-attrition"
+  job_name                   = "employee-attrition"
   data_drift_ml_problem_type = "Classification"
-  input_data_content_type = "csv"
+  input_data_content_type    = "csv"
 
   byo_model_repo_name         = "employee-attrition"
   byo_model_source_image_path = "source/containers/ml-ops-byo-xgboost"
