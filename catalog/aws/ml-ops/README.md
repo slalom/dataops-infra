@@ -26,9 +26,9 @@ The following providers are used by this module:
 
 - null
 
-- local
-
 - random
+
+- local
 
 - aws
 
@@ -82,15 +82,9 @@ Each item in the map should point to a list of object with the following keys:
 
 Type: `any`
 
-### repo\_name
+### byo\_model\_repo\_name
 
-Description: Name for your model image repository.
-
-Type: `string`
-
-### source\_image\_path
-
-Description: Path for source model image.
+Description: Name for your BYO model image repository.
 
 Type: `string`
 
@@ -103,14 +97,6 @@ Type: `string`
 ## Optional Inputs
 
 The following input variables are optional (have default values):
-
-### feature\_store\_override
-
-Description: Optionally, you can override the default feature store bucket with a bucket that already exists.
-
-Type: `string`
-
-Default: `null`
 
 ### script\_path
 
@@ -144,6 +130,14 @@ Type: `string`
 
 Default: `"source/data/score/score.csv"`
 
+### feature\_store\_override
+
+Description: Optionally, you can override the default feature store bucket with a bucket that already exists.
+
+Type: `string`
+
+Default: `null`
+
 ### train\_key
 
 Description: URL path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem.
@@ -168,7 +162,7 @@ Type: `string`
 
 Default: `"input_data/validate/validate.csv"`
 
-### content\_type
+### input\_data\_content\_type
 
 Description: Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is
 'application/x-recordio'
@@ -186,7 +180,56 @@ Type: `string`
 
 Default: `"training-endpoint"`
 
-### hpo\_tuning\_strategy
+### endpoint\_or\_batch\_transform
+
+Description: Choose whether to create/update an inference API endpoint or do batch inference on test data.
+
+Type: `string`
+
+Default: `"Batch Transform"`
+
+### endpoint\_instance\_count
+
+Description: Number of initial endpoint instances.
+
+Type: `number`
+
+Default: `1`
+
+### endpoint\_instance\_type
+
+Description: Instance type for inference endpoint.
+
+Type: `string`
+
+Default: `"ml.m4.xlarge"`
+
+### batch\_transform\_instance\_count
+
+Description: Number of batch transformation instances.
+
+Type: `number`
+
+Default: `1`
+
+### batch\_transform\_instance\_type
+
+Description: Instance type for batch inference.
+
+Type: `string`
+
+Default: `"ml.m4.xlarge"`
+
+### static\_hyperparameters
+
+Description: Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.
+E.g. `{ "kfold_splits" = "5" }`
+
+Type: `map`
+
+Default: `{}`
+
+### tuning\_strategy
 
 Description: Hyperparameter tuning strategy, can be Bayesian or Random.
 
@@ -229,45 +272,15 @@ Type: `number`
 
 Default: `0.7`
 
-### endpoint\_or\_batch\_transform
+### built\_in\_model\_image
 
-Description: Choose whether to create/update an inference API endpoint or do batch inference on test data.
-
-Type: `string`
-
-Default: `"Batch Transform"`
-
-### batch\_transform\_instance\_count
-
-Description: Number of batch transformation instances.
-
-Type: `number`
-
-Default: `1`
-
-### batch\_transform\_instance\_type
-
-Description: Instance type for batch inference.
+Description: One of the ECR image URIs from Amazon-stock SageMaker image definitions.
+If specified, 'bring-your-own' model support is not required and the ECR image will not
+be created.
 
 Type: `string`
 
-Default: `"ml.m4.xlarge"`
-
-### endpoint\_instance\_count
-
-Description: Number of initial endpoint instances.
-
-Type: `number`
-
-Default: `1`
-
-### endpoint\_instance\_type
-
-Description: Instance type for inference endpoint.
-
-Type: `string`
-
-Default: `"ml.m4.xlarge"`
+Default: `null`
 
 ### max\_number\_training\_jobs
 
@@ -309,48 +322,6 @@ Type: `number`
 
 Default: `30`
 
-### static\_hyperparameters
-
-Description: Map of hyperparameter names to static values, which should not be altered during hyperparameter tuning.
-E.g. `{ "kfold_splits" = "5" }`
-
-Type: `map`
-
-Default: `{}`
-
-### built\_in\_model\_image
-
-Description: Tuning ranges for hyperparameters.
-Specifying this means that 'bring-your-own' model is not required and the ECR image not created.
-
-Type: `string`
-
-Default: `null`
-
-### width
-
-Description: The width of image file
-
-Type: `number`
-
-Default: `800`
-
-### height
-
-Description: The height of image file
-
-Type: `number`
-
-Default: `1200`
-
-### channels
-
-Description: The total number of channels of image file
-
-Type: `number`
-
-Default: `3`
-
 ### byo\_model\_image\_name
 
 Description: Image and repo name for bring your own model.
@@ -358,14 +329,6 @@ Description: Image and repo name for bring your own model.
 Type: `string`
 
 Default: `"byo-custom"`
-
-### byo\_model\_image\_source\_path
-
-Description: Local source path for bring your own model docker image.
-
-Type: `string`
-
-Default: `"source/containers/ml-ops-byo-custom"`
 
 ### byo\_model\_image\_tag
 
@@ -375,9 +338,17 @@ Type: `string`
 
 Default: `"latest"`
 
-### ecr\_tag\_name
+### byo\_model\_source\_image\_path
 
-Description: Tag name for the ecr image.
+Description: Local source path for bring your own model docker image.
+
+Type: `string`
+
+Default: `"source/containers/ml-ops-byo-custom"`
+
+### byo\_model\_ecr\_tag\_name
+
+Description: Tag name for the BYO ecr image.
 
 Type: `string`
 
@@ -395,7 +366,7 @@ Default: `"data-transformation"`
 
 Description: (Default=True). True to use the default (Spark) Glue job type. False to use Python Shell.
 
-Type: `string`
+Type: `bool`
 
 Default: `false`
 
@@ -407,10 +378,11 @@ Type: `string`
 
 Default: `"Model is Overfitting and Retraining Alarm"`
 
-### comparison\_operator
+### alarm\_comparison\_operator
 
-Description:   The arithmetic operation to use when comparing the specified statistic and threshold. The specified alarm_statistic value is used as the first operand.
-  Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, BooleanEquals,
+Description:   The arithmetic operation to use when comparing the specified alarm\_statistic and alarm\_threshold. The specified alarm\_statistic
+  value is used as the first operand.Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric,
+  BooleanEquals,
   StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan,
   NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals,
   TimestampGreaterThan, StringGreaterThanEqualsPath, TimestampGreaterThanEqualsPath,
@@ -425,32 +397,34 @@ Type: `string`
 
 Default: `"NumericLessThan"`
 
-### evaluation\_period
+### alarm\_evaluation\_period
 
-Description:   The number of periods over which data is compared to the specified alarm_threshold. If you are setting an alarm that requires that a number of consecutive data points
-  be breaching to trigger the alarm, this value specifies that number. If you are setting an "M out of N" alarm, this value is the N.
-  An alarm's total current evaluation period can be no longer than one day, so this number multiplied by Period cannot be more than 86,400 seconds.
-  This parameter works in combination with datapoints\_to\_evaluate for specifying how frequently the model performance will be monitored.
-
-Type: `number`
-
-Default: `10`
-
-### datapoints\_to\_evaluate
-
-Description:   The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" alarm. In that case, this value is the M.
-  This parameter works in combination with evaluation\_period for specifying how frequently the model performance will be monitored.
+Description:   The number of periods over which data is compared to the specified alarm\_threshold. If you are setting an alarm that
+  requires that a number of consecutive data points be breaching to trigger the alarm, this value specifies that number.
+  If you are setting an "M out of N" alarm, this value is the N.An alarm's total current evaluation period can be no longer
+  than one day, so this number multiplied by Period cannot be more than 86,400 seconds.This parameter works in combination
+  with alarm\_datapoints\_to\_evaluate for specifying how frequently the model performance will be monitored.
 
 Type: `number`
 
 Default: `10`
 
-### metric\_name
+### alarm\_datapoints\_to\_evaluate
 
-Description:   The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or a Metrics array.
-  If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the Dimensions , Period , Namespace , alarm_statistic ,
-  or Extendedalarm_statistic parameters. Instead, you specify all this information in the Metrics array. Values include Training Accuray, Training Loss,
-  Validation Accuracy, and Validation Loss.
+Description:   The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N"
+  alarm. In that case, this value is the M.This parameter works in combination with alarm\_evaluation\_period for specifying how
+  frequently the model performance will be monitored.
+
+Type: `number`
+
+Default: `10`
+
+### alarm\_metric\_name
+
+Description:   The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or
+  a Metrics array.If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the
+  Dimensions , Period , Namespace , alarm\_statistic ,or Extendedalarm\_statistic parameters. Instead, you specify all this information in
+  the Metrics array. Values include Training Accuray, Training Loss, Validation Accuracy, and Validation Loss.
 
 Type: `string`
 
@@ -464,47 +438,23 @@ Type: `number`
 
 Default: `30`
 
-### alarm_statistic
+### alarm\_statistic
 
-Description: The alarm_statistic to return. It can include any CloudWatch stats or extended stats
+Description: The alarm\_statistic to return. It can include any CloudWatch stats or extended stats
 
 Type: `string`
 
 Default: `"Maximum"`
 
-### alarm_threshold
+### alarm\_statistic\_unit\_name
 
-Description: The baseline alarm_threshold value that cloudwatch will compare against
-
-Type: `number`
-
-Default: `90`
-
-### actions\_enable
-
-Description: Indicates whether actions should be executed during any changes to the alarm state.
-
-Type: `string`
-
-Default: `"True"`
-
-### alarm\_des
-
-Description: The description for the alarm.
-
-Type: `string`
-
-Default: `"Model is overfitting. Model retraining will be activated."`
-
-### unit\_name
-
-Description:   The unit of measure for the alarm_statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual meaning to your data.
-  Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
-  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm. Usually metrics
-  are published with only one unit, so the alarm will work as intended.
-  However, if the metric is published with multiple types of units and you don't specify a unit, the alarm's behavior is not defined and will behave un-predictably.
-  We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this metric. Doing so causes the alarm to be
-  stuck in the INSUFFICIENT DATA state.
+Description:   The unit of measure for the alarm\_statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual
+  meaning to your data. Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
+  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm.
+  Usually metrics are published with only one unit, so the alarm will work as intended.
+  However, if the metric is published with multiple types of units and you don't specify a unit, the alarm's behavior is not defined and will
+  behave un-predictably. We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this
+  metric. Doing so causes the alarm to be stuck in the INSUFFICIENT DATA state.
 
   Possible values:
   Seconds, Microseconds, Milliseconds, Bytes, Kilobytes, Megabits, Gigabits, Terabits, Percent, Count, Bytes/Second, Kilobytes/Second, Megabytes/Second,
@@ -514,47 +464,39 @@ Type: `string`
 
 Default: `"Percent"`
 
-### enable\_retrain
+### alarm\_threshold
+
+Description: The baseline alarm\_threshold value that cloudwatch will compare against
+
+Type: `number`
+
+Default: `90`
+
+### alarm\_actions\_enabled
+
+Description: Indicates whether actions should be executed during any changes to the alarm state.
+
+Type: `bool`
+
+Default: `true`
+
+### alarm\_description
+
+Description: The description for the alarm.
+
+Type: `string`
+
+Default: `"Model is overfitting. Model retraining will be activated."`
+
+### retrain\_on\_alarm
 
 Description: Whether or not to retrain the model if detected overfitting.
 
-Type: `string`
+Type: `bool`
 
-Default: `"False"`
+Default: `false`
 
-### sample\_percent
-
-Description: The percentage used to sample the input data to perform a data drift detection
-
-Type: `number`
-
-Default: `50`
-
-### max\_timeout\_in\_sec
-
-Description: Timeout in seconds. After this amount of time, Amazon SageMaker terminates the job regardless of its current status.
-
-Type: `number`
-
-Default: `3600`
-
-### data_drift_monitoring_frequency
-
-Description: The data_drift_monitoring_frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily\_every\_x\_hours (hour\_interval, starting\_hour)
-
-Type: `string`
-
-Default: `"daily"`
-
-### problem\_type
-
-Description: The type of machine learning problem, including Classification, Image Recognition, and Regression
-
-Type: `string`
-
-Default: `"Classification"`
-
-### data\_mon\_name
+### data\_drift\_monitor\_name
 
 Description: The name for the scheduled data drift monitoring job
 
@@ -562,7 +504,47 @@ Type: `string`
 
 Default: `"data-drift-monitor-schedule"`
 
-### predictive_db_name
+### data\_drift\_monitoring\_frequency
+
+Description: The data\_drift\_monitoring\_frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily\_every\_x\_hours (hour\_interval, starting\_hour)
+
+Type: `string`
+
+Default: `"daily"`
+
+### data\_drift\_ml\_problem\_type
+
+Description: The type of machine learning problem, including Classification, Image Recognition, and Regression
+
+Type: `string`
+
+Default: `"Classification"`
+
+### data\_drift\_sampling\_percent
+
+Description: The percentage used to sample the input data to perform a data drift detection
+
+Type: `number`
+
+Default: `50`
+
+### data\_drift\_job\_timeout\_in\_sec
+
+Description: Timeout in seconds. After this amount of time, Amazon SageMaker terminates the job regardless of its current status.
+
+Type: `number`
+
+Default: `3600`
+
+### enable\_predictive\_db
+
+Description: Enable loading prediction outputs from S3 to the selected database.
+
+Type: `bool`
+
+Default: `false`
+
+### predictive\_db\_name
 
 Description: The name for the database in PostgreSQL
 
@@ -570,7 +552,7 @@ Type: `string`
 
 Default: `"model_outputs"`
 
-### db\_admin\_name
+### predictive\_db\_admin\_user
 
 Description: Define admin user name for PostgreSQL.
 
@@ -578,7 +560,7 @@ Type: `string`
 
 Default: `"pgadmin"`
 
-### db\_passwd
+### predictive\_db\_admin\_password
 
 Description: Define admin user password for PostgreSQL.
 
@@ -586,23 +568,7 @@ Type: `string`
 
 Default: `"Db1234asdf"`
 
-### db\_version
-
-Description: Define the version of the selected database platform.
-
-Type: `string`
-
-Default: `"11"`
-
-### enable\_pred\_db
-
-Description: Enable loading prediction outputs from S3 to the selected database.
-
-Type: `string`
-
-Default: `"False"`
-
-### storage\_size\_in\_gb
+### predictive\_db\_storage\_size\_in\_gb
 
 Description: The allocated storage value is denoted in GB
 
@@ -610,37 +576,13 @@ Type: `string`
 
 Default: `"10"`
 
-### instance\_class
+### predictive\_db\_instance\_class
 
 Description: Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )
 
 Type: `string`
 
 Default: `"db.t3.micro"`
-
-### rs\_nodetype
-
-Description: Enter the desired node type. The default and cheapest option is 'dc2.large' @ ~$0.25/hr, ~$180/mo (https://aws.amazon.com/redshift/pricing/)
-
-Type: `string`
-
-Default: `"dc2.large"`
-
-### num\_rs\_nodes
-
-Description: Optional (default=1). The number of Redshift nodes to use.
-
-Type: `number`
-
-Default: `1`
-
-### skip\_final\_snapshot\_rs
-
-Description: If true, will allow terraform to destroy the RDS cluster without performing a final backup.
-
-Type: `bool`
-
-Default: `false`
 
 ## Outputs
 
