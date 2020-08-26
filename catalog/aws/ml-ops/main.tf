@@ -141,8 +141,8 @@ module "postgres" {
   admin_username = var.predictive_db_admin_user
   admin_password = var.predictive_db_admin_password
 
-  predictive_db_storage_size_in_gb = var.predictive_db_storage_size_in_gb
-  predictive_db_instance_class     = var.predictive_db_instance_class
+  storage_size_in_gb = var.predictive_db_storage_size_in_gb
+  instance_class     = var.predictive_db_instance_class
 }
 
 resource "local_file" "step_function_def" {
@@ -263,7 +263,7 @@ resource "local_file" "step_function_def" {
       "Choices": [
         {
           "Variable": "$['trainingMetrics'][0]['Value']",
-          "${var.inference_alarm_comparison_operator}": ${var.inference_metric_alarm_threshold},
+          "${var.inference_comparison_operator}": ${var.inference_metric_threshold},
           "Next": "Save Best Model"
         }
       ],

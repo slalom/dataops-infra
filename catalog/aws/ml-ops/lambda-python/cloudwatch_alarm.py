@@ -4,7 +4,7 @@ import boto3
 
 model_name = "${var.job_name}"
 client = boto3.client("cloudwatch")
-retraining = "${var.retrain_on_alarm"
+retraining = "${var.retrain_on_alarm}"
 
 
 def lambda_handler(event, context):
@@ -18,7 +18,7 @@ def lambda_handler(event, context):
         DatapointsToAlarm="${var.alarm_datapoints_to_evaluate}",
         MetricName="${var.alarm_metric_name}",
         Namespace=model_name,
-        Period="${var.alarm_metric_alarm_evaluation_period}",
+        Period="${var.alarm_metric_evaluation_period}",
         alarm_statistic="${var.alarm_statistic}",
         alarm_threshold="${var.alarm_threshold}",
         ActionsEnabled="${var.alarm_actions_enabled}",

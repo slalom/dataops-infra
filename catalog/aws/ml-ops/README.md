@@ -213,17 +213,17 @@ Default: `"accuracy"`
 ### inference\_comparison\_operator
 
 Description: Comparison operator for deploying the trained SageMaker model.
-Used in combination with `inference_metric_alarm_threshold`.
+Used in combination with `inference_metric_threshold`.
 Examples: 'NumericGreaterThan', 'NumericLessThan', etc.
 
 Type: `string`
 
 Default: `"NumericGreaterThan"`
 
-### inference\_metric\_alarm_threshold
+### inference\_metric\_threshold
 
 Description: alarm_threshold for deploying the trained SageMaker model.
-Used in combination with `inference_alarm_comparison_operator`.
+Used in combination with `inference_comparison_operator`.
 
 Type: `number`
 

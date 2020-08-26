@@ -19,8 +19,8 @@ module "ml-ops" {
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
-  inference_alarm_comparison_operator = "NumericGreaterThan"
-  inference_metric_alarm_threshold    = 0.7
+  inference_comparison_operator = "NumericGreaterThan"
+  inference_metric_threshold    = 0.7
   endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
 
   max_number_training_jobs    = 3

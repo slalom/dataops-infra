@@ -185,20 +185,20 @@ variable "tuning_metric" {
 
 # Inference alarm_threshold config # TODO: Reorder
 
-variable "inference_alarm_comparison_operator" {
+variable "inference_comparison_operator" {
   description = <<EOF
 Comparison operator for deploying the trained SageMaker model.
-Used in combination with `inference_metric_alarm_threshold`.
+Used in combination with `inference_metric_threshold`.
 Examples: 'NumericGreaterThan', 'NumericLessThan', etc.
 EOF
   type        = string
   default     = "NumericGreaterThan"
 }
 
-variable "inference_metric_alarm_threshold" {
+variable "inference_metric_threshold" {
   description = <<EOF
 alarm_threshold for deploying the trained SageMaker model.
-Used in combination with `inference_alarm_comparison_operator`.
+Used in combination with `inference_comparison_operator`.
 EOF
   type        = number
   default     = 0.7
@@ -299,7 +299,7 @@ variable "glue_job_name" {
 
 variable "glue_job_spark_flag" {
   description = "(Default=True). True to use the default (Spark) Glue job type. False to use Python Shell."
-  type        = string
+  type        = bool
   default     = false
 }
 
@@ -363,7 +363,7 @@ variable "alarm_metric_name" {
   default     = "Training Accuracy"
 }
 
-variable "alarm_metric_alarm_evaluation_period" {
+variable "alarm_metric_evaluation_period" {
   description = "The granularity, in seconds, of the returned data points"
   type        = number
   default     = 30
@@ -426,8 +426,7 @@ variable "data_drift_monitor_name" {
 }
 
 variable "data_drift_monitoring_frequency" { 
-  description = "The data_drift_monitoring_frequency at which data drift monitoring is performed. Values include: hourly, 
-  daily, and daily_every_x_hours (hour_interval, starting_hour)"
+  description = "The data_drift_monitoring_frequency at which data drift monitoring is performed. Values include: hourly, daily, and daily_every_x_hours (hour_interval, starting_hour)"
   type        = string
   default     = "daily"
 }
@@ -454,8 +453,8 @@ variable "data_drift_job_timeout_in_sec" {
 
 variable "enable_predictive_db" { 
   description = "Enable loading prediction outputs from S3 to the selected database."
-  type        = string
-  default     = "False"
+  type        = bool
+  default     = false
 }
 
 variable "predictive_db_name" { 
@@ -483,8 +482,7 @@ variable "predictive_db_storage_size_in_gb" {
 }
 
 variable "predictive_db_instance_class" { 
-  description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, 
-  or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
+  description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t3.micro"
 }

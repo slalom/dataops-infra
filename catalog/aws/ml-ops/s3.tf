@@ -69,7 +69,7 @@ resource "aws_s3_bucket_object" "train_data" {
   bucket       = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
   key          = var.train_key
   source       = var.train_local_path
-  input_data_content_type = var.input_data_content_type
+  content_type = var.input_data_content_type
   for_each = fileset(
     var.train_local_path, "${var.train_key}/*.png"
   )
@@ -79,7 +79,7 @@ resource "aws_s3_bucket_object" "score_data" {
   bucket       = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
   key          = var.test_key
   source       = var.score_local_path
-  input_data_content_type = var.input_data_content_type
+  content_type = var.input_data_content_type
   for_each = fileset(
     var.score_local_path, "${var.test_key}/*.png"
   )

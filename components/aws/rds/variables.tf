@@ -54,7 +54,7 @@ variable "database_name" {
   description = "The name of the initial database to be created."
   default     = "default_db"
 }
-variable "predictive_db_instance_class" {
+variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t2.micro"
@@ -72,7 +72,7 @@ variable "skip_final_snapshot" {
   description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
   default     = false
 }
-variable "predictive_db_storage_size_in_gb" {
+variable "storage_size_in_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "20"

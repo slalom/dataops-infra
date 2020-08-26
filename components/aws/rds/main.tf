@@ -93,11 +93,11 @@ resource "aws_db_instance" "rds_db" {
   name                = var.database_name
   engine              = var.engine
   engine_version      = var.engine_version
-  predictive_db_instance_class      = var.predictive_db_instance_class
+  instance_class      = var.instance_class
   kms_key_id          = var.kms_key_id
   port                = var.jdbc_port
   skip_final_snapshot = var.skip_final_snapshot
-  allocated_storage   = var.predictive_db_storage_size_in_gb
+  allocated_storage   = var.storage_size_in_gb
   username            = var.admin_username
   password            = var.admin_password
 

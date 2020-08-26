@@ -47,7 +47,7 @@ variable "identifier" {
   description = "The database name which will be used within connection strings and URLs."
   default     = "rds-postgres-db"
 }
-variable "predictive_db_instance_class" {
+variable "instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t3.micro"
@@ -76,7 +76,7 @@ variable "s3_logging_path" {
   type        = string
   default     = null
 }
-variable "predictive_db_storage_size_in_gb" {
+variable "storage_size_in_gb" {
   description = "The allocated storage value is denoted in GB"
   type        = string
   default     = "10"
