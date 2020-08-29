@@ -12,7 +12,7 @@ Environment summary:
   User Switch Command:
    - Linux/Mac:     export AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}
    - Windows (cmd): SET AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}
-   - Windows (PS):  $Env:AWS_SHARED_CREDENTIALS_FILE = ${local.aws_credentials_file}
+   - Windows (PS):  $Env:AWS_SHARED_CREDENTIALS_FILE = "${local.aws_credentials_file}"
 
 EOF
 }
