@@ -40,7 +40,7 @@ locals {
     for tap in var.taps :
     "TAP_${replace(upper(tap.name, "-", "_"))}_"
   ]
-  target_env_prefix = "TARGET_${replace(upper(var.target.name, "-", "_"))}_"
+  target_env_prefix = "TARGET_${replace(upper(var.target.name), "-", "_")}_"
 }
 
 module "ecs_cluster" {
