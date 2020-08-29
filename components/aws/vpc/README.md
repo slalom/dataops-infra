@@ -22,21 +22,17 @@ Included automatically when creating this module:
 
 ## Requirements
 
-The following requirements are needed by this module:
-
-- aws (~> 2.10)
-
-- aws (~> 2.10)
+No requirements.
 
 ## Providers
 
 The following providers are used by this module:
 
-- aws (~> 2.10 ~> 2.10)
+- aws
 
 - http
 
-- aws.region\_lookup (~> 2.10 ~> 2.10)
+- aws.region\_lookup
 
 ## Required Inputs
 
