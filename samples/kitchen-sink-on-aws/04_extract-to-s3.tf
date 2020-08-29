@@ -31,8 +31,8 @@ module "tap_to_s3" {
       }
       secrets = {
         # Map the name of the secret to the file containing the key:
-        api_token  = local.tap_config_file
-        user_agent = local.tap_config_file
+        # api_token  = local.tap_config_file
+        # user_agent = local.tap_config_file
       }
     }
   ]
