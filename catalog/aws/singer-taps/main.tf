@@ -24,7 +24,7 @@ locals {
     for tap in var.taps :
     coalesce(
       var.container_image_override,
-      "dataopstk/tapdance:${tap.id}-to-${local.target.id}${var.container_image_suffix}"
+      "dataopstk/tapdance:${lookup(tap.settings, "EXE", tap.id)}-to-${lookup(local.target.settings, "EXE", local.target.id)}${var.container_image_suffix}"
     )
   ]
   default_target_def = {
