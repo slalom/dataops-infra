@@ -24,7 +24,7 @@ locals {
     for tap in var.taps :
     coalesce(
       var.container_image_override,
-      "dataopstk/tapdance:${lookup(tap.settings, "EXE", tap.id)}-to-${lookup(local.target.settings, "EXE", local.target.id)}${var.container_image_suffix}"
+      "dataopstk/tapdance:${lookup(tap.settings, "EXE", replace(tap.id, "tap-", ""))}-to-${lookup(local.target.settings, "EXE", replace(local.target.id, "target-", ""))}${var.container_image_suffix}"
     )
   ]
   default_target_def = {
@@ -36,6 +36,11 @@ locals {
     secrets = {}
   }
   target = var.data_lake_type != "S3" || var.target != null ? var.target : local.default_target_def
+  tap_env_prefix = [
+    for tap in var.taps :
+    "TAP_${replace(upper(tap.name, "-", "_"))}_"
+  ]
+  target_env_prefix = "TARGET_${replace(upper(var.target.name, "-", "_"))}_"
 }
 
 module "ecs_cluster" {
@@ -60,31 +65,33 @@ module "ecs_tap_sync_task" {
   use_fargate         = true
   environment_vars = merge(
     {
-      TAP_CONFIG_DIR          = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
-      TAP_STATE_FILE          = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
-      PIPELINE_VERSION_NUMBER = var.pipeline_version_number
+      TAP_CONFIG_DIR                                     = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
+      TAP_STATE_FILE                                     = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
+      PIPELINE_VERSION_NUMBER                            = var.pipeline_version_number
+      "${local.tap_env_prefix[count.index]}_CONFIG_FILE" = "False" # Config will be passed via env vars
+      "${local.target_env_prefix}_CONFIG_FILE"           = "False" # Config will be passed via env vars
     },
     {
       for k, v in var.taps[count.index].settings :
-      "TAP_${upper(replace(var.taps[count.index].id, "-", "_"))}_${k}" => v
+      "${local.tap_env_prefix[count.index]}_${k}" => v
     },
     {
       for k, v in local.target.settings :
-      "TARGET_${upper(replace(local.target.id, "-", "_"))}_${k}" => v
+      "${local.target_env_prefix}_${k}" => v
     }
   )
   environment_secrets = merge(
     {
       for k, v in var.taps[count.index].secrets :
-      "TAP_${upper(replace(var.taps[count.index].id, "-", "_"))}_${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.tap_env_prefix[count.index]}_${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
     },
     {
       for k, v in local.target.secrets :
-      "TARGET_${upper(replace(local.target.id, "-", "_"))}_${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.target_env_prefix}_${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
     }
   )
   schedules = [
-    # Convert 4-digit time of day into cron. Cron tester: https://crontab.guru/
+    # Converts 4-digit time of day into cron. https://crontab.guru/
     for cron_expr in var.taps[count.index].schedule :
     "cron(${
       tonumber(substr(cron_expr, 2, 2))
