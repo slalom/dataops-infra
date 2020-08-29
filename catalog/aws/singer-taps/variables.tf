@@ -28,24 +28,47 @@ variable "resource_tags" {
 
 variable "taps" {
   description = <<EOF
-A list of objects with the following keys:
+A list of tap configurations with the following setting keys:
 
-- `id`       - The name of the tap without the 'tap-' prefix.
+- `id`       - The official id of the tap plugin to be used, without the 'tap-' prefix.
+- `name`     - The friendly name of the tap, without the 'tap-' prefix.
 - `schedule` - A list of one or more daily sync times in `HHMM` format. E.g.: `0400` for 4am, `1600` for 4pm.
-- `settings` - A map of tap settings to their values.
-- `secrets`  - A map of secret names to the location (file:key) of the secrets (not the secret values themselves)
+- `settings` - Map of tap settings to their values.
+- `secrets`  - Map of secrets names mapped to any of the following:
+               A. file path ("path/to/file") that contains a matching key name,
+               B. the file path and the json/yaml key ("path/to/file:key"),
+               C. the AWS Secrets Manager ID of an already stored secret
 EOF
   type = list(object({
     id       = string
+    name     = string
     schedule = list(string)
     settings = map(string)
     secrets  = map(string)
   }))
+  # type        = list(map(any))
+  # validation {
+  #   condition = length([
+  #     for tap in var.taps :
+  #     tap["id"]
+  #     if length(setintersect(keys(tap), ["id", "settings", "secrets"])) < 3 # missing required key
+  #   ]) > 0
+  #   error_message = "One or more tap configurations is missing a required key. Expected minimum config: 'id', 'settings', and 'secrets'."
+  # }
+  # validation {
+  #   condition = length([
+  #     for tap in var.taps :
+  #     tap["id"]
+  #     if length(setsubtract(keys(tap), ["id", "settings", "secrets", "name", "schedule"])) > 0 # unknown keys
+  #   ]) > 0
+  #   error_message = "One or more tap configurations has an unexpected key. Allowed keys: 'id', 'name', 'schedule', 'settings', and 'secrets'."
+  # }
 }
 variable "target" {
   description = <<EOF
 The definition of which target to load data into.
 Note: You must specify `target` or `data_lake_storage_path` but not both.
+See the 'taps' input variable for more information on expected configuration values.
 EOF
   type = object({
     id       = string

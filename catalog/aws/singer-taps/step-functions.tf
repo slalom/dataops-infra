@@ -1,8 +1,8 @@
 
 module "step_function" {
-  count         = length(var.taps)
+  count         = length(local.taps_specs)
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}${count.index}-${var.taps[count.index].id}-"
+  name_prefix   = "${var.name_prefix}${count.index}-${local.taps_specs[count.index].name}-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
@@ -14,7 +14,7 @@ module "step_function" {
   state_machine_definition = <<EOF
 {
   "Version": "1.0",
-  "Comment": "Run Sync (ECS Fargate: ${local.container_images[count.index]})",
+  "Comment": "Run Sync (ECS Fargate: ${local.taps_specs[count.index].image})",
   "TimeoutSeconds": ${var.timeout_hours * (60 * 60)},
   "StartAt": "RunTask",
   "States": {
