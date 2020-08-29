@@ -21,7 +21,7 @@ EOF
 
 resource "aws_cloudwatch_dashboard" "main" {
   count          = length(local.taps_specs)
-  dashboard_name = "${local.taps_specs[count.index].name}-to-${local.target.id}-v${var.pipeline_version_number}-dashboard--${var.name_prefix}-Tap"
+  dashboard_name = "${local.taps_specs[count.index].name}${count.index}-to-${local.target.id}-v${var.pipeline_version_number}-${var.name_prefix}-TapDashboard"
   dashboard_body = <<EOF
 {
   "periodOverride": "auto",
