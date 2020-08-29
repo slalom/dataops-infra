@@ -1,7 +1,7 @@
 locals {
   tap_id            = "exchangeratesapi"
   tap_metadata_path = "./taps"
-  tap_config_file   = "${local.tap_metadata_path}/.secrets/tap-${tap_id}-config.json"
+  tap_config_file   = "${local.tap_metadata_path}/.secrets/tap-${local.tap_id}-config.json"
 }
 
 output "tap_to_s3_summary" { value = module.tap_to_s3.summary }
@@ -23,6 +23,7 @@ module "tap_to_s3" {
   taps = [ # Learn more and browse taps at: https://www.singer.io
     {
       id       = local.tap_id
+      name     = local.tap_id
       schedule = ["1000", "1400"]
       settings = {
         start_date = "2019-01-01T00:00:00Z" # How far back to backfill
