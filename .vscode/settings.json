@@ -9,4 +9,5 @@
         "AWS_SHARED_CREDENTIALS_PATH": "${workspaceFolder}\\.secrets"
     },
     "editor.formatOnSave": true,
+    "workbench.colorTheme": "Amethyst Dark",
 }

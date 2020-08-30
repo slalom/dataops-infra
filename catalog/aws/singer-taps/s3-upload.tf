@@ -3,9 +3,9 @@ locals {
     for f in fileset(var.local_metadata_path, "*") :
     f
     if length([
-      for tap_id in var.taps.*.id :
-      tap_id
-      if replace(f, tap_id, "") != f
+      for tap_name in local.taps_specs.*.name :
+      tap_name
+      if replace(f, tap_name, "") != f
     ]) > 0
   ])
   source_files_hash = join(",", [

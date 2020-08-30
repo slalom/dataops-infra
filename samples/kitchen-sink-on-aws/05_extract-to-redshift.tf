@@ -21,14 +21,16 @@ module "tap_to_rs" {
   taps = [ # Learn more and browse taps at: https://www.singer.io
     {
       id       = local.tap_id
+      name     = local.tap_id
       schedule = ["1000", "1400"]
       settings = {
         start_date = "2019-01-01T00:00:00Z" # How far back to backfill
+        base       = "USD"
       }
       secrets = {
         # Map the name of the secret to the file containing the key:
-        api_token  = local.tap_config_file
-        user_agent = local.tap_config_file
+        # api_token  = local.tap_config_file
+        # user_agent = local.tap_config_file
       }
     }
   ]

@@ -178,10 +178,10 @@ def update_module_docs(
     """
     markdown_text = ""
     if ".git" not in tf_dir and ".terraform" not in tf_dir:
-        tf_files = [x for x in uio.list_files(tf_dir) if x.endswith(".tf")]
+        tf_files = [x for x in uio.list_local_files(tf_dir, recursive=False) if x.endswith(".tf")]
         extra_docs = [
             x
-            for x in uio.list_files(tf_dir)
+            for x in uio.list_local_files(tf_dir, recursive=False)
             if extra_docs_names and os.path.basename(x) in extra_docs_names
         ]
         if tf_files:
@@ -232,7 +232,7 @@ def update_module_docs(
                 )
             uio.create_text_file(f"{tf_dir}/{readme}", markdown_text)
     if recursive:
-        for folder in uio.list_files(tf_dir):
+        for folder in uio.list_local_files(tf_dir, recursive=False):
             if os.path.isdir(folder):
                 update_module_docs(folder, recursive=recursive, readme=readme)
 
@@ -258,7 +258,7 @@ def get_tf_metadata(tf_dir: str, recursive: bool = False, save_to_dir: bool = Tr
         and "samples" not in tf_dir
         and "tests" not in tf_dir
     ):
-        if [x for x in uio.list_files(tf_dir) if x.endswith(".tf")]:
+        if [x for x in uio.list_local_files(tf_dir, recursive=False) if x.endswith(".tf")]:
             _, json_text = runnow.run(f"terraform-docs json {tf_dir}", echo=False)
             result[tf_dir] = json.loads(json_text)
             if save_to_dir:
@@ -267,7 +267,7 @@ def get_tf_metadata(tf_dir: str, recursive: bool = False, save_to_dir: bool = Tr
                     f"{tf_dir}/.terraform/terraform-docs.json", json_text
                 )
     if recursive:
-        for folder in uio.list_files(tf_dir):
+        for folder in uio.list_local_files(tf_dir, recursive=False):
             folder = folder.replace("\\", "/")
             if os.path.isdir(folder):
                 result.update(get_tf_metadata(folder, recursive=recursive))
