@@ -1,6 +1,6 @@
 output "tableau_server_summmary" { value = module.tableau_server.summary }
 module "tableau_server" {
-  # source                = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=main"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/tableau-server?ref=main"
   source        = "../../catalog/aws/tableau-server"
   name_prefix   = local.name_prefix
   environment   = module.env.environment
@@ -8,7 +8,7 @@ module "tableau_server" {
 
   # CONFIGURE HERE:
 
-  num_linux_instances   = 0
+  num_linux_instances   = 1
   num_windows_instances = 0
 
   /*
