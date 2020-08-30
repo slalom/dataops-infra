@@ -78,29 +78,29 @@ module "ecs_tap_sync_task" {
   use_fargate         = true
   environment_vars = merge(
     {
-      TAP_CONFIG_DIR                                     = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
-      TAP_STATE_FILE                                     = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
-      PIPELINE_VERSION_NUMBER                            = var.pipeline_version_number
-      "${local.tap_env_prefix[count.index]}_CONFIG_FILE" = "False" # Config will be passed via env vars
-      "${local.target_env_prefix}_CONFIG_FILE"           = "False" # Config will be passed via env vars
+      TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
+      TAP_STATE_FILE                                    = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
+      PIPELINE_VERSION_NUMBER                           = var.pipeline_version_number
+      "${local.tap_env_prefix[count.index]}CONFIG_FILE" = "False" # Config will be passed via env vars
+      "${local.target_env_prefix}CONFIG_FILE"           = "False" # Config will be passed via env vars
     },
     {
       for k, v in local.taps_specs[count.index].settings :
-      "${local.tap_env_prefix[count.index]}_${k}" => v
+      "${local.tap_env_prefix[count.index]}${k}" => v
     },
     {
       for k, v in local.target.settings :
-      "${local.target_env_prefix}_${k}" => v
+      "${local.target_env_prefix}${k}" => v
     }
   )
   environment_secrets = merge(
     {
       for k, v in local.taps_specs[count.index].secrets :
-      "${local.tap_env_prefix[count.index]}_${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.tap_env_prefix[count.index]}${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
     },
     {
       for k, v in local.target.secrets :
-      "${local.target_env_prefix}_${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.target_env_prefix}${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
     }
   )
   schedules = [
