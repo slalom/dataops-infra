@@ -1,261 +1,193 @@
 ---
-title: Infrastructure Catalog
-has_children: true
-nav_order: 3
+parent: Infrastructure Catalog
+title: .. Catalog
 nav_exclude: false
 ---
-# DataOps Infrastructure Catalog
+# .. Catalog
 
-The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](../components/README.md).
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog)
 
-## Contents
+## Overview
 
-1. [AWS Catalog](#aws-catalog)
-    - [AWS Airflow](#aws-airflow)
-    - [AWS Data-Lake](#aws-data-lake)
-    - [AWS Data-Lake-Users](#aws-data-lake-users)
-    - [AWS DBT](#aws-dbt)
-    - [AWS Dev-Box](#aws-dev-box)
-    - [AWS Environment](#aws-environment)
-    - [AWS ML-Ops](#aws-ml-ops)
-    - [AWS MySQL](#aws-mysql)
-    - [AWS Postgres](#aws-postgres)
-    - [AWS Redshift](#aws-redshift)
-    - [AWS SFTP](#aws-sftp)
-    - [AWS SFTP-Users](#aws-sftp-users)
-    - [AWS Singer-Taps](#aws-singer-taps)
-    - [AWS Tableau-Server](#aws-tableau-server)
 
-2. Azure Catalog
-    * _(Coming soon)_
-2. GCP Catalog
-    * _(Coming soon)_
+## Requirements
 
-## AWS Catalog
+No requirements.
 
-### AWS Airflow
+## Providers
 
-#### Overview
+No provider.
 
-Airflow is an open source platform to programmatically author, schedule and monitor workflows. More information here: [airflow.apache.org](https://airflow.apache.org/)
+## Required Inputs
 
+No required input.
 
-#### Documentation
+## Optional Inputs
 
-- [AWS Airflow Readme](../catalog/aws/airflow/README.md)
+No optional input.
 
--------------------
+## Outputs
 
-### AWS Data-Lake
+No output.
+## Usage
 
-#### Overview
+### General Usage Instructions
 
-This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
-trigger automatically when new content is added.
+#### Prereqs:
 
-* Designed to be used in combination with the `aws/data-lake-users` module.
-* To add SFTP protocol support, combine this module with the `aws/sftp` module.
+1. Create glue jobs (see sample code in `transform.py`).
 
+#### Terraform Config:
 
-#### Documentation
+1. If additional python dependencies are needed, list these in [TK] config variable. These will be packaged into python wheels (`.whl` files) and uploaded to S3 automatically.
+2. Configure terraform variable `script_path` with location of Glue transform code.
 
-- [AWS Data-Lake Readme](../catalog/aws/data-lake/README.md)
+#### Terraform Deploy:
 
--------------------
+1. Run `terraform apply` which will create all resources and upload files to the correct bucket (enter 'yes' when prompted).
 
-### AWS Data-Lake-Users
+#### Execute State Machine:
 
-#### Overview
+1. Execute the state machine by landing first your training data and then your scoring (prediction) data into the feature store S3 bucket.
 
-Automates the management of users and groups in an S3 data lake.
+### Bring Your Own Model
 
-* Designed to be used in combination with the `aws/data-lake` module.
+_BYOM (Bring your own Model) allows you to build a custom docker image which will be used during state machine execution, in place of the generic training image._
 
+For BYOM, perform all of the above and also the steps below.
 
-#### Documentation
+#### Additional Configuration
 
-- [AWS Data-Lake-Users Readme](../catalog/aws/data-lake-users/README.md)
+Create a local folder in the code repository which contains at least the following files:
 
--------------------
+    * `Dockerfile`
+    * `.Dockerignore`
+    * `build_and_push.sh`
+    * subfolder containing the following files:
+      * Custom python:
+        * `train` (with no file extension)
+        * `predictor.py`
+      * Generic / boilerplate (copy from standard sample):
+        * `serve` (with no file extension)
+        * `wsgi.py` (wrapper for gunicorn to find your app)
+        * `nginx.conf`
 
-### AWS DBT
+## File Stores Used by MLOps Module
 
-#### Overview
+#### File Stores (S3 Buckets):
 
-DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating data transformations. More info at [www.getdbt.com](https://www.getdbt.com).
+1. Input Buckets:
+   1. Feature Store - Input training and scoring data.
+2. Managed Buckets:
+   1. Source Repository - Location where Glue python scripts are stored.
+   2. Extract Store - Training data (model inputs) stored to be consumed by the training model. Default output location for the Glue transformation job(s).
+   3. Model Store - Landing zone for pickled models as they are created and tuned by SageMaker training jobs.
+   4. Metadata Store - For logging SageMaker metadata information about the tuning and training jobs.
+   5. Output Store - Output from batch transformations (csv). Ignored when running endpoint inference.
 
+## Usage
 
+This module supports multiple taps per each target. To target multiple destinations, simply create
+additional instances of the module.
 
-#### Documentation
+### Tap configuration overview
 
-- [AWS DBT Readme](../catalog/aws/dbt/README.md)
+The `taps` input variable expects a list of specifications for each tap. The specification for each
+tap should include the following properties:
 
--------------------
-
-### AWS Dev-Box
-
-#### Overview
-
-The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
-or develop using the native cloud environment. Applicable use cases include:
-
-* Debugging network firewall and routing rules
-* Debugging components which can only be run from whitelisted IP ranges
-* Offloading heavy processing from the developer's local laptop
-* Mitigating network relability issues when working from WiFi or home networks
-
-
-#### Documentation
-
-- [AWS Dev-Box Readme](../catalog/aws/dev-box/README.md)
-
--------------------
-
-### AWS Environment
-
-#### Overview
-
-The environment module sets up common infrastrcuture like VPCs and network subnets. The `environment` output
-from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
-
-
-
-#### Documentation
-
-- [AWS Environment Readme](../catalog/aws/environment/README.md)
-
--------------------
-
-### AWS ML-Ops
-
-#### Overview
-
-This module automates MLOps tasks associated with training Machine Learning models.
-
-The module leverages Step Functions and Lambda functions as needed. The state machine
-executes hyperparameter tuning, training, and deployments as needed. Deployment options
-supported are Sagemaker endpoints and/or batch inference.
-
-#### Documentation
-
-- [AWS ML-Ops Readme](../catalog/aws/ml-ops/README.md)
-
--------------------
-
-### AWS MySQL
-
-#### Overview
-
-Deploys a MySQL server running on RDS.
-
-* NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
-
-#### Documentation
-
-- [AWS MySQL Readme](../catalog/aws/mysql/README.md)
-
--------------------
-
-### AWS Postgres
-
-#### Overview
-
-Deploys a Postgres server running on RDS.
-
-* NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
-
-#### Documentation
-
-- [AWS Postgres Readme](../catalog/aws/postgres/README.md)
-
--------------------
-
-### AWS Redshift
-
-#### Overview
-
-Redshift is an AWS database platform which applies MPP (Massively-Parallel-Processing) principles to big data workloads in the cloud.
-
-
-#### Documentation
-
-- [AWS Redshift Readme](../catalog/aws/redshift/README.md)
-
--------------------
-
-### AWS SFTP
-
-#### Overview
-
-Automates the management of the AWS Transfer Service, which
-provides an SFTP interface on top of existing S3 storage resources.
-
-* Designed to be used in combination with the `aws/data-lake` and `aws/sftp-users` modules.
-
-
-
-#### Documentation
-
-- [AWS SFTP Readme](../catalog/aws/sftp/README.md)
-
--------------------
-
-### AWS SFTP-Users
-
-#### Overview
-
-Automates the management of SFTP user accounts on the AWS Transfer Service. AWS Transfer Service
-provides an SFTP interface on top of existing S3 storage resources.
-
-* Designed to be used in combination with the `aws/sftp` module.
-
-
-#### Documentation
-
-- [AWS SFTP-Users Readme](../catalog/aws/sftp-users/README.md)
-
--------------------
-
-### AWS Singer-Taps
-
-#### Overview
-
-The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
-
-
-#### Documentation
-
-- [AWS Singer-Taps Readme](../catalog/aws/singer-taps/README.md)
-
--------------------
-
-### AWS Tableau-Server
-
-#### Overview
-
-This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
-The module supports both Linux and Windows versions of the Tableau Server Software.
-
-
-#### Documentation
-
-- [AWS Tableau-Server Readme](../catalog/aws/tableau-server/README.md)
-
--------------------
-
-
-
-## Azure Catalog
-
-_(Coming soon)_
-
-## GCP Catalog
-
-_(Coming soon)_
-
--------------------
+- `id` - The name or alias of the tap as registered in the [Singer Index](#singer-index), without the `tap-` prefix.
+  - Note: in most cases, this is exactly what you'd expect: `mssql` for `tap-mssql`, etc. However,
+    for forks or experimental releases, this might contain a suffix such as `mssql-test` for a test
+    version of `tap-mssql` or `snowflake-singer` for the singer edition of `tap-snowflake`.
+  - A future release will add a separate and optional flag for `owner` or `variant`, in place of the
+    currently used alias/suffix convention. See the [Singer Index](#singer-index) section for more
+    info.
+- `name` - What you want to call the data source. For instance, if you have multiple SQL Servers, you may want to use a more memorable name such as `finance-system` or `gl-db`. This name should still align with tap naming conventions, which is to say it should be in _lower-case-with-dashes_ format.
+- `settings` - A simple map of the tap settings' names to their values. These are specific to each tap and they are required for each tap to work.
+  - Note: While singer does not distinguish between 'secrets' and 'settings', we should and do treat these two types of config separately. Be sure to put all sensitive config in the `secrets` collection, and not here in `settings`.
+- `secrets` - Same as `config` except for sensitive values. When passing secrets, you specify the setting name in the same way but you _must_ either pass the value as a pointer to the file containing the secret (a config.json file, for instance) or else pass a AWS Secrets Manager ARN.
+  - _If you pass a Secrets Manager ARN as the config value_, that secret pointer will be passed to the ECS container securely, and only the running container will have access to the secret.
+  - _If you pass a pointer to a config file_, the module will automatically create a new AWS Secrets Manager secret, upload the secret to AWS Secrets Manager, and then the above process will continue by passing the Secrets Manager pointer _only_ to the running ECS container.
+
+### Singer Index
+
+There are actually two Singer Indexes currently available.
+
+1. The first and primary index for this module today is the tapdance index stored [here](https://github.com/aaronsteers/tapdance/blob/master/docker/singer_index.yml).
+
+2. This index will be eventually be replaced by a new dedicated [Singer DB](https://github.com/aaronsteers/singer-db), which is still a work-in-progress.
+
+Note:
+
+- Both of these sources support multiple versions (forks) of each tap, and both provide a "default"
+  or "recommended" version for those new users who just want to get started quickly.
+- The new [Singer DB](https://github.com/aaronsteers/singer-db) will implement a new "owner" or "variant"
+  flag to replace the current "alias" technique used by the
+  [tapdance index](https://github.com/aaronsteers/tapdance/blob/master/docker/singer_index.yml).
+
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [ecr-image.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/ecr-image.tf)
+* [glue-crawler.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/glue-crawler.tf)
+* [glue-job.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/glue-job.tf)
+* [lambda.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/lambda.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [s3.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/s3.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [cloudwatch.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/cloudwatch.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [s3-path-parsing.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/s3-path-parsing.tf)
+* [s3-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/s3-upload.tf)
+* [step-functions.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/step-functions.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/variables.tf)
+
+---------------------
 
 _**NOTE:** This documentation was auto-generated using
-`terraform-docs`. Please do not attempt to manually update
-this file._
-
+`terraform-docs` and `s-infra` from `slalom.dataops`.
+Please do not attempt to manually update this file._

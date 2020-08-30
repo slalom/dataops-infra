@@ -1,261 +1,189 @@
 ---
-title: Infrastructure Components
-has_children: true
-nav_order: 3
+parent: Infrastructure Components
+title: .. Components
 nav_exclude: false
 ---
-# DataOps Infrastructure Components
+# .. Components
 
-These components define the technical building blocks which enable advanced, ready-to-deploy data solutions in the [Infrastructure Catalog](../catalog/README.md).
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components)
 
-## Contents
+## Overview
 
-1. [AWS Components](#aws-components)
-    - [AWS EC2](#aws-ec2)
-    - [AWS ECR](#aws-ecr)
-    - [AWS ECR-Image](#aws-ecr-image)
-    - [AWS ECS-Cluster](#aws-ecs-cluster)
-    - [AWS ECS-Task](#aws-ecs-task)
-    - [AWS Glue-Crawler](#aws-glue-crawler)
-    - [AWS Glue-Job](#aws-glue-job)
-    - [AWS Lambda-Python](#aws-lambda-python)
-    - [AWS RDS](#aws-rds)
-    - [AWS Redshift](#aws-redshift)
-    - [AWS Secrets-Manager](#aws-secrets-manager)
-    - [AWS Step-Functions](#aws-step-functions)
-    - [AWS VPC](#aws-vpc)
 
-2. Azure Components
-    * _(Coming soon)_
-2. GCP Components
-    * _(Coming soon)_
+## Requirements
 
-## AWS Components
+No requirements.
 
-### AWS EC2
+## Providers
 
-#### Overview
+No provider.
 
-EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
-credentials (passwords and/or SSH keypairs) needed to connect to the instances.
+## Required Inputs
 
+No required input.
 
+## Optional Inputs
 
-#### Documentation
+No optional input.
 
-- [AWS EC2 Readme](../components/aws/ec2/README.md)
+## Outputs
 
--------------------
+No output.
+## Prereqs:
 
-### AWS ECR
+_To use this module, you will need the following components:_
 
-#### Overview
+### 1. ECR Credential Manager
 
-ECR (Elastic Compute Repository) is the private-hosted AWS equivalent of DockerHub. ECR allows you to securely publish docker images which
-should not be accessible to external users.
+Once installed, the credential manager will pickup AWS credentials and use those specified in the `AWS_SHARED_CREDENTIALS_FILE` environment variable - which can be quickly set using the `environment` module's terraform output in the "AWS User Switch Cmd".
 
+**To install on Windows:**
 
-#### Documentation
+```cmd
+# Install Go
+choco install golang
 
-- [AWS ECR Readme](../components/aws/ecr/README.md)
+# Install ECR Credential Helper
+go get -u github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login
+```
 
--------------------
+**To install on Mac/Linux:**
 
-### AWS ECR-Image
+* [https://github.com/awslabs/amazon-ecr-credential-helper#user-content-installing](https://github.com/awslabs/amazon-ecr-credential-helper#user-content-installing)
 
-#### Overview
+**Configure Docker to use the ECR Credential Helper:**
 
-ECR (Elastic Compute Repository) is the private-hosted AWS
-equivalent of DockerHub. ECR allows you to securely publish
-docker images which should not be accessible to external users.
+Replace the contents of `~/.docker/config.json` (or `%USERPROFILE%/.docker/config.json` on Windows) with:
 
+```json
+{ "credsStore": "ecr-login" }
+```
 
-#### Documentation
+**Set your shared credentials file:**
 
-- [AWS ECR-Image Readme](../components/aws/ecr-image/README.md)
+On Windows:
 
--------------------
+```cmd
+SET AWS_SHARED_CREDENTIALS_FILE=[repo-root-dir]/.secrets/aws-credentials
+```
 
-### AWS ECS-Cluster
+On Linux/Mac:
 
-#### Overview
+```cmd
+export AWS_SHARED_CREDENTIALS_FILE=[repo-root-dir]/.secrets/aws-credentials
+```
 
-ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
-features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
-to manage or pay for when tasks are not running.
+### 2. AWS Powershell Tools Module (Windows only)
 
-Use in combination with the `ECS-Task` component.
+Install with:
 
-#### Documentation
+```ps
+Install-Module -name AWSPowerShell.NetCore
+```
 
-- [AWS ECS-Cluster Readme](../components/aws/ecs-cluster/README.md)
+In order to then use this module for manual executions, you will need to load it into your powershell session:
 
--------------------
+```ps
+Import-Module AWSPowerShell.NetCore
+```
 
-### AWS ECS-Task
+For more info: [https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html#ps-installing-awspowershellnetcore](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html#ps-installing-awspowershellnetcore)
 
-#### Overview
 
-ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
-features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
-to manage or pay for when tasks are not running.
+## Usage Example
 
-Use in combination with the `ECS-Cluster` component.
+**Sample inputs:**
 
-#### Documentation
+```hcl
+  secrets_file_map = {
+    # These secret will be retrieved from the respective files and uploaded
+    # to AWS Secrets Manager:
+    MY_SAMPLE_1_username = "./.secrets/mysample1-creds.yml:username
+    MY_SAMPLE_1_password = "./.secrets/mysample1-creds.yml:password
+    MY_SAMPLE_2_username = "./.secrets/mysample2-creds.json:username
+    MY_SAMPLE_2_password = "./.secrets/mysample2-creds.json:password
 
-- [AWS ECS-Task Readme](../components/aws/ecs-task/README.md)
-
--------------------
-
-### AWS Glue-Crawler
-
-#### Overview
-
-Glue is AWS's fully managed extract, transform, and load (ETL) service.
-A Glue crawler is used to access a data store and create table definitions.
-This can be used in conjuction with Amazon Athena to query flat files in S3 buckets using SQL.
-
-#### Documentation
-
-- [AWS Glue-Crawler Readme](../components/aws/glue-crawler/README.md)
-
--------------------
-
-### AWS Glue-Job
-
-#### Overview
-
-Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue job can be used job to run ETL Python scripts.
-
-#### Documentation
-
-- [AWS Glue-Job Readme](../components/aws/glue-job/README.md)
-
--------------------
-
-### AWS Lambda-Python
-
-#### Overview
-
-AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
-Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
-packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
-S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
-
-
-#### Documentation
-
-- [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md)
-
--------------------
-
-### AWS RDS
-
-#### Overview
-
-Deploys an RDS-backed database. RDS currently supports the following database engines:
-* Aurora
-* MySQL
-* PostgreSQL
-* Oracle
-* SQL Server
-
-Each engine type has it's own required configuration. For already-configured database
-configurations, see the catalog modules: `catalog/aws/mysql` and `catalog/aws/postgres`
-which are built on top of this component module.
-
-* NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
-
-#### Documentation
-
-- [AWS RDS Readme](../components/aws/rds/README.md)
-
--------------------
-
-### AWS Redshift
-
-#### Overview
-
-This is the underlying technical component which supports the Redshift catalog module.
-
-NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
-
-#### Documentation
-
-- [AWS Redshift Readme](../components/aws/redshift/README.md)
-
--------------------
-
-### AWS Secrets-Manager
-
-#### Overview
-
-This module takes as input a set of maps from variable names to secrets locations (in YAML or
-JSON). The module uploads those secrets to AWS Secrets Manager and returns the same map pointing
-to the IDs of new AWS Secrets manager locations. Those IDs (aka ARNs) can then safely be handed
-on to other resources which required access to those secrets.
-
-**Usage Notes:**
-
-* Any secrets locations which are already pointing to AWS secrets will simply be passed back through to the output with no changes.
-* For security reasons, this module does not accept inputs for secrets using the clear text of the secrets themselves. To properly use this module, first save the secrets to a YAML or JSON file which is excluded from source control.
-
-
-#### Documentation
-
-- [AWS Secrets-Manager Readme](../components/aws/secrets-manager/README.md)
-
--------------------
-
-### AWS Step-Functions
-
-#### Overview
-
-AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
-to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
-for another step.
-
-
-#### Documentation
-
-- [AWS Step-Functions Readme](../components/aws/step-functions/README.md)
-
--------------------
-
-### AWS VPC
-
-#### Overview
-
-The VPC module creates a number of network services which support other key AWS functions.
-
-Included automatically when creating this module:
-* 1 VPC which contains the following:
-    * 2 private subnets (for resources which **do not** need a public IP address)
-    * 2 public subnets (for resources which do need a public IP address)
-    * 1 NAT gateway (allows private subnet resources to reach the outside world)
-    * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
-    * route tables and routes to connect all of the above
-
-#### Documentation
-
-- [AWS VPC Readme](../components/aws/vpc/README.md)
-
--------------------
-
-
-
-## Azure Components
-
-_(Coming soon)_
-
-## GCP Components
-
-_(Coming soon)_
-
--------------------
+    # Because the paths starts with `arn://`, these secret are assumed to be
+    # already in AWS Secrets Manager and will not be uploaded:
+    SAMPLE_aws_access_key_id     = "arn:aws:secretsmanager:us-east-1::secret:aws_access_key_id-sqQDPG"
+    SAMPLE_aws_secret_access_key = "arn:aws:secretsmanager:us-east-1::secret:aws_secret_access_key-adf13"
+  }
+```
+
+**Outputs from sample:**
+
+```hcl
+{
+    # Newly created AWS Secrets Manager secrets:
+    MY_SAMPLE_1_username = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_1_username-adf13"
+    MY_SAMPLE_1_password = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_1_password-adf13"
+    MY_SAMPLE_2_username = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_2_username-adf13"
+    MY_SAMPLE_2_password = "arn:aws:secretsmanager:us-east-1::secret:MY_SAMPLE_2_password-adf13"
+
+    # Secrets IDs passed through with no change:
+    SAMPLE_aws_access_key_id     = "arn:aws:secretsmanager:us-east-1::secret:aws_access_key_id-adf13"
+    SAMPLE_aws_secret_access_key = "arn:aws:secretsmanager:us-east-1::secret:aws_secret_access_key-adf13"
+}
+```
+
+
+---------------------
+
+## Source Files
+
+_Source code for this module is available using the links below._
+
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [alb.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/alb.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [py-script-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/py-script-upload.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [python-zip.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/python-zip.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/variables.tf)
+
+---------------------
 
 _**NOTE:** This documentation was auto-generated using
-`terraform-docs`. Please do not attempt to manually update
-this file._
-
+`terraform-docs` and `s-infra` from `slalom.dataops`.
+Please do not attempt to manually update this file._
