@@ -202,7 +202,7 @@ variable "container_command" {
 variable "container_args" {
   type        = list(string)
   description = "Optional. A list of additional args to send to the container."
-  default     = ["--config_file=False", "--target_config_file=False"]
+  default     = []
 }
 variable "container_entrypoint" {
   description = "Optional. Override the docker image's entrypoint."
