@@ -172,10 +172,10 @@ resources.
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/sftp-users/iam.tf)
 
 ---------------------
 

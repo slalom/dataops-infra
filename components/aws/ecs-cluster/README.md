@@ -101,10 +101,10 @@ Description: The name of the IAM instance role used by the ECS cluster. (Can be 
 
 _Source code for this module is available using the links below._
 
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-cluster/iam.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-cluster/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-cluster/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-cluster/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-cluster/variables.tf)
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-cluster/iam.tf)
 
 ---------------------
 

@@ -21,9 +21,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
+
+- aws
 
 ## Required Inputs
 
@@ -268,8 +268,8 @@ Description: A map of instance IDs to command-line strings which can be used to 
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ec2/variables.tf)
 
 ---------------------

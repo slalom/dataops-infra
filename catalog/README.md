@@ -11,20 +11,20 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 ## Contents
 
 1. [AWS Catalog](#aws-catalog)
-    - [AWS Airflow](#aws-airflow)
-    - [AWS Data-Lake](#aws-data-lake)
-    - [AWS Data-Lake-Users](#aws-data-lake-users)
-    - [AWS DBT](#aws-dbt)
-    - [AWS Dev-Box](#aws-dev-box)
-    - [AWS Environment](#aws-environment)
     - [AWS ML-Ops](#aws-ml-ops)
+    - [AWS Redshift](#aws-redshift)
+    - [AWS Tableau-Server](#aws-tableau-server)
+    - [AWS Environment](#aws-environment)
+    - [AWS Data-Lake-Users](#aws-data-lake-users)
+    - [AWS Dev-Box](#aws-dev-box)
+    - [AWS DBT](#aws-dbt)
     - [AWS MySQL](#aws-mysql)
     - [AWS Postgres](#aws-postgres)
-    - [AWS Redshift](#aws-redshift)
+    - [AWS Singer-Taps](#aws-singer-taps)
+    - [AWS Airflow](#aws-airflow)
+    - [AWS Data-Lake](#aws-data-lake)
     - [AWS SFTP](#aws-sftp)
     - [AWS SFTP-Users](#aws-sftp-users)
-    - [AWS Singer-Taps](#aws-singer-taps)
-    - [AWS Tableau-Server](#aws-tableau-server)
 
 2. Azure Catalog
     * _(Coming soon)_
@@ -33,33 +33,61 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 
 ## AWS Catalog
 
-### AWS Airflow
+### AWS ML-Ops
 
 #### Overview
 
-Airflow is an open source platform to programmatically author, schedule and monitor workflows. More information here: [airflow.apache.org](https://airflow.apache.org/)
+This module automates MLOps tasks associated with training Machine Learning models.
 
+The module leverages Step Functions and Lambda functions as needed. The state machine
+executes hyperparameter tuning, training, and deployments as needed. Deployment options
+supported are Sagemaker endpoints and/or batch inference.
 
 #### Documentation
 
-- [AWS Airflow Readme](../catalog/aws/airflow/README.md)
+- [AWS ML-Ops Readme](../catalog/aws/ml-ops/README.md)
 
 -------------------
 
-### AWS Data-Lake
+### AWS Redshift
 
 #### Overview
 
-This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
-trigger automatically when new content is added.
-
-* Designed to be used in combination with the `aws/data-lake-users` module.
-* To add SFTP protocol support, combine this module with the `aws/sftp` module.
+Redshift is an AWS database platform which applies MPP (Massively-Parallel-Processing) principles to big data workloads in the cloud.
 
 
 #### Documentation
 
-- [AWS Data-Lake Readme](../catalog/aws/data-lake/README.md)
+- [AWS Redshift Readme](../catalog/aws/redshift/README.md)
+
+-------------------
+
+### AWS Tableau-Server
+
+#### Overview
+
+This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
+The module supports both Linux and Windows versions of the Tableau Server Software.
+
+
+#### Documentation
+
+- [AWS Tableau-Server Readme](../catalog/aws/tableau-server/README.md)
+
+-------------------
+
+### AWS Environment
+
+#### Overview
+
+The environment module sets up common infrastrcuture like VPCs and network subnets. The `environment` output
+from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
+
+
+
+#### Documentation
+
+- [AWS Environment Readme](../catalog/aws/environment/README.md)
 
 -------------------
 
@@ -75,20 +103,6 @@ Automates the management of users and groups in an S3 data lake.
 #### Documentation
 
 - [AWS Data-Lake-Users Readme](../catalog/aws/data-lake-users/README.md)
-
--------------------
-
-### AWS DBT
-
-#### Overview
-
-DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating data transformations. More info at [www.getdbt.com](https://www.getdbt.com).
-
-
-
-#### Documentation
-
-- [AWS DBT Readme](../catalog/aws/dbt/README.md)
 
 -------------------
 
@@ -111,34 +125,17 @@ or develop using the native cloud environment. Applicable use cases include:
 
 -------------------
 
-### AWS Environment
+### AWS DBT
 
 #### Overview
 
-The environment module sets up common infrastrcuture like VPCs and network subnets. The `environment` output
-from this module is designed to be passed easily to downstream modules, streamlining the reuse of these core components.
+DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating data transformations. More info at [www.getdbt.com](https://www.getdbt.com).
 
 
 
 #### Documentation
 
-- [AWS Environment Readme](../catalog/aws/environment/README.md)
-
--------------------
-
-### AWS ML-Ops
-
-#### Overview
-
-This module automates MLOps tasks associated with training Machine Learning models.
-
-The module leverages Step Functions and Lambda functions as needed. The state machine
-executes hyperparameter tuning, training, and deployments as needed. Deployment options
-supported are Sagemaker endpoints and/or batch inference.
-
-#### Documentation
-
-- [AWS ML-Ops Readme](../catalog/aws/ml-ops/README.md)
+- [AWS DBT Readme](../catalog/aws/dbt/README.md)
 
 -------------------
 
@@ -170,16 +167,46 @@ Deploys a Postgres server running on RDS.
 
 -------------------
 
-### AWS Redshift
+### AWS Singer-Taps
 
 #### Overview
 
-Redshift is an AWS database platform which applies MPP (Massively-Parallel-Processing) principles to big data workloads in the cloud.
+The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
 
 
 #### Documentation
 
-- [AWS Redshift Readme](../catalog/aws/redshift/README.md)
+- [AWS Singer-Taps Readme](../catalog/aws/singer-taps/README.md)
+
+-------------------
+
+### AWS Airflow
+
+#### Overview
+
+Airflow is an open source platform to programmatically author, schedule and monitor workflows. More information here: [airflow.apache.org](https://airflow.apache.org/)
+
+
+#### Documentation
+
+- [AWS Airflow Readme](../catalog/aws/airflow/README.md)
+
+-------------------
+
+### AWS Data-Lake
+
+#### Overview
+
+This data lake implementation creates three buckets, one each for data, logging, and metadata. The data lake also supports lambda functions which can
+trigger automatically when new content is added.
+
+* Designed to be used in combination with the `aws/data-lake-users` module.
+* To add SFTP protocol support, combine this module with the `aws/sftp` module.
+
+
+#### Documentation
+
+- [AWS Data-Lake Readme](../catalog/aws/data-lake/README.md)
 
 -------------------
 
@@ -213,33 +240,6 @@ provides an SFTP interface on top of existing S3 storage resources.
 #### Documentation
 
 - [AWS SFTP-Users Readme](../catalog/aws/sftp-users/README.md)
-
--------------------
-
-### AWS Singer-Taps
-
-#### Overview
-
-The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
-
-
-#### Documentation
-
-- [AWS Singer-Taps Readme](../catalog/aws/singer-taps/README.md)
-
--------------------
-
-### AWS Tableau-Server
-
-#### Overview
-
-This module securely deploys one or more Tableau Servers, which can then be used to host reports in production or POC environments.
-The module supports both Linux and Windows versions of the Tableau Server Software.
-
-
-#### Documentation
-
-- [AWS Tableau-Server Readme](../catalog/aws/tableau-server/README.md)
 
 -------------------
 

@@ -443,14 +443,14 @@ Create a local folder in the code repository which contains at least the followi
 
 _Source code for this module is available using the links below._
 
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/outputs.tf)
+* [lambda.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/lambda.tf)
+* [s3.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/s3.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/main.tf)
 * [ecr-image.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/ecr-image.tf)
 * [glue-crawler.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/glue-crawler.tf)
-* [glue-job.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/glue-job.tf)
-* [lambda.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/lambda.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/main.tf)
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/outputs.tf)
-* [s3.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/s3.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/variables.tf)
+* [glue-job.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/glue-job.tf)
 
 ---------------------
 

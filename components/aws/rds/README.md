@@ -189,8 +189,8 @@ Description: Summary of resources created by this module.
 
 _Source code for this module is available using the links below._
 
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/outputs.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/rds/variables.tf)
 
 ---------------------
