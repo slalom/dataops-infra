@@ -31,7 +31,7 @@ jobs:
           go-version: "1.15" # The Go version to download (if necessary) and use.
       - name: "Terraform Code Standards Check"
         run: |
-          GO111MODULE="on" go get github.com/segmentio/terraform-docs
+          GO111MODULE="on" go get github.com/terraform-docs/terraform-docs@v0.10.0-rc.1
           export PATH=$HOME/go/bin:$PATH
           pip3 install --pre slalom.dataops
           s-infra check_tf_metadata ./catalog \
