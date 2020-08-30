@@ -97,10 +97,10 @@ Description: The name of the Glue crawler.
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/outputs.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/main.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/variables.tf)
 * [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/outputs.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-crawler/variables.tf)
 
 ---------------------
 

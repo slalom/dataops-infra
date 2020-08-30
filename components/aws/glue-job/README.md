@@ -133,11 +133,11 @@ Description: Summary of Glue resources created.
 
 _Source code for this module is available using the links below._
 
-* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/outputs.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/main.tf)
-* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/variables.tf)
 * [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/main.tf)
+* [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/outputs.tf)
 * [py-script-upload.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/py-script-upload.tf)
+* [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/glue-job/variables.tf)
 
 ---------------------
 

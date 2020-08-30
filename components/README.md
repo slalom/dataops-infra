@@ -11,19 +11,19 @@ These components define the technical building blocks which enable advanced, rea
 ## Contents
 
 1. [AWS Components](#aws-components)
-    - [AWS Redshift](#aws-redshift)
-    - [AWS ECR-Image](#aws-ecr-image)
-    - [AWS Glue-Crawler](#aws-glue-crawler)
-    - [AWS VPC](#aws-vpc)
-    - [AWS Step-Functions](#aws-step-functions)
-    - [AWS ECS-Task](#aws-ecs-task)
-    - [AWS ECR](#aws-ecr)
-    - [AWS Lambda-Python](#aws-lambda-python)
-    - [AWS Glue-Job](#aws-glue-job)
-    - [AWS ECS-Cluster](#aws-ecs-cluster)
     - [AWS EC2](#aws-ec2)
+    - [AWS ECR](#aws-ecr)
+    - [AWS ECR-Image](#aws-ecr-image)
+    - [AWS ECS-Cluster](#aws-ecs-cluster)
+    - [AWS ECS-Task](#aws-ecs-task)
+    - [AWS Glue-Crawler](#aws-glue-crawler)
+    - [AWS Glue-Job](#aws-glue-job)
+    - [AWS Lambda-Python](#aws-lambda-python)
     - [AWS RDS](#aws-rds)
+    - [AWS Redshift](#aws-redshift)
     - [AWS Secrets-Manager](#aws-secrets-manager)
+    - [AWS Step-Functions](#aws-step-functions)
+    - [AWS VPC](#aws-vpc)
 
 2. Azure Components
     * _(Coming soon)_
@@ -32,97 +32,18 @@ These components define the technical building blocks which enable advanced, rea
 
 ## AWS Components
 
-### AWS Redshift
+### AWS EC2
 
 #### Overview
 
-This is the underlying technical component which supports the Redshift catalog module.
+EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
+credentials (passwords and/or SSH keypairs) needed to connect to the instances.
 
-NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
-
-#### Documentation
-
-- [AWS Redshift Readme](../components/aws/redshift/README.md)
-
--------------------
-
-### AWS ECR-Image
-
-#### Overview
-
-ECR (Elastic Compute Repository) is the private-hosted AWS
-equivalent of DockerHub. ECR allows you to securely publish
-docker images which should not be accessible to external users.
 
 
 #### Documentation
 
-- [AWS ECR-Image Readme](../components/aws/ecr-image/README.md)
-
--------------------
-
-### AWS Glue-Crawler
-
-#### Overview
-
-Glue is AWS's fully managed extract, transform, and load (ETL) service.
-A Glue crawler is used to access a data store and create table definitions.
-This can be used in conjuction with Amazon Athena to query flat files in S3 buckets using SQL.
-
-#### Documentation
-
-- [AWS Glue-Crawler Readme](../components/aws/glue-crawler/README.md)
-
--------------------
-
-### AWS VPC
-
-#### Overview
-
-The VPC module creates a number of network services which support other key AWS functions.
-
-Included automatically when creating this module:
-* 1 VPC which contains the following:
-    * 2 private subnets (for resources which **do not** need a public IP address)
-    * 2 public subnets (for resources which do need a public IP address)
-    * 1 NAT gateway (allows private subnet resources to reach the outside world)
-    * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
-    * route tables and routes to connect all of the above
-
-#### Documentation
-
-- [AWS VPC Readme](../components/aws/vpc/README.md)
-
--------------------
-
-### AWS Step-Functions
-
-#### Overview
-
-AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
-to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
-for another step.
-
-
-#### Documentation
-
-- [AWS Step-Functions Readme](../components/aws/step-functions/README.md)
-
--------------------
-
-### AWS ECS-Task
-
-#### Overview
-
-ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
-features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
-to manage or pay for when tasks are not running.
-
-Use in combination with the `ECS-Cluster` component.
-
-#### Documentation
-
-- [AWS ECS-Task Readme](../components/aws/ecs-task/README.md)
+- [AWS EC2 Readme](../components/aws/ec2/README.md)
 
 -------------------
 
@@ -140,31 +61,18 @@ should not be accessible to external users.
 
 -------------------
 
-### AWS Lambda-Python
+### AWS ECR-Image
 
 #### Overview
 
-AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
-Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
-packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
-S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
+ECR (Elastic Compute Repository) is the private-hosted AWS
+equivalent of DockerHub. ECR allows you to securely publish
+docker images which should not be accessible to external users.
 
 
 #### Documentation
 
-- [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md)
-
--------------------
-
-### AWS Glue-Job
-
-#### Overview
-
-Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue job can be used job to run ETL Python scripts.
-
-#### Documentation
-
-- [AWS Glue-Job Readme](../components/aws/glue-job/README.md)
+- [AWS ECR-Image Readme](../components/aws/ecr-image/README.md)
 
 -------------------
 
@@ -184,18 +92,61 @@ Use in combination with the `ECS-Task` component.
 
 -------------------
 
-### AWS EC2
+### AWS ECS-Task
 
 #### Overview
 
-EC2 is the virtual machine layer of the AWS platform. This module allows you to pass your own startup scripts, and it streamlines the creation and usage of
-credentials (passwords and/or SSH keypairs) needed to connect to the instances.
+ECS, or EC2 Container Service, is able to run docker containers natively in AWS cloud. While the module can support classic EC2-based and Fargate,
+features, this module generally prefers "ECS Fargete", which allows dynamic launching of docker containers with no always-on cost and no servers
+to manage or pay for when tasks are not running.
 
+Use in combination with the `ECS-Cluster` component.
+
+#### Documentation
+
+- [AWS ECS-Task Readme](../components/aws/ecs-task/README.md)
+
+-------------------
+
+### AWS Glue-Crawler
+
+#### Overview
+
+Glue is AWS's fully managed extract, transform, and load (ETL) service.
+A Glue crawler is used to access a data store and create table definitions.
+This can be used in conjuction with Amazon Athena to query flat files in S3 buckets using SQL.
+
+#### Documentation
+
+- [AWS Glue-Crawler Readme](../components/aws/glue-crawler/README.md)
+
+-------------------
+
+### AWS Glue-Job
+
+#### Overview
+
+Glue is AWS's fully managed extract, transform, and load (ETL) service. A Glue job can be used job to run ETL Python scripts.
+
+#### Documentation
+
+- [AWS Glue-Job Readme](../components/aws/glue-job/README.md)
+
+-------------------
+
+### AWS Lambda-Python
+
+#### Overview
+
+AWS Lambda is a platform which enables serverless execution of arbitrary functions. This module specifically focuses on the
+Python implementatin of Lambda functions. Given a path to a folder of one or more python fyles, this module takes care of
+packaging the python code into a zip and uploading to a new Lambda Function in AWS. The module can also be configured with
+S3-based triggers, to run the function automatically whenever a file is landed in a specific S3 path.
 
 
 #### Documentation
 
-- [AWS EC2 Readme](../components/aws/ec2/README.md)
+- [AWS Lambda-Python Readme](../components/aws/lambda-python/README.md)
 
 -------------------
 
@@ -222,6 +173,20 @@ which are built on top of this component module.
 
 -------------------
 
+### AWS Redshift
+
+#### Overview
+
+This is the underlying technical component which supports the Redshift catalog module.
+
+NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
+
+#### Documentation
+
+- [AWS Redshift Readme](../components/aws/redshift/README.md)
+
+-------------------
+
 ### AWS Secrets-Manager
 
 #### Overview
@@ -240,6 +205,41 @@ on to other resources which required access to those secrets.
 #### Documentation
 
 - [AWS Secrets-Manager Readme](../components/aws/secrets-manager/README.md)
+
+-------------------
+
+### AWS Step-Functions
+
+#### Overview
+
+AWS Step Functions is a service provided by Amazon Web Services that makes it easier to orchestrate multiple AWS services
+to accomplish tasks. Step Functions allows you to create steps in a process where the output of one step becomes the input
+for another step.
+
+
+#### Documentation
+
+- [AWS Step-Functions Readme](../components/aws/step-functions/README.md)
+
+-------------------
+
+### AWS VPC
+
+#### Overview
+
+The VPC module creates a number of network services which support other key AWS functions.
+
+Included automatically when creating this module:
+* 1 VPC which contains the following:
+    * 2 private subnets (for resources which **do not** need a public IP address)
+    * 2 public subnets (for resources which do need a public IP address)
+    * 1 NAT gateway (allows private subnet resources to reach the outside world)
+    * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
+    * route tables and routes to connect all of the above
+
+#### Documentation
+
+- [AWS VPC Readme](../components/aws/vpc/README.md)
 
 -------------------
 

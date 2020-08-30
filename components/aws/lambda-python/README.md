@@ -194,11 +194,11 @@ additional permissions to the role.
 
 _Source code for this module is available using the links below._
 
+* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/iam.tf)
+* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/outputs.tf)
 * [python-zip.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/python-zip.tf)
-* [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/main.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/variables.tf)
-* [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/lambda-python/iam.tf)
 
 ---------------------
 
