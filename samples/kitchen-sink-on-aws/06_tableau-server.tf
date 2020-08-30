@@ -10,6 +10,7 @@ module "tableau_server" {
 
   num_linux_instances   = 1
   num_windows_instances = 0
+  registration_file     = "https://gist.githubusercontent.com/aaronsteers/11d857eeb78d52de125a9f04dac2d1bf/raw/899140b284628b49373cd7fa5fcd33636d0c7522/tableau-registration-aj.json"
 
   /*
   # OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
