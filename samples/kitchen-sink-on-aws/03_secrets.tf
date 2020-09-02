@@ -6,8 +6,7 @@ module "secrets_mgr" {
   resource_tags = local.resource_tags
 
   secrets_map = {
-    SAMPLE_username = local.secrets_folder,
-    SAMPLE_password = local.secrets_folder,
+    project_shortname = local.yaml_config_path
   }
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:

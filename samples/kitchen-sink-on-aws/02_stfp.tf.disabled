@@ -1,8 +1,10 @@
-# Note: The required SFTP layer 'AWS Transfer Service' is not currently supported by LinuxAcademy AWS Sandbox limits:
-# https://support.linuxacademy.com/hc/en-us/articles/360025783132-What-can-I-do-with-the-Cloud-Playground-AWS-Sandbox-
-#
-# Associated Error: Error creating Transfer Server: AccessDeniedException: User: arn:aws:iam::****:user/cloud_user is not
-# authorized to perform: transfer:CreateServer on resource: arn:aws:transfer:us-east-1:****:server/* with an explicit deny
+# Note to LinuxAcademy Sandbox Users:
+#  - The required SFTP layer 'AWS Transfer Service' is not currently supported by LinuxAcademy AWS Sandbox limits:
+#    - https://support.linuxacademy.com/hc/en-us/articles/360025783132-What-can-I-do-with-the-Cloud-Playground-AWS-Sandbox-
+#    - Associated Message: Error creating Transfer Server: AccessDeniedException: User: arn:aws:iam::****:user/cloud_user is not
+#      authorized to perform: transfer:CreateServer on resource: arn:aws:transfer:us-east-1:****:server/* with an explicit deny
+
+# If you are using your own AWS environment (not LinuxAcademy), you can re-enable this file by removing the `.disabled` suffix
 
 output "sftp_server_summary" { value = module.sftp_server.summary }
 module "sftp_server" {
