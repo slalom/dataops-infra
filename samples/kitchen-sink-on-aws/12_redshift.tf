@@ -1,11 +1,10 @@
-# NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
-
 locals {
   redshift_admin_user = "rsadmin"
-  redshift_admin_pass = "asdfAS12"
+  redshift_admin_pass = "AsdF1234"
+  redshift_db_name    = "redshift_db"
 }
 
-output "summary" { value = module.redshift.summary }
+output "redshift_summary" { value = module.redshift.summary }
 module "redshift" {
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source        = "../../catalog/aws/redshift"
@@ -16,17 +15,14 @@ module "redshift" {
   # CONFIGURE HERE:
 
   identifier          = "redshift-db"
-  jdbc_port           = 5439
-  jdbc_cidr           = ["0.0.0.0/0"] # Allow query connections from any IP
+  database_name       = local.redshift_db_name
   admin_username      = local.redshift_admin_user
   admin_password      = local.redshift_admin_pass
-  skip_final_snapshot = true # allows simple DB deletion for POC environments
+  skip_final_snapshot = true # allows immediate DB deletion for POC environments
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  mysql_version       = "5.7.26"
-  instance_class      = "db.t2.micro"
-  storage_size_in_gb  = 20
+  jdbc_cidr = ["0.0.0.0/0"] # Allow query connections from any IP
 
   */
 

@@ -41,14 +41,18 @@ module "tap_to_rs" {
       s3_key_prefix         = "data/raw/{tap}/{table}/v1/"
       s3_bucket             = module.data_lake.s3_data_bucket
       port                  = split(":", module.redshift.endpoint)[1]
-      dbname                = "redshift_db"
+      dbname                = local.redshift_db_name
       default_target_schema = "public"
 
-      host     = split(":", module.redshift.endpoint)[0]
+      host = split(":", module.redshift.endpoint)[0]
+
+      # Note: In 'real' production use cases, these should be stored in AWS Secrets
+      # Manager and passed as part of the 'secrets' collection:
       user     = local.redshift_admin_user
       password = local.redshift_admin_pass
     }
     secrets = {
+      # Creds to allow saving files to S3 prior to ingesting into Redsfhit:
       aws_access_key_id     = local.aws_credentials_file
       aws_secret_access_key = local.aws_credentials_file
     }

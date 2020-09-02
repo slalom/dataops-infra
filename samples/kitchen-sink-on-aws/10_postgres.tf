@@ -1,7 +1,5 @@
-# NOTE: Requires AWS policy 'AmazonRDSFullAccess' on the terraform account
-
-output "summary" { value = module.rds_postgres.summary }
-module "rds_postgres" {
+output "postgres_summary" { value = module.postgres.summary }
+module "postgres" {
   source = "../../catalog/aws/postgres"
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=main"
   name_prefix   = local.name_prefix
@@ -24,7 +22,3 @@ module "rds_postgres" {
 
   */
 }
-
-#OPTIONAL CONFIGURATION HERE
-
-
