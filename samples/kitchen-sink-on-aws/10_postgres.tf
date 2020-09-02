@@ -1,4 +1,4 @@
-output "postgres_summary" { value = module.postgres_summary.summary }
+output "postgres_summary" { value = module.postgres.summary }
 module "postgres" {
   source = "../../catalog/aws/postgres"
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=main"

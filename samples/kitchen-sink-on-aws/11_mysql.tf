@@ -1,4 +1,4 @@
-output "mysql_summary" { value = module.mysql_summary.summary }
+output "mysql_summary" { value = module.mysql.summary }
 module "mysql" {
   source = "../../catalog/aws/mysql"
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/mysql?ref=main"
