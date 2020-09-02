@@ -7,7 +7,8 @@ nav_order: 1
 ---
 # QuickStart: Deploying Infrastructure Catalog Samples
 
-_This guide is targeted towards developers and contributors. We will start with the
+_This guide is targeted towards developers, contributors, or anyone who wants to test
+out the various modules which available. We will start with the
 `data-lake-on-aws` sample, and from there then you can deploy any additional examples
 using the same procedure._
 
@@ -23,7 +24,7 @@ using the same procedure._
 
 1. Create a new file in the `.secrets` folder called `aws-credentials` and enter your AWS
    credentials.
-   - _For reference, copy the example file from `.template/aws-credentials.template`._
+   - _For reference, refer to the sample file: `.secrets/aws-credentials.template`._
 2. In left-hand navigation pane in VS Code, expand the `samples` folder select the
    `data-lake-on-aws` sample.
 3. Right-click the desired sample folder (`data-lake-on-aws` in this example) and select
@@ -40,18 +41,28 @@ using the same procedure._
 3. Run `terraform destroy` to tear down the environment.
    - When prompted, type 'y' to confirm.
 
-## Running additional samples
+## Running the 'kitchen sink' sample
+
+> Remember: you are deploying _**real infrastructure**_ into the cloud, and those resources
+> cost real money. Be sure to run `terraform destroy` to cleanup your AWS environment after
+> running each deployment.
 
 _Once you have successfully deployed the data lake sample, you are ready to deploy more
 advanced infrastructures._
 
-### Before you move forward
+1. In left-hand navigation pane in VS Code, expand the `samples` folder select the
+   `kitcken-sink-on-aws` sample.
+2. Right-click the `kitcken-sink-on-aws` sample folder and select
+   "Open in Integrated Terminal".
+3. Run `terraform init` to download needed providers and then run `terraform apply` to
+   deploy the infrastructure.
 
-> Remember: you are deploying real infrastructure into the cloud, and those resources
-> cost real money. Be sure to run `terraform destroy` to cleanup your AWS environment after
-> running each deployment.
+If needed, perform any necessary debugging until you succeed in running `terraform apply`
+without errors. At any time, especially if you get stuck on a particular module, you may still be
+able to run `terraform output`, which will give you an overview of the components which have
+deployed successfully.
 
-### Browsing the available samples
+### Browsing the deployed infrastructure
 
 Navigate to the [samples directory](https://github.com/slalom-ggp/dataops-infra/tree/main/samples)
 and select from one of the samples. Each sample folder has a README file which explains
