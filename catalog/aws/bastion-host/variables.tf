@@ -31,8 +31,8 @@ Optional. The name of an available prebuilt bastion image to use for the contain
 - Currently only `dataopstk/bastion:python-3.8` is supported (default).
 - Ignored if `custom_base_image` is provided.
 EOF
-  type    = string
-  default = "dataopstk/bastion:python-3.8"
+  type        = string
+  default     = "dataopstk/bastion:python-3.8"
 }
 variable "custom_base_image" {
   description = <<EOF
@@ -42,8 +42,8 @@ Optional. The name of a custom base image, on top of which to build a custom bas
 - This option has additional workstation requirements, including Golang, Docker, and special docker
   config as defined here: https://infra.dataops.tk/components/aws/ecr-image/#prereqs
 EOF
-  type    = string
-  default = null
+  type        = string
+  default     = null
 }
 variable "settings" {
   description = "Map of environment variables."

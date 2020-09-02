@@ -15,7 +15,7 @@ module "remote_dev_box" {
   settings = {
     SAMPLE_ENV_VAR = "foo"
   }
-  secrets = {}
+  secrets    = {}
   depends_on = [module.dev_box_ssh_key_pair]
 }
 

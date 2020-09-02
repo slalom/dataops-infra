@@ -44,7 +44,7 @@ module "tap_to_rs" {
       dbname                = local.redshift_db_name
       default_target_schema = "public"
 
-      host     = split(":", module.redshift.endpoint)[0]
+      host = split(":", module.redshift.endpoint)[0]
 
       # Note: In 'real' production use cases, these should be stored in AWS Secrets
       # Manager and passed as part of the 'secrets' collection:

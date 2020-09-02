@@ -6,8 +6,8 @@ module "glue_job1" {
   resource_tags = local.resource_tags
 
   s3_script_bucket_name      = module.data_lake.s3_metadata_bucket
-  s3_source_bucket_name      = module.data_lake.s3_data_bucket  # Source data location
-  s3_destination_bucket_name = module.data_lake.s3_data_bucket  # Output data location
+  s3_source_bucket_name      = module.data_lake.s3_data_bucket # Source data location
+  s3_destination_bucket_name = module.data_lake.s3_data_bucket # Output data location
   local_script_path          = "${path.module}/glue/hello/hello_world.py"
   s3_script_path             = "${path.module}/glue/hello/hello_world.py"
   with_spark                 = true
@@ -21,8 +21,8 @@ module "glue_job2" {
   resource_tags = local.resource_tags
 
   s3_script_bucket_name      = module.data_lake.s3_metadata_bucket
-  s3_source_bucket_name      = module.data_lake.s3_data_bucket  # Source data location
-  s3_destination_bucket_name = module.data_lake.s3_data_bucket  # Output data location
+  s3_source_bucket_name      = module.data_lake.s3_data_bucket # Source data location
+  s3_destination_bucket_name = module.data_lake.s3_data_bucket # Output data location
   local_script_path          = "${path.module}/glue/transform/transform.py"
   s3_script_path             = "${path.module}/glue/transform/transform.py"
   with_spark                 = true

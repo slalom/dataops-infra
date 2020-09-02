@@ -86,6 +86,6 @@ For additional information, see:
 
 - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_job#default_arguments
 EOF
-  type    = map(string)
-  default = null
+  type        = map(string)
+  default     = null
 }
