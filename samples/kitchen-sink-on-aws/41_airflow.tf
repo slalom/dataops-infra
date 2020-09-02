@@ -1,14 +1,13 @@
 output "airflow_summary" { value = module.airflow.summary }
 module "airflow" {
+  source = "../../catalog/aws/airflow"
   # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/airflow?ref=main"
-  source        = "../../catalog/aws/airflow"
   name_prefix   = local.name_prefix
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
   # CONFIGURE HERE:
 
-  # container_image = "slalomggp/dataops:test-project-latest-dev"
   container_image   = "puckel/docker-airflow"
   container_command = "webserver"
   environment_vars = {
@@ -19,7 +18,7 @@ module "airflow" {
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
-  admin_password    = "asdf1234" # pragma: allowlist secret
+  admin_password    = "asdf1234"
   aws_region        = local.aws_region
 
   */

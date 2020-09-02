@@ -1,0 +1,59 @@
+# Note: The required SFTP layer 'AWS Transfer Service' is not currently supported by LinuxAcademy AWS Sandbox limits:
+# https://support.linuxacademy.com/hc/en-us/articles/360025783132-What-can-I-do-with-the-Cloud-Playground-AWS-Sandbox-
+#
+# Associated Error: Error creating Transfer Server: AccessDeniedException: User: arn:aws:iam::****:user/cloud_user is not
+# authorized to perform: transfer:CreateServer on resource: arn:aws:transfer:us-east-1:****:server/* with an explicit deny
+
+output "sftp_server_summary" { value = module.sftp_server.summary }
+module "sftp_server" {
+  source = "../../catalog/aws/sftp"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/sftp?ref=main"
+  name_prefix   = local.name_prefix
+  resource_tags = local.resource_tags
+  environment   = module.env.environment
+}
+
+output "sftp_users_summary" { value = module.sftp_users.summary }
+module "sftp_users" {
+  source = "../../catalog/aws/sftp-users"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/sftp-users?ref=main"
+  name_prefix   = local.name_prefix
+  resource_tags = local.resource_tags
+  environment   = module.env.environment
+
+  sftp_server_id = module.sftp_server.sftp_server_id
+  data_bucket    = module.data_lake.s3_data_bucket
+  secrets_folder = local.secrets_folder
+
+  users = [
+    "test_admin",
+    "test_user"
+  ]
+  user_groups = {
+    test_admin = ["global_writers"]
+    test_user  = ["global_readers"]
+  }
+  group_permissions = {
+    global_readers = [
+      {
+        path  = ""
+        read  = true
+        write = false
+      }
+    ]
+    global_writers = [
+      {
+        path  = ""
+        read  = true
+        write = true
+      }
+    ]
+    uploaders = [
+      {
+        path  = "data/uploads/"
+        read  = true
+        write = true
+      }
+    ]
+  }
+}

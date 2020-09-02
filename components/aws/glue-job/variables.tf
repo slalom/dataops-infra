@@ -68,3 +68,24 @@ variable "max_instances" {
   type        = number
   default     = 10
 }
+
+variable "default_arguments" {
+  description = <<EOF
+The map of default arguments for this job. You can specify arguments here that your own job-execution script
+consumes, as well as arguments that AWS Glue itself consumes.
+
+Example:
+
+```hcl
+default_arguments = {
+  "--DATA_BUCKET_NAME" = "my-bucket"
+}
+```
+
+For additional information, see:
+
+- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_job#default_arguments
+EOF
+  type    = map(string)
+  default = null
+}
