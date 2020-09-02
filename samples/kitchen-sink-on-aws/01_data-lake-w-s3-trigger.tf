@@ -15,4 +15,12 @@ module "data_lake" {
       environment_secrets = {}
     }
   }
+
+  /*
+
+  Optionally, you can override the pip installer used to package the lambda zip:
+
+  pip_path = "pip3"
+
+  */
 }
