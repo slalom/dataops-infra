@@ -1,6 +1,7 @@
 locals {
   cloudwatch_errors_query    = <<EOF
-filter @message like /level=CRITICAL/
+filter @message like /(level=CRITICAL|Error|Exception)/
+| filter @message not like /WARNING/
 | fields @timestamp, @message
 | sort @timestamp desc
 | limit 20
