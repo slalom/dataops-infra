@@ -43,12 +43,26 @@ using the same procedure._
 
 ## Running the 'kitchen sink' sample
 
-> Remember: you are deploying _**real infrastructure**_ into the cloud, and those resources
-> cost real money. Be sure to run `terraform destroy` to cleanup your AWS environment after
-> running each deployment.
-
 _Once you have successfully deployed the data lake sample, you are ready to deploy more
 advanced infrastructures._
+
+> **Before you go further:**
+>
+> Some of these components require python, and now's a good time to pause and double
+> check that python and it's installer "pip" are both working as expected. In any command line try
+> running `pip3 --version`. If that doesn't work, you can try `pip --version`. If that doesn't work,
+> please revisit the [datapops quickstart](https://docs.dataops.tk/setup) and follow the
+> instructions to re-install python (after first uninstalling any versions you already have
+> installed). Similarly, you can double check that terraform is installed by running
+> `terraform --version` on any command line prompt.
+>
+> And one more thing.... remember that you are deploying _**real infrastructure**_ into the cloud,
+> an those resources cost _**real money**_. Be sure to run `terraform destroy` to cleanup your AWS
+> environment after running each deployment. Alternatively, you can also use an environment like
+> [LinuxAcademy Playground](https://playground.linuxacademy.com) which automically cleans up your
+> resources after a specified time limit.
+
+Once you are ready to go:
 
 1. In left-hand navigation pane in VS Code, expand the `samples` folder select the
    `kitcken-sink-on-aws` sample.

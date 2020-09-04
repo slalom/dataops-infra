@@ -24,4 +24,12 @@ module "triggered_lambda" {
       s3_path       = "*"
     }
   ]
+
+  /*
+
+  Optionally, you can override the pip installer used to package the lambda zip:
+
+  pip_path = "pip3"
+
+  */
 }

@@ -1,12 +1,12 @@
 {
     "terminal.integrated.env.osx": {
-        "AWS_SHARED_CREDENTIALS_PATH": "${workspaceFolder}/.secrets"
+        "AWS_SHARED_CREDENTIALS_FILE": "${workspaceFolder}/.secrets"
     },
     "terminal.integrated.env.linux": {
-        "AWS_SHARED_CREDENTIALS_PATH": "${workspaceFolder}/.secrets"
+        "AWS_SHARED_CREDENTIALS_FILE": "${workspaceFolder}/.secrets"
     },
     "terminal.integrated.env.windows": {
-        "AWS_SHARED_CREDENTIALS_PATH": "${workspaceFolder}\\.secrets"
+        "AWS_SHARED_CREDENTIALS_FILE": "${workspaceFolder}\\.secrets"
     },
     "editor.formatOnSave": true,
     "workbench.colorTheme": "Amethyst Dark",
