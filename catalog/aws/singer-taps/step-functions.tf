@@ -33,7 +33,12 @@ module "step_function" {
           }
         },
         "Overrides":{
-          "ContainerOverrides":[]
+          "ContainerOverrides":[
+            {
+              "Name":"DefaultContainer",
+              "Environment.$" = ${true == true ? "{}" : "$.env"}
+            }
+          ]
         }
       },
       "Retry": [
