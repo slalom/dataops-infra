@@ -1,3 +1,10 @@
+# NOTE: This module requires the python `pip` tool in order
+# to package and deploy the lambda function code. If you have
+# difficulty deploying this module, you can try modifying the
+# optional 'pip_path' variable, or simply change the file
+# extention to to '.tf.disabled' in order to disable just this
+# module.
+
 module "triggered_lambda" {
   source        = "../../components/aws/lambda-python"
   name_prefix   = local.name_prefix

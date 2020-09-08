@@ -6,15 +6,15 @@ module "data_lake" {
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
-  lambda_python_source = "${path.module}/lambda/fn_lambda_logger"
-  s3_triggers = {
-    "LambdaLogger1" = {
-      triggering_path     = "*"
-      lambda_handler      = "main.lambda_handler"
-      environment_vars    = {}
-      environment_secrets = {}
-    }
-  }
+  # lambda_python_source = "${path.module}/lambda/fn_lambda_logger"
+  # s3_triggers = {
+  #   "LambdaLogger1" = {
+  #     triggering_path     = "*"
+  #     lambda_handler      = "main.lambda_handler"
+  #     environment_vars    = {}
+  #     environment_secrets = {}
+  #   }
+  # }
 
   /*
 
