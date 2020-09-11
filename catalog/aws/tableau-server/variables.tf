@@ -40,7 +40,8 @@ ports). If not set, this will default to allow incoming connections from
 any IP address (['0.0.0.0/0']). In general, this should be omitted unless the
 site has a VPN or other internal list of IP whitelist ranges.
 EOF
-  default     = ["0.0.0.0/0"]
+#default of 0.0.0.0/0 was pushed to the app_cidr security group which is flagged by the itsec and removed
+  default     = []
 }
 variable "ec2_instance_type" {
   description = "Optional. Overrides the Tableau Server instance type."
