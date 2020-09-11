@@ -1,5 +1,5 @@
 # Config file (comment this line to modify the template):
-samples/infra-config.yml
+**/samples/infra-config.yml
 build
 !build/README.md
 
@@ -25,6 +25,7 @@ plan.out.json
 !**/.secrets/*.md
 !**/.secrets/*sample*
 !**/.secrets/*template*
+.vscode/**
 
 # .tfstate files
 *.tfstate
@@ -41,3 +42,4 @@ __pycache__
 .mypy_cache
 **.pyc
 .gitignore
+samples/serverless-data-pipeline
