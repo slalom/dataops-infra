@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS DBT
+nav_exclude: false
+---
 # AWS DBT
 
-`/catalog/aws/dbt`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/dbt?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/dbt)
 
 ## Overview
 

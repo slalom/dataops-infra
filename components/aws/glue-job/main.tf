@@ -21,4 +21,6 @@ resource "aws_glue_job" "glue_job" {
     name           = var.with_spark ? null : "pythonshell"
     python_version = 3
   }
+
+  default_arguments = var.default_arguments
 }

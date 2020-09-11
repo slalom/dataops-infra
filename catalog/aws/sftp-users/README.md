@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS SFTP-Users
+nav_exclude: false
+---
 # AWS SFTP-Users
 
-`/catalog/aws/sftp-users`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/sftp-users?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/sftp-users)
 
 ## Overview
 

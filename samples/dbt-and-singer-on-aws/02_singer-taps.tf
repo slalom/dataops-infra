@@ -13,18 +13,16 @@ module "singer_taps_on_aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
-  local_metadata_path     = local.tap_metadata_path
-  data_lake_type          = "S3"
-  data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
-  data_lake_storage_path  = "s3://${module.data_lake_on_aws.s3_data_bucket}/data/raw"
-  scheduled_timezone      = "PST"
-  scheduled_sync_times    = ["0600"]
+  local_metadata_path = local.tap_metadata_path
+  scheduled_timezone  = "PST"
 
   taps = [
     {
       # For 'id', enter any plugin name or alias from the index below, excluding the `tap-` prefix:
       # https://github.com/slalom-ggp/dataops-tools/blob/main/containers/singer/singer_index.yml
-      id = "covid-19"
+      id       = "covid-19"
+      name     = "covid-19"
+      schedule = ["0600"]
       settings = {
         start_date = "2020-02-28T00:00:00Z"
       }
@@ -37,6 +35,12 @@ module "singer_taps_on_aws" {
     }
   ]
 
+  # Please specify `data_lake_*` variables or `target` but not both.
+
+  data_lake_type          = "S3"
+  data_lake_metadata_path = "s3://${module.data_lake_on_aws.s3_metadata_bucket}"
+  data_lake_storage_path  = "s3://${module.data_lake_on_aws.s3_data_bucket}/data/raw"
+
   # Target is not needed when data_lake_storage_path is provided:
   # target = {
   #   id = "s3-csv"
@@ -45,8 +49,8 @@ module "singer_taps_on_aws" {
   #     s3_key_prefix = "data/raw/{tap}/{table}/{version}/"
   #   }
   #   secrets = {
-  #     aws_access_key_id     = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_access_key_id"
-  #     aws_secret_access_key = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_secret_access_key"
+  #     aws_access_key_id     = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_access_key_id"      # pragma: allowlist secret
+  #     aws_secret_access_key = "../.secrets/aws-secrets-manager-secrets.yml:S3_CSV_aws_secret_access_key"  # pragma: allowlist secret
   #   }
   # }
 

@@ -25,8 +25,6 @@ module "ecs_dev_box_cluster" {
 }
 
 module "ecs_dev_box_task" {
-  # TODO: use for_each to run jobs in parallel when the feature launches
-  # for_each            = var.taps
   source              = "../../../components/aws/ecs-task"
   name_prefix         = local.name_prefix
   environment         = var.environment
@@ -47,8 +45,6 @@ module "ecs_dev_box_task" {
 }
 
 module "ecr_image" {
-  # TODO: use for_each to run jobs in parallel when the feature launches
-  # for_each            = var.taps
   source               = "../../../components/aws/ecr-image"
   name_prefix          = local.name_prefix
   environment          = var.environment

@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS ECS-Task
+nav_exclude: false
+---
 # AWS ECS-Task
 
-`/components/aws/ecs-task`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecs-task?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecs-task)
 
 ## Overview
 
@@ -148,14 +152,6 @@ Description: The amount of RAM to dedicate to the container.
 Type: `string`
 
 Default: `"8"`
-
-### ecs\_launch\_type
-
-Description: 'FARGATE' or 'Standard'
-
-Type: `string`
-
-Default: `"FARGATE"`
 
 ### environment\_secrets
 

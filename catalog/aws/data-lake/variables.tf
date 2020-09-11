@@ -64,3 +64,7 @@ EOF
   )
   default = {}
 }
+variable "pip_path" {
+  description = "The path to a local pip executable, used to package python dependencies for any lambda triggers."
+  default     = "pip3"
+}

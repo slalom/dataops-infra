@@ -67,11 +67,6 @@ variable "ecs_cluster_name" {
   description = "The name of the ECS Cluster to use."
   type        = string
 }
-variable "ecs_launch_type" {
-  # TODO: Replace with a condition on `use_fargate`
-  description = "'FARGATE' or 'Standard'"
-  default     = "FARGATE"
-}
 variable "environment_secrets" {
   type        = map(string)
   default     = {}

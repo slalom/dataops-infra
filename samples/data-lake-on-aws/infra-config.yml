@@ -1,0 +1,4 @@
+aws_region: us-east-1
+project_shortname: DataLakeTest01
+resource_tags:
+  admin_contact: my.admin@sample.com

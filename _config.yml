@@ -1,1 +1,90 @@
-theme: jekyll-theme-slate
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+title: Slalom DataOps
+url: https://infra.dataops.tk
+# logo: /docs/resources/slalom-logo.png
+
+description: >-
+  The Slalom Infrastructure Catalog is a set of reusable DataOps frameworks and components,
+  which can be instantly deployed to any environment.
+baseurl: "" # the subpath of your site, e.g. /blog
+# twitter_username: jekyllrb
+# github_username: jekyll
+# email: your-email@example.com
+
+# Build settings
+markdown: kramdown
+remote_theme: pmarsceill/just-the-docs
+aux_links:
+  "Infrastructure Catalog on GitHub":
+    - "//github.com/slalom-ggp/dataops-infra"
+readme_index:
+  enabled: true
+  remove_originals: true
+  with_frontmatter: true
+
+collections:
+  my_collection:
+    output: true
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      has_children: false
+      layout: default
+      has_toc: false
+      # nav_exclude: true
+  - scope:
+      path: catalog
+    values:
+      # grandparent: Infrastructure Catalog
+      # parent: { module_type }
+      # title: { module_title }
+      has_children: false
+      has_toc: false
+      nav_order: 1
+      nav_exclude: false
+  - scope:
+      path: catalog/aws
+    values:
+      parent: Infrastructure Catalog
+      # title: { module_title }
+      has_children: false
+      has_toc: false
+      nav_order: 1
+
+plugins:
+  - jekyll-readme-index
+  - jekyll-seo-tag
+  # - jekyll-feed
+
+# Exclude from processing.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - catalog/aws/*/.secrets
+  - catalog/*/*/USAGE.md
+  - catalog/*/*/NOTES.md
+  - components/*/*/USAGE.md
+  - components/*/*/NOTES.md
+  - autodocs
+  - samples

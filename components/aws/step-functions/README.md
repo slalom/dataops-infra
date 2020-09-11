@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS Step-Functions
+nav_exclude: false
+---
 # AWS Step-Functions
 
-`/components/aws/step-functions`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/step-functions?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/step-functions)
 
 ## Overview
 
@@ -19,8 +23,6 @@ No requirements.
 The following providers are used by this module:
 
 - random
-
-- null
 
 - aws
 

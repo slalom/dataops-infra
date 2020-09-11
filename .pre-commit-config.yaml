@@ -1,0 +1,7 @@
+repos:
+  - repo: https://github.com/yelp/detect-secrets
+    rev: v0.14.2
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline", "--exclude-lines", "asdf1234", "--exclude-lines", "Asdf1234"]
+        exclude: .*/tests/.*

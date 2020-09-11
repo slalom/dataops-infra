@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS RDS
+nav_exclude: false
+---
 # AWS RDS
 
-`/components/aws/rds`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/rds?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/rds)
 
 ## Overview
 
