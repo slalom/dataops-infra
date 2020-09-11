@@ -1,3 +1,9 @@
+---
+title: Contributing
+has_children: false
+nav_order: 10
+nav_exclude: false
+---
 # Contributing Guide
 
 1. [Feature Requests](#feature-requests)
@@ -94,3 +100,8 @@ In addition to custom variables, each AWS catalog and component module should su
 
 * There is no expectation that modules should be fully generic or meet every use case.
 * Opinionated and purpose-driven approaches are preferred versus trying to build modules that are one-size-fits-all.
+
+## Preventing Security Leaks
+
+Please read the [Secrets Guide](./secrets.md) for instructions on how to properly manage secrets
+and prevent accidentally compromising sensitive information.

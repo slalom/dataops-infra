@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Airflow
+nav_exclude: false
+---
 # AWS Airflow
 
-`/catalog/aws/airflow`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/airflow?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/airflow)
 
 ## Overview
 

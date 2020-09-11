@@ -1,4 +1,9 @@
-
+---
+title: Infrastructure Catalog
+has_children: true
+nav_order: 3
+nav_exclude: false
+---
 # DataOps Infrastructure Catalog
 
 The Infrastructure Catalog contains ready-to-deploy terraform modules for a variety of production data project use cases and POCs. For information about the technical building blocks used in these modules, please see the catalog [components index](../components/README.md).
@@ -215,7 +220,7 @@ provides an SFTP interface on top of existing S3 storage resources.
 
 #### Overview
 
-The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) ELT platform. For more information, see [singer.io](https://singer.io)
+The Singer Taps platform is the open source stack which powers the [Stitcher](https://www.stitcher.com) EL platform. For more information, see [singer.io](https://singer.io)
 
 
 #### Documentation

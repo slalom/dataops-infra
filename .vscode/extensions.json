@@ -1,5 +1,8 @@
 {
     "recommendations": [
-        "alexkrechik.cucumberautocomplete"
+        "alexkrechik.cucumberautocomplete", // For Gherkin-based Terraform-Compliance Tests
+        "hashicorp.terraform", // Terraform support, syntax highlighting, linting, etc.
+        "bierner.markdown-preview-github-styles", // Github-styled markdown preview
+        "davidanson.vscode-markdownlint", // Markdown linting
     ]
 }

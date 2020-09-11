@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Catalog
+title: AWS Data-Lake
+nav_exclude: false
+---
 # AWS Data-Lake
 
-`/catalog/aws/data-lake`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/data-lake?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/catalog/aws/data-lake)
 
 ## Overview
 

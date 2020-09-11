@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS ECR-Image
+nav_exclude: false
+---
 # AWS ECR-Image
 
-`/components/aws/ecr-image`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecr-image?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ecr-image)
 
 ## Overview
 
@@ -74,14 +78,6 @@ Type: `string`
 ## Optional Inputs
 
 The following input variables are optional (have default values):
-
-### is\_disabled
-
-Description: Switch for disabling ECR image and push.
-
-Type: `bool`
-
-Default: `false`
 
 ### build\_args
 

@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS Glue-Job
+nav_exclude: false
+---
 # AWS Glue-Job
 
-`/components/aws/glue-job`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/glue-job?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/glue-job)
 
 ## Overview
 

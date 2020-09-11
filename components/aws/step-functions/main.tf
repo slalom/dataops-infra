@@ -10,16 +10,6 @@ locals {
   is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
 }
 
-resource "null_resource" "delay" {
-  provisioner "local-exec" {
-    command     = "sleep 60"
-    interpreter = local.is_windows ? ["PowerShell", "-Command"] : []
-  }
-  triggers = {
-    "states_exec_role" = aws_iam_role.step_functions_role.arn
-  }
-}
-
 resource "aws_sfn_state_machine" "state_machine" {
   name = "${lower(var.name_prefix)}state-machine"
   tags = var.resource_tags
@@ -27,5 +17,5 @@ resource "aws_sfn_state_machine" "state_machine" {
   definition = var.state_machine_definition
   role_arn   = aws_iam_role.step_functions_role.arn
 
-  depends_on = [null_resource.delay]
+  depends_on = [aws_iam_role.step_functions_role]
 }
