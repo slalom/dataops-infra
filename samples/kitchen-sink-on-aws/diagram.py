@@ -14,22 +14,17 @@ from diagrams.aws import network
 from diagrams.aws import storage
 from diagrams.aws import security
 from diagrams.generic.blank import Blank
-from diagrams import generic
 
-from diagrams.onprem.analytics import Singer, Dbt, Tableau
+from diagrams.onprem.analytics import Singer, Tableau
 from diagrams.onprem.database import MySQL, PostgreSQL
 from diagrams.onprem.workflow import Airflow
-from diagrams.saas.analytics import Snowflake
 
-from diagrams.generic.device import Mobile, Tablet
 from diagrams.onprem.client import User, Users
 
 from diagrams.onprem.iac import Terraform
 
 from diagrams.aws.integration import Eventbridge
 
-from diagrams.onprem.compute import Server
-from diagrams.onprem.container import Docker
 from diagrams.onprem.network import Internet
 from diagrams.aws.migration import TransferForSftp
 from diagrams.aws.analytics import Glue
