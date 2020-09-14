@@ -41,7 +41,7 @@ graph_attr = {
 }
 
 with Diagram(
-    "Kitchen Sink Lab",
+    "'Kitchen Sink' Sample on AWS",
     show=False,
     filename="diagram",
     graph_attr=graph_attr,
