@@ -10,7 +10,11 @@ has_children: false
 
 Catalog documentation is available from the [Infrastructure Catalog Index](catalog/README.md).
 
-## Contributions Guide
+## Getting Started
+
+For a quick tutorial, check the [Getting Started Guides](docs/getting_started/README.md).
+
+## Contributor's Guide
 
 For information on how to request enhancements, submit bug reports, or contribute code, please see the [Contributing Guide](docs/CONTRIBUTING.md).
 
