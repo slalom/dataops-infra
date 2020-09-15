@@ -76,8 +76,8 @@ Once you are ready to go:
      without errors. At any time, especially if you get stuck on a particular module, you may still be
      able to run `terraform output`, which will give you an overview of the components which have
      deployed successfully.
-4. Your deployed infrastructure should look similar to the below.
-   [![Diagram](../../samples/kitchen-sink-on-aws/diagram.png)](../../samples/kitchen-sink-on-aws/diagram.png)
+4. Your deployed infrastructure should look similar to the below:
+   [![Diagram](https://github.com/slalom-ggp/dataops-infra/raw/main/samples/kitchen-sink-on-aws/diagram.png)](https://github.com/slalom-ggp/dataops-infra/raw/main/samples/kitchen-sink-on-aws/diagram.png)
 5. **Important:** Once you are done, run `terraform destroy` to destroy the infrastructure which
    you have deployed.
 
