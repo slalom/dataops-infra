@@ -21,14 +21,16 @@ module "tap_to_rs" {
   taps = [ # Learn more and browse taps at: https://www.singer.io
     {
       id       = local.tap_id
+      name     = local.tap_id
       schedule = ["1000", "1400"]
       settings = {
         start_date = "2019-01-01T00:00:00Z" # How far back to backfill
+        base       = "USD"
       }
       secrets = {
         # Map the name of the secret to the file containing the key:
-        api_token  = local.tap_config_file
-        user_agent = local.tap_config_file
+        # api_token  = local.tap_config_file
+        # user_agent = local.tap_config_file
       }
     }
   ]
@@ -39,14 +41,18 @@ module "tap_to_rs" {
       s3_key_prefix         = "data/raw/{tap}/{table}/v1/"
       s3_bucket             = module.data_lake.s3_data_bucket
       port                  = split(":", module.redshift.endpoint)[1]
-      dbname                = "redshift_db"
+      dbname                = local.redshift_db_name
       default_target_schema = "public"
 
-      host     = split(":", module.redshift.endpoint)[0]
+      host = split(":", module.redshift.endpoint)[0]
+
+      # Note: In 'real' production use cases, these should be stored in AWS Secrets
+      # Manager and passed as part of the 'secrets' collection:
       user     = local.redshift_admin_user
       password = local.redshift_admin_pass
     }
     secrets = {
+      # Creds to allow saving files to S3 prior to ingesting into Redsfhit:
       aws_access_key_id     = local.aws_credentials_file
       aws_secret_access_key = local.aws_credentials_file
     }

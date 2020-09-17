@@ -33,6 +33,10 @@ variable "skip_final_snapshot" {
   description = "If true, will allow terraform to destroy the RDS cluster without performing a final backup."
   default     = false
 }
+variable "database_name" {
+  description = "The name of the initial Redshift database to be created."
+  default     = "redshift_db"
+}
 variable "admin_username" {
   description = "Optional (default='rsadmin'). The initial admin username."
   type        = string

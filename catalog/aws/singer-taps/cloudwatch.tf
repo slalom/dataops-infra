@@ -1,6 +1,7 @@
 locals {
   cloudwatch_errors_query    = <<EOF
-filter @message like /level=CRITICAL/
+filter @message like /(level=CRITICAL|Error|Exception)/
+| filter @message not like /WARNING/
 | fields @timestamp, @message
 | sort @timestamp desc
 | limit 20
@@ -20,8 +21,8 @@ EOF
 }
 
 resource "aws_cloudwatch_dashboard" "main" {
-  count          = length(var.taps)
-  dashboard_name = "${var.taps[count.index].id}-to-${local.target.id}-v${var.pipeline_version_number}-dashboard--${var.name_prefix}-Tap"
+  count          = length(local.taps_specs)
+  dashboard_name = "${local.taps_specs[count.index].name}${count.index}-to-${local.target.id}-v${var.pipeline_version_number}-${var.name_prefix}-TapDashboard"
   dashboard_body = <<EOF
 {
   "periodOverride": "auto",
@@ -35,7 +36,7 @@ resource "aws_cloudwatch_dashboard" "main" {
       "properties": {
         "markdown": "${
   replace(replace(replace(<<EOF
-## Data Pipeline (${var.taps[count.index].id}-to-${local.target.id})
+## Data Pipeline (${local.taps_specs[count.index].name}-to-${local.target.id})
 
 Additional Actions:
 
@@ -122,7 +123,7 @@ EOF
         "query": "SOURCE '${module.ecs_tap_sync_task[count.index].cloudwatch_log_group_name}' | ${
   replace(replace(replace(<<EOF
 filter @message like /sync of table/
-| parse @message "sync of table '*' from '${var.taps[count.index].id}'" as tablename
+| parse @message "sync of table '*' from '${local.taps_specs[count.index].name}'" as tablename
 | parse @message " (* elapsed)" as elapsed
 | fields @message
 | sort tablename desc, @timestamp desc

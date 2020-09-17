@@ -4,7 +4,7 @@ output "summary" { value = module.rds_mysql.summary }
 module "rds_mysql" {
   # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/mysql?ref=main"
   source        = "../../catalog/aws/mysql"
-  name_prefix   = "${local.project_shortname}-"
+  name_prefix   = local.name_prefix
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
@@ -12,8 +12,8 @@ module "rds_mysql" {
 
   identifier          = "rds-db"
   admin_username      = "mysqladmin"
-  admin_password      = "asdfASDF12"
-  skip_final_snapshot = true # allows simple DB deletion for POC environments
+  admin_password      = "asdf1234"
+  skip_final_snapshot = true # allows immediate DB deletion for POC environments
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 

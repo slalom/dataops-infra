@@ -145,7 +145,7 @@ resource "aws_instance" "ec2_instances" {
     aws_security_group.ec2_sg_admin_ports[0].id,
     aws_security_group.ec2_sg_allow_all_outbound[0].id,
     aws_security_group.ec2_sg_app_ports[0].id
-    ], length(var.cluster_ports) == 0 && var.num_instances > 1 ? [] : [
+    ], length(var.cluster_ports) == 0 || var.num_instances == 1 ? [] : [
     aws_security_group.ecs_cluster_traffic[0].id
   ]])
   root_block_device {

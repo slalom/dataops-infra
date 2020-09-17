@@ -117,18 +117,6 @@ EOF
 EOF
 }
 
-module "ecr_image" {
-  source               = "../../../components/aws/ecr-image"
-  name_prefix          = var.name_prefix
-  environment          = var.environment
-  resource_tags        = var.resource_tags
-  aws_credentials_file = var.aws_credentials_file
-
-  repository_name   = var.byo_model_repo_name
-  source_image_path = var.byo_model_source_image_path
-  tag               = var.byo_model_ecr_tag_name
-}
-
 module "postgres" {
   source        = "../../../catalog/aws/postgres"
   name_prefix   = var.name_prefix
@@ -146,6 +134,7 @@ module "postgres" {
 }
 
 resource "local_file" "step_function_def" {
+  # This local json file provides an artifact to debug in case of any json parsing errors.
   filename = "${path.root}/.terraform/tmp/step-function-def.json"
   content  = <<EOF
 {
