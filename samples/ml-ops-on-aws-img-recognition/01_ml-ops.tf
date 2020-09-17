@@ -85,6 +85,3 @@ module "ml-ops" {
 output "summary" {
   value = module.ml-ops.summary
 }
-
-
-
