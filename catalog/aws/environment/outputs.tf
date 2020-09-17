@@ -9,7 +9,10 @@ Environment summary:
   AWS Region:      ${var.aws_region}
   Private Subnets: ${join(",", module.vpc.private_subnets)}
   Public Subnets:  ${join(",", module.vpc.public_subnets)}
-  User Switch Cmd: ${coalesce(try(local.aws_user_switch_cmd, "n/a (error)"), "n/a")}
+  User Switch Command:
+   - Linux/Mac:     export AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}
+   - Windows (cmd): SET AWS_SHARED_CREDENTIALS_FILE=${local.aws_credentials_file}
+   - Windows (PS):  $Env:AWS_SHARED_CREDENTIALS_FILE = "${local.aws_credentials_file}"
 
 EOF
 }

@@ -1,10 +1,20 @@
-# Infrastructure Catalog for Slalom DataOps
+---
+layout: default
+title: Introduction
+nav_order: 1
+has_children: false
+---
+# Slalom DataOps Infrastructure Catalog
 
 ## Catalog Documentation
 
 Catalog documentation is available from the [Infrastructure Catalog Index](catalog/README.md).
 
-## Contributions Guide
+## Getting Started
+
+For a quick tutorial, check the [Getting Started Guides](docs/getting_started/README.md).
+
+## Contributor's Guide
 
 For information on how to request enhancements, submit bug reports, or contribute code, please see the [Contributing Guide](docs/CONTRIBUTING.md).
 
@@ -12,7 +22,7 @@ For information on how to request enhancements, submit bug reports, or contribut
 
 ### Workstation Setup
 
-1. Follow the steps in [Windows Development QuickStart](https://docs.dataops.tk/setup/windows.html) or [Mac Development Quistart](https://docs.dataops.tk/setup/mac.html), which will automatically install all of the following required tools: Terraform, Docker, VS Code, Python 3, and Git.
+1. Follow the steps in [Windows Development QuickStart](https://docs.dataops.tk/setup/windows.html) or [Mac Development QuickStart](https://docs.dataops.tk/setup/mac.html), which will automatically install all of the following required tools: Terraform, Docker, VS Code, Python 3, and Git.
 2. Clone this repo to your local machine.
 
 ### Deploying from the Infrastructure Catalog

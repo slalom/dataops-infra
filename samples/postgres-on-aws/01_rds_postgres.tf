@@ -2,18 +2,18 @@
 
 output "summary" { value = module.rds_postgres.summary }
 module "rds_postgres" {
-  # source    = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=main"
-  source        = "../../catalog/aws/postgres"
-  name_prefix   = "${local.project_shortname}-"
+  source = "../../catalog/aws/postgres"
+  # source      = "git::https://github.com/slalom-ggp/dataops-infra.git//catalog/aws/postgres?ref=main"
+  name_prefix   = local.name_prefix
   environment   = module.env.environment
   resource_tags = local.resource_tags
 
   # CONFIGURE HERE:
 
-  identifier          = "rds-postgres-db"
+  identifier          = "postgres-db"
   admin_username      = "postgresadmin"
-  admin_password      = "asdfASDF12"
-  skip_final_snapshot = true
+  admin_password      = "asdf1234"
+  skip_final_snapshot = true # allows immediate DB deletion for POC environments
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 

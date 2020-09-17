@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS Glue-Crawler
+nav_exclude: false
+---
 # AWS Glue-Crawler
 
-`/components/aws/glue-crawler`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/glue-crawler?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/glue-crawler)
 
 ## Overview
 

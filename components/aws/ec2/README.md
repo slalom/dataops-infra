@@ -1,7 +1,11 @@
-
+---
+parent: Infrastructure Components
+title: AWS EC2
+nav_exclude: false
+---
 # AWS EC2
 
-`/components/aws/ec2`
+[`source = "git::https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ec2?ref=main"`](https://github.com/slalom-ggp/dataops-infra/tree/main/components/aws/ec2)
 
 ## Overview
 
@@ -17,9 +21,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
+
+- aws
 
 ## Required Inputs
 
