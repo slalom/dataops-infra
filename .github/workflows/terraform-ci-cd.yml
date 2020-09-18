@@ -61,6 +61,7 @@ jobs:
           - dbt-and-singer-on-aws
           - kitchen-sink-on-aws
           - ml-ops-on-aws
+          - ml-ops-on-aws-img-recognition
           - mysql-on-aws
           - postgres-on-aws
           - redshift-on-aws

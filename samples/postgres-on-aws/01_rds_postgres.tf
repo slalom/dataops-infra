@@ -18,7 +18,7 @@ module "rds_postgres" {
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
 
   postgres_version    = "11.5"
-  instance_class      = "db.t2.micro"
+  instance_class      = "db.t3.micro"
   jdbc_port           = 5432
   storage_size_in_gb  = 20
 
