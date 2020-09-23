@@ -32,6 +32,7 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
 
 resource "aws_iam_policy" "group_s3_permission" {
   for_each = var.group_permissions
+  name     = "${var.name_prefix}${each.key}-sftps3access"
   policy = <<POLICY
 {
   "Version": "2012-10-17",

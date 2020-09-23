@@ -39,6 +39,7 @@ EOF
 
 resource "aws_iam_policy" "group_s3_permission" {
   for_each = var.group_permissions
+  name     = "${var.name_prefix}${each.key}-s3access"
   policy = <<POLICY
 {
   "Version": "2012-10-17",

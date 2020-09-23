@@ -171,6 +171,7 @@ resource "aws_iam_role_policy_attachment" "permitted_s3_buckets_policy_attachmen
 }
 
 resource "aws_iam_policy" "allow_kms_decrypt" {
+  name   = "${var.name_prefix}ecs_task-kms_decryption"
   policy = <<EOF
 {
   "Id": "AllowsKmsKeyAccess",
