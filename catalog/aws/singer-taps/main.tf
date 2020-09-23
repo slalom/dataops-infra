@@ -96,11 +96,11 @@ module "ecs_tap_sync_task" {
   environment_secrets = merge(
     {
       for k, v in local.taps_specs[count.index].secrets :
-      "${local.tap_env_prefix[count.index]}${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.tap_env_prefix[count.index]}${k}" => length(split(":", v)) > 1 ? v : "${v}:${k}"
     },
     {
       for k, v in local.target.secrets :
-      "${local.target_env_prefix}${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.target_env_prefix}${k}" => length(split(":", v)) > 1 ? v : "${v}:${k}"
     }
   )
   schedules = [

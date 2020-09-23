@@ -17,7 +17,7 @@ Singer Taps Summary:
  - Run sync via State Machine:
     ${join("\n   - ", [
   for sf in module.step_function :
-  "aws stepfunctions start-execution --state-machine-arn ${sf.state_machine_arn}"
+  "aws stepfunctions start-execution --state-machine-arn ${sf.state_machine_arn} --region ${var.environment.aws_region}"
 ])}
 
 EOF

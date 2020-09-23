@@ -16,10 +16,10 @@ resource "random_id" "suffix" { byte_length = 2 }
 locals {
   secrets_names = toset(keys(var.secrets_map))
   existing_secrets_ids_map = {
-    # filter existing map for secrets already stored in AWS secrets manager
+    # filter existing map for secrets already stored in AWS Secrets Manager or AWS SSM
     for secret_name, location in var.secrets_map :
     secret_name => location
-    if replace(secret_name, ":secretsmanager:", "") != secret_name
+    if replace(location, "arn:aws:", "") != secret_name
   }
   new_yaml_secrets_map = {
     # raw secrets from JSON or YAML which have not yet been stored in AWS secrets manager
@@ -52,22 +52,25 @@ locals {
     ), ".json", ""), ".yml", ""), ".yaml", "") == lower(location)
   }
   new_secrets_map = merge(local.new_yaml_secrets_map, local.new_aws_creds_secrets_map)
-  merged_secrets_map = merge(
-    local.existing_secrets_ids_map, {
-      for created_name in keys(local.new_secrets_map) :
-      created_name => aws_secretsmanager_secret.secrets[created_name].id
-    }
-  )
 }
 
 resource "aws_secretsmanager_secret" "secrets" {
-  for_each   = toset(keys(local.new_secrets_map))
+  for_each   = var.use_parameter_store ? toset([]) : toset(keys(local.new_secrets_map))
   name       = "${var.name_prefix}${each.key}-${random_id.suffix.dec}"
   kms_key_id = var.kms_key_id
 }
 
 resource "aws_secretsmanager_secret_version" "secrets_value" {
-  for_each      = local.new_secrets_map
+  for_each      = var.use_parameter_store ? {} : local.new_secrets_map
   secret_id     = aws_secretsmanager_secret.secrets[each.key].id
   secret_string = each.value
+}
+
+resource "aws_ssm_parameter" "secrets" {
+  for_each    = var.use_parameter_store == false ? {} : local.new_secrets_map
+  name        = "${var.name_prefix}${random_id.suffix.dec}/${each.key}"
+  description = "Stored using Terraform"
+  type        = "SecureString"
+  value       = each.value
+  tags        = var.resource_tags
 }
