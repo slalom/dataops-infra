@@ -186,7 +186,7 @@ resource "aws_iam_policy" "allow_kms_decrypt" {
         "kms:GenerateDataKey*",
         "kms:DescribeKey"
       ],
-      "Resource": "arn:aws:kms:*::alias/*"
+      "Resource": "*"
     },
     {
       "Sid": "listKeys",
