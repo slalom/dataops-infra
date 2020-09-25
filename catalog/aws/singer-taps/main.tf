@@ -66,7 +66,7 @@ module "ecs_cluster" {
 module "ecs_tap_sync_task" {
   count               = length(local.taps_specs)
   source              = "../../../components/aws/ecs-task"
-  name_prefix         = "${local.name_prefix}sync-"
+  name_prefix         = "${local.name_prefix}task${count.index}-"
   environment         = var.environment
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
