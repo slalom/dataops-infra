@@ -58,15 +58,15 @@ variable "access_tier" {
 }
 
 variable "enable_https_traffic_only" {
-   description = "Boolean flag which forces HTTPS if enabled."
-   type        = bool
-   default     = true
+  description = "Boolean flag which forces HTTPS if enabled."
+  type        = bool
+  default     = true
 }
 
 variable "allow_blob_public_access" {
-   description = "Allow or disallow public access to all Blobs or Containers in the Storage Account."
-   type        = bool
-   default     = false
+  description = "Allow or disallow public access to all Blobs or Containers in the Storage Account."
+  type        = bool
+  default     = false
 }
 
 variable "is_hns_enabled" {

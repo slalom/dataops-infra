@@ -21,8 +21,8 @@ locals {
   aws_region        = local.config["aws_region"]
   name_prefix       = "${local.project_shortname}-"
   #added for non-default credentials profiles
-  aws_profile       = local.config["profile"]
-  resource_tags     = merge(local.config["resource_tags"], { project = local.project_shortname })
+  aws_profile   = local.config["profile"]
+  resource_tags = merge(local.config["resource_tags"], { project = local.project_shortname })
 }
 
 provider "aws" {
@@ -30,7 +30,7 @@ provider "aws" {
   region                  = local.aws_region
   shared_credentials_file = local.aws_credentials_file
   #using the profile name from the local variables
-  profile                 = local.aws_profile
+  profile = local.aws_profile
 }
 
 output "env_summary" { value = module.env.summary }

@@ -38,5 +38,5 @@ module "rg" {
   resource_tags  = local.resource_tags
 
   # CONFIGURE HERE:
-  resource_group_name  = "test"
+  resource_group_name = "test"
 }
