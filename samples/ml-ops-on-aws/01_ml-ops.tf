@@ -9,8 +9,13 @@ module "ml-ops" {
   aws_credentials_file = local.aws_credentials_file
 
   # ADD OR MODIFY CONFIGURATION HERE:
+  job_name                   = "employee-attrition"
+  data_drift_ml_problem_type = "Classification"
+  input_data_content_type    = "csv"
 
-  job_name = "employee-attrition"
+  byo_model_repo_name         = "employee-attrition"
+  byo_model_source_image_path = "source/containers/ml-ops-byo-xgboost"
+
 
   tuning_objective              = "Maximize"
   tuning_metric                 = "accuracy"
@@ -23,6 +28,12 @@ module "ml-ops" {
   training_job_instance_type  = "ml.m4.xlarge"
   training_job_instance_count = 1
   training_job_storage_in_gb  = 30
+
+  train_key = "input_data/train/train.csv"
+  test_key  = "input_data/test/score.csv"
+  #validate_key = "input_data/validate/"
+
+  enable_predictive_db = true
 
   static_hyperparameters = {
     kfold_splits = "5"
@@ -70,6 +81,7 @@ module "ml-ops" {
       }
     ]
   }
+  glue_transform_script = "source/scripts/transform.py"
 
   /* OPTIONAL - CHANGE PATHS BELOW:
 
@@ -78,8 +90,7 @@ module "ml-ops" {
   train_local_path  = "source/data/train.csv"
   score_local_path  = "source/score/score.csv"
 
-  script_path = "source/scripts/transform.py"
-  whl_path    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
+  glue_dependency_package    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
 
   /* OPTIONALLY, COPY-PASTE ADDITIONAL SETTINGS FROM BELOW:
@@ -87,7 +98,7 @@ module "ml-ops" {
   # specifying built_in_model_image means that 'bring-your-own' model is not required and the ECR image not created
 
   built_in_model_image        = "811284229777.dkr.ecr.us-east-1.amazonaws.com/xgboost:latest"
-  byo_model_image_source_path = "source/containers/ml-ops-byo-xgboost"
+  byo_model_source_image_path = "source/containers/ml-ops-byo-xgboost"
   byo_model_image_name        = "byo-xgboost"
   byo_model_image_tag         = "latest"
 

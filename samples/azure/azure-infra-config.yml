@@ -1,0 +1,5 @@
+azure_location: East US 2
+project_shortname: DataOpsInfra
+subscription_id: 41f6dfc3-d8a4-4f3f-87c8-46e52a49f8ab
+resource_tags:
+  admin_contact: my.admin@sample.com

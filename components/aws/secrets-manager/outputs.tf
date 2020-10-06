@@ -1,3 +1,12 @@
+locals {
+  merged_secrets_map = merge(
+    local.existing_secrets_ids_map, {
+      for created_name in keys(local.new_secrets_map) :
+      created_name => var.use_parameter_store ? aws_ssm_parameter.secrets[created_name].id : aws_secretsmanager_secret.secrets[created_name].id
+    }
+  )
+}
+
 output "summary" {
   description = "Summary of resources created by this module."
   value = <<EOF

@@ -13,7 +13,7 @@ module "lambda_functions" {
     QueryTrainingStatus = {
       description = "Queries the SageMaker training job and return the results."
       handler     = "query_training_status.lambda_handler"
-      environment = { "metadata_store_name" = "${aws_s3_bucket.metadata_store.id}" }
+      environment = { "metadata_store_name" = "${aws_s3_bucket.ml_bucket[0].id}" }
       secrets     = {}
     }
     ExtractModelPath = {
@@ -25,6 +25,36 @@ module "lambda_functions" {
     CheckEndpointExists = {
       description = "Queries if endpoint exists to determine create or update job."
       handler     = "check_endpoint_exists.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    CloudWatchAlarm = {
+      description = "Send developers an email alarm when the model is overfitting."
+      handler     = "clodwatch_alarm.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    LoadPredDataDB = {
+      description = "Load prediction outputs csv file to a selected database."
+      handler     = "load_predoutput_db.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    DataDriftMonitor = {
+      description = "Monitor data drift on input data."
+      handler     = "data_drift_monitor.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ModelPerformanceMonitor = {
+      description = "Monitor model performance for any degradation issues."
+      handler     = "model_performance_monitor.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ProblemType = {
+      description = "Determine the type of machine learning problem."
+      handler     = "determine_prob_type.lambda_handler"
       environment = {}
       secrets     = {}
     }
@@ -43,6 +73,18 @@ module "lambda_functions" {
     RunGlueCrawler = {
       description = "Runs Glue Crawler to create table of batch transformation output for Athena."
       handler     = "run_glue_crawler.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    SNSAlert = {
+      description = "Send an SNS email to users notifying data drift being detected."
+      handler     = "sns_alert.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    StopTraining = {
+      description = "Stop the model training."
+      handler     = "stop_training.lambda_handler"
       environment = {}
       secrets     = {}
     }
@@ -71,7 +113,7 @@ module "triggered_lambda" {
   s3_triggers = [
     {
       function_name = "ExecuteStateMachine"
-      s3_bucket     = var.feature_store_override != null ? data.aws_s3_bucket.feature_store_override[0].id : aws_s3_bucket.feature_store[0].id
+      s3_bucket     = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
       s3_path       = "data/train/*"
     }
   ]
@@ -95,6 +137,7 @@ resource "aws_iam_policy" "lambda_policy" {
                 "sagemaker:GetSearchSuggestions",
                 "sagemaker:Search",
                 "s3:*",
+                "rds-db:connect",
                 "glue:StartCrawler"
             ],
             "Resource": "*"

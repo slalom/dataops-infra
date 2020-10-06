@@ -97,11 +97,11 @@ Default: `"rds-postgres-db"`
 
 ### instance\_class
 
-Description: Enter the desired node type. The default and cheapest option is 'db.t2.micro' @ ~$0.017/hr, or ~$120/mo (https://aws.amazon.com/rds/mysql/pricing/ )
+Description: Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )
 
 Type: `string`
 
-Default: `"db.t2.micro"`
+Default: `"db.t3.micro"`
 
 ### jdbc\_port
 

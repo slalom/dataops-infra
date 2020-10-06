@@ -9,7 +9,7 @@
 #### Terraform Config:
 
 1. If additional python dependencies are needed, list these in [TK] config variable. These will be packaged into python wheels (`.whl` files) and uploaded to S3 automatically.
-2. Configure terraform variable `script_path` with location of Glue transform code.
+2. Configure terraform variable `glue_transform_script` with location of Glue transform code.
 
 #### Terraform Deploy:
 

@@ -9,7 +9,7 @@ nav_order: 1
 
 _This guide is targeted towards developers, contributors, or anyone who wants to test
 out the various modules which available. We will start with the
-`data-lake-on-aws` sample, and from there then you can deploy any additional examples
+[Data Lake Sample](https://github.com/slalom-ggp/dataops-infra/tree/main/samples/data-lake-on-aws) on AWS, and from there then you can deploy any additional examples
 using the same procedure._
 
 ## Setup workstation and clone the repo
@@ -44,7 +44,9 @@ using the same procedure._
 ## Running the 'kitchen sink' sample
 
 _Once you have successfully deployed the data lake sample, you are ready to deploy more
-advanced infrastructures._
+advanced infrastructures. This section will walk you through deploying the
+[Kitchen Sink Sample](https://github.com/slalom-ggp/dataops-infra/tree/main/samples/kitchen-sink-on-aws)
+on AWS._
 
 > **Before you go further:**
 >
@@ -70,11 +72,14 @@ Once you are ready to go:
    "Open in Integrated Terminal".
 3. Run `terraform init` to download needed providers and then run `terraform apply` to
    deploy the infrastructure.
-
-If needed, perform any necessary debugging until you succeed in running `terraform apply`
-without errors. At any time, especially if you get stuck on a particular module, you may still be
-able to run `terraform output`, which will give you an overview of the components which have
-deployed successfully.
+   - If needed, perform any necessary debugging until you succeed in running `terraform apply`
+     without errors. At any time, especially if you get stuck on a particular module, you may still be
+     able to run `terraform output`, which will give you an overview of the components which have
+     deployed successfully.
+4. Your deployed infrastructure should look similar to the below:
+   [![Diagram](https://github.com/slalom-ggp/dataops-infra/raw/main/samples/kitchen-sink-on-aws/diagram.png)](https://github.com/slalom-ggp/dataops-infra/raw/main/samples/kitchen-sink-on-aws/diagram.png)
+5. **Important:** Once you are done, run `terraform destroy` to destroy the infrastructure which
+   you have deployed.
 
 ### Browsing the deployed infrastructure
 

@@ -66,7 +66,7 @@ module "ecs_cluster" {
 module "ecs_tap_sync_task" {
   count               = length(local.taps_specs)
   source              = "../../../components/aws/ecs-task"
-  name_prefix         = "${local.name_prefix}sync-"
+  name_prefix         = "${local.name_prefix}task${count.index}-"
   environment         = var.environment
   resource_tags       = var.resource_tags
   ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
@@ -96,11 +96,11 @@ module "ecs_tap_sync_task" {
   environment_secrets = merge(
     {
       for k, v in local.taps_specs[count.index].secrets :
-      "${local.tap_env_prefix[count.index]}${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.tap_env_prefix[count.index]}${k}" => length(split(":", v)) > 1 ? v : "${v}:${k}"
     },
     {
       for k, v in local.target.secrets :
-      "${local.target_env_prefix}${k}" => length(split(v, ":")) > 1 ? v : "${v}:${k}"
+      "${local.target_env_prefix}${k}" => length(split(":", v)) > 1 ? v : "${v}:${k}"
     }
   )
   schedules = [

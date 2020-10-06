@@ -39,6 +39,7 @@ EOF
 
 resource "aws_iam_policy" "group_s3_permission" {
   for_each = var.group_permissions
+  name     = "${var.name_prefix}${each.key}-s3access"
   policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -51,11 +52,11 @@ resource "aws_iam_policy" "group_s3_permission" {
       "Resource": ["arn:aws:s3:::*"]
     },
     {
-      "Sid": "AllowRootAndHomeListingOfCompanyBucket",
+      "Sid": "AllowListingRoot",
       "Action": ["s3:ListBucket"],
       "Effect": "Allow",
       "Resource": ["arn:aws:s3:::${var.data_bucket}"],
-      "Condition":{"StringEquals":{"s3:prefix":["","home/","data/"],"s3:delimiter":["/"]}}
+      "Condition":{"StringEquals":{"s3:prefix":[""],"s3:delimiter":["/"]}}
     },
     {
       "Sid": "AllowListingOfUserFolder",
@@ -93,9 +94,19 @@ resource "aws_iam_policy" "group_s3_permission" {
       "Resource": [
         "arn:aws:s3:::${var.data_bucket}${grant.path}*"
       ]
+    },
+    {
+      "Sid": "AllowS3ListingON${replace(replace(replace(grant.path, "/", ""), "-", ""), "_", "")}",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::${var.data_bucket}"],
+      ${grant.path == "" ? "" : <<EOF
+"Condition":{"StringEquals":{"s3:prefix":["${grant.path}"],"s3:delimiter":["/"]}},
+EOF
+  }
+      "Effect": "Allow"
     }
 EOF2
-  ]
+]
 )}
   ]
 }

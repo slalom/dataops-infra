@@ -63,7 +63,7 @@ Type: `map(string)`
 
 ### container\_image
 
-Description: Examples: 'python:3.8', [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[repo\_name]
+Description: Examples: 'python:3.8', [aws\_account\_id].dkr.ecr.[aws\_region].amazonaws.com/[byo\_model\_repo\_name]
 
 Type: `string`
 
