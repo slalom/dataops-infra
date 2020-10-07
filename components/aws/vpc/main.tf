@@ -73,7 +73,7 @@ resource "aws_subnet" "private_subnets" {
 }
 
 resource "aws_internet_gateway" "my_igw" {
-  count  = var.disabled ? 0 : 1
+  count  = (var.enable_intenet_gateway && (var.disabled == false)) ? 1 : 0
   vpc_id = aws_vpc.my_vpc[0].id
   tags = merge(
     var.resource_tags,
@@ -115,7 +115,7 @@ resource "aws_route_table_association" "public_rt_assoc" {
 }
 
 resource "aws_route" "igw_route" {
-  count                  = var.disabled ? 0 : 1
+  count                  = (var.enable_intenet_gateway && (var.disabled == false)) ? 1 : 0
   route_table_id         = aws_route_table.public_rt[0].id
   gateway_id             = aws_internet_gateway.my_igw[0].id
   destination_cidr_block = "0.0.0.0/0"
