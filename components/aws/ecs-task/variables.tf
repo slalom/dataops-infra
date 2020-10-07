@@ -32,12 +32,22 @@ variable "always_on" {
 variable "admin_ports" {
   description = "A list of admin ports (to be governed by `admin_cidr`)."
   type        = list(string)
-  default     = ["8080"]
+  default     = []
+}
+variable "admin_cidr" {
+  description = "Optional. The range of IP addresses which should be able to access admin ports. Defaults to the local user's current IP."
+  type        = list
+  default     = []
 }
 variable "app_ports" {
   description = "A list of app ports (will be governed by `app_cidr`)."
   type        = list(string)
-  default     = ["8080"]
+  default     = []
+}
+variable "app_cidr" {
+  description = "Optional. The range of IP addresses which should be able to access app ports. Defaults to the local user's current IP."
+  type        = list
+  default     = []
 }
 variable "container_command" {
   description = "Optional. Overrides 'command' for the image."

@@ -110,7 +110,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
       protocol    = "tcp"
       from_port   = ingress.value
       to_port     = ingress.value
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = var.app_cidr
     }
   }
   dynamic "ingress" {
@@ -119,7 +119,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
       protocol    = "tcp"
       from_port   = ingress.value
       to_port     = ingress.value
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = var.admin_cidr
     }
   }
   egress {

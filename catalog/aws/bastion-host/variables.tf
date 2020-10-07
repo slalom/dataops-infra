@@ -90,3 +90,8 @@ variable "aws_credentials_file" {
   description = "Path to the AWS credentials file, used to ensure that the correct credentials are used during upload of the ECR image."
   type        = string
 }
+variable "admin_cidr" {
+  description = "List of source IP CIDR blocks which should be allowed to connect to the bastion host."
+  type        = string
+  default     = null
+}

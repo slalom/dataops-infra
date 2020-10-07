@@ -1,11 +1,13 @@
 /*
-* The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
-* or develop using the native cloud environment. Applicable use cases include:
+* The `bestion-host` catalog module deploys an ECS-backed container which can be used to remotely test
+* or develop using the native cloud environment.
 *
-* * Debugging network firewall and routing rules
-* * Debugging components which can only be run from whitelisted IP ranges
-* * Offloading heavy processing from the developer's local laptop
-* * Mitigating network relability issues when working from WiFi or home networks
+* Applicable use cases include:
+*
+* - Debugging network firewall and routing rules
+* - Debugging components which can only be run from whitelisted IP ranges
+* - Offloading heavy processing from the developer's local laptop
+* - Mitigating network relability issues when working from WiFi or home networks
 *
 */
 
@@ -40,8 +42,9 @@ module "ecs_bastion_task" {
     SSH_PUBLIC_KEY_BASE64 = local.ssh_public_key_base64
   })
   environment_secrets = var.secrets
-  app_ports           = ["22"]
+  app_ports           = []
   admin_ports         = ["22"]
+  admin_cidr          = var.admin_cidr
 }
 
 module "ecr_image" {
