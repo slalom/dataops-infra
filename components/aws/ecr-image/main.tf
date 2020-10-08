@@ -31,7 +31,7 @@ resource "null_resource" "push" {
 
   provisioner "local-exec" {
     command     = <<EOT
-docker build ${local.build_args_str} -t ${aws_ecr_repository.ecr_repo.name} ${var.source_image_path};
+docker build ${local.build_args_str} -t ${aws_ecr_repository.ecr_repo.name} ${abspath(var.source_image_path)};
 ${local.is_windows ? "$env:" : "export "}AWS_SHARED_CREDENTIALS_FILE="${abspath(var.aws_credentials_file)}";
 docker tag ${aws_ecr_repository.ecr_repo.name}:${var.tag} ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};
 docker push ${aws_ecr_repository.ecr_repo.repository_url}:${var.tag};

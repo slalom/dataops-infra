@@ -26,6 +26,8 @@ The following providers are used by this module:
 
 - aws
 
+- http
+
 - random
 
 - null
@@ -91,13 +93,15 @@ Description: A list of admin ports (to be governed by `admin_cidr`).
 
 Type: `list(string)`
 
-Default:
+Default: `[]`
 
-```json
-[
-  "8080"
-]
-```
+### admin\_cidr
+
+Description: Optional. The range of IP addresses which should be able to access admin ports. Defaults to the local user's current IP.
+
+Type: `list`
+
+Default: `[]`
 
 ### app\_ports
 
@@ -105,13 +109,15 @@ Description: A list of app ports (will be governed by `app_cidr`).
 
 Type: `list(string)`
 
-Default:
+Default: `[]`
 
-```json
-[
-  "8080"
-]
-```
+### app\_cidr
+
+Description: Optional. The range of IP addresses which should be able to access app ports. Defaults to the local user's current IP.
+
+Type: `list`
+
+Default: `[]`
 
 ### container\_command
 
@@ -229,6 +235,14 @@ require a NAT gateway.
 Type: `bool`
 
 Default: `false`
+
+### whitelist\_terraform\_ip
+
+Description: True to allow the terraform user to connect to the DB instance.
+
+Type: `bool`
+
+Default: `true`
 
 ## Outputs
 

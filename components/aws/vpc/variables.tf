@@ -26,8 +26,8 @@ variable "resource_tags" {
 ########################################
 
 variable "aws_region" {
-  description = "Optional. Overrides the AWS region, otherwise will use the AWS region provided from context."
-  default     = null
+  description = "Required. Specifies the AWS region."
+  type        = string
 }
 variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
@@ -55,4 +55,19 @@ If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets
 EOF
   type        = list(string)
   default     = null
+}
+variable "enable_internet_gateway" {
+  description = <<EOF
+Optional. Specifies if an Internet Gateway should be associated to the VPC. An Internet Gateway is required to receive
+any type of incoming traffic over the internet.
+
+Note:
+
+- Most modules also supportthe variables `admin_cidr` (associated with `admin_ports`)
+  and `app_cidr` (associated with `app_ports`).
+- The `admin_cidr` and `app_cidr` variables can be leveraged to limit internet traffic only
+  from specific sources.
+EOF
+  type        = bool
+  default     = true
 }

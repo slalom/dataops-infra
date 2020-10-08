@@ -108,6 +108,14 @@ map(
 
 Default: `{}`
 
+### pip\_path
+
+Description: The path to a local pip executable, used to package python dependencies for any lambda triggers.
+
+Type: `string`
+
+Default: `"pip3"`
+
 ## Outputs
 
 The following outputs are exported:

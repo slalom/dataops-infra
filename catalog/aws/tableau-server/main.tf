@@ -4,10 +4,6 @@
 *
 */
 
-
-data "aws_availability_zones" "az_list" {}
-data "aws_region" "current" {}
-
 locals {
   name_prefix = "${var.name_prefix}Tableau-"
   admin_cidr  = var.admin_cidr

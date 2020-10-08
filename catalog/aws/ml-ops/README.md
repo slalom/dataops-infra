@@ -26,11 +26,11 @@ The following providers are used by this module:
 
 - null
 
+- local
+
 - random
 
 - aws
-
-- local
 
 ## Required Inputs
 

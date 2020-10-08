@@ -55,3 +55,18 @@ EOF
   type        = list(string)
   default     = null
 }
+variable "enable_internet_gateway" {
+  description = <<EOF
+Optional. Specifies if an Internet Gateway should be associated to the VPC. An Internet Gateway is required to receive
+any type of incoming traffic over the internet.
+
+Note:
+
+- Most modules also supportthe variables `admin_cidr` (associated with `admin_ports`)
+  and `app_cidr` (associated with `app_ports`).
+- The `admin_cidr` and `app_cidr` variables can be leveraged to limit internet traffic only
+  from specific sources.
+EOF
+  type        = bool
+  default     = true
+}

@@ -28,11 +28,11 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
 
 - aws.region\_lookup
+
+- aws
 
 ## Required Inputs
 
@@ -49,6 +49,12 @@ Type: `string`
 Description: Standard `resource_tags` module input.
 
 Type: `map(string)`
+
+### aws\_region
+
+Description: Required. Specifies the AWS region.
+
+Type: `string`
 
 ## Optional Inputs
 
@@ -68,14 +74,6 @@ object({
     private_subnets = list(string)
   })
 ```
-
-Default: `null`
-
-### aws\_region
-
-Description: Optional. Overrides the AWS region, otherwise will use the AWS region provided from context.
-
-Type: `any`
 
 Default: `null`
 
@@ -120,6 +118,22 @@ If omitted, the VPC CIDR block will be split evenly into 4 equally-sized subnets
 Type: `list(string)`
 
 Default: `null`
+
+### enable\_internet\_gateway
+
+Description: Optional. Specifies if an Internet Gateway should be associated to the VPC. An Internet Gateway is required to receive
+any type of incoming traffic over the internet.
+
+Note:
+
+- Most modules also supportthe variables `admin_cidr` (associated with `admin_ports`)
+  and `app_cidr` (associated with `app_ports`).
+- The `admin_cidr` and `app_cidr` variables can be leveraged to limit internet traffic only
+  from specific sources.
+
+Type: `bool`
+
+Default: `true`
 
 ## Outputs
 

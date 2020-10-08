@@ -26,8 +26,6 @@ The following providers are used by this module:
 
 - aws
 
-- null
-
 ## Required Inputs
 
 The following input variables are required:

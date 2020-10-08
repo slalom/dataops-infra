@@ -18,11 +18,11 @@ module "data_lake_gen1" {
 }
 
 module "data_lake_gen2" {
-  source                   = "../../../components/azure/data-lake/gen-2"
-  count                    = var.data_lake_type == "Gen2" ? 1 : 0
-  name_prefix              = var.name_prefix
-  data_lake_name           = var.data_lake_name
-  data_lake_type           = var.data_lake_type
-  resource_tags            = var.resource_tags
-  storage_account_id       = var.storage_account_id
+  source             = "../../../components/azure/data-lake/gen-2"
+  count              = var.data_lake_type == "Gen2" ? 1 : 0
+  name_prefix        = var.name_prefix
+  data_lake_name     = var.data_lake_name
+  data_lake_type     = var.data_lake_type
+  resource_tags      = var.resource_tags
+  storage_account_id = var.storage_account_id
 }

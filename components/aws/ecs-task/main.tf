@@ -6,6 +6,11 @@
 * Use in combination with the `ECS-Cluster` component.
 */
 
+data "http" "icanhazip" {
+  count = var.whitelist_terraform_ip ? 1 : 0
+  url   = "http://ipv4.icanhazip.com"
+}
+
 data "aws_ecs_cluster" "ecs_cluster" {
   cluster_name = var.ecs_cluster_name
 }
@@ -35,6 +40,10 @@ locals {
   network_mode   = var.use_fargate ? "awsvpc" : "bridge"
   launch_type    = var.use_fargate ? "FARGATE" : "EC2"
   subnets        = var.use_private_subnet ? var.environment.private_subnets : var.environment.public_subnets
+
+  tf_admin_ip_cidr = var.whitelist_terraform_ip ? ["${chomp(data.http.icanhazip[0].body)}/32"] : []
+  admin_cidr       = flatten([coalesce(var.admin_cidr, []), local.tf_admin_ip_cidr])
+  app_cidr         = flatten([coalesce(var.app_cidr, []), local.tf_admin_ip_cidr])
 }
 
 module "secrets" {
@@ -61,7 +70,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
   tags                     = var.resource_tags
-  container_definitions    = <<DEFINITION
+  container_definitions = <<DEFINITION
 [
   {
     "name":       "${var.container_name}",
@@ -79,11 +88,14 @@ resource "aws_ecs_task_definition" "ecs_task" {
       }
     },
     "portMappings": [
+      ${join(",\n", [for p in flatten([coalesce(var.app_ports, []), coalesce(var.admin_ports, [])]) : <<EOF2
       {
-        "containerPort": ${var.app_ports[0]},
-        "hostPort":      ${var.app_ports[0]},
+        "containerPort": ${p},
+        "hostPort":      ${p},
         "protocol":      "tcp"
       }
+EOF2
+])}
     ],
     "environment": [
       ${local.container_env_vars_str}
@@ -110,7 +122,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
       protocol    = "tcp"
       from_port   = ingress.value
       to_port     = ingress.value
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = local.app_cidr
     }
   }
   dynamic "ingress" {
@@ -119,7 +131,7 @@ resource "aws_security_group" "ecs_tasks_sg" {
       protocol    = "tcp"
       from_port   = ingress.value
       to_port     = ingress.value
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = local.admin_cidr
     }
   }
   egress {

@@ -6,38 +6,38 @@ locals {
 
 output "summary" {
   description = "Summary of resources created by this module."
-  value       = <<EOF
+  value = <<EOF
 
 Storage Summary:
   - Container Name(s):
   ${"\t"}${
-    coalesce(join("\n\t",
-      [
-        for container_name in local.storage_container_names :
-        "${container_name}"
-      ]
-    ), "(none)")
+  coalesce(join("\n\t",
+    [
+      for container_name in local.storage_container_names :
+      "${container_name}"
+    ]
+  ), "(none)")
   }
 
   - Table Name(s):
   ${"\t"}${
-    coalesce(join("\n\t",
-      [
-        for table_name in local.table_storage_names :
-        "${table_name}"
-      ]
-    ), "(none)")
+  coalesce(join("\n\t",
+    [
+      for table_name in local.table_storage_names :
+      "${table_name}"
+    ]
+  ), "(none)")
   }
 
   - Queue Name(s):
   ${"\t"}${
-    coalesce(join("\n\t",
-      [
-        for queue_name in local.queue_storage_names :
-        "${queue_name}"
-      ]
-    ), "(none)")
-  }
+  coalesce(join("\n\t",
+    [
+      for queue_name in local.queue_storage_names :
+      "${queue_name}"
+    ]
+  ), "(none)")
+}
 
 
 EOF

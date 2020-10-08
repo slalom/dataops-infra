@@ -12,10 +12,10 @@ The Infrastructure Catalog contains ready-to-deploy terraform modules for a vari
 
 1. [AWS Catalog](#aws-catalog)
     - [AWS Airflow](#aws-airflow)
+    - [AWS Bastion-Host](#aws-bastion-host)
     - [AWS Data-Lake](#aws-data-lake)
     - [AWS Data-Lake-Users](#aws-data-lake-users)
     - [AWS DBT](#aws-dbt)
-    - [AWS Dev-Box](#aws-dev-box)
     - [AWS Environment](#aws-environment)
     - [AWS ML-Ops](#aws-ml-ops)
     - [AWS MySQL](#aws-mysql)
@@ -43,6 +43,27 @@ Airflow is an open source platform to programmatically author, schedule and moni
 #### Documentation
 
 - [AWS Airflow Readme](../catalog/aws/airflow/README.md)
+
+-------------------
+
+### AWS Bastion-Host
+
+#### Overview
+
+The `bastion-host` catalog module deploys an ECS-backed container which can be used to remotely test
+or develop using the native cloud environment.
+
+Applicable use cases include:
+
+- Debugging network firewall and routing rules
+- Debugging components which can only be run from whitelisted IP ranges
+- Offloading heavy processing from the developer's local laptop
+- Mitigating network relability issues when working from WiFi or home networks
+
+
+#### Documentation
+
+- [AWS Bastion-Host Readme](../catalog/aws/bastion-host/README.md)
 
 -------------------
 
@@ -89,25 +110,6 @@ DBT (Data Built Tool) is a CI/CD and DevOps-friendly platform for automating dat
 #### Documentation
 
 - [AWS DBT Readme](../catalog/aws/dbt/README.md)
-
--------------------
-
-### AWS Dev-Box
-
-#### Overview
-
-The `dev-box` catalog module deploys an ECS-backed container which can be used to remotely test
-or develop using the native cloud environment. Applicable use cases include:
-
-* Debugging network firewall and routing rules
-* Debugging components which can only be run from whitelisted IP ranges
-* Offloading heavy processing from the developer's local laptop
-* Mitigating network relability issues when working from WiFi or home networks
-
-
-#### Documentation
-
-- [AWS Dev-Box Readme](../catalog/aws/dev-box/README.md)
 
 -------------------
 

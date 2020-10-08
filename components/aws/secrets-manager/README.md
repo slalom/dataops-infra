@@ -75,11 +75,21 @@ The location can be:
 
   - ID of an existing Secrets Manager secret (`arn:aws:secretsmanager:...`)
 
+  - ID of an existing Systems Manager Parameter Store secret (`arn:aws:ssm:...`)
+
   - String with the local secrets file name and property names separated by `:` (`path/to/file.yml:my_key_name`)."
 
 Type: `map(string)`
 
 Default: `{}`
+
+### use\_parameter\_store
+
+Description: Optional. True to use AWS Systems Manager Parameter Store (free) instead of AWS Secrets Manager ($0.40 per secret per month).
+
+Type: `bool`
+
+Default: `true`
 
 ### kms\_key\_id
 
