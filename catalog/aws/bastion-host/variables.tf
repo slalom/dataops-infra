@@ -92,6 +92,6 @@ variable "aws_credentials_file" {
 }
 variable "admin_cidr" {
   description = "List of source IP CIDR blocks which should be allowed to connect to the bastion host."
-  type        = string
+  type        = list(string)
   default     = null
 }

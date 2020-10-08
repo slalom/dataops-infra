@@ -5,8 +5,6 @@
 
 # NOTE: Requires AWS policy 'AmazonRedshiftFullAccess' on the terraform account
 
-data "aws_region" "current" {}
-
 locals {
   name_prefix = "${var.name_prefix}-RS"
 }

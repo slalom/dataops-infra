@@ -67,6 +67,6 @@ Note:
 - The `admin_cidr` and `app_cidr` variables can be leveraged to limit internet traffic only
   from specific sources.
 EOF
-  type        = boolean
+  type        = bool
   default     = true
 }

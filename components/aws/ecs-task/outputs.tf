@@ -9,7 +9,7 @@ output "ecs_checklogs_cli" {
 }
 output "ecs_container_name" {
   description = "The name of the task's primary container."
-  value       = "${var.container_name}"
+  value       = var.container_name
 }
 output "ecs_task_execution_role" {
   description = "An IAM role which has access to execute the ECS Task."

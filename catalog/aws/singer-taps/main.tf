@@ -3,8 +3,6 @@
 *
 */
 
-data "aws_availability_zones" "az_list" {}
-
 # Timezone math:
 locals {
   tz_hour_offset = (

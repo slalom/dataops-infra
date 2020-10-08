@@ -26,8 +26,8 @@ variable "resource_tags" {
 ########################################
 
 variable "aws_region" {
-  description = "Optional. Overrides the AWS region, otherwise will use the AWS region provided from context."
-  default     = null
+  description = "Required. Specifies the AWS region."
+  type        = string
 }
 variable "disabled" {
   description = "As a workaround for unsupported 'count' feature in terraform modules, this switch can be used to disable the module entirely."
@@ -68,6 +68,6 @@ Note:
 - The `admin_cidr` and `app_cidr` variables can be leveraged to limit internet traffic only
   from specific sources.
 EOF
-  type        = boolean
+  type        = bool
   default     = true
 }

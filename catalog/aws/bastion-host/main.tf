@@ -11,8 +11,6 @@
 *
 */
 
-data "aws_availability_zones" "az_list" {}
-
 locals {
   name_prefix = "${var.name_prefix}devbox-"
   # container_command = ()

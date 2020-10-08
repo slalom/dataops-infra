@@ -142,3 +142,8 @@ EOF
   type        = bool
   default     = false
 }
+variable "whitelist_terraform_ip" {
+  description = "True to allow the terraform user to connect to the DB instance."
+  type        = bool
+  default     = true
+}
