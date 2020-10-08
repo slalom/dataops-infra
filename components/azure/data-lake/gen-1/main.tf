@@ -4,7 +4,7 @@
 */
 
 locals {
-  data_lake_create_flag  = var.data_lake_type == "Gen1" ? 1 : 0
+  data_lake_create_flag = var.data_lake_type == "Gen1" ? 1 : 0
 }
 
 resource "azurerm_data_lake_store" "data_lake_gen1" {
