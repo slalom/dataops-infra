@@ -18,9 +18,7 @@ No requirements.
 
 ## Providers
 
-The following providers are used by this module:
-
-- aws
+No provider.
 
 ## Required Inputs
 
@@ -72,6 +70,14 @@ Description: If true, will allow terraform to destroy the RDS cluster without pe
 Type: `bool`
 
 Default: `false`
+
+### database\_name
+
+Description: The name of the initial Redshift database to be created.
+
+Type: `string`
+
+Default: `"redshift_db"`
 
 ### admin\_username
 

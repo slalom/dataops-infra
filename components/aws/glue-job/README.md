@@ -115,6 +115,27 @@ Type: `number`
 
 Default: `10`
 
+### default\_arguments
+
+Description: The map of default arguments for this job. You can specify arguments here that your own job-execution script
+consumes, as well as arguments that AWS Glue itself consumes.
+
+Example:
+
+```hcl
+default_arguments = {
+  "--DATA_BUCKET_NAME" = "my-bucket"
+}
+```
+
+For additional information, see:
+
+- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_job#default_arguments
+
+Type: `map(string)`
+
+Default: `null`
+
 ## Outputs
 
 The following outputs are exported:

@@ -24,9 +24,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - random
+
+- aws
 
 ## Required Inputs
 
