@@ -1,5 +1,5 @@
 /*
-* The `bastion-host` catalog module deploys an ECS-backed container which can be used to remotely test
+* The `bastion-host` module deploys an ECS-backed container which can be used to remotely test
 * or develop using the native cloud environment.
 *
 * Applicable use cases include:
