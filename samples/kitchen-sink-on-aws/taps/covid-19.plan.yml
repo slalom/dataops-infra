@@ -1,0 +1,513 @@
+selected_tables:
+  c19_trk_us_daily:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - date
+      - states
+      - positive
+      - negative
+      - pos_neg
+      - pending
+      - hospitalized
+      - death
+      - total
+      - date_checked
+      - total_test_results
+      - death_increase
+      - hospitalized_increase
+      - negative_increase
+      - positive_increase
+      - total_test_results_increase
+  c19_trk_us_population_counties:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - state
+      - county
+      - state_name
+      - geo_id
+      - population
+      - pop_density
+  c19_trk_us_population_states:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - state
+      - state_name
+      - geo_id
+      - population
+      - pop_density
+  c19_trk_us_population_states_age_groups:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - state
+      - state_name
+      - geo_id
+      - population
+      - agegroup
+      - pct_pop
+  c19_trk_us_states_acs_health_insurance:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - geo_id
+      - state
+      - state_name
+      - acs_variable
+      - estimate
+      - margin_of_error
+      - label
+      - concept
+      - estimate_type
+      - coverage_type
+      - age_group
+      - labor_force
+      - employed
+  c19_trk_us_states_current:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - state
+      - positive
+      - positive_score
+      - negative_regular_score
+      - commercial_score
+      - grade
+      - score
+      - negative
+      - pending
+      - hospitalized
+      - death
+      - total
+      - last_update_et
+      - check_time_et
+      - total_test_results
+      - fips
+      - date_modified
+      - date_checked
+      - notes
+  c19_trk_us_states_daily:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - date
+      - state
+      - positive
+      - negative
+      - pending
+      - hospitalized
+      - death
+      - total
+      - date_checked
+      - total_test_results
+      - fips
+      - death_increase
+      - hospitalized_increase
+      - negative_increase
+      - positive_increase
+      - total_test_results_increase
+  c19_trk_us_states_info:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - state
+      - covid19_site_old
+      - covid19_site
+      - covid19_site_secondary
+      - twitter
+      - pui
+      - pum
+      - notes
+      - fips
+      - name
+  c19_trk_us_states_kff_hospital_beds:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - state
+      - state_name
+      - state_local_government
+      - non_profit
+      - for_profit
+      - total
+  eu_daily:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - country
+      - nuts_1
+      - nuts_2
+      - nuts_3
+      - lau
+      - cases
+      - cases_lower
+      - cases_upper
+      - population
+      - cases_100k_pop
+      - percent
+      - deaths
+      - recovered
+      - hospitalized
+      - intensive_care
+      - tests
+      - quarantine
+  eu_ecdc_daily:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - country
+      - cases
+      - deaths
+  italy_national_daily:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - date_of_notification
+      - country
+      - hospitalized_with_symptoms
+      - intensive_care
+      - total_hospitalized
+      - home_isolation
+      - total_currently_positive
+      - new_currently_positive
+      - discharged_recovered
+      - deaths
+      - total_cases
+      - tested
+      - note_it
+      - note_en
+  italy_provincial_daily:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - date_of_notification
+      - country
+      - region_code
+      - region
+      - province_code
+      - province
+      - province_abbr
+      - lat
+      - long
+      - total_cases
+      - note_it
+      - note_en
+  italy_regional_daily:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - date_of_notification
+      - country
+      - region_code
+      - region
+      - lat
+      - long
+      - hospitalized_with_symptoms
+      - intensive_care
+      - total_hospitalized
+      - home_isolation
+      - total_currently_positive
+      - new_currently_positive
+      - discharged_recovered
+      - deaths
+      - total_cases
+      - tested
+      - note_it
+      - note_en
+  jh_csse_daily:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - province_state
+      - province_state_cleansed
+      - country_region
+      - country_region_cleansed
+      - last_update
+      - confirmed
+      - deaths
+      - recovered
+      - latitude
+      - longitude
+      - active
+      - combined_key
+      - fips
+      - admin_area
+      - is_a_cruise
+  neherlab_case_counts:
+    primary_key:
+      - git_path
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_sha
+      - git_file_name
+      - location
+      - date
+      - datetime
+      - cases
+      - deaths
+      - hospitalized
+      - icu
+      - recovered
+  neherlab_country_codes:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - name
+      - alpha_2
+      - alpha_3
+      - country_code
+      - iso_3166_2
+      - region
+      - sub_region
+      - intermediate_region
+      - region_code
+      - sub_region_code
+      - intermediate_region_code
+  neherlab_icu_capacity:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - country
+      - acute_care
+      - acute_care_per_100k
+      - imcu
+      - icu
+      - critical_care
+      - critical_care_per_100k
+      - percent_of_total
+      - gdp
+  neherlab_population:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - name
+      - population
+      - country
+      - hospital_beds
+      - icu_beds
+      - suspected_cases_mar_1st
+      - imports_per_day
+      - hemisphere
+  nytimes_us_counties:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - county
+      - state
+      - state_code
+      - fips
+      - cases
+      - deaths
+  nytimes_us_states:
+    primary_key:
+      - __sdc_row_number
+    replication_key:
+      - git_last_modified
+    selected_columns:
+      - git_owner
+      - git_repository
+      - git_url
+      - git_html_url
+      - git_path
+      - git_sha
+      - git_file_name
+      - date
+      - datetime
+      - state
+      - state_code
+      - fips
+      - cases
+      - deaths
