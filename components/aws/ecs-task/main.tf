@@ -88,7 +88,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
       }
     },
     "portMappings": [
-      ${join(",\n", [for p in flatten([coalesce(var.app_ports, []), coalesce(var.admin_ports, [])]) : <<EOF2
+      ${join(",\n", [for p in distinct(flatten([coalesce(var.app_ports, []), coalesce(var.admin_ports, [])])) : <<EOF2
       {
         "containerPort": ${p},
         "hostPort":      ${p},

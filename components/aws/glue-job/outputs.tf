@@ -10,7 +10,7 @@ output "summary" {
 Glue ETL Job Summary:
 
   Job Name:    ${aws_glue_job.glue_job.id}
-  Run Command: aws glue start-job-run --job-name ${aws_glue_job.glue_job.id} --arguments="--S3_DATA_BUCKET=${var.s3_destination_bucket_name}"
+  Run Command: aws glue start-job-run --job-name ${aws_glue_job.glue_job.id} --arguments="--S3_DATA_BUCKET=${var.s3_destination_bucket_name}" --region ${var.environment.aws_region}
 
 EOF
 }

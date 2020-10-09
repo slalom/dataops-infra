@@ -6,11 +6,12 @@ resource "aws_glue_job" "glue_job" {
   name         = "${var.name_prefix}data-transformation"
   role_arn     = aws_iam_role.glue_job_role.arn
   tags         = var.resource_tags
-  glue_version = "1.0"
+  glue_version = "2.0"
   max_capacity = var.with_spark ? null : 1
 
   worker_type       = var.with_spark ? "Standard" : null
   number_of_workers = var.with_spark ? var.num_workers : null
+  max_retries       = 0
 
   command {
     script_location = (
@@ -22,5 +23,18 @@ resource "aws_glue_job" "glue_job" {
     python_version = 3
   }
 
-  default_arguments = var.default_arguments
+  default_arguments = merge(
+    var.default_arguments,
+    {
+      "--continuous-log-logGroup"          = aws_cloudwatch_log_group.glue_job_log.name
+      "--enable-continuous-cloudwatch-log" = "true"
+      "--enable-continuous-log-filter"     = "true"
+      "--enable-metrics"                   = ""
+    }
+  )
+}
+
+resource "aws_cloudwatch_log_group" "glue_job_log" {
+  name              = "${var.name_prefix}data-transformation"
+  retention_in_days = 30
 }

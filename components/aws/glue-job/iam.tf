@@ -34,25 +34,64 @@ resource "aws_iam_policy" "glue_job_policy" {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "ListObjectsInBucket",
+            "Sid": "ListS3ObjectsInBucket",
             "Effect": "Allow",
             "Action": [
                 "s3:ListBucket"
             ],
             "Resource": [
+                "*",
                 "arn:aws:s3:::${var.s3_script_bucket_name}",
                 "arn:aws:s3:::${var.s3_source_bucket_name}",
                 "arn:aws:s3:::${var.s3_destination_bucket_name}"
             ]
         },
         {
-            "Sid": "AllObjectActions",
+            "Sid": "AllS3ObjectActions",
             "Effect": "Allow",
             "Action": "s3:*Object",
             "Resource": [
+                "*",
                 "arn:aws:s3:::${var.s3_script_bucket_name}/*",
                 "arn:aws:s3:::${var.s3_source_bucket_name}/*",
                 "arn:aws:s3:::${var.s3_destination_bucket_name}/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:AssociateKmsKey"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:/aws-glue/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "glue:*",
+                "s3:GetBucketLocation",
+                "s3:ListBucket",
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketAcl",
+                "ec2:DescribeVpcEndpoints",
+                "ec2:DescribeRouteTables",
+                "ec2:CreateNetworkInterface",
+                "ec2:DeleteNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcAttribute",
+                "iam:ListRolePolicies",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "cloudwatch:PutMetricData"
+            ],
+            "Resource": [
+                "*"
             ]
         }
     ]

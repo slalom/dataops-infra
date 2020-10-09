@@ -68,8 +68,8 @@ resource "aws_secretsmanager_secret_version" "secrets_value" {
 
 resource "aws_ssm_parameter" "secrets" {
   for_each    = var.use_parameter_store == false ? {} : local.new_secrets_map
-  name        = "${var.name_prefix}${random_id.suffix.dec}/${each.key}"
-  description = "Stored using Terraform"
+  name        = "/${var.name_prefix}${random_id.suffix.dec}/${each.key}"
+  description = "Created using Terraform"
   type        = "SecureString"
   value       = each.value
   tags        = var.resource_tags
