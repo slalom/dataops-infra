@@ -79,10 +79,12 @@ module "ecs_tap_sync_task" {
     {
       TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
       TAP_STATE_FILE                                    = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
-      TAP_LOG_DIR                                       = "${var.data_lake_logging_path}/tap-${local.taps_specs[count.index].name}/",
       PIPELINE_VERSION_NUMBER                           = var.pipeline_version_number
       "${local.tap_env_prefix[count.index]}CONFIG_FILE" = "False" # Config will be passed via env vars
       "${local.target_env_prefix}CONFIG_FILE"           = "False" # Config will be passed via env vars
+    },
+    var.data_lake_logging_path == null ? {} : {
+      TAP_LOG_DIR = "${var.data_lake_logging_path}/tap-${local.taps_specs[count.index].name}/"
     },
     {
       for k, v in local.taps_specs[count.index].settings :

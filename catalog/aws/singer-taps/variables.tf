@@ -107,6 +107,7 @@ The remote folder for storing tap execution logs and log artifacts.
 Currently only S3 paths (s3://...) are supported.
 EOF
   type        = string
+  default     = null
 }
 variable "data_lake_metadata_path" {
   description = <<EOF
