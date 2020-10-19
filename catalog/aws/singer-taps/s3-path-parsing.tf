@@ -10,4 +10,9 @@ locals {
     )),
     replace(var.data_file_naming_scheme, "{file}", "")
   ])
+  needed_s3_buckets = distinct(flatten([
+    var.data_lake_storage_path == null ? [] : [split("/", split("//", var.data_lake_storage_path)[1])[0]],
+    var.data_lake_logging_path == null ? [] : [split("/", split("//", var.data_lake_logging_path)[1])[0]],
+    var.data_lake_metadata_path == null ? [] : [split("/", split("//", var.data_lake_metadata_path)[1])[0]],
+  ]))
 }

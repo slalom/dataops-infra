@@ -62,22 +62,24 @@ module "ecs_cluster" {
 }
 
 module "ecs_tap_sync_task" {
-  count               = length(local.taps_specs)
-  source              = "../../../components/aws/ecs-task"
-  name_prefix         = "${local.name_prefix}task${count.index}-"
-  environment         = var.environment
-  resource_tags       = var.resource_tags
-  ecs_cluster_name    = module.ecs_cluster.ecs_cluster_name
-  container_image     = local.taps_specs[count.index].image
-  container_command   = local.taps_specs[count.index].sync_command
-  container_ram_gb    = var.container_ram_gb
-  container_num_cores = var.container_num_cores
-  use_private_subnet  = var.use_private_subnet
-  use_fargate         = true
+  count                = length(local.taps_specs)
+  source               = "../../../components/aws/ecs-task"
+  name_prefix          = "${local.name_prefix}task${count.index}-"
+  environment          = var.environment
+  resource_tags        = var.resource_tags
+  ecs_cluster_name     = module.ecs_cluster.ecs_cluster_name
+  container_image      = local.taps_specs[count.index].image
+  container_command    = local.taps_specs[count.index].sync_command
+  container_ram_gb     = var.container_ram_gb
+  container_num_cores  = var.container_num_cores
+  use_private_subnet   = var.use_private_subnet
+  use_fargate          = true
+  permitted_s3_buckets = local.needed_s3_buckets
   environment_vars = merge(
     {
       TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
       TAP_STATE_FILE                                    = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
+      TAP_LOG_DIR                                       = "${var.data_lake_logging_path}/tap-${local.taps_specs[count.index].name}/",
       PIPELINE_VERSION_NUMBER                           = var.pipeline_version_number
       "${local.tap_env_prefix[count.index]}CONFIG_FILE" = "False" # Config will be passed via env vars
       "${local.target_env_prefix}CONFIG_FILE"           = "False" # Config will be passed via env vars

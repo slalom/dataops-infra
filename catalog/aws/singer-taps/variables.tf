@@ -101,6 +101,13 @@ variable "data_lake_type" {
   description = "Specify `S3` if loading to an S3 data lake, otherwise leave blank."
   default     = null
 }
+variable "data_lake_logging_path" {
+  description = <<EOF
+The remote folder for storing tap execution logs and log artifacts.
+Currently only S3 paths (s3://...) are supported.
+EOF
+  type        = string
+}
 variable "data_lake_metadata_path" {
   description = <<EOF
 The remote folder for storing tap definitions files.
