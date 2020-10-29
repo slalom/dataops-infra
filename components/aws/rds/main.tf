@@ -15,7 +15,7 @@
 
 data "http" "icanhazip" {
   count = var.whitelist_terraform_ip ? 1 : 0
-  url   = "http://ipv4.icanhazip.com"
+  url   = "https://ipv4.icanhazip.com"
 }
 
 resource "random_id" "random_pass" {

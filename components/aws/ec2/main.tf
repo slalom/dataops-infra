@@ -5,7 +5,7 @@
 *
 */
 
-data "http" "icanhazip" { url = "http://ipv4.icanhazip.com" }
+data "http" "icanhazip" { url = "https://ipv4.icanhazip.com" }
 
 locals {
   project_shortname = substr(var.name_prefix, 0, length(var.name_prefix) - 1)
