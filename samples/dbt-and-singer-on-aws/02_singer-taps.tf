@@ -13,6 +13,11 @@ module "singer_taps_on_aws" {
 
   # ADD OR MODIFY CONFIGURATION HERE:
 
+  alerts_webhook_ms_teams = "https://outlook.office.com/webhook/6773dc96-ec60-4655-8fe9-8a5d38b78026@9ca75128-a244-4596-877b-f24828e476e2/IncomingWebhook/30488e1ac26b4154b8c5555cc2b22e78/5294bb34-f685-46e1-9975-a46dad926c1f"
+  alerts_webhook_message  = <<EOF
+Warning: A failure occured in the pipeline. Please check on the pipeline using the following link.
+EOF
+
   local_metadata_path = local.tap_metadata_path
   scheduled_timezone  = "PST"
 
