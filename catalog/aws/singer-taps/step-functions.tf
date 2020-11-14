@@ -36,6 +36,12 @@ module "step_function" {
           "ContainerOverrides":[]
         }
       },
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "NotifyOnError"
+        }
+      ],
       "Retry": [
         {
           "ErrorEquals": [
@@ -46,6 +52,11 @@ module "step_function" {
           "BackoffRate": 2
         }
       ],
+      "End": true
+    },
+    "NotifyOnError": {
+      "Type": "Task",
+      "Resource": "${module.triggered_lambda.function_ids["NotifyMSTeamsWebhook"]}",
       "End": true
     }
   }
