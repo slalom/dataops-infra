@@ -14,8 +14,8 @@ module "triggered_lambda" {
       description = "Send alert notification to MS Teams."
       handler     = "webhook_notify.lambda_handler"
       environment = {
-        ALERT_MESSAGE_TEXT = var.alerts_webhook_ms_teams
-        ALERT_WEBHOOK_URL  = var.alerts_webhook_message
+        ALERT_MESSAGE_TEXT = var.alerts_webhook_message
+        ALERT_WEBHOOK_URL  = var.alerts_webhook_ms_teams
       }
       secrets     = {}
     }

@@ -43,9 +43,10 @@ def post_to_webhook(msg, url):
     """
     json_msg_body = {"text": msg}
     encoded_msg = json.dumps(json_msg_body).encode("utf-8")
+    print({"message": msg, "url": url})
     resp = http.request("POST", url, body=encoded_msg)
     print(
-        {"message": msg, "status_code": resp.status, "response": resp.data, "url": url}
+        {"message": msg, "url": url, "status_code": resp.status, "response": resp.data}
     )
 
 
