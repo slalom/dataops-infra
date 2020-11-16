@@ -17,7 +17,7 @@ module "triggered_lambda" {
         ALERT_MESSAGE_TEXT = var.alerts_webhook_message
         ALERT_WEBHOOK_URL  = var.alerts_webhook_ms_teams
       }
-      secrets     = {}
+      secrets = {}
     }
   }
 }
