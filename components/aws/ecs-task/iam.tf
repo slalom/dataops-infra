@@ -130,44 +130,49 @@ resource "aws_iam_role" "ecs_task_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_role_policy-S3" {
-  role       = aws_iam_role.ecs_task_role.name
-  policy_arn = data.aws_iam_policy.AmazonS3FullAccess.arn
-}
-
-
-resource "aws_iam_policy" "permitted_s3_buckets_policy" {
-  count       = var.permitted_s3_buckets == null ? 0 : length(var.permitted_s3_buckets) > 0 ? 1 : 0
-  name        = "${var.name_prefix}ecs_task-permitted_s3_bucket_access"
+resource "aws_iam_policy" "custom_ecs_task_policy" {
+  name        = "${var.name_prefix}custom_ecs_tasks"
   path        = "/"
   description = "IAM policy for accessing S3 from a lambda"
-  policy      = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:ListBucket"],
-      "Resource": ["arn:aws:s3:::${join("\", \"arn:aws:s3:::", var.permitted_s3_buckets)}"]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject"
-      ],
-      "Resource": ["arn:aws:s3:::${join("/*\", \"arn:aws:s3:::", var.permitted_s3_buckets)}/*"]
-    }
-  ]
-}
-EOF
+  policy      = data.aws_iam_policy_document.custom_ecs_task_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "permitted_s3_buckets_policy_attachment" {
-  count      = var.permitted_s3_buckets == null ? 0 : length(var.permitted_s3_buckets) > 0 ? 1 : 0
+data "aws_iam_policy_document" "custom_ecs_task_policy" {
+  statement {
+    actions = ["s3:ListAllMyBuckets", "s3:GetBucketLocation"]
+    resources = ["arn:aws:s3:::*"]
+  }
+  dynamic "statement" {
+    # Must be dynamic, to prevent failure when case number of grants is zero.
+    for_each = length(coalesce(var.permitted_s3_buckets, [])) > 0 ? ["1"] : []
+    content {
+      actions = ["s3:ListBucket"]
+      resources = [
+        for b in var.permitted_s3_buckets :
+        "arn:aws:s3:::${b}"
+      ]
+    }
+  }
+  dynamic "statement" {
+    # Must be dynamic, to prevent failure when case number of grants is zero.
+    for_each = length(coalesce(var.permitted_s3_buckets, [])) > 0 ? ["1"] : []
+    content {
+      actions = [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject",
+      ]
+      resources = [
+        for b in var.permitted_s3_buckets :
+        "arn:aws:s3:::${b}/*"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "custom_ecs_task_policy_attachment" {
   role       = aws_iam_role.ecs_task_role.name
-  policy_arn = aws_iam_policy.permitted_s3_buckets_policy[0].arn
+  policy_arn = aws_iam_policy.custom_ecs_task_policy.arn
 }
 
 resource "aws_iam_policy" "allow_kms_decrypt" {

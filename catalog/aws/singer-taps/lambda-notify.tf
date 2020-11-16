@@ -1,8 +1,8 @@
 module "triggered_lambda" {
   source        = "../../../components/aws/lambda-python"
   name_prefix   = local.name_prefix
-  resource_tags = local.resource_tags
-  environment   = module.env.environment
+  resource_tags = var.resource_tags
+  environment   = var.environment
 
   runtime              = "python3.8"
   lambda_source_folder = "${path.module}/lambda"
