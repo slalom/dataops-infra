@@ -52,7 +52,7 @@ data "null_data_source" "wait_for_lambda_exporter" {
     # This ensures that this data resource will not be evaluated until
     # after the null_resource has been created.
     lambda_exporter_id = fileexists("${var.lambda_source_folder}/requirements.txt") ? null_resource.pip[0].id : null
-    copy_files_id      = "${null_resource.copy_files[0].id}"
+    copy_files_id      = null_resource.copy_files[0].id
 
     # This value gives us something to implicitly depend on
     # in the archive_file below.
