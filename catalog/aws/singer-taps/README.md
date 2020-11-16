@@ -132,6 +132,15 @@ Type: `any`
 
 Default: `null`
 
+### data\_lake\_logging\_path
+
+Description: The remote folder for storing tap execution logs and log artifacts.
+Currently only S3 paths (s3://...) are supported.
+
+Type: `string`
+
+Default: `null`
+
 ### data\_lake\_storage\_path
 
 Description: The root path where files should be stored in the data lake.
@@ -256,6 +265,22 @@ Type: `string`
 
 Default: `null`
 
+### alerts\_webhook\_ms\_teams
+
+Description: Optionally, specify a webhook for MS Teams notifications.
+
+Type: `string`
+
+Default: `null`
+
+### alerts\_webhook\_message
+
+Description: Optionally, specify a message for webhook notifications.
+
+Type: `string`
+
+Default: `null`
+
 ## Outputs
 
 The following outputs are exported:
@@ -311,6 +336,7 @@ Note:
 _Source code for this module is available using the links below._
 
 * [cloudwatch.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/cloudwatch.tf)
+* [lambda-notify.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/lambda-notify.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/outputs.tf)
 * [s3-path-parsing.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-path-parsing.tf)

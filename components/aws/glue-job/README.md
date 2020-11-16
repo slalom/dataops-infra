@@ -134,7 +134,7 @@ For additional information, see:
 
 Type: `map(string)`
 
-Default: `null`
+Default: `{}`
 
 ## Outputs
 
