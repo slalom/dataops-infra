@@ -52,3 +52,9 @@ variable "ecs_tasks" {
   type        = list(string)
   default     = []
 }
+
+variable "schedules" {
+  description = "A lists of scheduled execution times."
+  type        = set(string)
+  default     = []
+}
