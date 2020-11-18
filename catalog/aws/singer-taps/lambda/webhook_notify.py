@@ -28,10 +28,10 @@ def lambda_handler(event, context):
     """
     msg = os.environ.get("ALERT_MESSAGE_TEXT", "(ERROR: No message found.)")
     url = os.environ.get("ALERT_WEBHOOK_URL", "(ERROR: No url found.)")
-    post_to_webhook(msg, url)
+    post_to_webhook(msg, url, payload=event)
 
 
-def post_to_webhook(msg, url):
+def post_to_webhook(msg, url, payload=None):
     """[summary]
 
     Parameters
@@ -41,9 +41,13 @@ def post_to_webhook(msg, url):
     url : [type]
         [description]
     """
+
+    if payload:
+        msg += "\n\n"
+        msg += "\n".join([f"{k}: {v}" for k, v in payload.items()])
     json_msg_body = {"text": msg}
     encoded_msg = json.dumps(json_msg_body).encode("utf-8")
-    print({"message": msg, "url": url})
+    print({"message": msg, "url": url, "payload": payload})
     resp = http.request("POST", url, body=encoded_msg)
     print(
         {"message": msg, "url": url, "status_code": resp.status, "response": resp.data}

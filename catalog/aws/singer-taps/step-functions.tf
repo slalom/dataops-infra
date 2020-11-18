@@ -7,7 +7,7 @@ module "step_function" {
   resource_tags = var.resource_tags
 
   writeable_buckets = []
-  lambda_functions  = {}
+  lambda_functions  = module.triggered_lambda.function_ids
   ecs_tasks = [
     module.ecs_tap_sync_task[count.index].ecs_task_name
   ]
@@ -52,12 +52,36 @@ module "step_function" {
           "BackoffRate": 2
         }
       ],
+      "Next": "NotifyOnSuccess"
+    },
+    "NotifyOnSuccess": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters":{
+        "FunctionName": "${module.triggered_lambda.function_ids["SuccessWebhook"]}",
+        "Payload": {
+            "tap_name": "${local.taps_specs[count.index].name}",
+            "dashboard_url": "${local.dashboard_urls[count.index]}"
+        }
+      },
       "End": true
     },
     "NotifyOnError": {
       "Type": "Task",
-      "Resource": "${module.triggered_lambda.function_ids["NotifyMSTeamsWebhook"]}",
-      "End": true
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters":{
+        "FunctionName": "${module.triggered_lambda.function_ids["AlertsWebhook"]}",
+        "Payload": {
+            "tap_name": "${local.taps_specs[count.index].name}",
+            "dashboard_url": "${local.dashboard_urls[count.index]}"
+        }
+      },
+      "Next": "ExecutionFailed"
+    },
+    "ExecutionFailed": {
+      "Type": "Fail",
+      "Cause": "Failure occurred during execution.",
+      "Error": "ExecutionFailed"
     }
   }
 }

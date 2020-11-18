@@ -218,7 +218,7 @@ variable "container_entrypoint" {
   default     = null
 }
 
-variable "alerts_webhook_ms_teams" {
+variable "alerts_webhook_url" {
   description = "Optionally, specify a webhook for MS Teams notifications."
   type        = string
   default     = null
@@ -226,5 +226,19 @@ variable "alerts_webhook_ms_teams" {
 variable "alerts_webhook_message" {
   description = "Optionally, specify a message for webhook notifications."
   type        = string
+  default     = <<EOF
+Warning: A failure occured in the pipeline. Please check on it using the information below.
+EOF
+}
+variable "success_webhook_url" {
+  description = "Optionally, specify a webhook for MS Teams notifications."
+  type        = string
   default     = null
+}
+variable "success_webhook_message" {
+  description = "Optionally, specify a message for webhook notifications."
+  type        = string
+  default     = <<EOF
+Success! The pipeline completed successfully.
+EOF
 }
