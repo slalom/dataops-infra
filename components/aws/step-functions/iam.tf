@@ -5,7 +5,7 @@ resource "random_id" "suffix" {
 }
 
 resource "aws_iam_role" "step_functions_role" {
-  name                  = "${var.name_prefix}StepFunctionsRole-${random_id.suffix.dec}"
+  name                  = "${var.name_prefix}StepFnRole-${random_id.suffix.dec}"
   tags                  = var.resource_tags
   force_detach_policies = true
   assume_role_policy    = <<EOF
@@ -139,7 +139,7 @@ resource "aws_iam_role_policy_attachment" "step_functions_policy_attachment" {
 # Access for Cloudwatch schedulers to invoke the step function:
 
 resource "aws_iam_role" "cloudwatch_invoke_role" {
-  name                  = "${var.name_prefix}StepFunction_InvokeRole-${random_id.suffix.dec}"
+  name                  = "${var.name_prefix}StepFn-Invoke-${random_id.suffix.dec}"
   tags                  = var.resource_tags
   force_detach_policies = true
   assume_role_policy    = <<EOF

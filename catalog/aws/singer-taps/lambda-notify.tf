@@ -17,7 +17,8 @@ module "triggered_lambda" {
         ALERT_MESSAGE_TEXT = var.success_webhook_message
         ALERT_WEBHOOK_URL  = var.success_webhook_url
       }
-      secrets = {}
+      secrets = {
+      }
     }
     AlertsWebhook = {
       description = "Send failure alert notification to MS Teams."
@@ -26,7 +27,8 @@ module "triggered_lambda" {
         ALERT_MESSAGE_TEXT = var.alerts_webhook_message
         ALERT_WEBHOOK_URL  = var.alerts_webhook_url
       }
-      secrets = {}
+      secrets = {
+      }
     }
   }
 }

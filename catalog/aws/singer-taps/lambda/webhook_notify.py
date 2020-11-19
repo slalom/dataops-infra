@@ -16,35 +16,38 @@ import urllib3
 http = urllib3.PoolManager()
 
 
-def lambda_handler(event, context):
-    """[summary]
+def lambda_handler(event: dict, context: dict) -> None:
+    """
+    Responds to AWS lambda trigger.
 
     Parameters
     ----------
     event : [type]
-        [description]
+        The standard AWS event object submitted to the Lambda function.
     context : [type]
-        [description]
+        Additional context for the function execution.
     """
     msg = os.environ.get("ALERT_MESSAGE_TEXT", "(ERROR: No message found.)")
-    url = os.environ.get("ALERT_WEBHOOK_URL", "(ERROR: No url found.)")
-    post_to_webhook(msg, url, payload=event)
+    url = os.environ.get("ALERT_WEBHOOK_URL", None)
+    if url:
+        post_to_webhook(msg, url, payload=context)
 
 
-def post_to_webhook(msg, url, payload=None):
-    """[summary]
+def post_to_webhook(msg: str, url: str, payload=None) -> None:
+    """Post to the webhook.
 
     Parameters
     ----------
-    msg : [type]
-        [description]
-    url : [type]
-        [description]
+    msg : [str]
+        The message text to post.
+    url : [str]
+        The webhook URL.
+    payload : [dict]
+        Optional. Additional key-value pairs to attach to the message.
     """
-
     if payload:
-        msg += "\n\n"
-        msg += "\n".join([f"{k}: {v}" for k, v in payload.items()])
+        msg += "\n\n\n - "
+        msg += "\n\n - ".join([f"**{k}**: {v}" for k, v in payload.items()])
     json_msg_body = {"text": msg}
     encoded_msg = json.dumps(json_msg_body).encode("utf-8")
     print({"message": msg, "url": url, "payload": payload})
@@ -56,7 +59,9 @@ def post_to_webhook(msg, url, payload=None):
 
 if __name__ == "__main__":
     try:
-        url = sys.argv[0]
+        url = sys.argv[1]
     except Exception:
-        raise ValueError("Missing required 'webhook_url' argument.")
-    post_to_webhook("This is a test.", url)
+        raise ValueError("Missing required positional argument 'webhook_url'.")
+    post_to_webhook(
+        "This is a test.", url, {"something": "http://slalom.com", "else": "here"}
+    )
