@@ -86,7 +86,7 @@ EOF
 module "step_function" {
   count         = length(local.taps_specs)
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}${count.index}-${local.taps_specs[count.index].name}-"
+  name_prefix   = "${var.name_prefix}${count.index}-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
