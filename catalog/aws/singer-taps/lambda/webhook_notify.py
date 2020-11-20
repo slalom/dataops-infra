@@ -28,9 +28,12 @@ def lambda_handler(event: dict, context: dict) -> None:
         A LambdaContext object:
          - https://docs.aws.amazon.com/lambda/latest/dg/python-context.html
     """
-    msg = os.environ.get("ALERT_MESSAGE_TEXT", "(ERROR: No message found.)")
-    url = os.environ.get("ALERT_WEBHOOK_URL", None)
-    if url:
+    msg, url = None, None
+    if "MESSAGE_TEXT" in event:
+        msg = str(event.pop("MESSAGE_TEXT"))
+    if "WEBHOOK_URL" in event:
+        url = str(event.pop("MESSAGE_URL"))
+    if url and msg:
         post_to_webhook(msg, url, payload=event)
 
 

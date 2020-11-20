@@ -48,8 +48,10 @@ locals {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters":{
-        "FunctionName": "${module.triggered_lambda.function_ids["SuccessWebhook"]}",
+        "FunctionName": "${module.triggered_lambda.function_ids["NotifyWebook"]}",
         "Payload": {
+            "MESSAGE_TEXT": "${coalesce(var.success_webhook_message, "")}",
+            "WEBHOOK_URL": "${coalesce(var.success_webhook_url, "")}",
             "tap_name": "${tap_spec.name}",
             "dashboard_url": "${local.dashboard_urls[i]}"
         }
@@ -60,8 +62,10 @@ locals {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters":{
-        "FunctionName": "${module.triggered_lambda.function_ids["AlertsWebhook"]}",
+        "FunctionName": "${module.triggered_lambda.function_ids["NotifyWebook"]}",
         "Payload": {
+            "MESSAGE_TEXT": "${coalesce(var.alerts_webhook_message, "")}",
+            "WEBHOOK_URL": "${coalesce(var.alerts_webhook_url, "")}",
             "tap_name": "${tap_spec.name}",
             "dashboard_url": "${local.dashboard_urls[i]}"
         }

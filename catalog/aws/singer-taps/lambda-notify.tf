@@ -10,25 +10,11 @@ module "triggered_lambda" {
   upload_to_s3_path    = null
 
   functions = {
-    SuccessWebhook = {
+    NotifyWebook = {
       description = "Send success notification notification to MS Teams."
       handler     = "webhook_notify.lambda_handler"
-      environment = {
-        ALERT_MESSAGE_TEXT = var.success_webhook_message
-        ALERT_WEBHOOK_URL  = var.success_webhook_url
-      }
-      secrets = {
-      }
-    }
-    AlertsWebhook = {
-      description = "Send failure alert notification to MS Teams."
-      handler     = "webhook_notify.lambda_handler"
-      environment = {
-        ALERT_MESSAGE_TEXT = var.alerts_webhook_message
-        ALERT_WEBHOOK_URL  = var.alerts_webhook_url
-      }
-      secrets = {
-      }
+      environment = {}
+      secrets     = {}
     }
   }
 }
