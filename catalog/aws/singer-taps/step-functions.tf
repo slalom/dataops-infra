@@ -50,8 +50,8 @@ locals {
       "Parameters":{
         "FunctionName": "${module.triggered_lambda.function_ids["NotifyWebook"]}",
         "Payload": {
-            "MESSAGE_TEXT": "${var.success_webhook_message == null ? "" : var.success_webhook_message}",
-            "WEBHOOK_URL": "${var.success_webhook_url == null ? "" : var.success_webhook_url}",
+            "MESSAGE_TEXT": ${var.success_webhook_message == null ? "null" : "${var.success_webhook_message}"},
+            "WEBHOOK_URL": ${var.success_webhook_url == null ? "null" : "${var.success_webhook_url}"},
             "tap_name": "${tap_spec.name}",
             "dashboard_url": "${local.dashboard_urls[i]}"
         }
@@ -64,8 +64,8 @@ locals {
       "Parameters":{
         "FunctionName": "${module.triggered_lambda.function_ids["NotifyWebook"]}",
         "Payload": {
-            "MESSAGE_TEXT": "${var.alerts_webhook_message == null ? "" : var.alerts_webhook_message}",
-            "WEBHOOK_URL": "${var.alerts_webhook_url == null ? "" : var.alerts_webhook_url}",
+            "MESSAGE_TEXT": ${var.alerts_webhook_message == null ? "null" : "${var.alerts_webhook_message}"},
+            "WEBHOOK_URL": ${var.alerts_webhook_url == null ? "null" : "${var.alerts_webhook_url}"},
             "tap_name": "${tap_spec.name}",
             "dashboard_url": "${local.dashboard_urls[i]}"
         }
