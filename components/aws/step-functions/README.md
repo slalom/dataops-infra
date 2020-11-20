@@ -32,7 +32,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -91,6 +91,14 @@ Type: `list(string)`
 
 Default: `[]`
 
+### schedules
+
+Description: A lists of scheduled execution times.
+
+Type: `set(string)`
+
+Default: `[]`
+
 ## Outputs
 
 The following outputs are exported:
@@ -121,6 +129,7 @@ _Source code for this module is available using the links below._
 * [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/iam.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/outputs.tf)
+* [schedule.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/schedule.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/step-functions/variables.tf)
 
 ---------------------

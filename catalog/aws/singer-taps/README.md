@@ -28,7 +28,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -265,7 +265,7 @@ Type: `string`
 
 Default: `null`
 
-### alerts\_webhook\_ms\_teams
+### alerts\_webhook\_url
 
 Description: Optionally, specify a webhook for MS Teams notifications.
 
@@ -279,7 +279,23 @@ Description: Optionally, specify a message for webhook notifications.
 
 Type: `string`
 
+Default: `"Warning: A failure occured in the pipeline. Please check on it using the information below.\n"`
+
+### success\_webhook\_url
+
+Description: Optionally, specify a webhook for MS Teams notifications.
+
+Type: `string`
+
 Default: `null`
+
+### success\_webhook\_message
+
+Description: Optionally, specify a message for webhook notifications.
+
+Type: `string`
+
+Default: `"Success! The pipeline completed successfully.\n"`
 
 ## Outputs
 

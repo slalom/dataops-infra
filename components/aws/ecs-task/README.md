@@ -24,9 +24,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
+
+- aws
 
 - random
 
@@ -38,7 +38,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -302,6 +302,7 @@ _Source code for this module is available using the links below._
 * [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/iam.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/outputs.tf)
+* [schedule.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/schedule.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/variables.tf)
 
 ---------------------

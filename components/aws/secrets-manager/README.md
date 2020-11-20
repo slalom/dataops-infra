@@ -38,7 +38,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
