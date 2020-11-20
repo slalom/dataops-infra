@@ -46,7 +46,7 @@ resource "aws_lambda_function" "python_lambda" {
   s3_key    = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].id
 
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  function_name    = each.value
+  function_name    = "${var.name_prefix}${each.value}"
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = var.functions[each.value].handler
   runtime          = var.runtime
