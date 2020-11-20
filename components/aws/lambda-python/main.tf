@@ -47,7 +47,7 @@ resource "aws_lambda_function" "python_lambda" {
   # s3_object_version = aws_s3_bucket_object.s3_lambda_zip[0].version_id  # requires bucket versioning enabled
 
   source_code_hash = data.archive_file.lambda_zip[0].output_base64sha256
-  function_name    = each.value
+  function_name    = "${var.name_prefix}${each.value}"
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = var.functions[each.value].handler
   runtime          = var.runtime
