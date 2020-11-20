@@ -32,7 +32,7 @@ def lambda_handler(event: dict, context: dict) -> None:
     if "MESSAGE_TEXT" in event:
         msg = str(event.pop("MESSAGE_TEXT"))
     if "WEBHOOK_URL" in event:
-        url = str(event.pop("MESSAGE_URL"))
+        url = str(event.pop("WEBHOOK_URL"))
     if url and msg:
         post_to_webhook(msg, url, payload=event)
 
