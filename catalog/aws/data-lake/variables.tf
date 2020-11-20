@@ -3,7 +3,7 @@
 ##############################################
 
 variable "name_prefix" {
-  description = "Standard `name_prefix` module input."
+  description = "Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)"
   type        = string
 }
 
