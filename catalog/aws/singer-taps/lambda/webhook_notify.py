@@ -23,14 +23,15 @@ def lambda_handler(event: dict, context: dict) -> None:
     Parameters
     ----------
     event : [type]
-        The standard AWS event object submitted to the Lambda function.
+        The event payload that was submitted to the Lambda function.
     context : [type]
-        Additional context for the function execution.
+        A LambdaContext object:
+         - https://docs.aws.amazon.com/lambda/latest/dg/python-context.html
     """
     msg = os.environ.get("ALERT_MESSAGE_TEXT", "(ERROR: No message found.)")
     url = os.environ.get("ALERT_WEBHOOK_URL", None)
     if url:
-        post_to_webhook(msg, url, payload=context)
+        post_to_webhook(msg, url, payload=event)
 
 
 def post_to_webhook(msg: str, url: str, payload=None) -> None:
