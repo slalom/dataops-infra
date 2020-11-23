@@ -42,7 +42,8 @@ then
 fi
 
 # Get the login command from ECR and execute it directly
-$(aws ecr get-login --region ${region} --no-include-email)
+#$(aws ecr get-login --region ${region} --no-include-email)
+$(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com)
 
 # Build the docker image locally with the image name and then push it to ECR
 # with the full name.

@@ -25,3 +25,5 @@ RUN apt-get -y purge --auto-remove git
 # Set up the program in the image
 COPY xgboost /opt/program
 WORKDIR /opt/program
+
+ENTRYPOINT ["python3", "/opt/program/train"]
