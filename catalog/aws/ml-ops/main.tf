@@ -117,22 +117,6 @@ EOF
 EOF
 }
 
-module "postgres" {
-  source        = "../../../catalog/aws/postgres"
-  name_prefix   = var.name_prefix
-  environment   = var.environment
-  resource_tags = var.resource_tags
-
-  postgres_version = "11"
-  database_name    = var.predictive_db_name
-
-  admin_username = var.predictive_db_admin_user
-  admin_password = var.predictive_db_admin_password
-
-  storage_size_in_gb = var.predictive_db_storage_size_in_gb
-  instance_class     = var.predictive_db_instance_class
-}
-
 resource "local_file" "step_function_def" {
   # This local json file provides an artifact to debug in case of any json parsing errors.
   filename = "${path.root}/.terraform/tmp/step-function-def.json"
@@ -280,7 +264,17 @@ resource "local_file" "step_function_def" {
     "Load Pred Outputs from S3 to Database": {
       "Resource": "${module.lambda_functions.function_ids["LoadPredDataDB"]}",
       "Type": "Task",
-      "Next": "Monitor Input Data"
+      "Next": "Monitor Input Data",
+      "Parameters": {
+        "Payload": {
+          "is_predictive_db_enabled": ${var.enable_predictive_db},
+          "db_host": "${var.enable_predictive_db ? module.predictive_db[0].endpoint : "n/a"}",
+          "db_name": "${var.predictive_db_name}",
+          "db_user": "${var.predictive_db_admin_user}",
+          "db_password": "${var.predictive_db_admin_password}",
+          "s3_csv": "s3://${aws_s3_bucket.ml_bucket[0].id}/" + "${var.test_key}"
+        }
+      }
     },
     "Monitor Input Data": {
       "Type": "Choice",

@@ -1,5 +1,4 @@
-
-module "postgres" {
+module "predictive_db" {
   count         = var.enable_predictive_db ? 1 : 0
   source        = "../../../catalog/aws/postgres"
   name_prefix   = var.name_prefix
