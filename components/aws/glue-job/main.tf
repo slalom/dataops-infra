@@ -6,7 +6,7 @@ resource "aws_glue_job" "glue_job" {
   name         = "${var.name_prefix}data-transformation"
   role_arn     = aws_iam_role.glue_job_role.arn
   tags         = var.resource_tags
-  glue_version = "1.0"
+  glue_version = "2.0"
   max_capacity = var.with_spark ? null : 1
 
   worker_type       = var.with_spark ? "Standard" : null
