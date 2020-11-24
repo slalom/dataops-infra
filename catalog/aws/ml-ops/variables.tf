@@ -310,8 +310,8 @@ variable "alarm_name" {
 
 variable "alarm_comparison_operator" {
   description = <<EOF
-  The arithmetic operation to use when comparing the specified alarm_statistic and alarm_threshold. The specified alarm_statistic 
-  value is used as the first operand.Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric, 
+  The arithmetic operation to use when comparing the specified alarm_statistic and alarm_threshold. The specified alarm_statistic
+  value is used as the first operand.Possible values include StringEquals, IsBoolean, StringLessThan, IsNumeric,
   BooleanEquals,
   StringLessThanEqualsPath, NumericLessThan, NumericGreaterThan,
   NumericLessThanPath, StringMatches, TimestampLessThanEqualsPath, NumericEquals,
@@ -329,10 +329,10 @@ variable "alarm_comparison_operator" {
 
 variable "alarm_evaluation_period" {
   description = <<EOF
-  The number of periods over which data is compared to the specified alarm_threshold. If you are setting an alarm that 
-  requires that a number of consecutive data points be breaching to trigger the alarm, this value specifies that number. 
-  If you are setting an "M out of N" alarm, this value is the N.An alarm's total current evaluation period can be no longer 
-  than one day, so this number multiplied by Period cannot be more than 86,400 seconds.This parameter works in combination 
+  The number of periods over which data is compared to the specified alarm_threshold. If you are setting an alarm that
+  requires that a number of consecutive data points be breaching to trigger the alarm, this value specifies that number.
+  If you are setting an "M out of N" alarm, this value is the N.An alarm's total current evaluation period can be no longer
+  than one day, so this number multiplied by Period cannot be more than 86,400 seconds.This parameter works in combination
   with alarm_datapoints_to_evaluate for specifying how frequently the model performance will be monitored.
   EOF
   type        = number
@@ -341,8 +341,8 @@ variable "alarm_evaluation_period" {
 
 variable "alarm_datapoints_to_evaluate" {
   description = <<EOF
-  The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N" 
-  alarm. In that case, this value is the M.This parameter works in combination with alarm_evaluation_period for specifying how 
+  The number of data points that must be breaching to trigger the alarm. This is used only if you are setting an "M out of N"
+  alarm. In that case, this value is the M.This parameter works in combination with alarm_evaluation_period for specifying how
   frequently the model performance will be monitored.
   EOF
   type        = number
@@ -352,8 +352,8 @@ variable "alarm_datapoints_to_evaluate" {
 variable "alarm_metric_name" {
   description = <<EOF
   The name for the metric associated with the alarm. For each PutMetricAlarm operation, you must specify either MetricName or
-  a Metrics array.If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the 
-  Dimensions , Period , Namespace , alarm_statistic ,or Extendedalarm_statistic parameters. Instead, you specify all this information in 
+  a Metrics array.If you are creating an alarm based on a math expression, you cannot specify this parameter, or any of the
+  Dimensions , Period , Namespace , alarm_statistic ,or Extendedalarm_statistic parameters. Instead, you specify all this information in
   the Metrics array. Values include Training Accuray, Training Loss, Validation Accuracy, and Validation Loss.
   EOF
   type        = string
@@ -374,12 +374,12 @@ variable "alarm_statistic" {
 
 variable "alarm_statistic_unit_name" {
   description = <<EOF
-  The unit of measure for the alarm_statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual 
+  The unit of measure for the alarm_statistic.You can also specify a unit when you create a custom metric. Units help provide conceptual
   meaning to your data. Metric data points that specify a unit of measure, such as Percent, are aggregated separately.
-  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm. 
+  If you don't specify Unit , CloudWatch retrieves all unit types that have been published for the metric and attempts to evaluate the alarm.
   Usually metrics are published with only one unit, so the alarm will work as intended.
-  However, if the metric is published with multiple types of units and you don't specify a unit, the alarm's behavior is not defined and will 
-  behave un-predictably. We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this 
+  However, if the metric is published with multiple types of units and you don't specify a unit, the alarm's behavior is not defined and will
+  behave un-predictably. We recommend omitting Unit so that you don't inadvertently specify an incorrect unit that is not published for this
   metric. Doing so causes the alarm to be stuck in the INSUFFICIENT DATA state.
 
   Possible values:
