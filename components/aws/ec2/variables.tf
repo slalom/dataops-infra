@@ -47,7 +47,7 @@ Optional. The IP address range(s) which should have access to the non-admin port
 connections from any IP address (['0.0.0.0/0']). In general, this should be omitted
 unless the site has a VPN or other internal list of IP whitelist ranges.
 EOF
-  default     = ["0.0.0.0/0"]
+  default     = []
 }
 variable "app_ports" {
   description = <<EOF
