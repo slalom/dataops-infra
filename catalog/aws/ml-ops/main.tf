@@ -272,7 +272,7 @@ resource "local_file" "step_function_def" {
           "db_name": "${var.predictive_db_name}",
           "db_user": "${var.predictive_db_admin_user}",
           "db_password": "${var.predictive_db_admin_password}",
-          "s3_csv": "s3://${aws_s3_bucket.ml_bucket[0].id}/" + "${var.test_key}"
+          "s3_csv": "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.test_key}"
         }
       }
     },
