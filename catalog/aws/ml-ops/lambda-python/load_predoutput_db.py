@@ -1,5 +1,5 @@
 """
-This function will load model prediction outputs from S3 bucket to a selected database platform such as PostgreSQL. 
+This function will load model prediction outputs from S3 bucket to a selected database platform such as PostgreSQL.
 """
 
 import boto3
@@ -51,4 +51,3 @@ def pg_load(connection, table_name, file_path):
 def handler(event, context):
     # Load csv to Postgres
     pg_load(connection_string, predictive_db_name, S3_url)
-
