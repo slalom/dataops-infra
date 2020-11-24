@@ -33,7 +33,7 @@ module "ml-ops" {
   test_key  = "input_data/test/score.csv"
   #validate_key = "input_data/validate/"
 
-  enable_predictive_db = true
+  # enable_predictive_db = true
 
   static_hyperparameters = {
     kfold_splits = "5"
