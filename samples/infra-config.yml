@@ -1,4 +1,5 @@
 aws_region: us-east-1
-project_shortname: TestProject01
+project_shortname: PROJECTNAME
 resource_tags:
-  admin_contact: my.admin@sample.com
+  admin_contact: admin@email.com
+  

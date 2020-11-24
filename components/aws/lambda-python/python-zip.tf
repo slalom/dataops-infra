@@ -39,7 +39,7 @@ resource "null_resource" "copy_files" {
     command = (
       local.is_windows ?
       "if not exist ${replace(local.temp_build_folder, "/", "\\")}\\NUL mkdir ${replace(local.temp_build_folder, "/", "\\")} && copy ${replace(var.lambda_source_folder, "/", "\\")}\\* ${replace(local.temp_build_folder, "/", "\\")}\\" :
-      "mkdir -p ${local.temp_build_folder} && cp ${var.lambda_source_folder}/* ${local.temp_build_folder}/"
+      "mkdir -p ${local.temp_build_folder} && cp -rp ${var.lambda_source_folder}/* ${local.temp_build_folder}/"
     )
   }
 }

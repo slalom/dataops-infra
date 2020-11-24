@@ -82,10 +82,7 @@ resource "aws_internet_gateway" "my_igw" {
 
 resource "aws_eip" "nat_eip" {
   count = var.disabled ? 0 : 1
-  tags = merge(
-    var.resource_tags,
-    { Name = "${var.name_prefix}EIP" }
-  )
+  vpc = true
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
