@@ -107,10 +107,22 @@ EOF
   default     = "training-endpoint"
 }
 
+variable enable_api_endpoint {
+  description = "True to create/update an inference API endpoint or do batch inference on test data."
+  type        = bool
+  default     = true
+}
+
+variable enable_batch_inference {
+  description = "True to create/update a workflow for batch inference on test data."
+  type        = bool
+  default     = true
+}
+
 variable "endpoint_or_batch_transform" {
   description = "Choose whether to create/update an inference API endpoint or do batch inference on test data."
   type        = string
-  default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
+  default     = "Batch Transform" # 'Batch Transform' or 'Create Model Endpoint Config'
 }
 
 variable "endpoint_instance_count" {
@@ -482,4 +494,34 @@ variable "predictive_db_instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t3.micro"
+}
+
+# Schedules
+
+variable "training_job_schedule" {
+  description = <<EOF
+Optional. A list of cron expressions.
+Example:
+  ["cron(1 0 0 0 *)", "cron(0 0 0 0 *)"]
+EOF
+  type        = list(string)
+  default     = []
+}
+variable "batch_transform_schedule" {
+  description = <<EOF
+Optional. A list of cron expressions.
+Example:
+  ["cron(1 0 0 0 *)", "cron(0 0 0 0 *)"]
+EOF
+  type        = list(string)
+  default     = []
+}
+variable "drift_detection_schedule" {
+  description = <<EOF
+Optional. A list of cron expressions.
+Example:
+  ["cron(1 0 0 0 *)", "cron(0 0 0 0 *)"]
+EOF
+  type        = list(string)
+  default     = []
 }

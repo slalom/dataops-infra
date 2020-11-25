@@ -106,7 +106,7 @@ module "triggered_lambda" {
     ExecuteStateMachine = {
       description = "Executes model training state machine when new training data lands in S3."
       handler     = "execute_state_machine.lambda_handler"
-      environment = { "state_machine_arn" = module.step-functions.state_machine_arn }
+      environment = { "state_machine_arn" = module.training_workflow.state_machine_arn }
       secrets     = {}
     }
   }
@@ -154,7 +154,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
 
 resource "aws_iam_policy" "lambda_step_function_policy" {
   name        = "${var.name_prefix}lambda_step_function_access"
-  description = "Policy for Lambda access to execute the Step Function"
+  description = "Policy for Lambda access to execute the training job Step Function"
   path        = "/"
 
   policy = <<EOF
@@ -164,7 +164,7 @@ resource "aws_iam_policy" "lambda_step_function_policy" {
         {
             "Effect": "Allow",
             "Action": "states:StartExecution",
-            "Resource": "${module.step-functions.state_machine_arn}"
+            "Resource": ${jsonencode([module.training_workflow.state_machine_arn])}
         }
     ]
 }

@@ -19,7 +19,7 @@ output "summary" {
 
 Step Functions summary:
 
-  State Machine Name: ${module.step-functions.state_machine_name}
+  Training Workflow:  ${module.training_workflow.state_machine_name}
 
 S3 summary:
 
@@ -36,6 +36,6 @@ Commands:
 
   Or execute Step Functions directly:
 
-    1) aws stepfunctions start-execution --state-machine-arn ${module.step-functions.state_machine_arn}
+    1) aws stepfunctions start-execution --state-machine-arn ${module.training_workflow.state_machine_arn}
 EOF
 }
