@@ -34,14 +34,14 @@ jobs:
           GO111MODULE="on" go get github.com/terraform-docs/terraform-docs@v0.10.0-rc.1
           export PATH=$HOME/go/bin:$PATH
           pip3 install --pre slalom.dataops
-          s-infra check_tf_metadata ./catalog \
+          s-infra check_tf_metadata ./catalog/aws \
               --check_module_headers \
               --required_input_vars=[name_prefix,resource_tags,environment] \
               --required_output_vars=[summary] \
               --check_input_descriptions \
               --check_output_descriptions \
               --raise_error
-          s-infra check_tf_metadata ./components \
+          s-infra check_tf_metadata ./components/aws \
               --check_module_headers \
               --required_input_vars=[name_prefix,resource_tags,environment] \
               --required_output_vars=[] \
