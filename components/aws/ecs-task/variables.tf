@@ -36,7 +36,7 @@ variable "admin_ports" {
 }
 variable "admin_cidr" {
   description = "Optional. The range of IP addresses which should be able to access admin ports. Defaults to the local user's current IP."
-  type        = list
+  type        = list(any)
   default     = []
 }
 variable "app_ports" {
@@ -46,7 +46,7 @@ variable "app_ports" {
 }
 variable "app_cidr" {
   description = "Optional. The range of IP addresses which should be able to access app ports. Defaults to the local user's current IP."
-  type        = list
+  type        = list(any)
   default     = []
 }
 variable "container_command" {
