@@ -26,9 +26,11 @@ plan.out.json
 !**/.secrets/*sample*
 !**/.secrets/*template*
 
-# .tfstate files
+# Terraform local state and lock files
 *.tfstate
 *.tfstate.*
+*.tfstate-*
+.terraform.lock.hcl
 
 # tfplan
 tfplan
@@ -36,7 +38,7 @@ tfplan
 # .tfvars files
 *.tfvars
 
-# .vs files 
+# .vs files
 **/.vs/**
 
 # Other (Python)
@@ -44,3 +46,12 @@ __pycache__
 .mypy_cache
 **.pyc
 .gitignore
+
+# Terraform executable
+
+terraform
+terraform.exe
+
+# Other
+
+.DS_Store
