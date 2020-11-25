@@ -82,7 +82,7 @@ variable "environment_secrets" {
   default     = {}
   description = <<EOF
 Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:
- - arn:aws:secretsmanager:[aws_region]:[aws_account]:secret:prod/ECSRunner/AWS_SECRET_ACCESS_KEY
+ - arn:aws:secretsmanager:[aws_region]:[aws_account]:secret:prod/ECSRunner/thisisnottherealsecret <!-- pragma: allowlist secret -->
  - path/to/file.json:MY_KEY_NAME_1
  - path/to/file.yml:MY_KEY_NAME_2
 EOF

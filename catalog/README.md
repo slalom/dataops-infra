@@ -58,7 +58,7 @@ Applicable use cases include:
 - Debugging network firewall and routing rules
 - Debugging components which can only be run from whitelisted IP ranges
 - Offloading heavy processing from the developer's local laptop
-- Mitigating network relability issues when working from WiFi or home networks
+- Mitigating network reliability issues when working from WiFi or home networks
 
 
 #### Documentation
