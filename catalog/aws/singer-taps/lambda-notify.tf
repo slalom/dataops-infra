@@ -1,4 +1,6 @@
 module "triggered_lambda" {
+  count = var.success_webhook_url == null && var.alerts_webhook_url == null ? 0 : 1
+
   source        = "../../../components/aws/lambda-python"
   name_prefix   = local.name_prefix
   resource_tags = var.resource_tags

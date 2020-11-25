@@ -29,7 +29,7 @@ locals {
       "Catch": [
         {
           "ErrorEquals": ["States.ALL"],
-          "Next": "NotifyOnError"
+          "Next": "${var.alerts_webhook_url == null ? "ExecutionFailed" : "NotifyOnError"}"
         }
       ],
       "Retry": [
@@ -42,13 +42,18 @@ locals {
           "BackoffRate": 2
         }
       ],
+      ${var.success_webhook_url == null ? <<EOF2
+      "End": true
+    },
+EOF2
+      : <<EOF2
       "Next": "NotifyOnSuccess"
     },
     "NotifyOnSuccess": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters":{
-        "FunctionName": "${module.triggered_lambda.function_ids["NotifyWebook"]}",
+        "FunctionName": "${module.triggered_lambda[0].function_ids["NotifyWebook"]}",
         "Payload": {
           "MESSAGE_TEXT": "${var.success_webhook_message == null ? "" : replace(var.success_webhook_message, "\n", "\\n")}",
           "WEBHOOK_URL": "${var.success_webhook_url == null ? "" : var.success_webhook_url}",
@@ -58,11 +63,14 @@ locals {
       },
       "End": true
     },
+EOF2
+}
+    ${var.alerts_webhook_url == null ? "" : <<EOF2
     "NotifyOnError": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters":{
-        "FunctionName": "${module.triggered_lambda.function_ids["NotifyWebook"]}",
+        "FunctionName": "${module.triggered_lambda[0].function_ids["NotifyWebook"]}",
         "Payload": {
             "MESSAGE_TEXT": "${var.alerts_webhook_message == null ? "" : replace(var.alerts_webhook_message, "\n", "\\n")}",
             "WEBHOOK_URL": "${var.alerts_webhook_url == null ? "" : var.alerts_webhook_url}",
@@ -72,6 +80,8 @@ locals {
       },
       "Next": "ExecutionFailed"
     },
+EOF2
+    }
     "ExecutionFailed": {
       "Type": "Fail",
       "Cause": "Failure occurred during execution.",
@@ -91,7 +101,7 @@ module "step_function" {
   resource_tags = var.resource_tags
 
   writeable_buckets = []
-  lambda_functions  = module.triggered_lambda.function_ids
+  lambda_functions  = var.success_webhook_url == null && var.success_webhook_url == null ? {} : module.triggered_lambda[0].function_ids
   ecs_tasks = [
     module.ecs_tap_sync_task[count.index].ecs_task_name
   ]
