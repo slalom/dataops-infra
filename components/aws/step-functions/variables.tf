@@ -3,7 +3,7 @@
 ##############################################
 
 variable "name_prefix" {
-  description = "Standard `name_prefix` module input."
+  description = "Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)"
   type        = string
 }
 variable "environment" {
@@ -50,5 +50,11 @@ variable "lambda_functions" {
 variable "ecs_tasks" {
   description = "List of ECS tasks, to ensure state machine access permissions."
   type        = list(string)
+  default     = []
+}
+
+variable "schedules" {
+  description = "A lists of scheduled execution times."
+  type        = set(string)
   default     = []
 }

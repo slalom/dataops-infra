@@ -23,13 +23,6 @@ locals {
   resource_tags     = merge(local.config["resource_tags"], { project = local.project_shortname })
 }
 
-provider "aws" {
-  version                 = "~> 3.0"
-  region                  = local.aws_region
-  shared_credentials_file = local.aws_credentials_file
-  profile                 = "default"
-}
-
 output "env_summary" { value = module.env.summary }
 module "env" {
   source               = "../../catalog/aws/environment"
@@ -51,4 +44,16 @@ resource "null_resource" "secrets_folder_protection" {
       ])
     )
   }
+}
+
+terraform {
+  required_providers {
+    aws = "~> 3.0"
+  }
+}
+
+provider "aws" {
+  region                  = local.aws_region
+  shared_credentials_file = local.aws_credentials_file
+  profile                 = "default"
 }

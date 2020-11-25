@@ -14,15 +14,19 @@ filter @message not like /INFO\sUsed/
 | fields @timestamp, @message
 | sort @timestamp desc
 EOF
+  dashboard_names = [
+    for i, tap_spec in local.taps_specs :
+    "${tap_spec.name}${i}-to-${local.target.id}-v${var.pipeline_version_number}-${var.name_prefix}-TapDashboard"
+  ]
   dashboard_urls = [
-    for dashboard in aws_cloudwatch_dashboard.main :
-    "https://console.aws.amazon.com/cloudwatch/home?region=${var.environment.aws_region}#dashboards:name=${dashboard.dashboard_name}"
+    for dashboard_name in local.dashboard_names :
+    "https://console.aws.amazon.com/cloudwatch/home?region=${var.environment.aws_region}#dashboards:name=${dashboard_name}"
   ]
 }
 
 resource "aws_cloudwatch_dashboard" "main" {
   count          = length(local.taps_specs)
-  dashboard_name = "${local.taps_specs[count.index].name}${count.index}-to-${local.target.id}-v${var.pipeline_version_number}-${var.name_prefix}-TapDashboard"
+  dashboard_name = local.dashboard_names[count.index]
   dashboard_body = <<EOF
 {
   "periodOverride": "auto",

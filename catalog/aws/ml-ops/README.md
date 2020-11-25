@@ -24,9 +24,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- null
-
 - local
+
+- null
 
 - random
 
@@ -38,7 +38,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -659,6 +659,7 @@ _Source code for this module is available using the links below._
 * [lambda.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/lambda.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/outputs.tf)
+* [predictive-db.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/predictive-db.tf)
 * [s3.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/s3.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/ml-ops/variables.tf)
 

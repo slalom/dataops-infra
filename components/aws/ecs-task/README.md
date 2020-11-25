@@ -24,9 +24,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
+
+- aws
 
 - random
 
@@ -38,7 +38,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -162,7 +162,7 @@ Default: `"8"`
 ### environment\_secrets
 
 Description: Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:
- - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/AWS\_SECRET\_ACCESS\_KEY
+ - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/thisisnottherealsecret <!-- pragma: allowlist secret -->
  - path/to/file.json:MY\_KEY\_NAME\_1
  - path/to/file.yml:MY\_KEY\_NAME\_2
 
@@ -302,6 +302,7 @@ _Source code for this module is available using the links below._
 * [iam.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/iam.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/outputs.tf)
+* [schedule.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/schedule.tf)
 * [variables.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//components/aws/ecs-task/variables.tf)
 
 ---------------------

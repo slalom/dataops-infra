@@ -13,7 +13,7 @@ module "lambda_functions" {
     QueryTrainingStatus = {
       description = "Queries the SageMaker training job and return the results."
       handler     = "query_training_status.lambda_handler"
-      environment = { "metadata_store_name" = "${aws_s3_bucket.ml_bucket[0].id}" }
+      environment = { "metadata_store_name" = aws_s3_bucket.ml_bucket[0].id }
       secrets     = {}
     }
     ExtractModelPath = {

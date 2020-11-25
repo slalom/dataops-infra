@@ -3,7 +3,7 @@
 ##############################################
 
 variable "name_prefix" {
-  description = "Standard `name_prefix` module input."
+  description = "Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)"
   type        = string
 }
 variable "environment" {
@@ -26,7 +26,7 @@ variable "resource_tags" {
 
 variable "admin_cidr" {
   description = "Optional. The range of IP addresses which should be able to access the DBT instance. Defaults to the local user's current IP."
-  type        = list
+  type        = list(any)
   default     = []
 }
 variable "container_image" {

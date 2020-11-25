@@ -3,7 +3,7 @@
 ##############################################
 
 variable "name_prefix" {
-  description = "Standard `name_prefix` module input."
+  description = "Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)"
   type        = string
 }
 variable "environment" {
@@ -37,7 +37,7 @@ variable "admin_ports" {
 A map defining the admin ports which should be goverened by `admin_cidr`. Single ports
 (e.g. '22') and port ranges (e.g. '0:65535') and both supported.
 EOF
-  type        = map
+  type        = map(any)
   default     = { "SSH" : "22" }
 }
 variable "app_cidr" {
@@ -54,7 +54,7 @@ variable "app_ports" {
 A map defining the end-user ports which should be goverened by `app_cidr`. Single ports
 (e.g. '22') and port ranges (e.g. '0:65535') and both supported.
 EOF
-  type        = map
+  type        = map(any)
   default     = {}
 }
 variable "cluster_ports" {

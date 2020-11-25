@@ -105,13 +105,4 @@ module "ecs_tap_sync_task" {
       "${local.target_env_prefix}${k}" => length(split(":", v)) > 1 ? v : "${v}:${k}"
     }
   )
-  schedules = [
-    # Converts 4-digit time of day into cron. https://crontab.guru/
-    for cron_expr in local.taps_specs[count.index].schedule :
-    "cron(${
-      tonumber(substr(cron_expr, 2, 2))
-      } ${
-      (24 + tonumber(substr(cron_expr, 0, 2)) - local.tz_hour_offset) % 24
-    } * * ? *)"
-  ]
 }

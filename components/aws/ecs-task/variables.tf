@@ -3,7 +3,7 @@
 ##############################################
 
 variable "name_prefix" {
-  description = "Standard `name_prefix` module input."
+  description = "Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)"
   type        = string
 }
 variable "environment" {
@@ -36,7 +36,7 @@ variable "admin_ports" {
 }
 variable "admin_cidr" {
   description = "Optional. The range of IP addresses which should be able to access admin ports. Defaults to the local user's current IP."
-  type        = list
+  type        = list(any)
   default     = []
 }
 variable "app_ports" {
@@ -46,7 +46,7 @@ variable "app_ports" {
 }
 variable "app_cidr" {
   description = "Optional. The range of IP addresses which should be able to access app ports. Defaults to the local user's current IP."
-  type        = list
+  type        = list(any)
   default     = []
 }
 variable "container_command" {
@@ -82,7 +82,7 @@ variable "environment_secrets" {
   default     = {}
   description = <<EOF
 Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:
- - arn:aws:secretsmanager:[aws_region]:[aws_account]:secret:prod/ECSRunner/AWS_SECRET_ACCESS_KEY
+ - arn:aws:secretsmanager:[aws_region]:[aws_account]:secret:prod/ECSRunner/thisisnottherealsecret <!-- pragma: allowlist secret -->
  - path/to/file.json:MY_KEY_NAME_1
  - path/to/file.yml:MY_KEY_NAME_2
 EOF

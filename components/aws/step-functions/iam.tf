@@ -5,7 +5,7 @@ resource "random_id" "suffix" {
 }
 
 resource "aws_iam_role" "step_functions_role" {
-  name                  = "${var.name_prefix}StepFunctionsRole-${random_id.suffix.dec}"
+  name                  = "${var.name_prefix}StepFnRole-${random_id.suffix.dec}"
   tags                  = var.resource_tags
   force_detach_policies = true
   assume_role_policy    = <<EOF
@@ -136,4 +136,53 @@ resource "aws_iam_policy" "step_functions_policy" {
 resource "aws_iam_role_policy_attachment" "step_functions_policy_attachment" {
   role       = aws_iam_role.step_functions_role.name
   policy_arn = aws_iam_policy.step_functions_policy.arn
+}
+
+# Access for Cloudwatch schedulers to invoke the step function:
+
+resource "aws_iam_role" "cloudwatch_invoke_role" {
+  name                  = "${var.name_prefix}StepFn-Invoke-${random_id.suffix.dec}"
+  tags                  = var.resource_tags
+  force_detach_policies = true
+  assume_role_policy    = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "cloudwatch_invoke_policy" {
+  name        = "${var.name_prefix}CW_StepFunction_InvokePolicy"
+  description = "Policy for Cloudwatch to Invoke the Step Function Workflow"
+  path        = "/"
+  policy      = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "states:StartExecution"
+      ],
+      "Resource": [
+        "${aws_sfn_state_machine.state_machine.id}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_invoke_policy_attachment" {
+  role       = aws_iam_role.cloudwatch_invoke_role.name
+  policy_arn = aws_iam_policy.cloudwatch_invoke_policy.arn
 }

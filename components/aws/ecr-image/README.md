@@ -32,7 +32,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -134,7 +134,11 @@ go get -u github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-c
 
 **To install on Mac/Linux:**
 
-* [https://github.com/awslabs/amazon-ecr-credential-helper#user-content-installing](https://github.com/awslabs/amazon-ecr-credential-helper#user-content-installing)
+```bash
+brew install docker-credential-helper-ecr
+```
+
+* More info here: [https://github.com/awslabs/amazon-ecr-credential-helper#user-content-installing](https://github.com/awslabs/amazon-ecr-credential-helper#user-content-installing)
 
 **Configure Docker to use the ECR Credential Helper:**
 
@@ -164,12 +168,14 @@ Install with:
 
 ```ps
 Install-Module -name AWSPowerShell.NetCore
+Install-Module -name AWS.Tools.ECR
 ```
 
 In order to then use this module for manual executions, you will need to load it into your powershell session:
 
 ```ps
 Import-Module AWSPowerShell.NetCore
+Import-Module AWS.Tools.ECR
 ```
 
 For more info: [https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html#ps-installing-awspowershellnetcore](https://docs.aws.amazon.com/powershell/latest/userguide/pstools-getting-set-up-windows.html#ps-installing-awspowershellnetcore)
