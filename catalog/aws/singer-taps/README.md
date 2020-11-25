@@ -132,6 +132,15 @@ Type: `any`
 
 Default: `null`
 
+### data\_lake\_logging\_path
+
+Description: The remote folder for storing tap execution logs and log artifacts.
+Currently only S3 paths (s3://...) are supported.
+
+Type: `string`
+
+Default: `null`
+
 ### data\_lake\_storage\_path
 
 Description: The root path where files should be stored in the data lake.

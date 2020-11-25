@@ -2,7 +2,15 @@
 
 _These documents are published automatically to [infra.dataops.tk](https://infra.dataops.tk) using [Github Pages](https://help.github.com/en/github/working-with-github-pages) and [Jekyll](https://jekyllrb.com/docs/)._
 
+## Dependencies
+
+```bash
+pip3 install uio logless runnow
+brew install terraform-docs
+```
+
 ## Rebuilding Docs
+
 
 To rebuild or update all module README docs, run the following command on your dev machine:
 
