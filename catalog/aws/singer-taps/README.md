@@ -28,7 +28,7 @@ The following input variables are required:
 
 ### name\_prefix
 
-Description: Standard `name_prefix` module input.
+Description: Standard `name_prefix` module input. (Prefix counts towards 64-character max length for certain resource types.)
 
 Type: `string`
 
@@ -265,6 +265,38 @@ Type: `string`
 
 Default: `null`
 
+### alerts\_webhook\_url
+
+Description: Optionally, specify a webhook for MS Teams notifications.
+
+Type: `string`
+
+Default: `null`
+
+### alerts\_webhook\_message
+
+Description: Optionally, specify a message for webhook notifications.
+
+Type: `string`
+
+Default: `"Warning: A failure occured in the pipeline. Please check on it using the information below.\n"`
+
+### success\_webhook\_url
+
+Description: Optionally, specify a webhook for MS Teams notifications.
+
+Type: `string`
+
+Default: `null`
+
+### success\_webhook\_message
+
+Description: Optionally, specify a message for webhook notifications.
+
+Type: `string`
+
+Default: `"Success! The pipeline completed successfully.\n"`
+
 ## Outputs
 
 The following outputs are exported:
@@ -320,6 +352,7 @@ Note:
 _Source code for this module is available using the links below._
 
 * [cloudwatch.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/cloudwatch.tf)
+* [lambda-notify.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/lambda-notify.tf)
 * [main.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/main.tf)
 * [outputs.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/outputs.tf)
 * [s3-path-parsing.tf](https://github.com/slalom-ggp/dataops-infra/tree/main//catalog/aws/singer-taps/s3-path-parsing.tf)

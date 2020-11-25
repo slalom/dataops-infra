@@ -32,14 +32,14 @@ module "env" {
   resource_tags        = local.resource_tags
 }
 
-provider "aws" {
-  region                  = local.aws_region
-  shared_credentials_file = local.aws_credentials_file
-  profile                 = "default"
-}
-
 terraform {
   required_providers {
     aws = "~> 3.0"
   }
+}
+
+provider "aws" {
+  region                  = local.aws_region
+  shared_credentials_file = local.aws_credentials_file
+  profile                 = "default"
 }
