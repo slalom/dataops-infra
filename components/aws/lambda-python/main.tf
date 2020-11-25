@@ -41,8 +41,8 @@ resource "aws_lambda_function" "python_lambda" {
   for_each = local.function_names
 
   # if var.upload_to_s3 == true: use S3 path; otherwise upload directly from local zip path
-  filename         = var.upload_to_s3 == true ? null : data.archive_file.lambda_zip[0].output_path
-  source_code_hash = var.upload_to_s3 == true ? null : filebase64sha256(data.archive_file.lambda_zip[0].output_path)
+  filename         = var.upload_to_s3 == true ? null : data.archive_file.lambda_zip.output_path
+  source_code_hash = var.upload_to_s3 == true ? null : filebase64sha256(data.archive_file.lambda_zip.output_path)
   s3_bucket        = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].bucket
   s3_key           = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].id
 
