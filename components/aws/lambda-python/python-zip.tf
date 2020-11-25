@@ -79,5 +79,5 @@ resource "aws_s3_bucket_object" "s3_lambda_zip" {
     length(split("/", split("//", var.upload_to_s3_path)[1]))
   ))
   source = data.archive_file.lambda_zip[0].output_path
-  etag   = data.archive_file.lambda_zip[0].output_md5
+  etag   = filebase64sha256(data.archive_file.lambda_zip[0].output_path)
 }
