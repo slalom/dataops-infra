@@ -1,14 +1,3 @@
-# data "http" "additional_reqs" {
-#   for_each = var.dependency_urls
-#   url      = each.value
-# }
-
-# resource "local_file" "additional_reqs_local" {
-#   for_each = var.dependency_urls
-#   filename = "${local.temp_build_folder}/${each.key}"
-#   content  = data.http.additional_reqs[each.value].content
-# }
-
 # Step 1: Copy Files to temp directory
 
 resource "local_file" "canary_file" {
@@ -19,8 +8,6 @@ resource "local_file" "canary_file" {
 # Step 2: Run `pip install` from within temp directory
 
 resource "null_resource" "pip" {
-  # count = fileexists("${var.lambda_source_folder}/requirements.txt") ? 1 : 0
-
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
     version_increment = 1.2 # used to force a refresh
@@ -50,33 +37,33 @@ resource "null_resource" "pip" {
       ]
     ))
   }
-  depends_on = [local_file.canary_file]
+  depends_on = [local_file.canary_file, local_file.canary_file]
 }
 
 # # Step 3: Wait for things to finish
 
-# data "null_data_source" "wait_for_lambda_exporter" {
-#   # Workaround for explicit 'depends' issue within archive_file provider: https://github.com/terraform-providers/terraform-provider-archive/issues/11
-#   inputs = {
-#     # This ensures that this data resource will not be evaluated until
-#     # after the null_resource has been created.
-#     lambda_exporter_id = fileexists("${var.lambda_source_folder}/requirements.txt") ? null_resource.pip.id : null
-#     copy_files_id      = null_resource.copy_files.id
+data "null_data_source" "wait_for_lambda_exporter" {
+  # Workaround for explicit 'depends' issue within archive_file provider: https://github.com/terraform-providers/terraform-provider-archive/issues/11
+  inputs = {
+    # This ensures that this data resource will not be evaluated until
+    # after the null_resource has been created.
+    lambda_exporter_id = fileexists("${var.lambda_source_folder}/requirements.txt") ? null_resource.pip.id : null
+    copy_files_id      = null_resource.pip.id
 
-#     # This value gives us something to implicitly depend on
-#     # in the archive_file below.
-#     source_dir = "${local.temp_build_folder}/"
-#   }
-#   depends_on = [null_resource.copy_files]
-# }
+    # This value gives us something to implicitly depend on
+    # in the archive_file below.
+    source_dir = "${local.temp_build_folder}/"
+  }
+  depends_on = [null_resource.pip]
+}
 
 # Step 4: Create a packaged zip of the temp directory
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = null_resource.pip.id == "dummy" ? local.temp_build_folder : local.temp_build_folder
+  source_dir  = data.null_data_source.wait_for_lambda_exporter.outputs["source_dir"]
   output_path = replace(local.zip_local_path, ".zip", "-${null_resource.pip.id}.zip")
-  depends_on  = [null_resource.pip, local_file.canary_file]
+  depends_on  = [null_resource.pip, local_file.canary_file, data.null_data_source.wait_for_lambda_exporter]
 }
 
 # Step 5: Optionally upload the zip file to S3

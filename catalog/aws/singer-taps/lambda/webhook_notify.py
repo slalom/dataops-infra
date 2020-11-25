@@ -5,6 +5,7 @@ This python file defines the lambda function for webhook notification.
 
 Sample code from:
  - https://aws.amazon.com/premiumsupport/knowledge-center/sns-lambda-webhooks-chime-slack-teams/
+
 """
 
 import json
