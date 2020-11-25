@@ -18,7 +18,7 @@ locals {
   project_shortname  = local.config["project_shortname"]
   azure_subscription = local.config["subscription_id"]
   azure_location     = local.config["azure_location"]
-  name_prefix        = "${local.project_shortname}"
+  name_prefix        = local.project_shortname
   resource_tags      = merge(local.config["resource_tags"], { project = local.project_shortname })
 }
 

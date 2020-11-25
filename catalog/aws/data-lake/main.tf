@@ -9,7 +9,7 @@
 
 resource "random_id" "suffix" { byte_length = 2 }
 
-data aws_s3_bucket "data_bucket_override" {
+data "aws_s3_bucket" "data_bucket_override" {
   count  = var.data_bucket_override != null ? 1 : 0
   bucket = var.data_bucket_override
 }

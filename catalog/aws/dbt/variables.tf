@@ -26,7 +26,7 @@ variable "resource_tags" {
 
 variable "admin_cidr" {
   description = "Optional. The range of IP addresses which should be able to access the DBT instance. Defaults to the local user's current IP."
-  type        = list
+  type        = list(any)
   default     = []
 }
 variable "container_image" {
