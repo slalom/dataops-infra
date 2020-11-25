@@ -106,7 +106,7 @@ module "triggered_lambda" {
     ExecuteStateMachine = {
       description = "Executes model training state machine when new training data lands in S3."
       handler     = "execute_state_machine.lambda_handler"
-      environment = { "state_machine_arn" = "${module.step-functions.state_machine_arn}" }
+      environment = { "state_machine_arn" = module.step-functions.state_machine_arn }
       secrets     = {}
     }
   }
