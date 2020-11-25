@@ -24,9 +24,9 @@ No requirements.
 
 The following providers are used by this module:
 
-- aws
-
 - http
+
+- aws
 
 - random
 
@@ -162,7 +162,7 @@ Default: `"8"`
 ### environment\_secrets
 
 Description: Mapping of environment variable names to secret manager ARNs or local file secrets. Examples:
- - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/AWS\_SECRET\_ACCESS\_KEY
+ - arn:aws:secretsmanager:[aws\_region]:[aws\_account]:secret:prod/ECSRunner/thisisnottherealsecret <!-- pragma: allowlist secret -->
  - path/to/file.json:MY\_KEY\_NAME\_1
  - path/to/file.yml:MY\_KEY\_NAME\_2
 
