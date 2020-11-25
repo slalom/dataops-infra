@@ -46,7 +46,7 @@ locals {
       "End": true
     },
 EOF2
-      : <<EOF2
+    : <<EOF2
       "Next": "NotifyOnSuccess"
     },
     "NotifyOnSuccess": {
@@ -64,7 +64,7 @@ EOF2
       "End": true
     },
 EOF2
-}
+    }
     ${var.alerts_webhook_url == null ? "" : <<EOF2
     "NotifyOnError": {
       "Type": "Task",
@@ -81,7 +81,7 @@ EOF2
       "Next": "ExecutionFailed"
     },
 EOF2
-    }
+  }
     "ExecutionFailed": {
       "Type": "Fail",
       "Cause": "Failure occurred during execution.",
@@ -90,7 +90,7 @@ EOF2
   }
 }
 EOF
-  ]
+]
 }
 
 module "step_function" {
