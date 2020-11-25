@@ -9,7 +9,7 @@
 
 resource "random_id" "suffix" { byte_length = 2 }
 
-data aws_s3_bucket "data_bucket_override" {
+data "aws_s3_bucket" "data_bucket_override" {
   count  = var.data_bucket_override != null ? 1 : 0
   bucket = var.data_bucket_override
 }
@@ -19,8 +19,8 @@ locals {
   random_bucket_suffix  = lower(random_id.suffix.dec)
   data_bucket_name = (
     var.data_bucket_override != null ? data.aws_s3_bucket.data_bucket_override[0].id : aws_s3_bucket.s3_data_bucket[0].id
-  )
-}
+
+) }
 
 resource "aws_s3_bucket" "s3_data_bucket" {
   count  = var.data_bucket_override == null ? 1 : 0
