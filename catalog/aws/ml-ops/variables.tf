@@ -72,12 +72,6 @@ variable "test_key" {
   default     = "input_data/test/test.csv"
 }
 
-variable "validate_key" {
-  description = "URL path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
-  type        = string
-  default     = "input_data/validate/validate.csv"
-}
-
 # Input data config:
 
 variable "input_data_content_type" {
