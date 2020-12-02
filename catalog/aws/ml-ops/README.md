@@ -153,6 +153,14 @@ Type: `string`
 
 Default: `"input_data/test/test.csv"`
 
+### validate\_key
+
+Description: URL path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem.
+
+Type: `string`
+
+Default: `"input_data/validate/validate.csv"`
+
 ### input\_data\_content\_type
 
 Description: Define the content type for the HPO job. If it is regular classification problem, content type is 'csv'; if image recognition, content type is
