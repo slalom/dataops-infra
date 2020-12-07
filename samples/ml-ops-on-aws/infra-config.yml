@@ -1,0 +1,4 @@
+aws_region: us-east-1
+project_shortname: MLOpsSample
+resource_tags:
+  admin_contact: admin@email.com
