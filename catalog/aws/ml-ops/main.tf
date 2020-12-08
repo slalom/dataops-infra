@@ -293,8 +293,8 @@ module "training_workflow" {
         }
         Save_Best_Model = merge(
           {
-            Type       = "Task"
-            Resource   = "arn:aws:states:::sagemaker:createModel"
+            Type     = "Task"
+            Resource = "arn:aws:states:::sagemaker:createModel"
             Parameters = {
               PrimaryContainer = {
                 Image            = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
