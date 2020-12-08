@@ -105,7 +105,7 @@ module "batch_transform_workflow" {
             DataSource = {
               S3DataSource = {
                 S3DataType = "S3Prefix"
-                S3Uri      = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.test_key}"
+                S3Uri      = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.score_key}"
               }
             }
           }
@@ -168,21 +168,22 @@ module "training_workflow" {
             "--S3_DEST"        = aws_s3_bucket.ml_bucket[0].id
             "--TRAIN_KEY"      = var.train_key
             "--VALIDATION_KEY" = var.validate_key
-            "--SCORE_KEY"      = var.test_key
+            "--SCORE_KEY"      = var.score_key
             "--INFERENCE_TYPE" = var.enable_batch_inference ? "batch" : "endpoint"
           }
         }
         Next = "Generate_Unique_Job_Name"
       }
       Generate_Unique_Job_Name = {
+        Type     = "Task"
         Resource = module.lambda_functions.function_ids["UniqueJobName"]
         Parameters = {
           JobName = var.job_name
         }
-        Type = "Task"
         Next = "Hyperparameter_Tuning"
       }
       Hyperparameter_Tuning = {
+        Type     = "Task"
         Resource = "arn:aws:states:::sagemaker:createHyperParameterTuningJob.sync"
         Parameters = {
           "HyperParameterTuningJobName.$" = "$.JobName"
@@ -221,47 +222,52 @@ module "training_workflow" {
               VolumeSizeInGB = var.training_job_storage_in_gb
             }
             RoleArn = module.training_workflow.iam_role_arn
-            InputDataConfig = [
-              {
-                ChannelName = "train"
-                DataSource = {
-                  S3DataSource = {
-                    S3DataType             = "S3Prefix"
-                    S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.train_key}"
-                    S3DataDistributionType = "FullyReplicated"
+            InputDataConfig = flatten(
+              [
+                [
+                  {
+                    ChannelName     = "train"
+                    ContentType     = var.input_data_content_type
+                    CompressionType = "None"
+                    DataSource = {
+                      S3DataSource = {
+                        S3DataType             = "S3Prefix"
+                        S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.train_key}"
+                        S3DataDistributionType = "FullyReplicated"
+                      }
+                    }
                   }
-                }
-                ContentType     = var.input_data_content_type
-                CompressionType = "None"
-              },
-              {
-                ChannelName = "validation"
-                DataSource = {
-                  S3DataSource = {
-                    S3DataType             = "S3Prefix"
-                    S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.validate_key}"
-                    S3DataDistributionType = "FullyReplicated"
+                ],
+                var.validate_key == null ? [] : [
+                  {
+                    ChannelName     = "validation"
+                    ContentType     = var.input_data_content_type
+                    CompressionType = "None"
+                    DataSource = {
+                      S3DataSource = {
+                        S3DataType             = "S3Prefix"
+                        S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.validate_key}"
+                        S3DataDistributionType = "FullyReplicated"
+                      }
+                    }
                   }
-                }
-                ContentType     = var.input_data_content_type
-                CompressionType = "None"
-              },
-            ]
+                ]
+              ]
+            )
             StaticHyperParameters = var.static_hyperparameters
           }
         }
-        Type = "Task"
         Next = "Extract_Best_Model_Path"
       }
       Extract_Best_Model_Path = {
+        Type       = "Task"
         Resource   = module.lambda_functions.function_ids["ExtractModelPath"]
         ResultPath = "$.BestModelResult"
-        Type       = "Task"
         Next       = "Query_Training_Results"
       }
       Query_Training_Results = {
-        Resource = module.lambda_functions.function_ids["QueryTrainingStatus"]
         Type     = "Task"
+        Resource = module.lambda_functions.function_ids["QueryTrainingStatus"]
         Next     = "Inference_Rule"
       }
       Inference_Rule = {
@@ -276,8 +282,8 @@ module "training_workflow" {
         Default = "Model_Accuracy_Too_Low"
       }
       Model_Accuracy_Too_Low = {
-        Comment = "Validation accuracy lower than threshold"
         Type    = "Fail"
+        Comment = "Validation accuracy lower than threshold"
       }
       Save_Best_Model = {
         Parameters = {
@@ -312,9 +318,8 @@ module "drift_detection_workflow" {
     StartAt = "Load_Pred_Outputs_from_S3_to_Database"
     States = {
       Load_Pred_Outputs_from_S3_to_Database = {
-        Resource = module.lambda_functions.function_ids["LoadPredDataDB"]
         Type     = "Task"
-        Next     = "Monitor_Input_Data"
+        Resource = module.lambda_functions.function_ids["LoadPredDataDB"]
         Parameters = {
           Payload = {
             is_predictive_db_enabled = var.enable_predictive_db
@@ -322,9 +327,10 @@ module "drift_detection_workflow" {
             db_name                  = var.predictive_db_name
             db_user                  = var.predictive_db_admin_user
             db_password              = var.predictive_db_admin_password
-            s3_csv                   = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.test_key}"
+            s3_csv                   = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.score_key}"
           }
         }
+        Next = "Monitor_Input_Data"
       }
       Monitor_Input_Data = {
         Type = "Choice"
@@ -361,18 +367,18 @@ module "drift_detection_workflow" {
         ]
       }
       Stop_Model_Training = {
-        Resource = module.lambda_functions.function_ids["StopTraining"]
         Type     = "Task"
+        Resource = module.lambda_functions.function_ids["StopTraining"]
         Next     = "Send_SNS_Alert"
       }
       Send_SNS_Alert = {
-        Resource = module.lambda_functions.function_ids["SNSAlert"]
         Type     = "Task"
+        Resource = module.lambda_functions.function_ids["SNSAlert"]
         Next     = "Monitor_Model_Performance"
       }
       Monitor_Model_Performance = {
-        Resource = module.lambda_functions.function_ids["ModelPerformanceMonitor"]
         Type     = "Task"
+        Resource = module.lambda_functions.function_ids["ModelPerformanceMonitor"]
         Next     = "Model_Monitor_Rule"
       }
       Model_Monitor_Rule = {
@@ -389,8 +395,8 @@ module "drift_detection_workflow" {
         Default = var.enable_batch_inference ? "TODO:" : "TODO:"
       }
       CloudWatch_Alarm = {
-        Resource = module.lambda_functions.function_ids["CloudWatchAlarm"]
         Type     = "Task"
+        Resource = module.lambda_functions.function_ids["CloudWatchAlarm"]
         Next     = "Model_Retrain_Rule"
       }
       Model_Retrain_Rule : {
@@ -413,8 +419,8 @@ module "drift_detection_workflow" {
         Default = "Stop_Model_Training_Final"
       }
       Stop_Model_Training_Final = {
-        Resource = module.lambda_functions.function_ids["StopTraining"]
         Type     = "Task"
+        Resource = module.lambda_functions.function_ids["StopTraining"]
         End      = true
         # TODO: Re-enable if we want to update the endpoing or run the transform after each training job
         # Next     = "${var.endpoint_or_batch_transform}"
