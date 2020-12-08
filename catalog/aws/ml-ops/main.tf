@@ -15,7 +15,7 @@ module "endpoint_config_workflow" {
   # State machine input for creating or updating an inference endpoint
   count         = var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? 0 : 1
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}-endpoint_config"
+  name_prefix   = "${var.name_prefix}a-endpoint_config-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
@@ -84,7 +84,7 @@ module "endpoint_config_workflow" {
 module "batch_transform_workflow" {
   count         = var.endpoint_or_batch_transform == "Batch Transform" ? 1 : 0
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}-batch_transform"
+  name_prefix   = "${var.name_prefix}b-batch_transform-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
@@ -147,7 +147,7 @@ module "batch_transform_workflow" {
 
 module "training_workflow" {
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}-model-training"
+  name_prefix   = "${var.name_prefix}c-model_training-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
@@ -247,7 +247,7 @@ module "training_workflow" {
                 CompressionType = "None"
               },
             ]
-            StaticHyperParameters = jsonencode(var.static_hyperparameters)
+            StaticHyperParameters = var.static_hyperparameters
           }
         }
         Type = "Task"
@@ -268,9 +268,9 @@ module "training_workflow" {
         Type = "Choice"
         Choices = [
           {
-            Variable                               = "$['trainingMetrics'][0]['Value']"
-            "${var.inference_comparison_operator}" = var.inference_metric_threshold
-            Next                                   = "Save Best Model"
+            Variable                            = "$['trainingMetrics'][0]['Value']"
+            (var.inference_comparison_operator) = var.inference_metric_threshold
+            Next                                = "Save_Best_Model"
           },
         ]
         Default = "Model_Accuracy_Too_Low"
@@ -292,14 +292,7 @@ module "training_workflow" {
         ResultPath = "$.modelSaveResult"
         Resource   = "arn:aws:states:::sagemaker:createModel"
         Type       = "Task"
-        Next       = "Load_Pred_Outputs_from_S3_to_Database"
-      }
-      Stop_Model_Training_Final = {
-        Resource = module.lambda_functions.function_ids["StopTraining"]
-        Type     = "Task"
-        End      = true
-        # TODO: Re-enable if we want to update the endpoing or run the transform after each training job
-        # Next     = "${var.endpoint_or_batch_transform}"
+        End        = true
       }
     }
   })
@@ -308,7 +301,7 @@ module "training_workflow" {
 module "drift_detection_workflow" {
   count         = var.enable_predictive_db ? 1 : 0
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}-drift_detection"
+  name_prefix   = "${var.name_prefix}d-drift_detection-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
@@ -387,8 +380,8 @@ module "drift_detection_workflow" {
         Choices = [
           {
             Not = {
-              Variable                           = "$.MetricName"
-              "${var.alarm_comparison_operator}" = var.alarm_threshold
+              Variable                        = "$.MetricName"
+              (var.alarm_comparison_operator) = var.alarm_threshold
             }
             Next = "CloudWatch_Alarm"
           },
@@ -406,8 +399,8 @@ module "drift_detection_workflow" {
           {
             And = [
               {
-                Variable                           = "$.MetricName"
-                "${var.alarm_comparison_operator}" = var.alarm_threshold
+                Variable                        = "$.MetricName"
+                (var.alarm_comparison_operator) = var.alarm_threshold
               },
               {
                 Variable     = "$.response"
