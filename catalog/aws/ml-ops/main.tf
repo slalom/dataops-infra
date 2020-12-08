@@ -22,7 +22,7 @@ module "endpoint_config_workflow" {
   lambda_functions  = module.lambda_functions.function_ids
   writeable_buckets = local.writeable_buckets
   state_machine_definition = jsonencode({
-    StartAt = "Batch_Transform"
+    StartAt = "Create_Model_Endpoint_Config"
     States = {
       Create_Model_Endpoint_Config = {
         Resource = "arn:aws:states:::sagemaker:createEndpointConfig"
@@ -316,7 +316,7 @@ module "drift_detection_workflow" {
   writeable_buckets = local.writeable_buckets
   schedules         = var.drift_detection_schedule
   state_machine_definition = jsonencode({
-    StartAt = "Glue_Data_Transformation"
+    StartAt = "Load_Pred_Outputs_from_S3_to_Database"
     States = {
       Load_Pred_Outputs_from_S3_to_Database = {
         Resource = module.lambda_functions.function_ids["LoadPredDataDB"]
