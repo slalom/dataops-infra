@@ -1,4 +1,4 @@
-module "ml-ops" {
+module "ml_ops" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source = "../../catalog/aws/ml-ops"
@@ -29,9 +29,8 @@ module "ml-ops" {
   training_job_instance_count = 1
   training_job_storage_in_gb  = 30
 
-  train_key = "input_data/train/train.csv"
-  test_key  = "input_data/test/score.csv"
-  #validate_key = "input_data/validate/"
+  train_local_path = "${path.module}/source/data/train.csv"
+  score_local_path = "${path.module}/source/data/tests.csv"
 
   # enable_predictive_db = true
 
@@ -87,8 +86,6 @@ module "ml-ops" {
 
   # set score_local_path to 'null' if running endpoint inference
 
-  train_local_path  = "source/data/train.csv"
-  score_local_path  = "source/score/score.csv"
 
   glue_dependency_package    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
@@ -122,5 +119,5 @@ module "ml-ops" {
 }
 
 output "summary" {
-  value = module.ml-ops.summary
+  value = module.ml_ops.summary
 }

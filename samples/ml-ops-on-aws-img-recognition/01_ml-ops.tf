@@ -1,4 +1,4 @@
-module "ml-ops" {
+module "ml_ops" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source = "../../catalog/aws/ml-ops"
@@ -29,8 +29,6 @@ module "ml-ops" {
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
 
-  train_key    = "input_data/train/"
-  test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
   glue_transform_script = "${path.module}/source/scripts/transform.py"
@@ -83,5 +81,5 @@ module "ml-ops" {
   }
 }
 output "summary" {
-  value = module.ml-ops.summary
+  value = module.ml_ops.summary
 }

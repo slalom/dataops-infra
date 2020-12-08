@@ -47,7 +47,7 @@ variable "train_local_path" {
 }
 
 variable "score_local_path" {
-  description = "Local path for scoring data. Set to null for endpoint inference"
+  description = "Local path for scoring data (e.g. test data). Set to null for endpoint inference."
   type        = string
   default     = "source/data/score/score.csv"
 }
@@ -61,19 +61,19 @@ variable "ml_bucket_override" {
 }
 
 variable "train_key" {
-  description = "URL path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "S3 path postfix for training data. To specify a folder, end the path with a slash ('/')"
   type        = string
   default     = "input_data/train/train.csv"
 }
 
-variable "test_key" {
-  description = "URL path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+variable "score_key" {
+  description = "S3 path postfix for data to score (e.g. test data). To specify a folder, end the path with a slash ('/')."
   type        = string
   default     = "input_data/test/test.csv"
 }
 
 variable "validate_key" {
-  description = "URL path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "URL path postfix for validation data. To specify a folder, end the path with a slash ('/')."
   type        = string
   default     = "input_data/validate/validate.csv"
 }

@@ -38,23 +38,19 @@ resource "aws_s3_bucket" "ml_bucket" {
 }
 
 resource "aws_s3_bucket_object" "train_data" {
+  for_each     = substr(strrev(var.train_local_path), 0, 1) == "/" ? fileset(var.train_local_path, "*.*") : [var.train_local_path]
   bucket       = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
-  key          = var.train_key
-  source       = var.train_local_path
+  key          = substr(strrev(var.train_key), 0, 1) == "/" ? "${var.train_key}${basename(each.value)}" : var.train_key
+  source       = abspath(each.value)
   content_type = var.input_data_content_type
-  for_each = fileset(
-    var.train_local_path, "${var.train_key}/*.png"
-  )
 }
 
-resource "aws_s3_bucket_object" "score_data" {
+resource "aws_s3_bucket_object" "test_data" {
+  for_each     = substr(strrev(var.score_local_path), 0, 1) == "/" ? fileset(var.score_local_path, "*.*") : [var.score_local_path]
   bucket       = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
-  key          = var.test_key
-  source       = var.score_local_path
+  key          = substr(strrev(var.score_key), 0, 1) == "/" ? "${var.score_key}${basename(each.value)}" : var.score_key
+  source       = abspath(each.value)
   content_type = var.input_data_content_type
-  for_each = fileset(
-    var.score_local_path, "${var.test_key}/*.png"
-  )
 }
 
 resource "aws_s3_bucket_object" "glue_script" {
