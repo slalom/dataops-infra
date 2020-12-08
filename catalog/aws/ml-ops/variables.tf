@@ -75,7 +75,8 @@ variable "score_key" {
 variable "validate_key" {
   description = "URL path postfix for validation data. To specify a folder, end the path with a slash ('/')."
   type        = string
-  default     = "input_data/validate/validate.csv"
+  default     = null
+  # default     = "input_data/validate/validate.csv"
 }
 
 # Input data config:
