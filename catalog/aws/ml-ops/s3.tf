@@ -7,9 +7,7 @@ data "aws_s3_bucket" "ml_bucket_override" {
 
 locals {
   random_bucket_suffix = lower(random_id.suffix.dec)
-  ml_bucket = (
-    var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
-  )
+  ml_bucket            = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
 }
 
 resource "aws_s3_bucket" "source_repository" {

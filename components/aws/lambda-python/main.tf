@@ -12,7 +12,7 @@ resource "random_id" "suffix" {
 
 locals {
   is_disabled     = length(var.functions) == 0 ? true : false
-  has_s3_triggers = var.s3_triggers == null ? false : (length(var.s3_triggers) > 0 ? true : false)
+  has_s3_triggers = var.s3_triggers == null ? false : length(var.s3_triggers) > 0 ? true : false
   is_windows      = substr(pathexpand("~"), 0, 1) == "/" ? false : true
   random_suffix   = lower(random_id.suffix.dec)
   function_names  = toset(keys(var.functions))

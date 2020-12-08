@@ -107,13 +107,13 @@ EOF
   default     = "training-endpoint"
 }
 
-variable enable_api_endpoint {
+variable "enable_api_endpoint" {
   description = "True to create/update an inference API endpoint or do batch inference on test data."
   type        = bool
   default     = true
 }
 
-variable enable_batch_inference {
+variable "enable_batch_inference" {
   description = "True to create/update a workflow for batch inference on test data."
   type        = bool
   default     = true

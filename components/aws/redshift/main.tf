@@ -86,11 +86,11 @@ resource "aws_redshift_cluster" "redshift" {
   database_name             = var.database_name
 
   master_username = var.admin_username
-  master_password = (
+  master_password = ([
     var.admin_password == null
     ? "${lower(substr(random_id.random_pass.hex, 0, 4))}${upper(substr(random_id.random_pass.hex, 4, 4))}"
     : var.admin_password
-  )
+  ])[0] # Terraform format bug workaround
 
   node_type           = var.node_type
   number_of_nodes     = var.num_nodes

@@ -1,9 +1,6 @@
 output "ecs_cluster_name" {
   description = "The name of the ECS cluster."
-  value = (
-    length(aws_ecs_cluster.ecs_cluster.arn) > 0 ?
-    aws_ecs_cluster.ecs_cluster.name : "null"
-  )
+  value       = length(aws_ecs_cluster.ecs_cluster.arn) > 0 ? aws_ecs_cluster.ecs_cluster.name : "null"
 }
 output "ecs_cluster_arn" {
   description = "The unique ID (ARN) of the ECS cluster."
