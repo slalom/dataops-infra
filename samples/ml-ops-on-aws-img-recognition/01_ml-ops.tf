@@ -21,7 +21,8 @@ module "ml_ops" {
   tuning_metric                 = "accuracy"
   inference_comparison_operator = "NumericGreaterThan"
   inference_metric_threshold    = 0.7
-  endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
+  enable_api_endpoint           = true
+  enable_batch_scoring          = true
 
   max_number_training_jobs    = 3
   max_parallel_training_jobs  = 1

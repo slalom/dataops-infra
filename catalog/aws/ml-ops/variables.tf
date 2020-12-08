@@ -114,16 +114,10 @@ variable "enable_api_endpoint" {
   default     = true
 }
 
-variable "enable_batch_inference" {
-  description = "True to create/update a workflow for batch inference on test data."
+variable "enable_batch_scoring" {
+  description = "True to create/update a workflow for batch scoring of input data."
   type        = bool
   default     = true
-}
-
-variable "endpoint_or_batch_transform" {
-  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data."
-  type        = string
-  default     = "Batch Transform" # 'Batch Transform' or 'Create Model Endpoint Config'
 }
 
 variable "endpoint_instance_count" {
@@ -138,13 +132,13 @@ variable "endpoint_instance_type" {
   default     = "ml.m4.xlarge"
 }
 
-variable "batch_transform_instance_count" {
+variable "batch_scoring_instance_count" {
   description = "Number of batch transformation instances."
   type        = number
   default     = 1
 }
 
-variable "batch_transform_instance_type" {
+variable "batch_scoring_instance_type" {
   description = "Instance type for batch inference."
   type        = string
   default     = "ml.m4.xlarge"
@@ -508,7 +502,7 @@ EOF
   type        = list(string)
   default     = []
 }
-variable "batch_transform_schedule" {
+variable "batch_scoring_schedule" {
   description = <<EOF
 Optional. A list of cron expressions.
 Example:

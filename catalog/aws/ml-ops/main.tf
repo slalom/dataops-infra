@@ -13,141 +13,146 @@ locals {
 
 module "endpoint_config_workflow" {
   # State machine input for creating or updating an inference endpoint
-  count         = var.endpoint_or_batch_transform == "Create Model Endpoint Config" ? 0 : 1
+  count         = var.enable_api_endpoint ? 1 : 0
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}a-endpoint_config-"
+  name_prefix   = "${var.name_prefix}b-endpoint_config-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
   lambda_functions  = module.lambda_functions.function_ids
   writeable_buckets = local.writeable_buckets
-  state_machine_definition = jsonencode({
-    StartAt = "Create_Model_Endpoint_Config"
-    States = {
-      Create_Model_Endpoint_Config = {
-        Resource = "arn:aws:states:::sagemaker:createEndpointConfig"
-        Parameters = {
-          "EndpointConfigName.$" = "$.modelName"
-          ProductionVariants = [
+  state_machine_definition = jsonencode(
+    {
+      StartAt = "Create_Model_Endpoint_Config"
+      States = {
+        Create_Model_Endpoint_Config = {
+          Resource = "arn:aws:states:::sagemaker:createEndpointConfig"
+          Parameters = {
+            "EndpointConfigName.$" = "$.modelName"
+            ProductionVariants = [
+              {
+                InitialInstanceCount = var.endpoint_instance_count
+                InstanceType         = var.endpoint_instance_type
+                "ModelName.$"        = "$.modelName"
+                VariantName          = "AllTraffic"
+              }
+            ]
+          }
+          Type = "Task"
+          Next = "Check_Endpoint_Exists"
+        }
+        Check_Endpoint_Exists = {
+          Resource = module.lambda_functions.function_ids["CheckEndpointExists"]
+          Parameters = {
+            "EndpointConfigArn.$" = "$.EndpointConfigArn"
+            EndpointName          = var.endpoint_name
+          }
+          Type = "Task"
+          Next = "Create_or_Update_Endpoint"
+        }
+        Create_or_Update_Endpoint = {
+          Type = "Choice"
+          Choices = [
             {
-              InitialInstanceCount = var.endpoint_instance_count
-              InstanceType         = var.endpoint_instance_type
-              "ModelName.$"        = "$.modelName"
-              VariantName          = "AllTraffic"
+              Variable     = "$['CreateOrUpdate']"
+              StringEquals = "Update"
+              Next         = "Update_Existing_Model_Endpoint"
             }
           ]
+          Default = "Create_New_Model_Endpoint"
         }
-        Type = "Task"
-        Next = "Check_Endpoint_Exists"
-      }
-      Check_Endpoint_Exists = {
-        Resource = module.lambda_functions.function_ids["CheckEndpointExists"]
-        Parameters = {
-          "EndpointConfigArn.$" = "$.EndpointConfigArn"
-          EndpointName          = var.endpoint_name
-        }
-        Type = "Task"
-        Next = "Create_or_Update_Endpoint"
-      }
-      Create_or_Update_Endpoint = {
-        Type = "Choice"
-        Choices = [
-          {
-            Variable     = "$['CreateOrUpdate']"
-            StringEquals = "Update"
-            Next         = "Update_Existing_Model_Endpoint"
+        Create_New_Model_Endpoint = {
+          Resource = "arn:aws:states:::sagemaker:createEndpoint"
+          Parameters = {
+            "EndpointConfigName.$" = "$.endpointConfig"
+            "EndpointName.$"       = "$.endpointName"
           }
-        ]
-        Default = "Create_New_Model_Endpoint"
-      }
-      Create_New_Model_Endpoint = {
-        Resource = "arn:aws:states:::sagemaker:createEndpoint"
-        Parameters = {
-          "EndpointConfigName.$" = "$.endpointConfig"
-          "EndpointName.$"       = "$.endpointName"
+          Type = "Task"
+          End  = true
         }
-        Type = "Task"
-        End  = true
-      }
-      Update_Existing_Model_Endpoint = {
-        Resource = "arn:aws:states:::sagemaker:updateEndpoint"
-        Parameters = {
-          "EndpointConfigName.$" = "$.endpointConfig"
-          "EndpointName.$"       = "$.endpointName"
+        Update_Existing_Model_Endpoint = {
+          Resource = "arn:aws:states:::sagemaker:updateEndpoint"
+          Parameters = {
+            "EndpointConfigName.$" = "$.endpointConfig"
+            "EndpointName.$"       = "$.endpointName"
+          }
+          Type = "Task"
+          End  = true
         }
-        Type = "Task"
-        End  = true
       }
     }
-  })
+  )
 }
-module "batch_transform_workflow" {
-  count         = var.endpoint_or_batch_transform == "Batch Transform" ? 1 : 0
+
+module "batch_scoring_workflow" {
+  count         = var.enable_batch_scoring ? 1 : 0
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}b-batch_transform-"
+  name_prefix   = "${var.name_prefix}c-batch_scoring-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
   lambda_functions  = module.lambda_functions.function_ids
   writeable_buckets = local.writeable_buckets
-  schedules         = var.batch_transform_schedule
-  state_machine_definition = jsonencode({
-    StartAt = "Batch_Transform"
-    States = {
-      Batch_Transform = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::sagemaker:createTransformJob.sync"
-        Parameters = {
-          "ModelName.$" = "$.modelName"
-          TransformInput = {
-            ContentType     = var.input_data_content_type
-            CompressionType = "None"
-            DataSource = {
-              S3DataSource = {
-                S3DataType = "S3Prefix"
-                S3Uri      = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.score_key}"
+  schedules         = var.batch_scoring_schedule
+  state_machine_definition = jsonencode(
+    {
+      StartAt = "Batch_Scoring"
+      States = {
+        Batch_Scoring = {
+          Type     = "Task"
+          Resource = "arn:aws:states:::sagemaker:createTransformJob.sync"
+          Parameters = {
+            "ModelName.$" = "$.modelName"
+            TransformInput = {
+              ContentType     = var.input_data_content_type
+              CompressionType = "None"
+              DataSource = {
+                S3DataSource = {
+                  S3DataType = "S3Prefix"
+                  S3Uri      = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.score_key}"
+                }
               }
             }
+            TransformOutput = {
+              S3OutputPath = "s3://${aws_s3_bucket.ml_bucket[0].id}/batch-transform-output"
+            }
+            TransformResources = {
+              InstanceCount = var.batch_scoring_instance_count
+              InstanceType  = var.batch_scoring_instance_type
+            }
+            "TransformJobName.$" = "States.Format('{}-{}', $.modelName, $$.Execution.Id)"
           }
-          TransformOutput = {
-            S3OutputPath = "s3://${aws_s3_bucket.ml_bucket[0].id}/batch-transform-output"
-          }
-          TransformResources = {
-            InstanceCount = var.batch_transform_instance_count
-            InstanceType  = var.batch_transform_instance_type
-          }
-          "TransformJobName.$" = "$.modelName"
+          Next = "Rename_Batch_Scoring_Output"
         }
-        Next = "Rename_Batch_Transform_Output"
-      }
-      Rename_Batch_Transform_Output = {
-        Type     = "Task"
-        Resource = module.lambda_functions.function_ids["RenameBatchOutput"]
-        Parameters = {
-          Payload = {
-            BucketName = aws_s3_bucket.ml_bucket[0].id
-            Path       = "batch-transform-output"
+        Rename_Batch_Scoring_Output = {
+          Type     = "Task"
+          Resource = module.lambda_functions.function_ids["RenameBatchOutput"]
+          Parameters = {
+            Payload = {
+              BucketName = aws_s3_bucket.ml_bucket[0].id
+              Path       = "batch-transform-output"
+            }
           }
+          Next = "Run_Glue_Crawler"
         }
-        Next = "Run_Glue_Crawler"
-      }
-      Run_Glue_Crawler = {
-        Type     = "Task"
-        Resource = module.lambda_functions.function_ids["RunGlueCrawler"]
-        Parameters = {
-          Payload = {
-            CrawlerName = module.glue_crawler.glue_crawler_name
+        Run_Glue_Crawler = {
+          Type     = "Task"
+          Resource = module.lambda_functions.function_ids["RunGlueCrawler"]
+          Parameters = {
+            Payload = {
+              CrawlerName = module.glue_crawler.glue_crawler_name
+            }
           }
+          End = true
         }
-        End = true
       }
     }
-  })
+  )
 }
 
 module "training_workflow" {
   source        = "../../../components/aws/step-functions"
-  name_prefix   = "${var.name_prefix}c-model_training-"
+  name_prefix   = "${var.name_prefix}a-model_training-"
   environment   = var.environment
   resource_tags = var.resource_tags
 
@@ -156,151 +161,170 @@ module "training_workflow" {
   schedules         = var.training_job_schedule
   state_machine_definition = jsonencode({
     StartAt = "Glue_Data_Transformation"
-    States = {
-      Glue_Data_Transformation = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::glue:startJobRun.sync"
-        Parameters = {
-          JobName = module.glue_job.glue_job_name
-          Arguments = {
-            "--extra-py-files" = "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl"
-            "--S3_SOURCE"      = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
-            "--S3_DEST"        = aws_s3_bucket.ml_bucket[0].id
-            "--TRAIN_KEY"      = var.train_key
-            "--VALIDATION_KEY" = var.validate_key
-            "--SCORE_KEY"      = var.score_key
-            "--INFERENCE_TYPE" = var.enable_batch_inference ? "batch" : "endpoint"
+    States = merge(
+      {
+        Glue_Data_Transformation = {
+          Type     = "Task"
+          Resource = "arn:aws:states:::glue:startJobRun.sync"
+          Parameters = {
+            JobName = module.glue_job.glue_job_name
+            Arguments = {
+              "--extra-py-files" = "s3://${aws_s3_bucket.source_repository.id}/glue/python/pandasmodule-0.1-py3-none-any.whl"
+              "--S3_SOURCE"      = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
+              "--S3_DEST"        = aws_s3_bucket.ml_bucket[0].id
+              "--TRAIN_KEY"      = var.train_key
+              "--VALIDATION_KEY" = var.validate_key
+              "--SCORE_KEY"      = var.score_key
+              "--INFERENCE_TYPE" = var.enable_batch_scoring ? "batch" : "endpoint"
+            }
           }
+          Next = "Generate_Unique_Job_Name"
         }
-        Next = "Generate_Unique_Job_Name"
-      }
-      Generate_Unique_Job_Name = {
-        Type     = "Task"
-        Resource = module.lambda_functions.function_ids["UniqueJobName"]
-        Parameters = {
-          JobName = var.job_name
-        }
-        Next = "Hyperparameter_Tuning"
-      }
-      Hyperparameter_Tuning = {
-        Type     = "Task"
-        Resource = "arn:aws:states:::sagemaker:createHyperParameterTuningJob.sync"
-        Parameters = {
-          "HyperParameterTuningJobName.$" = "$.JobName"
-          HyperParameterTuningJobConfig = {
-            Strategy = var.tuning_strategy
-            HyperParameterTuningJobObjective = {
-              Type       = var.tuning_objective
-              MetricName = var.tuning_metric
-            }
-            ResourceLimits = {
-              MaxNumberOfTrainingJobs = var.max_number_training_jobs
-              MaxParallelTrainingJobs = var.max_parallel_training_jobs
-            }
-            ParameterRanges = var.parameter_ranges
+        Generate_Unique_Job_Name = {
+          Type     = "Task"
+          Resource = module.lambda_functions.function_ids["UniqueJobName"]
+          Parameters = {
+            JobName = var.job_name
           }
-          TrainingJobDefinition = {
-            AlgorithmSpecification = {
-              MetricDefinitions = [
-                {
-                  Name  = var.tuning_metric
-                  Regex = "${var.tuning_metric}: ([0-9\\.]+)"
-                }
-              ]
-              TrainingImage     = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
-              TrainingInputMode = "File"
+          Next = "Hyperparameter_Tuning"
+        }
+        Hyperparameter_Tuning = {
+          Type     = "Task"
+          Resource = "arn:aws:states:::sagemaker:createHyperParameterTuningJob.sync"
+          Parameters = {
+            "HyperParameterTuningJobName.$" = "$.JobName"
+            HyperParameterTuningJobConfig = {
+              Strategy = var.tuning_strategy
+              HyperParameterTuningJobObjective = {
+                Type       = var.tuning_objective
+                MetricName = var.tuning_metric
+              }
+              ResourceLimits = {
+                MaxNumberOfTrainingJobs = var.max_number_training_jobs
+                MaxParallelTrainingJobs = var.max_parallel_training_jobs
+              }
+              ParameterRanges = var.parameter_ranges
             }
-            OutputDataConfig = {
-              S3OutputPath = "s3://${aws_s3_bucket.ml_bucket[0].id}/models"
-            }
-            StoppingCondition = {
-              MaxRuntimeInSeconds = 86400
-            }
-            ResourceConfig = {
-              InstanceCount  = var.training_job_instance_count
-              InstanceType   = var.training_job_instance_type
-              VolumeSizeInGB = var.training_job_storage_in_gb
-            }
-            RoleArn = module.training_workflow.iam_role_arn
-            InputDataConfig = flatten(
-              [
-                [
+            TrainingJobDefinition = {
+              AlgorithmSpecification = {
+                MetricDefinitions = [
                   {
-                    ChannelName     = "train"
-                    ContentType     = var.input_data_content_type
-                    CompressionType = "None"
-                    DataSource = {
-                      S3DataSource = {
-                        S3DataType             = "S3Prefix"
-                        S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.train_key}"
-                        S3DataDistributionType = "FullyReplicated"
-                      }
-                    }
-                  }
-                ],
-                var.validate_key == null ? [] : [
-                  {
-                    ChannelName     = "validation"
-                    ContentType     = var.input_data_content_type
-                    CompressionType = "None"
-                    DataSource = {
-                      S3DataSource = {
-                        S3DataType             = "S3Prefix"
-                        S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.validate_key}"
-                        S3DataDistributionType = "FullyReplicated"
-                      }
-                    }
+                    Name  = var.tuning_metric
+                    Regex = "${var.tuning_metric}: ([0-9\\.]+)"
                   }
                 ]
-              ]
-            )
-            StaticHyperParameters = var.static_hyperparameters
+                TrainingImage     = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
+                TrainingInputMode = "File"
+              }
+              OutputDataConfig = {
+                S3OutputPath = "s3://${aws_s3_bucket.ml_bucket[0].id}/models"
+              }
+              StoppingCondition = {
+                MaxRuntimeInSeconds = 86400
+              }
+              ResourceConfig = {
+                InstanceCount  = var.training_job_instance_count
+                InstanceType   = var.training_job_instance_type
+                VolumeSizeInGB = var.training_job_storage_in_gb
+              }
+              RoleArn = module.training_workflow.iam_role_arn
+              InputDataConfig = flatten(
+                [
+                  [
+                    {
+                      ChannelName     = "train"
+                      ContentType     = var.input_data_content_type
+                      CompressionType = "None"
+                      DataSource = {
+                        S3DataSource = {
+                          S3DataType             = "S3Prefix"
+                          S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.train_key}"
+                          S3DataDistributionType = "FullyReplicated"
+                        }
+                      }
+                    }
+                  ],
+                  var.validate_key == null ? [] : [
+                    {
+                      ChannelName     = "validation"
+                      ContentType     = var.input_data_content_type
+                      CompressionType = "None"
+                      DataSource = {
+                        S3DataSource = {
+                          S3DataType             = "S3Prefix"
+                          S3Uri                  = "s3://${aws_s3_bucket.ml_bucket[0].id}/${var.validate_key}"
+                          S3DataDistributionType = "FullyReplicated"
+                        }
+                      }
+                    }
+                  ]
+                ]
+              )
+              StaticHyperParameters = var.static_hyperparameters
+            }
           }
+          Next = "Extract_Best_Model_Path"
         }
-        Next = "Extract_Best_Model_Path"
-      }
-      Extract_Best_Model_Path = {
-        Type       = "Task"
-        Resource   = module.lambda_functions.function_ids["ExtractModelPath"]
-        ResultPath = "$.BestModelResult"
-        Next       = "Query_Training_Results"
-      }
-      Query_Training_Results = {
-        Type     = "Task"
-        Resource = module.lambda_functions.function_ids["QueryTrainingStatus"]
-        Next     = "Inference_Rule"
-      }
-      Inference_Rule = {
-        Type = "Choice"
-        Choices = [
+        Extract_Best_Model_Path = {
+          Type       = "Task"
+          Resource   = module.lambda_functions.function_ids["ExtractModelPath"]
+          ResultPath = "$.BestModelResult"
+          Next       = "Query_Training_Results"
+        }
+        Query_Training_Results = {
+          Type     = "Task"
+          Resource = module.lambda_functions.function_ids["QueryTrainingStatus"]
+          Next     = "Inference_Rule"
+        }
+        Inference_Rule = {
+          Type = "Choice"
+          Choices = [
+            {
+              Variable                            = "$['trainingMetrics'][0]['Value']"
+              (var.inference_comparison_operator) = var.inference_metric_threshold
+              Next                                = "Save_Best_Model"
+            },
+          ]
+          Default = "Model_Accuracy_Too_Low"
+        }
+        Model_Accuracy_Too_Low = {
+          Type    = "Fail"
+          Comment = "Validation accuracy lower than threshold"
+        }
+        Save_Best_Model = merge(
           {
-            Variable                            = "$['trainingMetrics'][0]['Value']"
-            (var.inference_comparison_operator) = var.inference_metric_threshold
-            Next                                = "Save_Best_Model"
-          },
-        ]
-        Default = "Model_Accuracy_Too_Low"
-      }
-      Model_Accuracy_Too_Low = {
-        Type    = "Fail"
-        Comment = "Validation accuracy lower than threshold"
-      }
-      Save_Best_Model = {
-        Parameters = {
-          PrimaryContainer = {
-            Image            = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
-            Environment      = {}
-            "ModelDataUrl.$" = "$.modelDataUrl"
+            Type       = "Task"
+            Resource   = "arn:aws:states:::sagemaker:createModel"
+            Parameters = {
+              PrimaryContainer = {
+                Image            = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
+                Environment      = {}
+                "ModelDataUrl.$" = "$.modelDataUrl"
+              }
+              ExecutionRoleArn = module.training_workflow.iam_role_arn
+              "ModelName.$"    = "$.modelName"
+            }
+            ResultPath = "$.modelSaveResult"
+          }, var.enable_api_endpoint ? { Next = "Execute_API_Update_Workflow" } : { End = true }
+        )
+      },
+      var.enable_api_endpoint == false ? {} : {
+        Execute_API_Update_Workflow = {
+          Type     = "Task"
+          Comment  = "Start the Step Function to create or update the API endpoint."
+          Resource = "arn:aws:states:::states:startExecution"
+          Parameters = {
+            StateMachineArn = module.endpoint_config_workflow[0].state_machine_arn
+            Input = {
+              "modelName.$"                                  = "$.modelName"
+              "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$" = "$$.Execution.Id"
+              NeedCallback                                   = false
+            }
           }
-          ExecutionRoleArn = module.training_workflow.iam_role_arn
-          "ModelName.$"    = "$.modelName"
+          End = true
         }
-        ResultPath = "$.modelSaveResult"
-        Resource   = "arn:aws:states:::sagemaker:createModel"
-        Type       = "Task"
-        End        = true
       }
-    }
+    )
   })
 }
 
@@ -357,12 +381,12 @@ module "drift_detection_workflow" {
               Variable     = "$.latest_result_status"
               StringEquals = "Completed"
             }
-            Next = "Stop Model Training"
+            Next = "Stop_Model_Training"
           },
           {
             Variable     = "$.latest_result_status"
             StringEquals = "Completed"
-            Next         = "Monitor Model Performance"
+            Next         = "Monitor_Model_Performance"
           },
         ]
       }
@@ -392,7 +416,7 @@ module "drift_detection_workflow" {
             Next = "CloudWatch_Alarm"
           },
         ]
-        Default = var.enable_batch_inference ? "TODO:" : "TODO:"
+        Default = var.enable_batch_scoring ? "TODO:" : "TODO:"
       }
       CloudWatch_Alarm = {
         Type     = "Task"
@@ -422,8 +446,6 @@ module "drift_detection_workflow" {
         Type     = "Task"
         Resource = module.lambda_functions.function_ids["StopTraining"]
         End      = true
-        # TODO: Re-enable if we want to update the endpoing or run the transform after each training job
-        # Next     = "${var.endpoint_or_batch_transform}"
       }
     }
   })
