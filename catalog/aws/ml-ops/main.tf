@@ -8,7 +8,7 @@
 
 
 locals {
-  writeable_buckets = var.ml_bucket_override != null ? data.aws_s3_bucket.ml_bucket_override[0].id : aws_s3_bucket.ml_bucket[0].id
+  writeable_buckets = var.ml_bucket_override != null ? [data.aws_s3_bucket.ml_bucket_override[0].id] : [aws_s3_bucket.ml_bucket[0].id]
 }
 
 module "endpoint_config_workflow" {
