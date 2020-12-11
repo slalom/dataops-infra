@@ -260,30 +260,30 @@ variable "training_job_storage_in_gb" {
 # ECR input variables (BYO)
 
 variable "byo_model_image_name" {
-  description = "Image and repo name for bring your own model."
+  description = "Image and repo name for bring your own model. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "byo-custom"
 }
 
 variable "byo_model_image_tag" {
-  description = "Tag for bring your own model image."
+  description = "Tag for bring your own model image. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "latest"
 }
 
 variable "byo_model_repo_name" {
-  description = "Name for your BYO model image repository."
+  description = "Name for your BYO model image repository. Ignored if `built_in_model_image` is set."
   type        = string
 }
 
 variable "byo_model_source_image_path" {
-  description = "Local source path for bring your own model docker image."
+  description = "Local source path for bring your own model docker image. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "source/containers/ml-ops-byo-custom"
 }
 
 variable "byo_model_ecr_tag_name" {
-  description = "Tag name for the BYO ecr image."
+  description = "Tag name for the BYO ecr image. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "latest"
 }

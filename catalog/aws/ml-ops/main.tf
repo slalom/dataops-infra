@@ -213,7 +213,7 @@ module "training_workflow" {
                     Regex = "${var.tuning_metric}: ([0-9\\.]+)"
                   }
                 ]
-                TrainingImage     = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
+                TrainingImage     = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model[0].ecr_image_url_and_tag
                 TrainingInputMode = "File"
               }
               OutputDataConfig = {
@@ -297,7 +297,7 @@ module "training_workflow" {
             Resource = "arn:aws:states:::sagemaker:createModel"
             Parameters = {
               PrimaryContainer = {
-                Image            = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model.ecr_image_url_and_tag
+                Image            = var.built_in_model_image != null ? var.built_in_model_image : module.ecr_image_byo_model[0].ecr_image_url_and_tag
                 Environment      = {}
                 "ModelDataUrl.$" = "$.modelDataUrl"
               }
