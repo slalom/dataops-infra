@@ -29,8 +29,11 @@ variable "runtime" {
   default     = "python3.8"
 }
 variable "pip_path" {
-  description = "The path to a local pip executable, used to package python dependencies."
-  default     = "pip3"
+  description = <<EOF
+The path to a local pip executable, used to package python dependencies.
+If omitted, will use 'pip' on Windows-based systems and 'pip3' on Linux/Mac.
+EOF
+  default     = null
 }
 variable "timeout_seconds" {
   description = "The amount of time which can pass before the function will timeout and fail execution."

@@ -14,6 +14,7 @@ locals {
   is_disabled     = length(var.functions) == 0 ? true : false
   has_s3_triggers = var.s3_triggers == null ? false : length(var.s3_triggers) > 0 ? true : false
   is_windows      = substr(pathexpand("~"), 0, 1) == "/" ? false : true
+  pip_path        = coalesce(var.pip_path, local.is_windows ? "pip" : "pip3")
   random_suffix   = lower(random_id.suffix.dec)
   function_names  = toset(keys(var.functions))
   function_secrets = {
@@ -42,7 +43,7 @@ resource "aws_lambda_function" "python_lambda" {
 
   # if var.upload_to_s3 == true: use S3 path; otherwise upload directly from local zip path
   filename         = var.upload_to_s3 == true ? null : data.archive_file.lambda_zip.output_path
-  source_code_hash = var.upload_to_s3 == true ? null : filebase64sha256(data.archive_file.lambda_zip.output_path)
+  source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
   s3_bucket        = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].bucket
   s3_key           = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].id
 
@@ -63,6 +64,9 @@ resource "aws_lambda_function" "python_lambda" {
     aws_cloudwatch_log_group.lambda_log_group,
     data.archive_file.lambda_zip
   ]
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {

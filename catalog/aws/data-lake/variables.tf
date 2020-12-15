@@ -65,6 +65,9 @@ EOF
   default = {}
 }
 variable "pip_path" {
-  description = "The path to a local pip executable, used to package python dependencies for any lambda triggers."
-  default     = "pip3"
+  description = <<EOF
+The path to a local pip executable, used to package python dependencies.
+If omitted, will use 'pip' on Windows-based systems and 'pip3' on Linux/Mac.
+EOF
+  default     = null
 }

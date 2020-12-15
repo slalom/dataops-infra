@@ -1,31 +1,27 @@
 # Step 1: Copy Files to temp directory
 
-resource "local_file" "canary_file" {
-  content  = local.temp_build_folder
-  filename = "${local.temp_build_folder}/foo.bar"
-}
+# resource "local_file" "canary_file" {
+#   content  = local.temp_build_folder
+#   filename = "${local.temp_build_folder}/foo.bar"
+# }
 
 # Step 2: Run `pip install` from within temp directory
 
 resource "null_resource" "pip" {
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
-    version_increment = 1.2 # used to force a refresh
-    # not_exists        = fileexists("${var.lambda_source_folder}/requirements.txt")
-    source_folder     = abspath(var.lambda_source_folder)
-    source_file_list  = join(",", fileset(var.lambda_source_folder, "*"))
+    version_increment = 1.6 # used to force a refresh
     source_files_hash = local.source_files_hash
-    temp_build_folder = local.temp_build_folder
   }
   provisioner "local-exec" {
-    command = join(" && ", flatten(
+    command = join(local.is_windows ? "; " : " && ", flatten(
       [
         [
           # Copy files to temp directory
           local.is_windows ?
           [
-            "if not exist ${replace(local.temp_build_folder, "/", "\\")}\\NUL mkdir ${replace(local.temp_build_folder, "/", "\\")}",
-            "copy ${replace(var.lambda_source_folder, "/", "\\")}\\* ${replace(local.temp_build_folder, "/", "\\")}\\",
+            "New-Item -ItemType Directory -Force -Path ${local.temp_build_folder}",
+            "copy ${var.lambda_source_folder}/* ${local.temp_build_folder}/",
           ] :
           [
             "mkdir -p ${local.temp_build_folder}",
@@ -33,11 +29,12 @@ resource "null_resource" "pip" {
           ]
         ],
         # Run `pip install` to compile dependencies
-        "${var.pip_path} install --upgrade -r ${var.lambda_source_folder}/requirements.txt --target ${local.temp_build_folder}"
+        "${local.pip_path} install --upgrade -r ${local.temp_build_folder}/requirements.txt --target ${local.temp_build_folder}"
       ]
     ))
+    interpreter = local.is_windows ? ["Powershell", "-Command"] : ["/bin/bash", "-c"]
   }
-  depends_on = [local_file.canary_file, local_file.canary_file]
+  # depends_on = [local_file.canary_file, local_file.canary_file]
 }
 
 # # Step 3: Wait for things to finish
@@ -63,7 +60,11 @@ data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = data.null_data_source.wait_for_lambda_exporter.outputs["source_dir"]
   output_path = replace(local.zip_local_path, ".zip", "-${null_resource.pip.id}.zip")
-  depends_on  = [null_resource.pip, local_file.canary_file, data.null_data_source.wait_for_lambda_exporter]
+  depends_on = [
+    # local_file.canary_file,
+    null_resource.pip,
+    data.null_data_source.wait_for_lambda_exporter,
+  ]
 }
 
 # Step 5: Optionally upload the zip file to S3
@@ -79,5 +80,5 @@ resource "aws_s3_bucket_object" "s3_lambda_zip" {
     length(split("/", split("//", var.upload_to_s3_path)[1]))
   ))
   source = data.archive_file.lambda_zip.output_path
-  etag   = filebase64sha256(data.archive_file.lambda_zip.output_path)
+  # etag   = filebase64sha256(data.archive_file.lambda_zip.output_path)
 }
