@@ -36,7 +36,7 @@ jobs:
           git config --global user.name "AJ Steers (CI bot)"
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.13.0
+          terraform_version: 0.14.2
       - name: Run Terraform auto-format
         run: terraform fmt -recursive
       - name: Commit and Push
@@ -90,7 +90,7 @@ jobs:
           git config --global user.name "AJ Steers (CI bot)"
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.13.0
+          terraform_version: 0.14.2
       - name: Install Go
         uses: actions/setup-go@v2
       - name: Install terraform-docs
