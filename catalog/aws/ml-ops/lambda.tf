@@ -7,7 +7,6 @@ module "core_lambda" {
   runtime              = "python3.8"
   lambda_source_folder = "${path.module}/lambda-python/core-model"
   s3_upload_path       = "s3://${aws_s3_bucket.ml_bucket[0].id}/ml-lambda/"
-  # upload_to_s3         = true
 
   functions = {
     QueryTrainingStatus = {
@@ -70,7 +69,6 @@ module "drift_detection_lambda" {
   runtime              = "python3.8"
   lambda_source_folder = "${path.module}/lambda-python/drift-detection"
   s3_upload_path       = "s3://${aws_s3_bucket.ml_bucket[0].id}/ml-lambda/"
-  # upload_to_s3         = true
 
   functions = {
     CloudWatchAlarm = {
