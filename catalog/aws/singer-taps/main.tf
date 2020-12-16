@@ -5,7 +5,7 @@
 
 # Timezone math:
 locals {
-  tz_hour_offset = ([
+  tz_hour_offset = (
     contains(["PST"], var.scheduled_timezone) ? -8 :
     contains(["PDT"], var.scheduled_timezone) ? -7 :
     contains(["MST"], var.scheduled_timezone) ? -7 :
@@ -14,7 +14,7 @@ locals {
     contains(["UTC", "GMT"], var.scheduled_timezone) ? 0 :
     1 / 0
     # ERROR: currently supported timezone code are: UTC, MST, GMT, CST, EST, PST and PDT
-  ])[0] # Terraform format bug workaround
+  )
 }
 
 # Target config:

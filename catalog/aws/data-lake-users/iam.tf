@@ -26,7 +26,7 @@ resource "aws_iam_group_membership" "group_membership" {
 }
 resource "local_file" "encrypted_secret_key_files" {
   for_each = var.users
-  filename = "${path.root}/.terraform/tmp/${each.value}-encrypted-secret.txt"
+  filename = "${local.temp_artifacts_root}/${each.value}-encrypted-secret.txt"
   content  = <<EOF
 -----BEGIN PGP MESSAGE-----
 Version: Keybase OpenPGP v2.1.13

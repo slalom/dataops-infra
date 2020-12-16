@@ -26,9 +26,12 @@ locals {
     for filepath in fileset(var.lambda_source_folder, "*") :
     filebase64sha256("${var.lambda_source_folder}/${filepath}")
   ])
-  unique_hash       = local.is_disabled ? "na" : md5(local.source_files_hash)
-  temp_build_folder = "${path.root}/.terraform/tmp/${var.name_prefix}lambda-zip-${local.unique_hash}"
-  zip_local_path    = "${local.temp_build_folder}/../${var.name_prefix}lambda-${local.unique_hash}.zip"
+  unique_hash                 = local.is_disabled ? "na" : md5(local.source_files_hash)
+  temp_artifacts_root         = "${path.root}/.terraform/tmp"
+  temp_build_folder           = "${local.temp_artifacts_root}/${var.name_prefix}lambda-zip-${local.unique_hash}"
+  local_requirements_file     = fileexists("${var.lambda_source_folder}/requirements.txt") ? "${var.lambda_source_folder}/requirements.txt" : null
+  local_dependencies_zip_path = "${local.temp_artifacts_root}/${var.name_prefix}lambda-dependencies-${local.unique_hash}.zip"
+  # local_source_zip_path       = "${local.temp_artifacts_root}/${var.name_prefix}lambda-source-${local.unique_hash}.zip"
   triggering_bucket_names = var.s3_triggers == null ? [] : [
     for bucket in distinct([
       for trigger in var.s3_triggers :
@@ -36,18 +39,25 @@ locals {
     ]) :
     bucket
   ]
+  # TODO - add override for 'layered' or 'standalone' functions which don't need dependencies
+  upload_to_s3 = local.local_requirements_file == null ? false : true
 }
 
 resource "aws_lambda_function" "python_lambda" {
   for_each = local.function_names
 
-  # if var.upload_to_s3 == true: use S3 path; otherwise upload directly from local zip path
-  filename         = var.upload_to_s3 == true ? null : data.archive_file.lambda_zip.output_path
-  source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
-  s3_bucket        = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].bucket
-  s3_key           = var.upload_to_s3 == false ? null : aws_s3_bucket_object.s3_lambda_zip[0].id
+  # filename = local.local_source_zip_path
+  filename = local.local_dependencies_zip_path
+  # layers   = local.local_requirements_file == null ? null : [aws_lambda_layer_version.requirements_layer[0].arn]
 
-  function_name = "${var.name_prefix}${each.value}"
+  # if var.upload_to_s3 == true: use S3 path; otherwise upload directly from local zip path
+  # s3_bucket = aws_s3_bucket_object.dependencies_layer_s3_zip[0].bucket
+  # s3_key    = aws_s3_bucket_object.dependencies_layer_s3_zip[0].id
+  # s3_bucket = local.upload_to_s3 == false ? null : aws_s3_bucket_object.dependencies_layer_s3_zip[0].bucket
+  # s3_key    = local.upload_to_s3 == false ? null : aws_s3_bucket_object.dependencies_layer_s3_zip[0].id
+  # source_code_hash = local.unique_hash # filebase64sha256(local.local_dependencies_zip_path)
+
+  function_name = "${var.name_prefix}${each.value}-${substr(local.unique_hash, 0, 4)}"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = var.functions[each.value].handler
   runtime       = var.runtime
@@ -62,7 +72,9 @@ resource "aws_lambda_function" "python_lambda" {
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
     aws_cloudwatch_log_group.lambda_log_group,
-    data.archive_file.lambda_zip
+    null_resource.create_dependency_zip,
+    # null_resource.pip,
+    # data.archive_file.lambda_zip,
   ]
   lifecycle {
     ignore_changes = [tags]

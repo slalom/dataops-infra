@@ -19,16 +19,26 @@ module "endpoint_config_workflow" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  lambda_functions  = module.lambda_functions.function_ids
+  lambda_functions  = module.core_lambda.function_ids
   writeable_buckets = local.writeable_buckets
   state_machine_definition = jsonencode(
     {
-      StartAt = "Create_Model_Endpoint_Config"
+      StartAt = "Generate_Unique_Config_Job_Name"
       States = {
+        Generate_Unique_Config_Job_Name = {
+          Type     = "Task"
+          Resource = module.core_lambda.function_ids["UniqueJobName"]
+          Parameters = {
+            "JobName.$"   = "$.modelName"
+            "modelName.$" = "$.modelName"
+          }
+          Next = "Create_Model_Endpoint_Config"
+        }
         Create_Model_Endpoint_Config = {
+          Type     = "Task"
           Resource = "arn:aws:states:::sagemaker:createEndpointConfig"
           Parameters = {
-            "EndpointConfigName.$" = "$.modelName"
+            "EndpointConfigName.$" = "$.JobName"
             ProductionVariants = [
               {
                 InitialInstanceCount = var.endpoint_instance_count
@@ -38,37 +48,37 @@ module "endpoint_config_workflow" {
               }
             ]
           }
-          Type = "Task"
           Next = "Check_Endpoint_Exists"
         }
         Check_Endpoint_Exists = {
-          Resource = module.lambda_functions.function_ids["CheckEndpointExists"]
+          Type     = "Task"
+          Resource = module.core_lambda.function_ids["CheckEndpointExists"]
           Parameters = {
             "EndpointConfigArn.$" = "$.EndpointConfigArn"
             EndpointName          = var.endpoint_name
           }
-          Type = "Task"
-          Next = "Create_or_Update_Endpoint"
+          Next = "Choose_Create_or_Update_Endpoint"
         }
-        Create_or_Update_Endpoint = {
+        Choose_Create_or_Update_Endpoint = {
           Type = "Choice"
           Choices = [
             {
               Variable     = "$['CreateOrUpdate']"
               StringEquals = "Update"
               Next         = "Update_Existing_Model_Endpoint"
+              # Next         = "Delete_Existing_Model_Endpoint"
             }
           ]
           Default = "Create_New_Model_Endpoint"
         }
         Create_New_Model_Endpoint = {
+          Type     = "Task"
           Resource = "arn:aws:states:::sagemaker:createEndpoint"
           Parameters = {
             "EndpointConfigName.$" = "$.endpointConfig"
             "EndpointName.$"       = "$.endpointName"
           }
-          Type = "Task"
-          End  = true
+          End = true
         }
         Update_Existing_Model_Endpoint = {
           Resource = "arn:aws:states:::sagemaker:updateEndpoint"
@@ -79,6 +89,14 @@ module "endpoint_config_workflow" {
           Type = "Task"
           End  = true
         }
+        # Delete_Existing_Model_Endpoint = {
+        #   Type     = "Task"
+        #   Resource = "arn:aws:states:::sagemaker:deleteEndpoint"
+        #   Parameters = {
+        #     "EndpointName" = "$.endpointName"
+        #   }
+        #   Next = "Create_New_Model_Endpoint"
+        # }
       }
     }
   )
@@ -91,13 +109,22 @@ module "batch_scoring_workflow" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  lambda_functions  = module.lambda_functions.function_ids
+  lambda_functions  = module.core_lambda.function_ids
   writeable_buckets = local.writeable_buckets
   schedules         = var.batch_scoring_schedule
   state_machine_definition = jsonencode(
     {
-      StartAt = "Batch_Scoring"
+      StartAt = "Generate_Unique_Batch_Job_Name"
       States = {
+        Generate_Unique_Batch_Job_Name = {
+          Type     = "Task"
+          Resource = module.core_lambda.function_ids["UniqueJobName"]
+          Parameters = {
+            "JobName.$"   = "$.modelName"
+            "modelName.$" = "$.modelName"
+          }
+          Next = "Batch_Scoring"
+        }
         Batch_Scoring = {
           Type     = "Task"
           Resource = "arn:aws:states:::sagemaker:createTransformJob.sync"
@@ -120,13 +147,13 @@ module "batch_scoring_workflow" {
               InstanceCount = var.batch_scoring_instance_count
               InstanceType  = var.batch_scoring_instance_type
             }
-            "TransformJobName.$" = "States.Format('{}-{}', $.modelName, $$.Execution.Id)"
+            "TransformJobName.$" = "$.JobName"
           }
           Next = "Rename_Batch_Scoring_Output"
         }
         Rename_Batch_Scoring_Output = {
           Type     = "Task"
-          Resource = module.lambda_functions.function_ids["RenameBatchOutput"]
+          Resource = module.core_lambda.function_ids["RenameBatchOutput"]
           Parameters = {
             Payload = {
               BucketName = aws_s3_bucket.ml_bucket[0].id
@@ -137,7 +164,7 @@ module "batch_scoring_workflow" {
         }
         Run_Glue_Crawler = {
           Type     = "Task"
-          Resource = module.lambda_functions.function_ids["RunGlueCrawler"]
+          Resource = module.core_lambda.function_ids["RunGlueCrawler"]
           Parameters = {
             Payload = {
               CrawlerName = module.glue_crawler.glue_crawler_name
@@ -156,7 +183,7 @@ module "training_workflow" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  lambda_functions  = module.lambda_functions.function_ids
+  lambda_functions  = module.core_lambda.function_ids
   writeable_buckets = local.writeable_buckets
   schedules         = var.training_job_schedule
   state_machine_definition = jsonencode({
@@ -182,7 +209,7 @@ module "training_workflow" {
         }
         Generate_Unique_Job_Name = {
           Type     = "Task"
-          Resource = module.lambda_functions.function_ids["UniqueJobName"]
+          Resource = module.core_lambda.function_ids["UniqueJobName"]
           Parameters = {
             JobName = var.job_name
           }
@@ -267,13 +294,13 @@ module "training_workflow" {
         }
         Extract_Best_Model_Path = {
           Type       = "Task"
-          Resource   = module.lambda_functions.function_ids["ExtractModelPath"]
+          Resource   = module.core_lambda.function_ids["ExtractModelPath"]
           ResultPath = "$.BestModelResult"
           Next       = "Query_Training_Results"
         }
         Query_Training_Results = {
           Type     = "Task"
-          Resource = module.lambda_functions.function_ids["QueryTrainingStatus"]
+          Resource = module.core_lambda.function_ids["QueryTrainingStatus"]
           Next     = "Inference_Rule"
         }
         Inference_Rule = {
@@ -335,7 +362,7 @@ module "drift_detection_workflow" {
   environment   = var.environment
   resource_tags = var.resource_tags
 
-  lambda_functions  = module.lambda_functions.function_ids
+  lambda_functions  = module.drift_detection_lambda.function_ids
   writeable_buckets = local.writeable_buckets
   schedules         = var.drift_detection_schedule
   state_machine_definition = jsonencode({
@@ -343,7 +370,7 @@ module "drift_detection_workflow" {
     States = {
       Load_Pred_Outputs_from_S3_to_Database = {
         Type     = "Task"
-        Resource = module.lambda_functions.function_ids["LoadPredDataDB"]
+        Resource = module.drift_detection_lambda.function_ids["LoadPredDataDB"]
         Parameters = {
           Payload = {
             is_predictive_db_enabled = var.enable_predictive_db
@@ -392,17 +419,17 @@ module "drift_detection_workflow" {
       }
       Stop_Model_Training = {
         Type     = "Task"
-        Resource = module.lambda_functions.function_ids["StopTraining"]
+        Resource = module.drift_detection_lambda.function_ids["StopTraining"]
         Next     = "Send_SNS_Alert"
       }
       Send_SNS_Alert = {
         Type     = "Task"
-        Resource = module.lambda_functions.function_ids["SNSAlert"]
+        Resource = module.drift_detection_lambda.function_ids["SNSAlert"]
         Next     = "Monitor_Model_Performance"
       }
       Monitor_Model_Performance = {
         Type     = "Task"
-        Resource = module.lambda_functions.function_ids["ModelPerformanceMonitor"]
+        Resource = module.drift_detection_lambda.function_ids["ModelPerformanceMonitor"]
         Next     = "Model_Monitor_Rule"
       }
       Model_Monitor_Rule = {
@@ -420,7 +447,7 @@ module "drift_detection_workflow" {
       }
       CloudWatch_Alarm = {
         Type     = "Task"
-        Resource = module.lambda_functions.function_ids["CloudWatchAlarm"]
+        Resource = module.drift_detection_lambda.function_ids["CloudWatchAlarm"]
         Next     = "Model_Retrain_Rule"
       }
       Model_Retrain_Rule : {
@@ -444,7 +471,7 @@ module "drift_detection_workflow" {
       }
       Stop_Model_Training_Final = {
         Type     = "Task"
-        Resource = module.lambda_functions.function_ids["StopTraining"]
+        Resource = module.drift_detection_lambda.function_ids["StopTraining"]
         End      = true
       }
     }

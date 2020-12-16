@@ -44,11 +44,16 @@ variable "lambda_source_folder" {
   type        = string
   default     = "resources/fn_log"
 }
-variable "upload_to_s3" {
-  description = "True to upload source code to S3, False to upload inline with the Lambda function."
-  type        = bool
-}
-variable "upload_to_s3_path" {
+# variable "local_requirements_file" {
+#   description = "Optional path to 'requirements.txt' file. If provided, 's3_upload_path' must also be provided."
+#   type        = string
+#   default     = null
+# }
+# variable "upload_to_s3" {
+#   description = "True to upload source code to S3, False to upload inline with the Lambda function."
+#   type        = bool
+# }
+variable "s3_upload_path" {
   description = <<EOF
 S3 Path to where the source code zip should be uploaded.
 Use in combination with: `upload_to_s3 = true`

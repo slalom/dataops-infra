@@ -73,7 +73,7 @@ module "triggered_lambda" {
   runtime              = "python3.8"
   lambda_source_folder = var.lambda_python_source
   upload_to_s3         = true
-  upload_to_s3_path    = local.s3_path_to_lambda_zip
+  s3_upload_path       = local.s3_path_to_lambda_zip
   pip_path             = var.pip_path
 
   functions = {
