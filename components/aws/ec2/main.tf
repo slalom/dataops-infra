@@ -196,7 +196,7 @@ ${join("\n",
   [for x in var.file_resources :
     substr(x, 0, 4) == "http"
     ? "curl ${x} > ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]}"
-    : "echo ${base64encode(file("${x}"))} > ${basename(x)}.b64 && certutil -decode ${basename(x)}.b64 ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]} & del ${basename(x)}.b64"
+    : "echo ${base64encode(file(x))} > ${basename(x)}.b64 && certutil -decode ${basename(x)}.b64 ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]} & del ${basename(x)}.b64"
   ]
 )}
 dism.exe /online /import-defaultappassociations:defaultapps.xml
