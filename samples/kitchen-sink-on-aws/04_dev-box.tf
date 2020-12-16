@@ -20,7 +20,7 @@ module "remote_dev_box" {
 }
 
 module "dev_box_ssh_key_pair" {
-  source                = "git::https://github.com/cloudposse/terraform-aws-key-pair?ref=main"
+  source                = "git::https://github.com/cloudposse/terraform-aws-key-pair?ref=master"
   namespace             = lower(local.name_prefix)
   ssh_public_key_path   = abspath(local.secrets_folder)
   tags                  = local.resource_tags
