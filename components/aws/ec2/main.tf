@@ -170,7 +170,7 @@ ${join("\n",
   [for x in var.file_resources :
     substr(x, 0, 4) == "http"
     ? "curl ${split("::", x)[0]} > ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]}"
-    : "echo ${base64encode(file("${split("::", x)[0]}"))} | base64 --decode > ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]}"
+    : "echo ${base64encode(file(split("::", x)[0]))} | base64 --decode > ${length(split("::", x)) == 1 ? basename(x) : split("::", x)[1]}"
   ]
 )}
 echo "" > __BOOTSTRAP_UNPACK_COMPLETE_
