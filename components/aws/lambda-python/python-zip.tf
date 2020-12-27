@@ -63,7 +63,7 @@ resource "null_resource" "create_dependency_zip" {
           "sleep 3",
           "echo \"Changing working directory to temp folder '${abspath(local.temp_build_folder)}'...\"",
           "cd ${abspath(local.temp_build_folder)}",
-          "echo \"Zipping contents of ${abspath(local.temp_build_folder)} to '${local.local_dependencies_zip_path}'...\"",
+          "echo \"Zipping contents of ${abspath(local.temp_build_folder)} to '${abspath(local.local_dependencies_zip_path)}'...\"",
           "ls",
           "tar -acf ${abspath(local.local_dependencies_zip_path)} *",
           # "Compress-Archive -Force -Path ${local.temp_build_folder}/* -DestinationPath ${local.local_dependencies_zip_path}",
@@ -87,8 +87,8 @@ resource "null_resource" "create_dependency_zip" {
           "echo \"Granting execute permissions on temp folder '${local.temp_build_folder}'\"",
           "chmod -R 755 ${local.temp_build_folder}",
           "cd ${abspath(local.temp_build_folder)}",
-          "echo \"Zipping contents of ${abspath(local.temp_build_folder)} to '${local.local_dependencies_zip_path}'...\"",
-          "zip -r ${local.local_dependencies_zip_path} *",
+          "echo \"Zipping contents of '${abspath(local.temp_build_folder)}' to '${abspath(local.local_dependencies_zip_path)}'...\"",
+          "zip -r ${abspath(local.local_dependencies_zip_path)} *",
         ]
       ]
     ))
