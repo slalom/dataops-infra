@@ -53,8 +53,7 @@ locals {
     # returns null if is_windows == false
     # returns null also if no private ssh key is available
     var.is_windows == false ? null :
-    var.num_instances == 0 ? {} :
-    {
+    var.num_instances == 0 ? {} : {
       for s in aws_instance.ec2_instances :
       s.id => (
         length(s.password_data) == 0 ? "n/a" :

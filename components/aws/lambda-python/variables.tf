@@ -29,8 +29,11 @@ variable "runtime" {
   default     = "python3.8"
 }
 variable "pip_path" {
-  description = "The path to a local pip executable, used to package python dependencies."
-  default     = "pip3"
+  description = <<EOF
+The path to a local pip executable, used to package python dependencies.
+If omitted, will use 'pip' on Windows-based systems and 'pip3' on Linux/Mac.
+EOF
+  default     = null
 }
 variable "timeout_seconds" {
   description = "The amount of time which can pass before the function will timeout and fail execution."
@@ -41,11 +44,16 @@ variable "lambda_source_folder" {
   type        = string
   default     = "resources/fn_log"
 }
-variable "upload_to_s3" {
-  description = "True to upload source code to S3, False to upload inline with the Lambda function."
-  type        = bool
-}
-variable "upload_to_s3_path" {
+# variable "local_requirements_file" {
+#   description = "Optional path to 'requirements.txt' file. If provided, 's3_upload_path' must also be provided."
+#   type        = string
+#   default     = null
+# }
+# variable "upload_to_s3" {
+#   description = "True to upload source code to S3, False to upload inline with the Lambda function."
+#   type        = bool
+# }
+variable "s3_upload_path" {
   description = <<EOF
 S3 Path to where the source code zip should be uploaded.
 Use in combination with: `upload_to_s3 = true`

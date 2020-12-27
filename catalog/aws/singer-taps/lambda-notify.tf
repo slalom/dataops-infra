@@ -8,8 +8,7 @@ module "triggered_lambda" {
 
   runtime              = "python3.8"
   lambda_source_folder = "${path.module}/lambda"
-  upload_to_s3         = false
-  upload_to_s3_path    = null
+  s3_upload_path       = "${var.data_lake_metadata_path}/lambda/"
 
   functions = {
     NotifyWebook = {

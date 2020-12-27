@@ -1,4 +1,4 @@
-module "ml-ops" {
+module "ml_ops" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source = "../../catalog/aws/ml-ops"
@@ -21,7 +21,8 @@ module "ml-ops" {
   tuning_metric                 = "accuracy"
   inference_comparison_operator = "NumericGreaterThan"
   inference_metric_threshold    = 0.7
-  endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
+  enable_api_endpoint           = true
+  enable_batch_scoring          = true
 
   max_number_training_jobs    = 3
   max_parallel_training_jobs  = 1
@@ -29,8 +30,6 @@ module "ml-ops" {
   training_job_instance_count = 4
   training_job_storage_in_gb  = 30
 
-  train_key    = "input_data/train/"
-  test_key     = "input_data/test/"
   validate_key = "input_data/validate/"
 
   glue_transform_script = "${path.module}/source/scripts/transform.py"
@@ -83,5 +82,5 @@ module "ml-ops" {
   }
 }
 output "summary" {
-  value = module.ml-ops.summary
+  value = module.ml_ops.summary
 }

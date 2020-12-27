@@ -15,7 +15,8 @@ locals {
     contains(["CST"], var.scheduled_timezone) ? -6 :
     contains(["EST"], var.scheduled_timezone) ? -5 :
     contains(["UTC", "GMT"], var.scheduled_timezone) ? 0 :
-    1 / 0 # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
+    1 / 0
+    # ERROR: currently supported timezone code are: "UTC", "GMT", "EST", "PST" and "PDT"
   )
 }
 

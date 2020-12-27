@@ -13,8 +13,7 @@ module "triggered_lambda" {
 
   runtime              = "python3.8"
   lambda_source_folder = "${path.module}/lambda/fn_lambda_logger"
-  upload_to_s3         = false
-  upload_to_s3_path    = null
+  s3_upload_path       = "s3://${module.data_lake.s3_metadata_bucket}/lambda/"
 
   functions = {
     LambdaLogger2 = {

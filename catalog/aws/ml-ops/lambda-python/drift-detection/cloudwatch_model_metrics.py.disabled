@@ -1,5 +1,7 @@
 """  This class implements a function to send evaluation metrics to CloudWatch using Boto3 """
 
+# TODO: This appears unused. Consider deleting.
+
 import boto3
 
 modelname = "${var.job_name}"

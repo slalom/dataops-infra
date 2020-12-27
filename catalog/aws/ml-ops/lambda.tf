@@ -1,13 +1,12 @@
-module "lambda_functions" {
+module "core_lambda" {
   source        = "../../../components/aws/lambda-python"
-  name_prefix   = var.name_prefix
+  name_prefix   = "${var.name_prefix}core-"
   resource_tags = var.resource_tags
   environment   = var.environment
 
   runtime              = "python3.8"
-  lambda_source_folder = "${path.module}/lambda-python"
-  upload_to_s3         = false
-  upload_to_s3_path    = null
+  lambda_source_folder = "${path.module}/lambda-python/core-model"
+  s3_upload_path       = "s3://${aws_s3_bucket.ml_bucket[0].id}/ml-lambda/"
 
   functions = {
     QueryTrainingStatus = {
@@ -28,18 +27,6 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
-    CloudWatchAlarm = {
-      description = "Send developers an email alarm when the model is overfitting."
-      handler     = "clodwatch_alarm.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
-    LoadPredDataDB = {
-      description = "Load prediction outputs csv file to a selected database."
-      handler     = "load_predoutput_db.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
     DataDriftMonitor = {
       description = "Monitor data drift on input data."
       handler     = "data_drift_monitor.lambda_handler"
@@ -49,12 +36,6 @@ module "lambda_functions" {
     ModelPerformanceMonitor = {
       description = "Monitor model performance for any degradation issues."
       handler     = "model_performance_monitor.lambda_handler"
-      environment = {}
-      secrets     = {}
-    }
-    ProblemType = {
-      description = "Determine the type of machine learning problem."
-      handler     = "determine_prob_type.lambda_handler"
       environment = {}
       secrets     = {}
     }
@@ -76,6 +57,44 @@ module "lambda_functions" {
       environment = {}
       secrets     = {}
     }
+  }
+}
+
+module "drift_detection_lambda" {
+  source        = "../../../components/aws/lambda-python"
+  name_prefix   = "${var.name_prefix}drift-"
+  resource_tags = var.resource_tags
+  environment   = var.environment
+
+  runtime              = "python3.8"
+  lambda_source_folder = "${path.module}/lambda-python/drift-detection"
+  s3_upload_path       = "s3://${aws_s3_bucket.ml_bucket[0].id}/ml-lambda/"
+
+  functions = {
+    CloudWatchAlarm = {
+      description = "Send developers an email alarm when the model is overfitting."
+      handler     = "clodwatch_alarm.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    LoadPredDataDB = {
+      description = "Load prediction outputs csv file to a selected database."
+      handler     = "load_predoutput_db.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ModelPerformanceMonitor = {
+      description = "Monitor model performance for any degradation issues."
+      handler     = "model_performance_monitor.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
+    ProblemType = {
+      description = "Determine the type of machine learning problem."
+      handler     = "determine_prob_type.lambda_handler"
+      environment = {}
+      secrets     = {}
+    }
     SNSAlert = {
       description = "Send an SNS email to users notifying data drift being detected."
       handler     = "sns_alert.lambda_handler"
@@ -93,20 +112,19 @@ module "lambda_functions" {
 
 module "triggered_lambda" {
   source        = "../../../components/aws/lambda-python"
-  name_prefix   = var.name_prefix
+  name_prefix   = "${var.name_prefix}s3-"
   resource_tags = var.resource_tags
   environment   = var.environment
 
   runtime              = "python3.8"
-  lambda_source_folder = "${path.module}/lambda-python"
-  upload_to_s3         = false
-  upload_to_s3_path    = null
+  lambda_source_folder = "${path.module}/lambda-python/s3-triggered"
+  s3_upload_path       = "s3://${aws_s3_bucket.ml_bucket[0].id}/s3-triggered-lambda/"
 
   functions = {
     ExecuteStateMachine = {
       description = "Executes model training state machine when new training data lands in S3."
       handler     = "execute_state_machine.lambda_handler"
-      environment = { "state_machine_arn" = "${module.step-functions.state_machine_arn}" }
+      environment = { "state_machine_arn" = module.training_workflow.state_machine_arn }
       secrets     = {}
     }
   }
@@ -147,14 +165,19 @@ resource "aws_iam_policy" "lambda_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
-  role       = module.lambda_functions.lambda_iam_role
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_core" {
+  role       = module.core_lambda.lambda_iam_role
+  policy_arn = aws_iam_policy.lambda_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment_drift" {
+  role       = module.drift_detection_lambda.lambda_iam_role
   policy_arn = aws_iam_policy.lambda_policy.arn
 }
 
 resource "aws_iam_policy" "lambda_step_function_policy" {
-  name        = "${var.name_prefix}lambda_step_function_access"
-  description = "Policy for Lambda access to execute the Step Function"
+  name        = "${var.name_prefix}lambda_sfn_access"
+  description = "Policy for Lambda access to execute the training job Step Function"
   path        = "/"
 
   policy = <<EOF
@@ -164,7 +187,7 @@ resource "aws_iam_policy" "lambda_step_function_policy" {
         {
             "Effect": "Allow",
             "Action": "states:StartExecution",
-            "Resource": "${module.step-functions.state_machine_arn}"
+            "Resource": ${jsonencode([module.training_workflow.state_machine_arn])}
         }
     ]
 }

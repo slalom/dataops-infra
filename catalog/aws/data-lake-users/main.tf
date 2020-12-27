@@ -14,6 +14,7 @@ locals {
       flatten(values(var.user_groups))
     ])
   )
+  temp_artifacts_root = "${path.root}/.terraform/tmp"
 }
 
 resource "aws_kms_key" "group_kms_keys" {

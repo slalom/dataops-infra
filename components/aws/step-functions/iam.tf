@@ -41,6 +41,7 @@ data "aws_iam_policy_document" "step_functions_policy_doc" {
       "ecs:StopTask",
       "ecs:DescribeTasks",
       "iam:PassRole",
+      "glue:*",
       "glue:BatchStopJobRun",
       "glue:GetJobRun",
       "glue:GetJobRuns",
@@ -49,6 +50,7 @@ data "aws_iam_policy_document" "step_functions_policy_doc" {
       "logs:CreateLogStream",
       "logs:DescribeLogStreams",
       "logs:PutLogEvents",
+      "s3:*",
       "sagemaker:CreateEndpoint",
       "sagemaker:CreateEndpointConfig",
       "sagemaker:CreateHyperParameterTuningJob",
@@ -64,6 +66,7 @@ data "aws_iam_policy_document" "step_functions_policy_doc" {
       "states:DeleteStateMachine",
       "states:DescribeStateMachine",
       "states:ListStateMachines",
+      "states:StartExecution",
       "states:UpdateStateMachine",
     ]
     resources = ["*"]

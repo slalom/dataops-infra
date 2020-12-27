@@ -31,7 +31,7 @@ output "ecs_runtask_cli" {
       } --region ${
       var.environment.aws_region
       } ${
-      ! var.use_fargate ? "" :
+      !var.use_fargate ? "" :
       "--network-configuration awsvpcConfiguration={subnets=[${element(local.subnets, 0)}],securityGroups=[${aws_security_group.ecs_tasks_sg.id}]${var.use_private_subnet ? "" : ",assignPublicIp=ENABLED"}}"
     }"
   )

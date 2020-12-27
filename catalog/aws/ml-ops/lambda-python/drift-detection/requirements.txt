@@ -1,0 +1,5 @@
+# Used in drift detection
+psycopg2-binary
+
+# Used for S3 and Sagemaker
+boto3

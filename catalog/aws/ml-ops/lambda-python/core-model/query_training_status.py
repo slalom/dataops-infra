@@ -9,13 +9,13 @@ logger.setLevel(logging.INFO)
 sm_client = boto3.client("sagemaker")
 s3_client = boto3.client("s3")
 
-metadata_store_name = os.environ['metadata_store_name']
+metadata_store_name = os.environ["metadata_store_name"]
+
 
 def lambda_handler(event, context):
     """Retrieve transform job name from event and return transform job status."""
     model_name = event["BestModelResult"]["bestTrainingJobName"]
     model_data_url = event["BestModelResult"]["modelDataUrl"]
-    
 
     try:
         # Query boto3 API to check training status.
@@ -36,19 +36,18 @@ def lambda_handler(event, context):
     # all datetime objects returned to unix time.
     for index, metric in enumerate(response["FinalMetricDataList"]):
         metric["Timestamp"] = metric["Timestamp"].timestamp()
-        
+
     training_metrics = response["FinalMetricDataList"]
 
-    # log model metadata    
+    # log model metadata
     bucket = metadata_store_name
-    file_name = 'log/' + event['HyperParameterTuningJobName'] + '.json'
-    uploadByteStream = bytes(json.dumps(event).encode('UTF-8'))
+    file_name = "log/" + event["HyperParameterTuningJobName"] + ".json"
+    uploadByteStream = bytes(json.dumps(event).encode("UTF-8"))
     s3_client.put_object(Bucket=bucket, Key=file_name, Body=uploadByteStream)
-    
-    
+
     return {
         "statusCode": 200,
         "trainingMetrics": training_metrics,
         "modelName": model_name,
-        "modelDataUrl": model_data_url
+        "modelDataUrl": model_data_url,
     }

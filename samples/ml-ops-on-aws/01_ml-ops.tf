@@ -1,4 +1,4 @@
-module "ml-ops" {
+module "ml_ops" {
 
   # BOILERPLATE HEADER (NO NEED TO CHANGE):
   source = "../../catalog/aws/ml-ops"
@@ -21,7 +21,8 @@ module "ml-ops" {
   tuning_metric                 = "accuracy"
   inference_comparison_operator = "NumericGreaterThan"
   inference_metric_threshold    = 0.7
-  endpoint_or_batch_transform   = "Batch Transform" # "Batch Transform" or "Create Model Endpoint Config"
+  enable_batch_scoring          = true
+  enable_api_endpoint           = true
 
   max_number_training_jobs    = 3
   max_parallel_training_jobs  = 1
@@ -29,11 +30,10 @@ module "ml-ops" {
   training_job_instance_count = 1
   training_job_storage_in_gb  = 30
 
-  train_key = "input_data/train/train.csv"
-  test_key  = "input_data/test/score.csv"
-  #validate_key = "input_data/validate/"
+  train_local_path = "${path.module}/source/data/train.csv"
+  score_local_path = "${path.module}/source/data/tests.csv"
 
-  enable_predictive_db = true
+  # enable_predictive_db = true
 
   static_hyperparameters = {
     kfold_splits = "5"
@@ -87,8 +87,6 @@ module "ml-ops" {
 
   # set score_local_path to 'null' if running endpoint inference
 
-  train_local_path  = "source/data/train.csv"
-  score_local_path  = "source/score/score.csv"
 
   glue_dependency_package    = "source/scripts/python/pandasmodule-0.1-py3-none-any.whl" # to automate creation of wheel file
 
@@ -108,8 +106,8 @@ module "ml-ops" {
 
   OPTIONAL - IF USING BATCH TRANSFORMATION INFERENCE:
 
-  batch_transform_instance_type  = "ml.m4.xlarge"
-  batch_transform_instance_count = 1
+  batch_scoring_instance_type  = "ml.m4.xlarge"
+  batch_scoring_instance_count = 1
 
 
   OPTIONAL - IF USING ENDPOINT INFERENCE:
@@ -122,5 +120,5 @@ module "ml-ops" {
 }
 
 output "summary" {
-  value = module.ml-ops.summary
+  value = module.ml_ops.summary
 }

@@ -47,7 +47,7 @@ variable "train_local_path" {
 }
 
 variable "score_local_path" {
-  description = "Local path for scoring data. Set to null for endpoint inference"
+  description = "Local path for scoring data (e.g. test data). Set to null for endpoint inference."
   type        = string
   default     = "source/data/score/score.csv"
 }
@@ -61,21 +61,22 @@ variable "ml_bucket_override" {
 }
 
 variable "train_key" {
-  description = "URL path postfix for training data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "S3 path postfix for training data. To specify a folder, end the path with a slash ('/')"
   type        = string
   default     = "input_data/train/train.csv"
 }
 
-variable "test_key" {
-  description = "URL path postfix for testing data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+variable "score_key" {
+  description = "S3 path postfix for data to score (e.g. test data). To specify a folder, end the path with a slash ('/')."
   type        = string
   default     = "input_data/test/test.csv"
 }
 
 variable "validate_key" {
-  description = "URL path postfix for validation data. Provide a folder only if an image recognition problem, a csv file if a classification problem."
+  description = "URL path postfix for validation data. To specify a folder, end the path with a slash ('/')."
   type        = string
-  default     = "input_data/validate/validate.csv"
+  default     = null
+  # default     = "input_data/validate/validate.csv"
 }
 
 # Input data config:
@@ -107,10 +108,16 @@ EOF
   default     = "training-endpoint"
 }
 
-variable "endpoint_or_batch_transform" {
-  description = "Choose whether to create/update an inference API endpoint or do batch inference on test data."
-  type        = string
-  default     = "Batch Transform" # Batch Transform or Create Model Endpoint Config
+variable "enable_api_endpoint" {
+  description = "True to create/update an inference API endpoint or do batch inference on test data."
+  type        = bool
+  default     = true
+}
+
+variable "enable_batch_scoring" {
+  description = "True to create/update a workflow for batch scoring of input data."
+  type        = bool
+  default     = true
 }
 
 variable "endpoint_instance_count" {
@@ -125,13 +132,13 @@ variable "endpoint_instance_type" {
   default     = "ml.m4.xlarge"
 }
 
-variable "batch_transform_instance_count" {
+variable "batch_scoring_instance_count" {
   description = "Number of batch transformation instances."
   type        = number
   default     = 1
 }
 
-variable "batch_transform_instance_type" {
+variable "batch_scoring_instance_type" {
   description = "Instance type for batch inference."
   type        = string
   default     = "ml.m4.xlarge"
@@ -253,30 +260,30 @@ variable "training_job_storage_in_gb" {
 # ECR input variables (BYO)
 
 variable "byo_model_image_name" {
-  description = "Image and repo name for bring your own model."
+  description = "Image and repo name for bring your own model. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "byo-custom"
 }
 
 variable "byo_model_image_tag" {
-  description = "Tag for bring your own model image."
+  description = "Tag for bring your own model image. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "latest"
 }
 
 variable "byo_model_repo_name" {
-  description = "Name for your BYO model image repository."
+  description = "Name for your BYO model image repository. Ignored if `built_in_model_image` is set."
   type        = string
 }
 
 variable "byo_model_source_image_path" {
-  description = "Local source path for bring your own model docker image."
+  description = "Local source path for bring your own model docker image. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "source/containers/ml-ops-byo-custom"
 }
 
 variable "byo_model_ecr_tag_name" {
-  description = "Tag name for the BYO ecr image."
+  description = "Tag name for the BYO ecr image. Ignored if `built_in_model_image` is set."
   type        = string
   default     = "latest"
 }
@@ -482,4 +489,34 @@ variable "predictive_db_instance_class" {
   description = "Enter the desired node type. The default and cheapest option is 'db.t3.micro' @ ~$0.018/hr, or ~$13/mo (https://aws.amazon.com/rds/mysql/pricing/ )"
   type        = string
   default     = "db.t3.micro"
+}
+
+# Schedules
+
+variable "training_job_schedule" {
+  description = <<EOF
+Optional. A list of cron expressions.
+Example:
+  ["cron(1 0 0 0 *)", "cron(0 0 0 0 *)"]
+EOF
+  type        = list(string)
+  default     = []
+}
+variable "batch_scoring_schedule" {
+  description = <<EOF
+Optional. A list of cron expressions.
+Example:
+  ["cron(1 0 0 0 *)", "cron(0 0 0 0 *)"]
+EOF
+  type        = list(string)
+  default     = []
+}
+variable "drift_detection_schedule" {
+  description = <<EOF
+Optional. A list of cron expressions.
+Example:
+  ["cron(1 0 0 0 *)", "cron(0 0 0 0 *)"]
+EOF
+  type        = list(string)
+  default     = []
 }
