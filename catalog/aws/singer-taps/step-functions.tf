@@ -23,7 +23,12 @@ locals {
           }
         },
         "Overrides":{
-          "ContainerOverrides":[]
+          "ContainerOverrides":[
+            {
+              "Name":"DefaultContainer",
+              "Environment.$" = ${true == true ? "{}" : "$.env"}
+            }
+          ]
         }
       },
       "Catch": [
