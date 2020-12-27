@@ -14,11 +14,11 @@ resource "aws_glue_job" "glue_job" {
   max_retries       = 0
 
   command {
-    script_location = ([
+    script_location = (
       var.local_script_path == null ?
       "s3://${var.s3_script_bucket_name}/${var.s3_script_path}" :
       "s3://${aws_s3_bucket_object.py_script_upload[0].bucket}/${aws_s3_bucket_object.py_script_upload[0].key}"
-    ])[0] # Terraform format bug workaround
+    )
     name           = var.with_spark ? null : "pythonshell"
     python_version = 3
   }

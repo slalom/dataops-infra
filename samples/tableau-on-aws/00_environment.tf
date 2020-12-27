@@ -36,13 +36,13 @@ resource "null_resource" "secrets_folder_protection" {
   provisioner "local-exec" {
     interpreter = module.env.is_windows_host ? ["cmd", "/C"] : []
     # on_failure = continue
-    command = ([
+    command = (
       module.env.is_windows_host == false ? "chmod -R 700 ${local.secrets_folder}" : join(" && ", [
         "echo Orverriding permissions on ${local.secrets_folder} (running as %username%)...",
         "icacls ${local.secrets_folder} /grant:r %username%:(F) /t",
         "icacls ${local.secrets_folder} /inheritance:r /t"
       ])
-    ])[0] # Terraform format bug workaround
+    )
   }
 }
 
