@@ -34,7 +34,7 @@ resource "null_resource" "create_dependency_zip" {
   count = 1 # count = local.local_requirements_file == null ? 0 : 1
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
-    version_increment = 1.9 # can be incremented to force a refresh
+    version_increment = 1.1 # can be incremented to force a refresh
     source_files_hash = local.source_files_hash
   }
 
@@ -86,8 +86,9 @@ resource "null_resource" "create_dependency_zip" {
           "sleep 3",
           "echo \"Granting execute permissions on temp folder '${local.temp_build_folder}'\"",
           "chmod -R 755 ${local.temp_build_folder}",
+          "cd ${abspath(local.temp_build_folder)}",
           "echo \"Zipping contents of ${abspath(local.temp_build_folder)} to '${local.local_dependencies_zip_path}'...\"",
-          "zip -r ${local.local_dependencies_zip_path} ${local.temp_build_folder}",
+          "zip -r ${local.local_dependencies_zip_path} *",
         ]
       ]
     ))
@@ -106,7 +107,7 @@ resource "aws_s3_bucket_object" "dependencies_layer_s3_zip" {
       1,
       length(split("/", split("//", var.s3_upload_path)[1]))
     ))
-    , ".zip", "-${substr(local.unique_hash, 0, 4)}.zip"
+    , ".zip", "-${local.unique_suffix}.zip"
   )
   source     = local.local_dependencies_zip_path
   depends_on = [null_resource.create_dependency_zip[0]]
@@ -118,7 +119,7 @@ resource "aws_s3_bucket_object" "dependencies_layer_s3_zip" {
 
 # resource "aws_lambda_layer_version" "requirements_layer" {
 #   count      = local.local_requirements_file == null ? 0 : 1
-#   layer_name = "${var.name_prefix}dependencies-${local.unique_hash}"
+#   layer_name = "${var.name_prefix}dependencies-${local.unique_suffix}"
 #   s3_bucket  = aws_s3_bucket_object.dependencies_layer_s3_zip[0].bucket
 #   s3_key     = aws_s3_bucket_object.dependencies_layer_s3_zip[0].key
 # }

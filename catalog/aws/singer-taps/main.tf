@@ -78,7 +78,7 @@ module "ecs_tap_sync_task" {
   permitted_s3_buckets = local.needed_s3_buckets
   environment_vars = merge(
     {
-      TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_hash}",
+      TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_suffix}",
       TAP_STATE_FILE                                    = "${coalesce(var.data_lake_storage_path, var.data_lake_metadata_path)}/${var.state_file_naming_scheme}",
       PIPELINE_VERSION_NUMBER                           = var.pipeline_version_number
       "${local.tap_env_prefix[count.index]}CONFIG_FILE" = "False" # Config will be passed via env vars

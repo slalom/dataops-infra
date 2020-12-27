@@ -27,11 +27,12 @@ locals {
     filebase64sha256("${var.lambda_source_folder}/${filepath}")
   ])
   unique_hash                 = local.is_disabled ? "na" : md5(local.source_files_hash)
+  unique_suffix               = local.is_disabled ? "na" : substr(local.unique_hash, 0, 4)
   temp_artifacts_root         = "${path.root}/.terraform/tmp"
-  temp_build_folder           = "${local.temp_artifacts_root}/${var.name_prefix}lambda-zip-${local.unique_hash}"
+  temp_build_folder           = "${local.temp_artifacts_root}/${var.name_prefix}lambda-zip-${local.unique_suffix}"
   local_requirements_file     = fileexists("${var.lambda_source_folder}/requirements.txt") ? "${var.lambda_source_folder}/requirements.txt" : null
-  local_dependencies_zip_path = "${local.temp_artifacts_root}/${var.name_prefix}lambda-dependencies-${local.unique_hash}.zip"
-  # local_source_zip_path       = "${local.temp_artifacts_root}/${var.name_prefix}lambda-source-${local.unique_hash}.zip"
+  local_dependencies_zip_path = "${local.temp_artifacts_root}/${var.name_prefix}lambda-dependencies-${local.unique_suffix}.zip"
+  # local_source_zip_path       = "${local.temp_artifacts_root}/${var.name_prefix}lambda-source-${local.unique_suffix}.zip"
   triggering_bucket_names = var.s3_triggers == null ? [] : [
     for bucket in distinct([
       for trigger in var.s3_triggers :
@@ -57,7 +58,7 @@ resource "aws_lambda_function" "python_lambda" {
   # s3_key    = local.upload_to_s3 == false ? null : aws_s3_bucket_object.dependencies_layer_s3_zip[0].id
   # source_code_hash = local.unique_hash # filebase64sha256(local.local_dependencies_zip_path)
 
-  function_name = "${var.name_prefix}${each.value}-${substr(local.unique_hash, 0, 4)}"
+  function_name = "${var.name_prefix}${each.value}-${local.unique_suffix}"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = var.functions[each.value].handler
   runtime       = var.runtime

@@ -12,7 +12,8 @@ locals {
     for filepath in local.source_files :
     filebase64sha256("${var.local_metadata_path}/${filepath}")
   ])
-  unique_hash = md5(local.source_files_hash)
+  unique_hash   = md5(local.source_files_hash)
+  unique_suffix = substr(local.unique_hash, 0, 4)
 }
 
 resource "aws_s3_bucket_object" "s3_source_uploads" {
@@ -27,7 +28,7 @@ resource "aws_s3_bucket_object" "s3_source_uploads" {
         1,
         length(split("/", split("//", var.data_lake_metadata_path)[1]))
       )),
-      "tap-snapshot-${local.unique_hash}/${each.value}"
+      "tap-snapshot-${local.unique_suffix}/${each.value}"
     ]
   )
   source   = "${var.local_metadata_path}/${each.value}"
