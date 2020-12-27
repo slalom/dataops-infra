@@ -48,7 +48,7 @@ output "instance_states" {
   }
 }
 locals {
-  windows_instance_passwords = ([
+  windows_instance_passwords = (
     # returns a map of instance IDs to windows passwords
     # returns null if is_windows == false
     # returns null also if no private ssh key is available
@@ -61,8 +61,8 @@ locals {
         rsadecrypt(aws_instance.ec2_instances[0].password_data, file(var.ssh_private_key_filepath))
       )
     }
-  ])[0] # Terraform format issue workaround
-  remote_admin_commands = ([
+  )
+  remote_admin_commands = (
     # returns a map of instance IDs to remote connect commands (ssh for linux, rdp for windows)
     var.num_instances == 0 ? {} :
     tomap({
@@ -73,8 +73,7 @@ locals {
         "ssh -o StrictHostKeyChecking=no -i \"${coalesce(var.ssh_private_key_filepath, "n\\a")}\" ubuntu@${s.public_ip}"
       )
     })
-
-  ])[0] # Terraform format issue workaround
+  )
 }
 output "windows_instance_passwords" {
   description = "A map of instance IDs to Windows passwords (if applicable)."
