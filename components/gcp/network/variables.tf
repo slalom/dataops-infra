@@ -14,7 +14,7 @@ variable "environment" {
   description = "Standard `environment` module input. (Ignored for the `vpc` module.)"
   type = object({
     vpc_id          = string
-    aws_region      = string
+    region          = string
     public_subnets  = list(string)
     private_subnets = list(string)
   })
@@ -31,6 +31,10 @@ variable "resource_tags" {
 
 variable "region" {
   description = "Required. Specifies the AWS region."
+  type        = string
+}
+variable "zone" {
+  description = "Required. Specifies the GCP Zone."
   type        = string
 }
 variable "disabled" {
@@ -91,3 +95,38 @@ variable "flow_logs_config" {
     "metadata" = "INCLUDE_ALL_METADATA"
   }
 }
+
+// Logging
+variable "log_config_filter" {
+  type        = string
+  description = "Specifies the desired filtering of logs on this NAT. Valid values are: \"ERRORS_ONLY\", \"TRANSLATIONS_ONLY\", \"ALL\""
+  default     = "ALL"
+}
+
+
+// NAT Variables
+variable "nat_ip_allocate_option" {
+  default = "AUTO_ONLY"
+}
+
+variable "tcp_established_idle_timeout_sec" {
+  description = "Timeout (in seconds) for TCP established connections. Defaults to 1200s if not set. Changing this forces a new NAT to be created."
+  default     = "1200"
+}
+
+variable "tcp_transitory_idle_timeout_sec" {
+  description = "Timeout (in seconds) for TCP transitory connections. Defaults to 30s if not set. Changing this forces a new NAT to be created."
+  default     = "30"
+}
+
+variable "udp_idle_timeout_sec" {
+  description = "Timeout (in seconds) for UDP connections. Defaults to 30s if not set. Changing this forces a new NAT to be created."
+  default     = "30"
+}
+
+variable "icmp_idle_timeout_sec" {
+  description = "Timeout (in seconds) for ICMP connections. Defaults to 30s if not set. Changing this forces a new NAT to be created."
+  default     = "30"
+}
+
+

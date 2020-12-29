@@ -5,8 +5,8 @@
 * * 1 Network which contains the following:
 *     * 2 private subnets (for resources which **do not** need a public IP address)
 *     * 2 public subnets (for resources which do need a public IP address)
-*     * 1 NAT gateway (allows private subnet resources to reach the outside world)
-*     * 1 Intenet gateway (allows resources in public and private subnets to reach the internet)
+*     * 1 NAT router (allows private subnet resources to reach the outside world)
+*     * 1 Internet Gateway Route (allows resources in public and private subnets to reach the internet)
 *     * route tables and routes to connect all of the above
 */
 
@@ -29,18 +29,11 @@ provider "google" {
   project     = var.project
   region      = var.region
 //  TODO: Determine if the zone is pulled dynamically or passed as a variable
-  zone        = var.zone
+  zone        = data.google_compute_zones.available.names[count.index]
 }
 
-// TODO: Update this to pull zones for GCP
-//Determine Zones
-//data "aws_availability_zones" "az_list" {
-//  provider = google.region_lookup
-//}
+data "google_compute_zones" "available" {}
 
-/******************************************
-	VPC
- *****************************************/
 //GCP
 resource "google_compute_network" "network" {
   name         = "${var.name_prefix}VPC"
@@ -52,9 +45,6 @@ resource "google_compute_network" "network" {
   delete_default_routes_on_create = "true"
 }
 
-/******************************************
-	Subnets
- *****************************************/
 //Public Subnets
 resource "google_compute_subnetwork" "public" {
   count                    = var.disabled ? 0 : 2
@@ -93,38 +83,13 @@ resource "google_compute_subnetwork" "private" {
   }
 }
 
-// TODO: Internet Gateway should be handled by routes
-
-
-/******************************************
-	NAT Gateway
- *****************************************/
-//GCP
-resource "google_compute_router_nat" "nat" {
-  name                               = "${var.name_prefix}NAT"
-  router                             = google_compute_router.router.name
-  region                             = google_compute_router.router.region
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-
-  log_config {
-    enable = true
-    filter = "ERRORS_ONLY"
-  }
-}
-
-//TODO: Add NAT routes
-
-
-/******************************************
-	Routes
- *****************************************/
+// Routes
 resource "google_compute_router" "router" {
-  name    = "${var.name_prefix}NAT"
+  name    = "${var.name_prefix}Router"
+  region  = google_compute_subnetwork.public.region
   network = google_compute_network.network.name
-//  TODO: Update bgp routes
-//  bgp {
-//    asn               = 64514
+  bgp {
+    asn               = 64514
 //    advertise_mode    = "CUSTOM"
 //    advertised_groups = ["ALL_SUBNETS"]
 //    advertised_ip_ranges {
@@ -132,52 +97,37 @@ resource "google_compute_router" "router" {
 //    }
 //    advertised_ip_ranges {
 //      range = "6.7.0.0/16"
-//    }
   }
 }
 
-// TODO: Create Routes for GCP
-//AWS routes listed here as a reference
-//resource "aws_route_table" "public_rt" {
-//  count  = var.disabled ? 0 : 1
-//  vpc_id = aws_vpc.my_vpc[0].id
-//  tags = merge(
-//    var.resource_tags,
-//    { Name = "${var.name_prefix}PublicRT" }
-//  )
-//}
-//
-//resource "aws_route_table_association" "public_rt_assoc" {
-//  count          = var.disabled ? 0 : 2
-//  route_table_id = aws_route_table.public_rt[0].id
-//  subnet_id      = aws_subnet.public_subnets[count.index].id
-//}
-//
-//resource "aws_route" "igw_route" {
-//  count                  = (var.enable_internet_gateway && (var.disabled == false)) ? 1 : 0
-//  route_table_id         = aws_route_table.public_rt[0].id
-//  gateway_id             = aws_internet_gateway.my_igw[0].id
-//  destination_cidr_block = "0.0.0.0/0"
-//}
-//
-//resource "aws_route_table_association" "private_rt_assoc" {
-//  count          = var.disabled ? 0 : 2
-//  route_table_id = aws_route_table.private_rt[0].id
-//  subnet_id      = aws_subnet.private_subnets[count.index].id
-//}
-//
-//resource "aws_route_table" "private_rt" {
-//  count  = var.disabled ? 0 : 1
-//  vpc_id = aws_vpc.my_vpc[0].id
-//  tags = merge(
-//    var.resource_tags,
-//    { Name = "${var.name_prefix}PrivateRT" }
-//  )
-//}
-//
-//resource "aws_route" "nat_route" {
-//  count                  = var.disabled ? 0 : 1
-//  route_table_id         = aws_route_table.private_rt[0].id
-//  nat_gateway_id         = aws_nat_gateway.nat_gateway[0].id
-//  destination_cidr_block = "0.0.0.0/0"
-//}
+// NAT Router
+resource "google_compute_router_nat" "nat" {
+  name                               = "${var.name_prefix}NAT"
+  router                             = google_compute_router.router.name
+  region                             = google_compute_router.router.region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+  udp_idle_timeout_sec               = var.udp_idle_timeout_sec
+  icmp_idle_timeout_sec              = var.icmp_idle_timeout_sec
+  tcp_established_idle_timeout_sec   = var.tcp_established_idle_timeout_sec
+  tcp_transitory_idle_timeout_sec    = var.tcp_transitory_idle_timeout_sec
+
+  log_config {
+    enable = true
+    filter = var.log_config_filter
+  }
+}
+
+// Internet Routes
+resource "google_compute_route" "igw_route" {
+  project = var.project
+  network = google_compute_network.network.name
+  name                   = "${var.name_prefix}InternetEgress"
+  description            = "route through IGW to access internet"
+  tags                   = "egress-inet"
+  dest_range             = "0.0.0.0/0"
+  next_hop_internet      = "true"
+  next_hop_gateway       = "default-internet-gateway"
+  priority               = "100"
+
+}
