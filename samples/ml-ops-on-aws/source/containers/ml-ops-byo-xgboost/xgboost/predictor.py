@@ -10,6 +10,7 @@ from io import StringIO
 import sys
 import signal
 import traceback
+import glob
 
 import flask
 
@@ -69,6 +70,10 @@ def ping():
     health = ScoringService.get_model() is not None  # You can insert a health check here
 
     status = 200 if health else 404
+    folders = [f for f in glob.glob(model_path+'/*')]
+    
+    for f in folders:
+        print(f)
     return flask.Response(response="\n", status=status, mimetype="application/json")
 
 
@@ -81,13 +86,13 @@ def transformation():
     data = None
 
     # Convert from CSV to pandas
-    if flask.request.input_data_content_type == "text/csv":
+    if flask.request.content_type == "text/csv":
         data = flask.request.data.decode("utf-8")
         s = StringIO(data)
         data = pd.read_csv(s, index_col=0)
     else:
         return flask.Response(
-            response="This predictor only supports CSV data",
+            response="This predictor only supports CSV data {}".format(flask.request.content_type),
             status=415,
             mimetype="text/plain",
         )

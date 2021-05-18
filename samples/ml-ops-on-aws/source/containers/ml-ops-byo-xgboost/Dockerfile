@@ -1,12 +1,14 @@
 FROM python:3.6-slim-stretch
 
-
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     nginx \
     ca-certificates \
     g++ \
     git \
     && rm -rf /var/lib/apt/lists/*
+	
+RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/pip3 /usr/bin/pip
 
 # Set some environment variables. PYTHONUNBUFFERED keeps Python from buffering our standard
 # output stream, which means that logs can be delivered to the user quickly. PYTHONDONTWRITEBYTECODE
@@ -26,4 +28,4 @@ RUN apt-get -y purge --auto-remove git
 COPY xgboost /opt/program
 WORKDIR /opt/program
 
-ENTRYPOINT ["python3", "/opt/program/train"]
+#ENTRYPOINT ["python3", "/opt/program/train"]
