@@ -15,7 +15,9 @@ data "aws_s3_bucket" "data_bucket_override" {
 }
 
 locals {
-  s3_path_to_lambda_zip = "s3://${aws_s3_bucket.s3_metadata_bucket.id}/code/lambda/${var.name_prefix}lambda.zip"
+  # Removing the /lambda/ prefix to lambda zip path for webhooks
+  # s3_path_to_lambda_zip = "s3://${aws_s3_bucket.s3_metadata_bucket.id}/code/lambda/${var.name_prefix}lambda.zip"
+  s3_path_to_lambda_zip = "s3://${aws_s3_bucket.s3_metadata_bucket.id}/code/${var.name_prefix}lambda.zip"
   random_bucket_suffix  = lower(random_id.suffix.dec)
   data_bucket_name      = var.data_bucket_override != null ? data.aws_s3_bucket.data_bucket_override[0].id : aws_s3_bucket.s3_data_bucket[0].id
 }
