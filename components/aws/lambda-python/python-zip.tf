@@ -34,7 +34,7 @@ resource "null_resource" "create_dependency_zip" {
   count = 1 # count = local.local_requirements_file == null ? 0 : 1
   # Prepares Lambda package (https://github.com/hashicorp/terraform/issues/8344#issuecomment-345807204)
   triggers = {
-    version_increment = 1.1 # can be incremented to force a refresh
+    version_increment = 1.2 # can be incremented to force a refresh
     source_files_hash = local.source_files_hash
   }
 
