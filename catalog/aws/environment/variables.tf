@@ -70,3 +70,17 @@ EOF
   type        = bool
   default     = true
 }
+
+variable "enable_elastic_ip" {
+  description = <<EOF
+EOF
+  type        = bool
+  default     = true
+}
+
+variable "enable_nat_gateway" {
+  description = <<EOF
+EOF
+  type        = bool
+  default     = true
+}
