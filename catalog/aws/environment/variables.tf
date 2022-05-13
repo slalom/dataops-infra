@@ -70,3 +70,19 @@ EOF
   type        = bool
   default     = true
 }
+
+variable "enable_elastic_ip" {
+    description = <<EOF
+Disable the creation of Elastic IP.
+EOF
+  type        = bool
+  default     = true
+}
+
+variable "enable_nat_gateway" {
+  description = <<EOF
+Disable the creation of NAT gateway and route.
+EOF
+  type        = bool
+  default     = true
+}

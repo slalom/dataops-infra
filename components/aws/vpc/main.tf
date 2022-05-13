@@ -79,9 +79,8 @@ resource "aws_internet_gateway" "my_igw" {
     { Name = "${var.name_prefix}IGW" }
   )
 }
-
 resource "aws_eip" "nat_eip" {
-  count = var.disabled ? 0 : 1
+  count = (var.enable_elastic_ip && (var.disabled == false)) ? 1 : 0
   vpc   = true
   tags = merge(
     var.resource_tags,
@@ -90,7 +89,7 @@ resource "aws_eip" "nat_eip" {
 }
 
 resource "aws_nat_gateway" "nat_gateway" {
-  count         = var.disabled ? 0 : 1
+  count         = (var.enable_nat_gateway && (var.disabled == false)) ? 1 : 0
   allocation_id = aws_eip.nat_eip[0].id
   subnet_id     = aws_subnet.public_subnets[0].id
   tags = merge(
@@ -137,7 +136,7 @@ resource "aws_route_table" "private_rt" {
 }
 
 resource "aws_route" "nat_route" {
-  count                  = var.disabled ? 0 : 1
+  count                  = (var.enable_nat_gateway && (var.disabled == false)) ? 1 : 0
   route_table_id         = aws_route_table.private_rt[0].id
   nat_gateway_id         = aws_nat_gateway.nat_gateway[0].id
   destination_cidr_block = "0.0.0.0/0"

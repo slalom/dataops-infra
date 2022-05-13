@@ -22,4 +22,6 @@ module "vpc" {
   vpc_cidr                = var.vpc_cidr
   subnet_cidrs            = var.subnet_cidrs
   enable_internet_gateway = var.enable_internet_gateway
+  enable_nat_gateway      = var.enable_nat_gateway
+  enable_elastic_ip       = var.enable_elastic_ip
 }
