@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
     ]
     resources = [
       var.logging_bucket_arn,
-      "${logging_bucket_arn}/*",
+      "${var.logging_bucket_arn}/*",
     ]
   }
 }
