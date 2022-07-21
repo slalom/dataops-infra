@@ -9,7 +9,7 @@ resource "aws_cloudwatch_log_group" "kinesis_firehose_stream_logging_group" {
 # Cloudwatch Stream For Kinesis Logging
 resource "aws_cloudwatch_log_stream" "kinesis_firehose_stream_logging_stream" {
   log_group_name = aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group.name
-  name           = "S3Delivery"`
+  name           = "S3Delivery"
 }
 
 # Kinesis Firehose Delivery Stream
