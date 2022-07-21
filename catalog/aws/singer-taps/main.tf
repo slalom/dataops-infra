@@ -107,3 +107,17 @@ module "ecs_tap_sync_task" {
     }
   )
 }
+
+# Get logging bucket arn to pass to singer metrics
+data "aws_s3_bucket" "logging_bucket" {
+  bucket = var.data_lake_metadata_path
+}
+
+# Module Singer Metrics
+module "tap_jobscience_singer_metrics" {
+  count                               = length(local.taps_specs)
+  source                              = "../singer-metrics"
+  tap_env_prefix                      = "${local.tap_env_prefix[count.index]}${count.index}"
+  bucket_subdirectory                 = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
+  logging_bucket_arn                  = "${data.aws_s3_bucket.logging_bucket.arn}"
+}
