@@ -110,7 +110,7 @@ module "ecs_tap_sync_task" {
 
 # Get logging bucket arn to pass to singer metrics
 data "aws_s3_bucket" "logging_bucket" {
-  bucket = var.data_lake_metadata_path
+  bucket = trim("${var.data_lake_metadata_path}", "s3://")
 }
 
 # Module Singer Metrics
