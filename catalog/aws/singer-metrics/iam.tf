@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "lambda_assume_policy" {
 # Lambda Policy To Kickoff & Configure Lambda Jobs
 resource "aws_iam_role_policy" "lambda_policy" {
   name   = "${var.tap_env_prefix}_lambda_function_policy"
-  role   = var.kinesis_stream_role_name
+  role   = aws_iam_role.kinesis_firehose_stream_role.name
   policy = data.aws_iam_policy_document.lambda_assume_policy.json
 }
 
@@ -132,8 +132,8 @@ data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
         "s3:PutObject"
     ]
     resources = [
-      data.aws_s3_bucket.kinesis_firehose_stream_bucket.arn,
-      "${data.aws_s3_bucket.kinesis_firehose_stream_bucket.arn}/*",
+      var.logging_bucket_arn,
+      "${logging_bucket_arn}/*",
     ]
   }
 }
