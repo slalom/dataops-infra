@@ -124,17 +124,6 @@ module "tap_jobscience_singer_metrics" {
   count                 = length(local.taps_specs)
   source                = "../singer-metrics"
   tap_env_prefix        = "${local.tap_env_prefix[count.index]}${count.index}"
-  log_group_name        = element(module.ecs_tap_sync_task.ecs_tap_sync_tasks, count.index)
-  bucket_subdirectory   = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
-  logging_bucket_arn    = "${data.aws_s3_bucket.logging_bucket.arn}"
-  depends_on            = [module.ecs_tap_sync_task.ecs_tap_sync_task_output]
-}
-
-# Module Singer Metrics
-module "tap_jobscience_singer_metrics" {
-  count                 = length(local.taps_specs)
-  source                = "../singer-metrics"
-  tap_env_prefix        = "${local.tap_env_prefix[count.index]}${count.index}"
   log_group_name        = element(module.ecs_tap_sync_task.ecs_tap_sync_tasks[*], count.index)
   bucket_subdirectory   = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
   logging_bucket_arn    = "${data.aws_s3_bucket.logging_bucket.arn}"
