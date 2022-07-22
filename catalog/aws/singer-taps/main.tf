@@ -62,9 +62,14 @@ module "ecs_cluster" {
   resource_tags = var.resource_tags
 }
 
+# Get logging bucket arn to pass to singer metrics
+data "aws_s3_bucket" "logging_bucket" {
+  bucket = trim("${var.data_lake_metadata_path}", "s3://")
+}
+
 module "ecs_tap_sync_task" {
   count                = length(local.taps_specs)
-  source               = "../../../components/aws/ecs-task"
+  source               = "../../../components/aws/ecs-task-metrics"
   name_prefix          = "${local.name_prefix}task${count.index}-"
   environment          = var.environment
   resource_tags        = var.resource_tags
@@ -76,6 +81,8 @@ module "ecs_tap_sync_task" {
   use_private_subnet   = var.use_private_subnet
   use_fargate          = true
   permitted_s3_buckets = local.needed_s3_buckets
+  logging_bucket_arn   = "${data.aws_s3_bucket.logging_bucket.arn}"
+  bucket_subdirectory  = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
   environment_vars = merge(
     {
       TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_suffix}",
@@ -109,23 +116,20 @@ module "ecs_tap_sync_task" {
 }
 
 # Output for singer metrics dependancy
-output "ecs_tap_sync_task_output" { 
-  value = true
-  depends_on = [module.ecs_tap_sync_task]
-}
+# output "log_groups" { 
+#   value = toset(module.ecs_tap_sync_task[*].log_groups)
+#   depends_on = [module.ecs_tap_sync_task]
+# }
 
-# Get logging bucket arn to pass to singer metrics
-data "aws_s3_bucket" "logging_bucket" {
-  bucket = trim("${var.data_lake_metadata_path}", "s3://")
-}
 
-# Module Singer Metrics
-module "tap_jobscience_singer_metrics" {
-  count                 = length(local.taps_specs)
-  source                = "../singer-metrics"
-  tap_env_prefix        = "${local.tap_env_prefix[count.index]}${count.index}"
-  log_group_name        = element(module.ecs_tap_sync_task.log_groups[*], count.index)
-  bucket_subdirectory   = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
-  logging_bucket_arn    = "${data.aws_s3_bucket.logging_bucket.arn}"
-  depends_on            = [module.ecs_tap_sync_task.ecs_tap_sync_task_output]
-}
+
+# # Module Singer Metrics
+# module "tap_jobscience_singer_metrics" {
+#   count                 = length(local.taps_specs)
+#   source                = "../singer-metrics"
+#   tap_env_prefix        = "${local.tap_env_prefix[count.index]}${count.index}"
+#   log_group_name        = element(module.ecs_tap_sync_task.log_groups, count.index)
+#   bucket_subdirectory   = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
+#   logging_bucket_arn    = "${data.aws_s3_bucket.logging_bucket.arn}"
+#   depends_on            = [module.ecs_tap_sync_task.log_groups]
+# }
