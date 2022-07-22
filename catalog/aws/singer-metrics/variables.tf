@@ -13,3 +13,8 @@ variable "logging_bucket_arn" {
   type        = string
 }
 
+variable "log_group_name" {
+  description = "The log Group name from the ecs tasks creation"
+  type        = string
+}
+

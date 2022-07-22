@@ -69,7 +69,7 @@ resource "aws_lambda_function" "lambda_kinesis_firehose_data_transformation" {
 # Subscription Filter
 resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_subscription_filter" {
   name            = "${var.tap_env_prefix}-Tap-SingerLogs-SubscriptionFilter-Task"
-  log_group_name  = "${var.tap_env_prefix}"
+  log_group_name  = "${var.log_group_name}"
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream.arn
   distribution    = "ByLogStream"
