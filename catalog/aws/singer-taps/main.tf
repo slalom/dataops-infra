@@ -124,22 +124,8 @@ module "tap_jobscience_singer_metrics" {
   count                 = length(local.taps_specs)
   source                = "../singer-metrics"
   tap_env_prefix        = "${local.tap_env_prefix[count.index]}${count.index}"
-  log_group_name        = element(module.ecs_tap_sync_task.ecs_tap_sync_tasks[*], count.index)
+  log_group_name        = element(module.ecs_tap_sync_task.log_groups[*], count.index)
   bucket_subdirectory   = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
   logging_bucket_arn    = "${data.aws_s3_bucket.logging_bucket.arn}"
   depends_on            = [module.ecs_tap_sync_task.ecs_tap_sync_task_output]
 }
-
-# # Singer Metrics
-# output "tap_jobscience_singer_metrics_output" { value = module.tap_jobscience_singer_metrics.summary }
-# module "tap_jobscience_singer_metrics" {
-#   for_each                            = toset(module.tap_jobscience.ecs_tap_sync_tasks[*])
-#   source                              = "../87-singer-metrics"
-#   kinesis_firehose_stream_name        = "${local.name_prefix}${local.jobscience_tap_abbrv}Tap-SingerLogs-FirehoseStream-Task${index(tolist(module.tap_jobscience.ecs_tap_sync_tasks[*]), each.value)}"
-#   cloudwatch_subscription_filter_name = "${local.name_prefix}${local.jobscience_tap_abbrv}Tap-SingerLogs-SubscriptionFilter-Task${index(tolist(module.tap_jobscience.ecs_tap_sync_tasks[*]), each.value)}"
-#   cloudwatch_log_group_name           = each.key
-#   bucket_subdirectory                 = "singer-logs/${local.jobscience_tap_abbrv}/${index(tolist(module.tap_jobscience.ecs_tap_sync_tasks[*]), each.value)}/"
-#   logging_bucket_arn                  = data.aws_s3_bucket.kinesis_firehose_stream_bucket.arn
-#   kinesis_stream_role_arn             = aws_iam_role.kinesis_firehose_stream_role.arn
-#   kinesis_stream_role_name            = aws_iam_role.kinesis_firehose_stream_role.name
-# }
