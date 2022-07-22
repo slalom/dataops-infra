@@ -142,4 +142,4 @@ module "tap_jobscience_singer_metrics" {
 #   logging_bucket_arn                  = data.aws_s3_bucket.kinesis_firehose_stream_bucket.arn
 #   kinesis_stream_role_arn             = aws_iam_role.kinesis_firehose_stream_role.arn
 #   kinesis_stream_role_name            = aws_iam_role.kinesis_firehose_stream_role.name
-}
+# }
