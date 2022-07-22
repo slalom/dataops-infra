@@ -184,7 +184,7 @@ resource "aws_cloudwatch_log_stream" "kinesis_firehose_stream_logging_stream" {
 
 # Kinesis Firehose Delivery Stream
 resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
-  name        = "${var.name_prefix}-Tap-SingerLogs-FirehoseStream-Task"
+  name        = "${var.name_prefix}-Tap-SM-FirehoseStream-Task"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -238,7 +238,7 @@ resource "aws_lambda_function" "lambda_kinesis_firehose_data_transformation" {
 
 # Subscription Filter
 resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_subscription_filter" {
-  name            = "${var.name_prefix}-Tap-SingerLogs-SubscriptionFilter-Task"
+  name            = "${var.name_prefix}-Tap-SM-SubscriptionFilter-Task"
   log_group_name  = aws_cloudwatch_log_group.cw_log_group.name
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream.arn
