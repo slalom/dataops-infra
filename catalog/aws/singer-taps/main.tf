@@ -62,7 +62,7 @@ module "ecs_cluster" {
   resource_tags = var.resource_tags
 }
 
-output "ecs_tap_sync_task_summary" { value = module.tap_jobscience_l4.ecs_tap_sync_tasks }
+output "ecs_tap_sync_task_summary" { value = module.ecs_tap_sync_task.ecs_tap_sync_tasks }
 module "ecs_tap_sync_task" {
   count                = length(local.taps_specs)
   source               = "../../../components/aws/ecs-task"
