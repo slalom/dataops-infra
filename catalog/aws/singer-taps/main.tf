@@ -77,7 +77,7 @@ module "ecs_tap_sync_task" {
   ecs_cluster_name     = module.ecs_cluster.ecs_cluster_name
   container_image      = local.taps_specs[count.index].image
   container_command    = local.taps_specs[count.index].sync_command
-  container_ram_gb     = var.container_ram_gb`
+  container_ram_gb     = var.container_ram_gb
   container_num_cores  = var.container_num_cores
   use_private_subnet   = var.use_private_subnet
   use_fargate          = true
