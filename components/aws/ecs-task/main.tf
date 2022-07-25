@@ -180,7 +180,7 @@ resource "aws_cloudwatch_log_group" "kinesis_firehose_stream_logging_group" {
 # Cloudwatch Stream For Kinesis Logging
 resource "aws_cloudwatch_log_stream" "kinesis_firehose_stream_logging_stream" {
   count          = var.singer_metrics_flag ? 1 : 0 
-  log_group_name = aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group.name
+  log_group_name = aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group[0].name
   name           = "S3Delivery"
 }
 
@@ -223,7 +223,6 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
 
 # File pointer
 data "archive_file" "kinesis_firehose_data_transformation" {
-  count       = var.singer_metrics_flag ? 1 : 0 
   type        = "zip"
   source_file = "${path.module}/functions/index.js"
   output_path = "${path.module}/functions/index.zip"

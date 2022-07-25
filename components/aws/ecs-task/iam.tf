@@ -210,7 +210,6 @@ EOF
 
 # Lambda Policy Document To Kickoff & Configure Lambda Jobs
 data "aws_iam_policy_document" "lambda_assume_policy" {
-  count = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect = "Allow"
     actions = [
@@ -234,7 +233,6 @@ resource "aws_iam_role_policy" "lambda_policy" {
 
 # Lambda Policy Document To Assume Base Role
 data "aws_iam_policy_document" "lambda_assume_role" {
-  count = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -254,7 +252,6 @@ resource "aws_iam_role" "lambda" {
 
 # Lambda Policy Document To Write Logs To Cloudwatch
 data "aws_iam_policy_document" "lambda_to_cloudwatch_assume_policy" {
-  count = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect = "Allow"
     actions = [
@@ -276,7 +273,6 @@ resource "aws_iam_role_policy" "lambda_to_cloudwatch_policy" {
 
 # Cloudwatch Policy Document To Assume Base Role
 data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
-  count = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -289,7 +285,6 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
 
 # Cloudwatch Policy Document To Access/Write To S3
 data "aws_iam_policy_document" "cloudwatch_logs_assume_policy" {
-  count = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect    = "Allow"
     actions   = [
@@ -323,7 +318,6 @@ resource "aws_iam_role_policy" "cloudwatch_logs_policy" {
 
 # Kinesis Firehose Policy Document To Assume Base Role
 data "aws_iam_policy_document" "kinesis_firehose_stream_assume_role" {
-  count = var.singer_metrics_flag ? 1 : 0 
     statement {
         effect  = "Allow"
         actions = ["sts:AssumeRole"]
@@ -343,7 +337,6 @@ resource "aws_iam_role" "kinesis_firehose_stream_role" {
 
 # Kinesis Firehose Policy Document To Access S3
 data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
-  count = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect = "Allow"
     actions = [
