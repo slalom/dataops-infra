@@ -191,7 +191,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
   destination = "extended_s3"
 
   extended_s3_configuration {
-    role_arn       = aws_iam_role.kinesis_firehose_stream_role.arn
+    role_arn       = aws_iam_role.kinesis_firehose_stream_role[0].arn
     bucket_arn     = var.logging_bucket_arn
     prefix         = var.bucket_subdirectory
     processing_configuration {
@@ -223,6 +223,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
 
 # File pointer
 data "archive_file" "kinesis_firehose_data_transformation" {
+  count       = var.singer_metrics_flag ? 1 : 0 
   type        = "zip"
   source_file = "${path.module}/functions/index.js"
   output_path = "${path.module}/functions/index.zip"
@@ -231,11 +232,11 @@ data "archive_file" "kinesis_firehose_data_transformation" {
 # Lambda Function
 resource "aws_lambda_function" "lambda_kinesis_firehose_data_transformation" {
   count            = var.singer_metrics_flag ? 1 : 0 
-  filename         = data.archive_file.kinesis_firehose_data_transformation.output_path
+  filename         = data.archive_file.kinesis_firehose_data_transformation[0].output_path
   function_name    = "${var.name_prefix}_Index"
   role             = aws_iam_role.lambda[0].arn
   handler          = "index.handler"
-  source_code_hash = data.archive_file.kinesis_firehose_data_transformation.output_base64sha256
+  source_code_hash = data.archive_file.kinesis_firehose_data_transformation[0].output_base64sha256
   runtime          = "nodejs12.x"
   timeout          = 60
 }
@@ -248,5 +249,5 @@ resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_subscription_filte
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream[0].arn
   distribution    = "ByLogStream"
-  role_arn        = aws_iam_role.cloudwatch_logs_role.arn
+  role_arn        = aws_iam_role.cloudwatch_logs_role[0].arn
 }

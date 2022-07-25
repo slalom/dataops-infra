@@ -210,6 +210,7 @@ EOF
 
 # Lambda Policy Document To Kickoff & Configure Lambda Jobs
 data "aws_iam_policy_document" "lambda_assume_policy" {
+  count  = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect = "Allow"
     actions = [
@@ -217,8 +218,8 @@ data "aws_iam_policy_document" "lambda_assume_policy" {
       "lambda:GetFunctionConfiguration",
     ]
     resources = [
-      aws_lambda_function.lambda_kinesis_firehose_data_transformation.arn,
-      "${aws_lambda_function.lambda_kinesis_firehose_data_transformation.arn}:*",
+      aws_lambda_function.lambda_kinesis_firehose_data_transformation[0].arn,
+      "${aws_lambda_function.lambda_kinesis_firehose_data_transformation[0].arn}:*",
     ]
   }
 }
@@ -228,11 +229,12 @@ resource "aws_iam_role_policy" "lambda_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_lambda_function_policy"
   role   = aws_iam_role.kinesis_firehose_stream_role.name
-  policy = data.aws_iam_policy_document.lambda_assume_policy.json
+  policy = data.aws_iam_policy_document.lambda_assume_policy[0].json
 }
 
 # Lambda Policy Document To Assume Base Role
 data "aws_iam_policy_document" "lambda_assume_role" {
+  count  = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -247,11 +249,12 @@ data "aws_iam_policy_document" "lambda_assume_role" {
 resource "aws_iam_role" "lambda" {
   count              = var.singer_metrics_flag ? 1 : 0 
   name               = "${var.name_prefix}_lambda_function_role"
-  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role[0].json
 }
 
 # Lambda Policy Document To Write Logs To Cloudwatch
 data "aws_iam_policy_document" "lambda_to_cloudwatch_assume_policy" {
+  count  = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect = "Allow"
     actions = [
@@ -268,11 +271,12 @@ resource "aws_iam_role_policy" "lambda_to_cloudwatch_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_lambda_to_cloudwatch_policy"
   role   = aws_iam_role.lambda[0].name
-  policy = data.aws_iam_policy_document.lambda_to_cloudwatch_assume_policy.json
+  policy = data.aws_iam_policy_document.lambda_to_cloudwatch_assume_policy[0].json
 }
 
 # Cloudwatch Policy Document To Assume Base Role
 data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
+  count  = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -285,6 +289,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
 
 # Cloudwatch Policy Document To Access/Write To S3
 data "aws_iam_policy_document" "cloudwatch_logs_assume_policy" {
+  count  = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect    = "Allow"
     actions   = [
@@ -297,7 +302,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_policy" {
       "firehose:TagDeliveryStream",
       "firehose:UntagDeliveryStream"
     ]
-    resources = [aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream.arn]
+    resources = [aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream[0].arn]
   }
 }
 
@@ -305,7 +310,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_policy" {
 resource "aws_iam_role" "cloudwatch_logs_role" {
   count              = var.singer_metrics_flag ? 1 : 0 
   name               = "${var.name_prefix}_cloudwatch_logs_role"
-  assume_role_policy = data.aws_iam_policy_document.cloudwatch_logs_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.cloudwatch_logs_assume_role[0].json
 }
 
 # Cloudwatch Policy To Access/Write To S3
@@ -313,17 +318,18 @@ resource "aws_iam_role_policy" "cloudwatch_logs_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_cloudwatch_logs_policy"
   role   = aws_iam_role.cloudwatch_logs_role.name
-  policy = data.aws_iam_policy_document.cloudwatch_logs_assume_policy.json
+  policy = data.aws_iam_policy_document.cloudwatch_logs_assume_policy[0].json
 }
 
 # Kinesis Firehose Policy Document To Assume Base Role
 data "aws_iam_policy_document" "kinesis_firehose_stream_assume_role" {
-    statement {
-        effect  = "Allow"
-        actions = ["sts:AssumeRole"]
+  count  = var.singer_metrics_flag ? 1 : 0 
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
     principals {
-        type        = "Service"
-        identifiers = ["firehose.amazonaws.com"]
+      type        = "Service"
+      identifiers = ["firehose.amazonaws.com"]
     }
   }
 }
@@ -332,11 +338,12 @@ data "aws_iam_policy_document" "kinesis_firehose_stream_assume_role" {
 resource "aws_iam_role" "kinesis_firehose_stream_role" {
   count              = var.singer_metrics_flag ? 1 : 0 
   name               = "${var.name_prefix}_fh_stream_role"
-  assume_role_policy = data.aws_iam_policy_document.kinesis_firehose_stream_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.kinesis_firehose_stream_assume_role[0].json
 }
 
 # Kinesis Firehose Policy Document To Access S3
 data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
+  count  = var.singer_metrics_flag ? 1 : 0 
   statement {
     effect = "Allow"
     actions = [
@@ -359,5 +366,5 @@ resource "aws_iam_role_policy" "kinesis_firehose_access_bucket_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_fh_access_bucket_policy"
   role   = aws_iam_role.kinesis_firehose_stream_role.name
-  policy = data.aws_iam_policy_document.kinesis_firehose_access_bucket_assume_policy.json
+  policy = data.aws_iam_policy_document.kinesis_firehose_access_bucket_assume_policy[0].json
 }
