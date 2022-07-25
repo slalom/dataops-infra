@@ -23,7 +23,7 @@ Singer Taps Summary:
 EOF
 }
 
-output "log_groups" {
+output "ecs_tap_sync_tasks" {
   description = "References to ecs_tap_sync_tasks to grab Clouwatch logging information."
   value       = tolist(flatten(module.ecs_tap_sync_task.*.cloudwatch_log_group_name))
 }
