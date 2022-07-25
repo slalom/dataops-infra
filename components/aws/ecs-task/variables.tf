@@ -147,3 +147,21 @@ variable "whitelist_terraform_ip" {
   type        = bool
   default     = true
 }
+
+variable "logging_bucket_arn" {
+  description = "Arn of the singer metrics logs destination."
+  type        = string
+  default     = null
+}
+
+variable "bucket_subdirectory" {
+  description = "The s3 subdirectory for singer metrics destination."
+  type        = string
+  default     = null
+}
+
+variable "singer_metrics_flag" {
+  description = "Flag to signify if singer metrics resources are required"
+  type        = number
+  default     = 0 
+}

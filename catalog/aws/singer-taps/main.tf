@@ -70,7 +70,7 @@ data "aws_s3_bucket" "logging_bucket" {
 
 module "ecs_tap_sync_task" {
   count                = length(local.taps_specs)
-  source               = "../../../components/aws/ecs-task-metrics"
+  source               = "../../../components/aws/ecs-task"
   name_prefix          = "${local.name_prefix}task${count.index}-"
   environment          = var.environment
   resource_tags        = var.resource_tags
