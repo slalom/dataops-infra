@@ -64,7 +64,6 @@ module "ecs_cluster" {
 
 # Get logging bucket arn to pass to singer metrics
 data "aws_s3_bucket" "logging_bucket" {
-  count  = var.singer_metrics_flag ? 1 : 0 
   bucket = trim("${var.data_lake_logging_path}", "s3://")
 }
 

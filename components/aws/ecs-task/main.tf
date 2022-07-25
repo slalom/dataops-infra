@@ -201,7 +201,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
         type = "Lambda"
         parameters {
             parameter_name  = "LambdaArn"
-            parameter_value = "${aws_lambda_function.lambda_kinesis_firehose_data_transformation.arn}:$LATEST"
+            parameter_value = "${aws_lambda_function.lambda_kinesis_firehose_data_transformation[0].arn}:$LATEST"
         }
         parameters {
             parameter_name  = "BufferSizeInMBs"
@@ -215,8 +215,8 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
     }
     cloudwatch_logging_options {
       enabled         = true
-      log_group_name  = "${aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group.name}"
-      log_stream_name = "${aws_cloudwatch_log_stream.kinesis_firehose_stream_logging_stream.name}"
+      log_group_name  = "${aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group[0].name}"
+      log_stream_name = "${aws_cloudwatch_log_stream.kinesis_firehose_stream_logging_stream[0].name}"
     }
   }
 }
@@ -233,7 +233,7 @@ resource "aws_lambda_function" "lambda_kinesis_firehose_data_transformation" {
   count            = var.singer_metrics_flag ? 1 : 0 
   filename         = data.archive_file.kinesis_firehose_data_transformation.output_path
   function_name    = "${var.name_prefix}_Index"
-  role             = aws_iam_role.lambda.arn
+  role             = aws_iam_role.lambda[0].arn
   handler          = "index.handler"
   source_code_hash = data.archive_file.kinesis_firehose_data_transformation.output_base64sha256
   runtime          = "nodejs12.x"
@@ -246,7 +246,7 @@ resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_subscription_filte
   name            = "${var.name_prefix}-Tap-SM-SubscriptionFilter-Task"
   log_group_name  = aws_cloudwatch_log_group.cw_log_group.name
   filter_pattern  = ""
-  destination_arn = aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream.arn
+  destination_arn = aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream[0].arn
   distribution    = "ByLogStream"
   role_arn        = aws_iam_role.cloudwatch_logs_role.arn
 }

@@ -267,7 +267,7 @@ data "aws_iam_policy_document" "lambda_to_cloudwatch_assume_policy" {
 resource "aws_iam_role_policy" "lambda_to_cloudwatch_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_lambda_to_cloudwatch_policy"
-  role   = aws_iam_role.lambda.name
+  role   = aws_iam_role.lambda[0].name
   policy = data.aws_iam_policy_document.lambda_to_cloudwatch_assume_policy.json
 }
 
