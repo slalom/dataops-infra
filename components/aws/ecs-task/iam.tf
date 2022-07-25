@@ -228,7 +228,7 @@ data "aws_iam_policy_document" "lambda_assume_policy" {
 resource "aws_iam_role_policy" "lambda_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_lambda_function_policy"
-  role   = aws_iam_role.kinesis_firehose_stream_role.name
+  role   = aws_iam_role.kinesis_firehose_stream_role[0].name
   policy = data.aws_iam_policy_document.lambda_assume_policy[0].json
 }
 
@@ -317,7 +317,7 @@ resource "aws_iam_role" "cloudwatch_logs_role" {
 resource "aws_iam_role_policy" "cloudwatch_logs_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_cloudwatch_logs_policy"
-  role   = aws_iam_role.cloudwatch_logs_role.name
+  role   = aws_iam_role.cloudwatch_logs_role[0].name
   policy = data.aws_iam_policy_document.cloudwatch_logs_assume_policy[0].json
 }
 
@@ -365,6 +365,6 @@ data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
 resource "aws_iam_role_policy" "kinesis_firehose_access_bucket_policy" {
   count  = var.singer_metrics_flag ? 1 : 0 
   name   = "${var.name_prefix}_fh_access_bucket_policy"
-  role   = aws_iam_role.kinesis_firehose_stream_role.name
+  role   = aws_iam_role.kinesis_firehose_stream_role[0].name
   policy = data.aws_iam_policy_document.kinesis_firehose_access_bucket_assume_policy[0].json
 }
