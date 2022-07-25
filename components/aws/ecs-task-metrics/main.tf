@@ -173,17 +173,20 @@ resource "aws_ecs_service" "ecs_always_on_service" {
 
 # Clouwatch Group For Kinesis Logging
 resource "aws_cloudwatch_log_group" "kinesis_firehose_stream_logging_group" {
-  name = "/aws/kinesisfirehose/${var.name_prefix}"
+  count = var.singer_metrics_flag ? 1 : 0 
+  name  = "/aws/kinesisfirehose/${var.name_prefix}"
 }
 
 # Cloudwatch Stream For Kinesis Logging
 resource "aws_cloudwatch_log_stream" "kinesis_firehose_stream_logging_stream" {
+  count          = var.singer_metrics_flag ? 1 : 0 
   log_group_name = aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group.name
   name           = "S3Delivery"
 }
 
 # Kinesis Firehose Delivery Stream
 resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
+  count       = var.singer_metrics_flag ? 1 : 0 
   name        = "${var.name_prefix}-Tap-SM-FirehoseStream-Task"
   destination = "extended_s3"
 
@@ -220,6 +223,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
 
 # File pointer
 data "archive_file" "kinesis_firehose_data_transformation" {
+  count       = var.singer_metrics_flag ? 1 : 0 
   type        = "zip"
   source_file = "${path.module}/functions/index.js"
   output_path = "${path.module}/functions/index.zip"
@@ -227,6 +231,7 @@ data "archive_file" "kinesis_firehose_data_transformation" {
 
 # Lambda Function
 resource "aws_lambda_function" "lambda_kinesis_firehose_data_transformation" {
+  count            = var.singer_metrics_flag ? 1 : 0 
   filename         = data.archive_file.kinesis_firehose_data_transformation.output_path
   function_name    = "${var.name_prefix}_Index"
   role             = aws_iam_role.lambda.arn
@@ -238,6 +243,7 @@ resource "aws_lambda_function" "lambda_kinesis_firehose_data_transformation" {
 
 # Subscription Filter
 resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_subscription_filter" {
+  count           = var.singer_metrics_flag ? 1 : 0 
   name            = "${var.name_prefix}-Tap-SM-SubscriptionFilter-Task"
   log_group_name  = aws_cloudwatch_log_group.cw_log_group.name
   filter_pattern  = ""

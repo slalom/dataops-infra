@@ -159,3 +159,9 @@ variable "bucket_subdirectory" {
   type        = string
   default     = null
 }
+
+variable "singer_metrics_flag" {
+  description = "Flag to signify if singer metrics resources are required"
+  type        = number
+  default     = 0 
+}

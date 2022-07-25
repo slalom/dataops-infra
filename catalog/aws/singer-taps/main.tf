@@ -64,7 +64,8 @@ module "ecs_cluster" {
 
 # Get logging bucket arn to pass to singer metrics
 data "aws_s3_bucket" "logging_bucket" {
-  bucket = trim("${var.data_lake_metadata_path}", "s3://")
+  count  = var.singer_metrics_flag ? 1 : 0 
+  bucket = trim("${var.data_lake_logging_path}", "s3://")
 }
 
 module "ecs_tap_sync_task" {
@@ -76,13 +77,14 @@ module "ecs_tap_sync_task" {
   ecs_cluster_name     = module.ecs_cluster.ecs_cluster_name
   container_image      = local.taps_specs[count.index].image
   container_command    = local.taps_specs[count.index].sync_command
-  container_ram_gb     = var.container_ram_gb
+  container_ram_gb     = var.container_ram_gb`
   container_num_cores  = var.container_num_cores
   use_private_subnet   = var.use_private_subnet
   use_fargate          = true
   permitted_s3_buckets = local.needed_s3_buckets
   logging_bucket_arn   = "${data.aws_s3_bucket.logging_bucket.arn}"
   bucket_subdirectory  = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
+  singer_metrics_flag  = var.singer_metrics_flag
   environment_vars = merge(
     {
       TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_suffix}",
