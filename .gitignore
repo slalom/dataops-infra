@@ -53,5 +53,7 @@ terraform
 terraform.exe
 
 # Other
-
 .DS_Store
+
+# Firehose lambda zip
+commponents/aws/ecs-task/functions/index.zip

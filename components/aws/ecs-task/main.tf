@@ -7,7 +7,7 @@
 */
 
 # Default AWS Region
-data "aws_region" "default" {}
+# data "aws_region" "default" {}
 
 data "http" "icanhazip" {
   count = var.whitelist_terraform_ip ? 1 : 0
