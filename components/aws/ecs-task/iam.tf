@@ -282,7 +282,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"
-      identifiers = ["logs.${data.aws_region.default.name}.amazonaws.com"]
+      identifiers = ["logs.${var.environment.aws_region}.amazonaws.com"]
     }
   }
 }
