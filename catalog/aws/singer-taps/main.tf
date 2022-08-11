@@ -83,7 +83,7 @@ module "ecs_tap_sync_task" {
   permitted_s3_buckets = local.needed_s3_buckets
   logging_bucket_arn   = "${data.aws_s3_bucket.logging_bucket.arn}"
   bucket_subdirectory  = "singer-metrics/${var.name_prefix}/${local.tap_env_prefix[count.index]}/" # firehose logging subdirectory = ***
-  singer_metrics_flag  = var.singer_metrics_flag # firehose_logging_flag = ***
+  firehose_logging_flag  = var.firehose_logging_flag # firehose_logging_flag = ***
   environment_vars = merge(
     {
       TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_suffix}",

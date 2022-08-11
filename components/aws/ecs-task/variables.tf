@@ -160,7 +160,7 @@ variable "bucket_subdirectory" {
   default     = null
 }
 
-variable "singer_metrics_flag" {
+variable "firehose_logging_flag" {
   description = "Flag to signify if singer metrics resources are required"
   type        = bool
   default     = false
