@@ -180,7 +180,6 @@ resource "aws_cloudwatch_log_stream" "kinesis_firehose_stream_logging_stream" {
   count          = var.firehose_logging_flag ? 1 : 0 
   log_group_name = aws_cloudwatch_log_group.kinesis_firehose_stream_logging_group[0].name
   name           = "S3Delivery"
-  tags  = var.resource_tags
 }
 
 # Kinesis Firehose Delivery Stream
@@ -227,7 +226,6 @@ data "archive_file" "kinesis_firehose_data_transformation" {
   type        = "zip"
   source_file = "${path.module}/functions/index.js"
   output_path = "${path.module}/functions/index.zip"
-  tags        = var.resource_tags
 }
 
 # Lambda Function

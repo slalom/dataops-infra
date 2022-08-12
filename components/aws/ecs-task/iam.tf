@@ -289,7 +289,6 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
       identifiers = ["logs.${var.environment.aws_region}.amazonaws.com"]
     }
   }
-  tags = var.resource_tags
 }
 
 # Cloudwatch Policy Document To Access/Write To S3
