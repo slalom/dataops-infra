@@ -230,8 +230,6 @@ resource "aws_iam_role_policy" "lambda_policy" {
   name   = "${var.name_prefix}_lambda_function_policy"
   role   = aws_iam_role.kinesis_firehose_stream_role[0].name
   policy = data.aws_iam_policy_document.lambda_assume_policy[0].json
-  tags   = var.resource_tags
-
 }
 
 # Lambda Policy Document To Assume Base Role
