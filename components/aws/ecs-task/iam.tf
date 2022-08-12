@@ -237,7 +237,6 @@ resource "aws_iam_role_policy" "lambda_policy" {
 
 # Lambda Policy Document To Assume Base Role
 data "aws_iam_policy_document" "lambda_assume_role" {
-  tags   = var.resource_tags
   count  = var.firehose_logging_flag ? 1 : 0 
   statement {
     effect  = "Allow"
@@ -259,7 +258,6 @@ resource "aws_iam_role" "lambda" {
 
 # Lambda Policy Document To Write Logs To Cloudwatch
 data "aws_iam_policy_document" "lambda_to_cloudwatch_assume_policy" {
-  tags   = var.resource_tags
   count  = var.firehose_logging_flag ? 1 : 0 
   statement {
     effect = "Allow"
@@ -278,7 +276,6 @@ resource "aws_iam_role_policy" "lambda_to_cloudwatch_policy" {
   name   = "${var.name_prefix}_lambda_to_cloudwatch_policy"
   role   = aws_iam_role.lambda[0].name
   policy = data.aws_iam_policy_document.lambda_to_cloudwatch_assume_policy[0].json
-  tags   = var.resource_tags
 }
 
 # Cloudwatch Policy Document To Assume Base Role
@@ -311,7 +308,6 @@ data "aws_iam_policy_document" "cloudwatch_logs_assume_policy" {
       "firehose:UntagDeliveryStream"
     ]
     resources = [aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream[0].arn]
-    tags      = var.resource_tags
   }
 }
 
@@ -329,7 +325,6 @@ resource "aws_iam_role_policy" "cloudwatch_logs_policy" {
   name   = "${var.name_prefix}_cloudwatch_logs_policy"
   role   = aws_iam_role.cloudwatch_logs_role[0].name
   policy = data.aws_iam_policy_document.cloudwatch_logs_assume_policy[0].json
-  tags   = var.resource_tags
 }
 
 # Kinesis Firehose Policy Document To Assume Base Role
@@ -343,7 +338,6 @@ data "aws_iam_policy_document" "kinesis_firehose_stream_assume_role" {
       identifiers = ["firehose.amazonaws.com"]
     }
   }
-  tags  = var.resource_tags
 }
 
 # Kinesis Firehose Role
@@ -372,7 +366,6 @@ data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
       "${var.logging_bucket_arn}/*",
     ]
   }
-  tags = var.resource_tags
 }
 
 # Kinesis Firehose Policy To Access S3
@@ -381,5 +374,4 @@ resource "aws_iam_role_policy" "kinesis_firehose_access_bucket_policy" {
   name   = "${var.name_prefix}_fh_access_bucket_policy"
   role   = aws_iam_role.kinesis_firehose_stream_role[0].name
   policy = data.aws_iam_policy_document.kinesis_firehose_access_bucket_assume_policy[0].json
-  tags   = var.resource_tags
 }
