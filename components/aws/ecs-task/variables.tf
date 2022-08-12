@@ -149,19 +149,19 @@ variable "whitelist_terraform_ip" {
 }
 
 variable "logging_bucket_arn" {
-  description = "Arn of the singer metrics logs destination."
+  description = "Arn of the ecs task firehose logging logs destination."
   type        = string
   default     = null
 }
 
 variable "bucket_subdirectory" {
-  description = "The s3 subdirectory for singer metrics destination."
+  description = "The s3 subdirectory for ecs task firehose logging destination."
   type        = string
   default     = null
 }
 
 variable "firehose_logging_flag" {
-  description = "Flag to signify if singer metrics resources are required"
+  description = "Flag to signify if ecs task firehose logging resources are required"
   type        = bool
   default     = false
 }
