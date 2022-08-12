@@ -186,6 +186,7 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
   count       = var.firehose_logging_flag ? 1 : 0 
   name        = "${var.name_prefix}-Tap-SM-FirehoseStream-Task"
   destination = "extended_s3"
+  resource_tags = var.resource_tags
 
   extended_s3_configuration {
     role_arn       = aws_iam_role.kinesis_firehose_stream_role[0].arn
