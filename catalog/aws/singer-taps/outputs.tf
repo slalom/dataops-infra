@@ -14,7 +14,7 @@ Singer Taps Summary:
  - ECS Tasks URL: https://console.aws.amazon.com/ecs/home?region=${var.environment.aws_region}#/clusters/${module.ecs_cluster.ecs_cluster_name}/tasks
  - ECS Task Logging Flags:
    - ${join("\n   - ", module.ecs_tap_sync_task.*.firehose_logging_flag)}
-- ECS Task Logging Subdirectories:
+ - ECS Task Logging Subdirectories:
    - ${join("\n   - ", module.ecs_tap_sync_task.*.firehose_logging_subdirectory)}
 
  NOTE: Running from CLI require setting the profile using a "User Switch Command" from the "Environment" module:
