@@ -251,6 +251,4 @@ resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_subscription_filte
   destination_arn = aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream[0].arn
   distribution    = "ByLogStream"
   role_arn        = aws_iam_role.cloudwatch_logs_role[0].arn
-  tags            = var.resource_tags
-
 }

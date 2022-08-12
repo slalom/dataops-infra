@@ -222,7 +222,6 @@ data "aws_iam_policy_document" "lambda_assume_policy" {
       "${aws_lambda_function.lambda_kinesis_firehose_data_transformation[0].arn}:*",
     ]
   }
-  tags  = var.resource_tags
 }
 
 # Lambda Policy To Kickoff & Configure Lambda Jobs
