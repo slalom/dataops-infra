@@ -191,8 +191,8 @@ resource "aws_kinesis_firehose_delivery_stream" "kinesis_firehose_stream" {
 
   extended_s3_configuration {
     role_arn       = aws_iam_role.kinesis_firehose_stream_role[0].arn
-    bucket_arn     = var.logging_bucket_arn
-    prefix         = var.bucket_subdirectory
+    bucket_arn     = var.firehose_logging_bucket_arn
+    prefix         = var.firehose_logging_bucket_subdirectory
     processing_configuration {
       enabled = true
 

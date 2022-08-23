@@ -148,20 +148,20 @@ variable "whitelist_terraform_ip" {
   default     = true
 }
 
-variable "logging_bucket_arn" {
-  description = "Arn of the ecs task firehose logging logs destination."
+variable "firehose_logging_bucket_arn" {
+  description = "Arn of the ecs task firehose logging logs destination.  Required if firehose logging flag is true."
   type        = string
   default     = null
 }
 
-variable "bucket_subdirectory" {
-  description = "The s3 subdirectory for ecs task firehose logging destination."
+variable "firehose_logging_bucket_subdirectory" {
+  description = "The s3 subdirectory for ecs task firehose logging destination. Required if firehose logging flag is true."
   type        = string
   default     = null
 }
 
 variable "firehose_logging_flag" {
-  description = "Flag to signify if ecs task firehose logging resources are required"
+  description = "Flag to signify if ecs task firehose logging resources are required."
   type        = bool
   default     = false
 }
