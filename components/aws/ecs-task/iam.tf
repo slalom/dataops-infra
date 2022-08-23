@@ -358,8 +358,8 @@ data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
         "s3:PutObject"
     ]
     resources = [
-      var.logging_bucket_arn,
-      "${var.logging_bucket_arn}/*",
+      var.firehose_logging_bucket_arn,
+      "${var.firehose_logging_bucket_arn}/*",
     ]
   }
 }

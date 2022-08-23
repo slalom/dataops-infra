@@ -62,5 +62,5 @@ output "firehose_logging_flag" {
 }
 output "firehose_logging_subdirectory" {
   description = "The subdirectory of ecs task logging in our logging bucket"
-  value       = var.bucket_subdirectory
+  value       = var.firehose_logging_bucket_subdirectory
 }
