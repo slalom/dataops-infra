@@ -62,6 +62,11 @@ module "ecs_cluster" {
   resource_tags = var.resource_tags
 }
 
+# Get logging bucket arn to pass to singer metrics
+data "aws_s3_bucket" "logging_bucket" {
+  bucket = trim("${var.data_lake_logging_path}", "s3://")
+}
+
 module "ecs_tap_sync_task" {
   count                = length(local.taps_specs)
   source               = "../../../components/aws/ecs-task"
@@ -76,6 +81,9 @@ module "ecs_tap_sync_task" {
   use_private_subnet   = var.use_private_subnet
   use_fargate          = true
   permitted_s3_buckets = local.needed_s3_buckets
+  firehose_logging_flag  = var.firehose_logging_flag 
+  firehose_logging_bucket_arn   = "${data.aws_s3_bucket.logging_bucket.arn}"
+  firehose_logging_bucket_subdirectory  = "ecs-task-logs/${var.name_prefix}/${local.tap_env_prefix[count.index]}/"
   environment_vars = merge(
     {
       TAP_CONFIG_DIR                                    = "${var.data_lake_metadata_path}/tap-snapshot-${local.unique_suffix}",

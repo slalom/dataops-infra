@@ -56,3 +56,11 @@ output "subnets" {
   description = "A list of subnets used for task execution."
   value       = local.subnets
 }
+output "firehose_logging_flag" {
+  description = "A Flag to signify if logging of the ecs tasks are written to s3 via firehose"
+  value       = var.firehose_logging_flag
+}
+output "firehose_logging_subdirectory" {
+  description = "The subdirectory of ecs task logging in our logging bucket"
+  value       = var.firehose_logging_bucket_subdirectory
+}

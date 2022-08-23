@@ -207,3 +207,167 @@ resource "aws_iam_policy" "allow_kms_decrypt" {
 }
 EOF
 }
+
+# Lambda Policy Document To Kickoff & Configure Lambda Jobs
+data "aws_iam_policy_document" "lambda_assume_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect = "Allow"
+    actions = [
+      "lambda:InvokeFunction",
+      "lambda:GetFunctionConfiguration",
+    ]
+    resources = [
+      aws_lambda_function.lambda_kinesis_firehose_data_transformation[0].arn,
+      "${aws_lambda_function.lambda_kinesis_firehose_data_transformation[0].arn}:*",
+    ]
+  }
+}
+
+# Lambda Policy To Kickoff & Configure Lambda Jobs
+resource "aws_iam_role_policy" "lambda_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  name   = "${var.name_prefix}_lambda_function_policy"
+  role   = aws_iam_role.kinesis_firehose_stream_role[0].name
+  policy = data.aws_iam_policy_document.lambda_assume_policy[0].json
+}
+
+# Lambda Policy Document To Assume Base Role
+data "aws_iam_policy_document" "lambda_assume_role" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
+# Lambda Role
+resource "aws_iam_role" "lambda" {
+  count              = var.firehose_logging_flag ? 1 : 0 
+  name               = "${var.name_prefix}_lambda_function_role"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role[0].json
+  tags               = var.resource_tags
+}
+
+# Lambda Policy Document To Write Logs To Cloudwatch
+data "aws_iam_policy_document" "lambda_to_cloudwatch_assume_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+}
+
+# Lambda Policy To Write Logs To Cloudwatch
+resource "aws_iam_role_policy" "lambda_to_cloudwatch_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  name   = "${var.name_prefix}_lambda_to_cloudwatch_policy"
+  role   = aws_iam_role.lambda[0].name
+  policy = data.aws_iam_policy_document.lambda_to_cloudwatch_assume_policy[0].json
+}
+
+# Cloudwatch Policy Document To Assume Base Role
+data "aws_iam_policy_document" "cloudwatch_logs_assume_role" {
+  count = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["logs.${var.environment.aws_region}.amazonaws.com"]
+    }
+  }
+}
+
+# Cloudwatch Policy Document To Access/Write To S3
+data "aws_iam_policy_document" "cloudwatch_logs_assume_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect    = "Allow"
+    actions   = [
+      "firehose:DescribeDeliveryStream",
+      "firehose:PutRecord",
+      "firehose:StartDeliveryStreamEncryption",
+      "firehose:PutRecordBatch",
+      "firehose:StopDeliveryStreamEncryption",
+      "firehose:ListTagsForDeliveryStream",
+      "firehose:TagDeliveryStream",
+      "firehose:UntagDeliveryStream"
+    ]
+    resources = [aws_kinesis_firehose_delivery_stream.kinesis_firehose_stream[0].arn]
+  }
+}
+
+# Cloudwatch Role
+resource "aws_iam_role" "cloudwatch_logs_role" {
+  count              = var.firehose_logging_flag ? 1 : 0 
+  name               = "${var.name_prefix}_cloudwatch_logs_role"
+  assume_role_policy = data.aws_iam_policy_document.cloudwatch_logs_assume_role[0].json
+  tags               = var.resource_tags
+}
+
+# Cloudwatch Policy To Access/Write To S3
+resource "aws_iam_role_policy" "cloudwatch_logs_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  name   = "${var.name_prefix}_cloudwatch_logs_policy"
+  role   = aws_iam_role.cloudwatch_logs_role[0].name
+  policy = data.aws_iam_policy_document.cloudwatch_logs_assume_policy[0].json
+}
+
+# Kinesis Firehose Policy Document To Assume Base Role
+data "aws_iam_policy_document" "kinesis_firehose_stream_assume_role" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["firehose.amazonaws.com"]
+    }
+  }
+}
+
+# Kinesis Firehose Role
+resource "aws_iam_role" "kinesis_firehose_stream_role" {
+  count              = var.firehose_logging_flag ? 1 : 0 
+  name               = "${var.name_prefix}_fh_stream_role"
+  assume_role_policy = data.aws_iam_policy_document.kinesis_firehose_stream_assume_role[0].json
+  tags               = var.resource_tags
+}
+
+# Kinesis Firehose Policy Document To Access S3
+data "aws_iam_policy_document" "kinesis_firehose_access_bucket_assume_policy" {
+  count = var.firehose_logging_flag ? 1 : 0 
+  statement {
+    effect = "Allow"
+    actions = [
+        "s3:AbortMultipartUpload",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads",
+        "s3:PutObject"
+    ]
+    resources = [
+      var.firehose_logging_bucket_arn,
+      "${var.firehose_logging_bucket_arn}/*",
+    ]
+  }
+}
+
+# Kinesis Firehose Policy To Access S3
+resource "aws_iam_role_policy" "kinesis_firehose_access_bucket_policy" {
+  count  = var.firehose_logging_flag ? 1 : 0 
+  name   = "${var.name_prefix}_fh_access_bucket_policy"
+  role   = aws_iam_role.kinesis_firehose_stream_role[0].name
+  policy = data.aws_iam_policy_document.kinesis_firehose_access_bucket_assume_policy[0].json
+}
