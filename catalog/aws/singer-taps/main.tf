@@ -49,7 +49,7 @@ locals {
       sync_command = "tapdance sync ${tap.name} ${local.target.id} ${join(" ", var.container_args)}"
       image = coalesce(
         var.container_image_override,
-        "Slalom-Consulting/tapdance:${tap.id}-to-${local.target.id}${var.container_image_suffix}"
+        "slalomdata/tapdance:${tap.id}-to-${local.target.id}${var.container_image_suffix}"
       )
     }
   ]
