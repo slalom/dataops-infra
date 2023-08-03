@@ -99,10 +99,6 @@ resource "aws_iam_policy" "group_s3_permission" {
       "Sid": "AllowS3ListingON${replace(replace(replace(grant.path, "/", ""), "-", ""), "_", "")}",
       "Action": ["s3:ListBucket"],
       "Resource": ["arn:aws:s3:::${var.data_bucket}"],
-      ${grant.path == "" ? "" : <<EOF
-"Condition":{"StringEquals":{"s3:prefix":["${grant.path}"],"s3:delimiter":["/"]}},
-EOF
-  }
       "Effect": "Allow"
     }
 EOF2
