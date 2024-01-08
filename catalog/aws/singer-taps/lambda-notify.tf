@@ -6,7 +6,7 @@ module "triggered_lambda" {
   resource_tags = var.resource_tags
   environment   = var.environment
 
-  runtime              = "python3.8"
+  runtime              = "python3.9"
   lambda_source_folder = "${path.module}/lambda"
   s3_upload_path       = "${var.data_lake_metadata_path}/lambda/${local.name_prefix}lambda.zip"
 
